@@ -21,11 +21,13 @@ evals:
     criterion: AC-3
     executor: ui-check
     layer: ui-observed
-    surface: web
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/chu-san-du-vai/thu/chay-ui.mjs --e3 --ra _acceptance/chu-san-du-vai/evidence — chỗ thử dựng Postgres dãy Q nạp sàn mẫu và máy dev 3497; mỗi ca in một dòng JSON và chụp ảnh."
+      - "Đối chiếu từng dòng JSON với expected rồi tắt máy dev: node _acceptance/chu-san-du-vai/thu/dung-q.mjs --tat. Xem ảnh E3-chua-tich-1440, E3-tich-san-1440, E3-go-bot-1440, E3-danh-sach-1440, E3-tich-san-375."
     target: "http://localhost:3497/settings/users"
-    steps: "Đăng nhập bằng quản trị của sàn mẫu trên Postgres dãy Q. Mở Mời người: chụp năm ô vai và dòng mô tả. Tích Quản trị sàn: chụp cả năm ô tích. Bỏ tích Telesales: chụp ô Telesales trống, các ô khác giữ. Mời một email mẫu (…@example.test): chụp dòng người ở danh sách, đọc lại vai bằng node _acceptance/chu-san-du-vai/thu/doc-vai.mjs <email>. Mở Sửa một người chỉ mang Telesales, tích Trưởng nhóm, Lưu: chụp dòng, đọc lại vai. Mở Sửa một người đủ năm vai, bỏ tích bốn vai làm việc, Lưu: chụp dòng, đọc lại vai."
     paths: ["apps/web/src/app/(app)/settings/users/**", "apps/web/src/components/khoi/solution-users-8/member-dialog.tsx", "packages/core/src/access/goi-vai.*"]
-    expected: "Năm ô vai đúng ba trạng thái ST-hopvai-chua-tich, ST-hopvai-tich-san, ST-hopvai-go-bot của đặc tả UX; dòng mô tả hiện đúng chữ; ở khổ 1440 và 375 không vỡ hộp. doc-vai.mjs đọc từ Postgres in đúng: người mới {listing_agent, buyer_agent, team_lead, company_admin}; người chỉ Telesales thành {telesales, team_lead, listing_agent, buyer_agent}; người đủ năm vai còn {company_admin}; dòng người ở danh sách khớp từng kết quả."
+    expected: "Dòng ST-hopvai-chua-tich: năm ô false, moTa đúng chữ «Tích Quản trị sàn hay Trưởng nhóm là tích sẵn các vai đi kèm; bỏ tích vai nào không cần.». ST-hopvai-tich-san: năm ô true. ST-hopvai-go-bot: Telesales false, bốn ô kia true. moi-luu: db đúng [buyer_agent, company_admin, listing_agent, team_lead], dòng người có bốn nhãn vai ấy. sua-them: moHop chỉ Telesales true; db đúng [buyer_agent, listing_agent, team_lead, telesales]. sua-go-bot: db đúng [company_admin]. kho-375: năm ô true, trongKhung true. Ảnh: hộp không vỡ ở cả hai khổ."
     evidence_required: [screenshot, observed, verified_at]
 
   - id: E3b
@@ -66,11 +68,13 @@ evals:
     criterion: AC-5
     executor: ui-check
     layer: ui-observed
-    surface: web
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/chu-san-du-vai/thu/chay-ui.mjs --e5b --ra _acceptance/chu-san-du-vai/evidence — chỗ thử chạy công cụ mở sàn thật cho một sàn «[Thử] đủ vai», đăng nhập người đầu tiên và người chỉ mang Quản trị sàn."
+      - "Đối chiếu từng dòng JSON với expected rồi tắt máy dev: node _acceptance/chu-san-du-vai/thu/dung-q.mjs --tat. Xem ảnh E5b-dau-tien-1440, E5b-menu-tao-1440, E5b-bang-hang-1440, E5b-chi-cau-hinh-1440."
     target: "http://localhost:3497/today"
-    steps: "Trên Postgres dãy Q chạy công cụ mở sàn cho sàn «[Thử] đủ vai» với một email mẫu …@example.test. Đăng nhập bằng người đầu tiên của sàn ấy theo đường đăng nhập thử của kho. Chụp cột nhà và menu Tạo; mở Bảng hàng. Đối chứng: đăng nhập người chỉ mang Quản trị sàn, chụp cột nhà."
     paths: ["packages/core/src/navigation.ts", "packages/db/scripts/mo-san.mjs", "packages/core/src/access/goi-vai.*"]
-    expected: "Người đầu tiên của sàn mới thấy Hôm nay, Bảng hàng, Đã gửi, Liên hệ, Đội, Cài đặt và các nút «+ Lead», Nhập Excel, Xuất; Bảng hàng mở được; người chỉ mang Quản trị sàn chỉ thấy Cài đặt."
+    expected: "dau-tien-nha: nha đúng [today, inventory, shares, contacts, team, settings], url /today. dau-tien-nut: lead, nhap, xuat đều true. dau-tien-bang-hang: url /inventory, bao404 false. chi-cau-hinh-nha: nha đúng [settings]. Ảnh khớp các dòng."
     evidence_required: [screenshot, observed, verified_at]
 
   - id: E5c
