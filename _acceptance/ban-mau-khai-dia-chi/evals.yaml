@@ -5,7 +5,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "Bật máy dev dãy D ở cổng 3495 trên đúng cây được chấm, đăng nhập quan-tri@example.test, chọn Sàn mẫu A, khổ 1440x900, giao diện sáng."
+      - "Dựng chỗ thử dãy D trên đúng cây được chấm: node _acceptance/luat-chia-lead/thu/dung-d.mjs (máy dev http://localhost:3495). Mở trình duyệt, gắn cookie của khoá dau-chu-1 trong .acceptance-runs/luat-chia-lead/phien.json (vai có nhà Bảng hàng), khổ 1440x900, giao diện sáng."
       - "Mở /inventory, chụp _acceptance/ban-mau-khai-dia-chi/evidence/ban-mau-may-tinh-that.png. Mở /proto/nhanh-tuc-thi, chờ trang chạy, chụp _acceptance/ban-mau-khai-dia-chi/evidence/ban-mau-may-tinh-mau.png."
       - "Trên mỗi đường ghi: có thanh trên, nhà đang sáng trong cột biểu tượng (aria-current), danh sách mục cột thứ hai (data-slot=second-column), mục có aria-current=page."
       - "Màn thật có tham số: ở /today đọc href mục nhóm đầu tiên của cột thứ hai (dạng /today?nhom=<mã>), mở đúng địa chỉ ấy, ghi mục có aria-current=page."
@@ -20,6 +20,7 @@ evals:
     steps:
       - "Cùng phiên với E1, khổ 375x812. Mở /inventory, chụp _acceptance/ban-mau-khai-dia-chi/evidence/ban-mau-dien-thoai-that.png; mở /proto/nhanh-tuc-thi, chờ trang chạy, chụp _acceptance/ban-mau-khai-dia-chi/evidence/ban-mau-dien-thoai-mau.png."
       - "Trên mỗi đường ghi chữ tiêu đề đầu màn của vỏ và tab dưới có aria-current=page (data-slot=mobile-tab-bar)."
+      - "Xong thì tắt máy dev: node _acceptance/luat-chia-lead/thu/dung-d.mjs --tat."
     expected: "Hai đường cùng tiêu đề «Bảng hàng» và cùng một tab sáng; không đường nào hiện «Quỹ hàng»."
     paths: ["apps/web/src/components/shell/**", "packages/core/src/navigation*", "apps/web/src/app/(app)/proto/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
