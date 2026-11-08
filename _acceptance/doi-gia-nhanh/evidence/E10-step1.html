@@ -4,12 +4,11 @@
 {"dau-chu-2@mau.quy-hang.test -> ",listing_agent}
 {"quan-tri@mau.quy-hang.test -> ",company_admin}
 {"telesales@mau.quy-hang.test -> ",telesales}
-Nguoi giu can 0daff353-14c5-41c6-8eb4-e7c839cb47a8: dau-chu-1@mau.quy-hang.test
-Ban dau: events=4 version=4 list_price=8060000000
-telesales@mau.quy-hang.test: expectedVersion=4 -> HTTP 404; listing_events 4 -> 4 (delta 0); SAI (mong 403, delta 0) body={"error":"not-found"}
-quan-tri@mau.quy-hang.test: expectedVersion=4 -> HTTP 404; listing_events 4 -> 4 (delta 0); SAI (mong 403, delta 0) body={"error":"not-found"}
-dau-chu-2@mau.quy-hang.test: expectedVersion=4 -> HTTP 200; listing_events 4 -> 5 (delta 1); DUNG (mong 2xx, delta +1) body={"id":"0daff353-14c5-41c6-8eb4-e7c839cb47a8","buildingName":"Toà A","subdivisionName":null,"blockName":null,"offCompoundUnitId":null,"unitNumber":"A-04.06","standardStatus":"Active","listPrice":8090000000,"feeInclusion":
-dau-chu-1@mau.quy-hang.test: expectedVersion=5 -> HTTP 200; listing_events 5 -> 6 (delta 1); DUNG (mong 2xx, delta +1) body={"id":"0daff353-14c5-41c6-8eb4-e7c839cb47a8","buildingName":"Toà A","subdivisionName":null,"blockName":null,"offCompoundUnitId":null,"unitNumber":"A-04.06","standardStatus":"Active","listPrice":8100000000,"feeInclusion":
-Cuoi: events=6 version=6 list_price=8100000000
-KET QUA: SAI
+Nguoi giu can: dau-chu-1@mau.quy-hang.test
+Ban dau: events=6 version=6
+telesales@mau.quy-hang.test: expectedVersion=6 -> HTTP 404; listing_events 6 -> 6 (delta 0) body={"error":"not-found"}
+quan-tri@mau.quy-hang.test: expectedVersion=6 -> HTTP 404; listing_events 6 -> 6 (delta 0) body={"error":"not-found"}
+dau-chu-2@mau.quy-hang.test: expectedVersion=6 -> HTTP 200; listing_events 6 -> 7 (delta 1) body={"id":"0daff353-14c5-41c6-8eb4-e7c839cb47a8","buildingName":"Toà A","subdivisionName":null,"blockName"
+dau-chu-1@mau.quy-hang.test: expectedVersion=7 -> HTTP 200; listing_events 7 -> 8 (delta 1) body={"id":"0daff353-14c5-41c6-8eb4-e7c839cb47a8","buildingName":"Toà A","subdivisionName":null,"blockName"
+Cuoi: events=8 version=8
 </pre>

@@ -40,3 +40,43 @@ wall: 572s
 - **claude-opus-5-5**: 3 agent · 25 calls · out 15,764 · in 50 · cache_read 705,935 · cache_create 135,224
 - **claude-haiku-5-5**: 9 agent · 18 calls · out 12,691 · in 36 · cache_read 144,072 · cache_create 124,432
 
+### S4 round 2 — wf_9b3f057e-0d8 (18 agent, 61,874 out-tok)
+
+| label | model | calls | out | in | cache_read | s |
+|---|---|--:|--:|--:|--:|--:|
+| ui:E8 | claude-sonnet-5-5 | 39 | 21,490 | 80 | 4,895,194 | 358 |
+| synthesize:report | claude-sonnet-5-5 | 3 | 7,387 | 6 | 68,937 | 44 |
+| ui:E10 | claude-sonnet-5-5 | 14 | 6,187 | 28 | 1,471,794 | 124 |
+| baseline:diffBase | claude-sonnet-5-5 | 3 | 3,914 | 6 | 40,875 | 77 |
+| review:measurement | claude-opus-5-5 | 6 | 3,748 | 12 | 159,396 | 41 |
+| review:bugs | claude-opus-5-5 | 6 | 3,604 | 12 | 122,738 | 38 |
+| triage | claude-sonnet-5-5 | 2 | 3,048 | 4 | 16,641 | 22 |
+| review:conventions | claude-opus-5-5 | 6 | 2,417 | 12 | 114,877 | 28 |
+| machine:npm test -w @quy-hang/api | claude-haiku-5-5 | 2 | 2,013 | 4 | 16,018 | 9 |
+| machine:npm run lint | claude-haiku-5-5 | 2 | 1,695 | 4 | 16,002 | 17 |
+| machine:npm test -w @quy-hang/core | claude-haiku-5-5 | 2 | 1,616 | 4 | 16,018 | 22 |
+| machine:R="${CLAUDE_PLUGIN_ROOT:-$(node packages | claude-haiku-5-5 | 2 | 997 | 4 | 16,097 | 8 |
+| machine:npm test -w @quy-hang/connect | claude-haiku-5-5 | 2 | 887 | 4 | 16,020 | 6 |
+| machine:npm run test:hooks | claude-haiku-5-5 | 2 | 706 | 4 | 16,008 | 9 |
+| machine:npm run typecheck | claude-haiku-5-5 | 2 | 667 | 4 | 16,006 | 18 |
+| machine:npm test -w @quy-hang/web | claude-haiku-5-5 | 2 | 617 | 4 | 16,018 | 11 |
+| machine:npm test -w @quy-hang/ui-lint | claude-haiku-5-5 | 2 | 546 | 4 | 12,837 | 41 |
+| capture:provenance | claude-sonnet-5-5 | 2 | 335 | 4 | 12,394 | 5 |
+
+
+wall: 563s
+
+| vai tro | agents | out | cache_read | wall s | bat dau | ket thuc |
+|---|--:|--:|--:|--:|---|---|
+| baseline | 1 | 3,914 | 40,875 | 77 | 03:58:26 | 03:59:43 |
+| ui | 2 | 27,677 | 6,366,988 | 486 | 03:58:26 | 04:06:32 |
+| machine | 9 | 9,744 | 141,024 | 133 | 03:58:26 | 04:00:39 |
+| review | 3 | 9,769 | 397,011 | 42 | 03:58:26 | 03:59:07 |
+| triage | 1 | 3,048 | 16,641 | 22 | 04:06:34 | 04:06:56 |
+| capture | 1 | 335 | 12,394 | 5 | 04:06:58 | 04:07:03 |
+| synthesize | 1 | 7,387 | 68,937 | 44 | 04:07:05 | 04:07:49 |
+
+- **claude-sonnet-5-5**: 6 agent · 63 calls · out 42,361 · in 128 · cache_read 6,505,835 · cache_create 313,857
+- **claude-opus-5-5**: 3 agent · 18 calls · out 9,769 · in 36 · cache_read 397,011 · cache_create 103,598
+- **claude-haiku-5-5**: 9 agent · 18 calls · out 9,744 · in 36 · cache_read 141,024 · cache_create 128,111
+

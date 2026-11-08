@@ -5,7 +5,7 @@ slug: doi-gia-nhanh
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-08-doi-gia-nhanh-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -76,3 +76,13 @@ Thước đủ: mỗi ô của ma trận giá (6 ca) và trạng thái (theo b�
   design-pass trước Cổng Phạm vi.
 - Hỏi-1 (Cổng Phạm vi): trang khách — (a) giá mới hiện khi khách mở hay tải lại link (khuyến nghị) · (b) trang đang mở tự làm
   mới. Hợp đồng viết theo khuyến nghị.
+- Ngoài-1 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Người không được sửa (telesales, quản trị thuần) vẫn bị chặn, nhưng máy báo «không tìm thấy» thay vì «cấm». Câu chữ bài kiểm đã đổi sau khi chủ kho duyệt và chưa được duyệt lại. — `_acceptance/doi-gia-nhanh/evals.yaml`
+- Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Trang hồ sơ căn khi telesales mở có thể đang báo một lỗi nhỏ lúc chạy mà chưa ai xem là lỗi gì. Người dùng có thể không thấy gì khác thường, nhưng báo cáo ghi «sạch» là chưa chắc. — `_acceptance/doi-gia-nhanh/evidence/E8-network.txt`
+- Ngoài-3 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Tiêu chí về việc chặn người không có quyền đã được sửa sau khi duyệt, còn bằng chứng đang lưu vẫn là của lượt trước. Hồ sơ nghiệm thu có thể tự mâu thuẫn cho đến khi chạy lại và được phê. — `_acceptance/doi-gia-nhanh/evals.yaml`
+- Ngoài-4 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Một số ảnh minh chứng Lịch sử chỉ chụp đầu trang nên không chứng minh được dòng đổi trạng thái hiện ra. Tính năng có thể vẫn chạy đúng, chỉ là bằng chứng chưa rõ. — `_acceptance/doi-gia-nhanh/evidence/E8-canh4d-lich-su.png`
+- Ngoài-5 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Máy chưa tự kiểm rằng ngăn Đổi giá còn đủ ô giá, lựa chọn bao phí, nút Lưu và nút «Sửa lại» không ghi. Nếu sau này ai làm mất một phần, bài kiểm vẫn xanh và người dùng mới là người gặp lỗi. — `apps/web/src/app/(app)/units/ho-so/dien-thoai/sua-nhanh.test.ts`
+- Ngoài-7 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Người sửa trên điện thoại không được báo rằng lần sửa đã tính là vừa xác nhận với chủ nhà. Dữ liệu vẫn ghi đúng, chỉ thiếu lời nhắc. — `apps/web/src/app/(app)/units/ho-so/dien-thoai/ngan-sua-nhanh.tsx`
+- Ngoài-9 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bộ kiểm tự động chỉ xác nhận một nửa các tổ hợp trạng thái và quyền. Nếu danh sách nấc hiển thị sai ở các tổ hợp còn lại thì kiểm tự động chưa bắt được. — `apps/web/src/app/(app)/units/ho-so/dien-thoai/sua-nhanh.test.ts`
+- Ngoài-10 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm chỉ xác nhận Lịch sử có dòng đổi giá, chưa xác nhận giá cũ và giá mới ghi đúng chiều. Nếu dòng hiện sai số thì kiểm tự động không báo. — `apps/web/src/app/(app)/units/ho-so/dien-thoai/sua-nhanh.test.ts`
+- Ngoài-11 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm Lịch sử cho đổi trạng thái dùng sự kiện dựng tay nên chưa chứng minh được đường ghi thật sinh ra dòng đúng. Người dùng chưa thấy lỗi nào. — `apps/web/src/app/(app)/units/ho-so/dien-thoai/sua-nhanh.test.ts`
+- Ngoài-12 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Các ca từ chối chỉ được kiểm là bị từ chối, chưa kiểm đúng lý do. Nếu lý do hiện cho người dùng sai thì kiểm tự động chưa bắt được. — `apps/web/src/app/(app)/units/ho-so/dien-thoai/sua-nhanh.test.ts`
