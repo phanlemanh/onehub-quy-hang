@@ -2691,7 +2691,8 @@
       "bat_khi": "Đổi câu lỗi của máy chủ thì phép nhìn khung 3 đỏ; câu đúng thì xanh; không còn phản hồi giả viết tay trong chạy-ui",
       "vung": [
         "_acceptance/luat-chia-lead-cap-han-hong/thu/**",
-        "_acceptance/va-e7-loi-that-cap-han/**"
+        "_acceptance/va-e7-loi-that-cap-han/**",
+        "_acceptance/luat-chia-lead/thu/dung-d.mjs"
       ]
     },
     {
