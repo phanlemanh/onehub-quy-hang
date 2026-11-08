@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: ac665385e609f58366910a10a2cf0b070aedb9a5
+verified_commit: a0cbba1ee62e7d404ee8eb6ce64f1ad177c252fa
 human_signoff: Manh Phan 2026-11-06
 ---
 
@@ -289,3 +289,7 @@ sha: 7e91413c024683653d69d3ccaafcfefcb260420c · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 2 — 2026-11-05, do gộp nhánh chính vào nhánh
 run_id: repin-20261105T233834Z-82343
 sha: ac665385e609f58366910a10a2cf0b070aedb9a5 · suites: 7 lệnh exit 0 · evals: 15/15 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E11=1 · ngoài làn máy: E1 (E1 không khai paths), E2a (E2a không khai paths), E5b (E5b không khai paths), E6a (E6a không khai paths), E7b (E7b không khai paths), E10b (E10b không khai paths)
+
+### Re-pin lần 3 — 2026-11-08, do PR 204 va-e7-loi-that-cap-han sửa chỗ thử chay-ui.mjs và dung-d.mjs của hai hồ sơ
+run_id: repin-20261108T071211Z-38871
+sha: a0cbba1ee62e7d404ee8eb6ce64f1ad177c252fa · suites: 7 lệnh exit 0 · evals: 15/15 eval máy đạt kỳ vọng · giới hạn đã khai không còn: E11 (khai 1) · ngoài làn máy: E1 (E1 không khai paths), E2a (E2a không khai paths), E5b (E5b không khai paths), E6a (E6a không khai paths), E7b (E7b không khai paths), E10b (E10b không khai paths) · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)

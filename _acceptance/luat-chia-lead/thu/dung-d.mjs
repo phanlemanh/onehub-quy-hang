@@ -142,6 +142,40 @@ try {
   const dc1 = await idCua(mail("dau-chu-1"));
   const tn = await idCua(mail("truong-nhom"));
   // Một căn Đang bán ở Toà A gán đầu chủ 1 — cột «Đầu chủ» của Bảng hàng có tên để đối chiếu (E10).
+  // Thiếu thì tự nạp qua API (va-e7-loi-that-cap-han, giám sát duyệt D-30): bộ test của gói api dọn bảng trên chính 5575/postgres
+  // nên sàn mẫu có thể mất hết hàng. Tạo bằng phiên đầu chủ 1 (vai quản trị thuần không làm việc với hàng — 404), gieo đủ ảnh thật
+  // «chia sẻ được» như bộ thử dãy D, rồi đưa lên Đang bán.
+  const coCan = async () =>
+    (
+      await db.query(
+        `select 1 from listings l where l.company_id = $1 and l.standard_status = 'Active' and l.unit_number is not null and l.building_name = 'Toà A' limit 1`,
+        [san],
+      )
+    ).rowCount > 0;
+  if (!(await coCan())) {
+    const goi = async (method, p, body) => {
+      const r = await fetch(`${URL_GOC}${p}`, { method, headers: { ...h, cookie: ck["dau-chu-1"] }, body: body && JSON.stringify(body) });
+      if (!r.ok) throw new Error(`nạp căn Toà A: ${method} ${p} ${r.status} ${await r.text()}`);
+      return r.json();
+    };
+    const l = await goi("POST", "/api/v1/listings", { buildingName: "Toà A", unitNumber: "A-01.01" });
+    let phienBan = l.version;
+    const su = async (type, payload) => {
+      phienBan = (await goi("POST", `/api/v1/listings/${l.id}/events`, { type, payload, expectedVersion: phienBan })).version;
+    };
+    await su("price_changed", { listPrice: 3500000000, feeInclusion: "excluded" });
+    await su("details_changed", { legalStatus: "[Mẫu] Sổ hồng", occupantType: "[Mẫu] Để trống" });
+    await db.query(
+      `insert into unit_photos (id, company_id, building_name, unit_number, compartment, content_type, byte_size, width, height, added_by)
+       select gen_random_uuid(), l.company_id, l.building_name, l.unit_number, 'shareable', 'image/jpeg', 1, 1, 1, '[Mẫu] bộ thử dãy D'
+       from listings l, generate_series(1, greatest(1, coalesce((select (s.value #>> '{}')::int from company_settings s
+         where s.company_id = l.company_id and s.key = 'listing.ready_min_real_photos'), 1)))
+       where l.id = $1`,
+      [l.id],
+    );
+    await su("status_changed", { to: "Active" });
+    console.error(`dung-d: sàn mẫu thiếu căn Đang bán ở Toà A — đã nạp A-01.01 qua API (${l.id})`);
+  }
   const can = (
     await db.query(
       `select l.id, l.unit_number ma from listings l where l.company_id = $1 and l.standard_status = 'Active' and l.unit_number is not null
