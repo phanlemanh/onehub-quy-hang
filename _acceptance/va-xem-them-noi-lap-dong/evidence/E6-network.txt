@@ -1,0 +1,6 @@
+Origin http://localhost:3491 (dev server dãy L, cùng worktree). Trình duyệt Playwright, đo bằng bọc fetch trong trang.
+GET /api/v1/contacts?cursor=MTc5NDEy...NTUzMDA4OQ -> 200, 50 id
+GET /api/v1/contacts?cursor=MTc5NDEy...NzMxYTIxNDc1YjU4 -> 200, 21 id, nextCursor null
+Bước 4: 0 yêu cầu fetch trong 1,1 s sau gõ-xoá (không có yêu cầu không cursor)
+Console error: 404 /favicon.ico (static asset, chỉ ghi chú)
+Không có request app nào lỗi.

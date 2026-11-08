@@ -5,7 +5,7 @@ slug: va-xem-them-noi-lap-dong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: _acceptance/va-xem-them-noi-lap-dong/design.md
 approved_by:
 approved_at:
