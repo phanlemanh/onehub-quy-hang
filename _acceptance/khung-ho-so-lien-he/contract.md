@@ -5,7 +5,7 @@ slug: khung-ho-so-lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-08-khung-ho-so-lien-he-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -96,3 +96,9 @@ Ngưỡng SỐNG ở `opportunity.md` (chép từ `bat_khi` của hàng). Mỗi 
 
 - Hỏi-1 (duyệt giao diện bằng chữ, nhìn ảnh ở Cổng Bằng chứng — khuyến nghị) và Hỏi-2 (Esc khi đang gõ ô tìm hay khi
   menu, hộp đang mở không đóng hồ sơ — khuyến nghị) chờ chủ kho ở Cổng Phạm vi; hợp đồng soạn theo khuyến nghị.
+- Ngoài-1 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu người dùng bấm «Xem thêm», rồi gõ và xoá nhanh một ký tự ở ô tìm, lần «Xem thêm» kế tiếp có thể hiện lặp các dòng của trang trước. Tải lại màn là hết. — `apps/web/src/app/(app)/contacts/vung.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm giữ lỗi «bảng kẹt khi quay về bộ lọc cũ» chỉ xem chữ trong mã chứ không chạy thử hành vi thật. Sau này có thể báo đỏ oan khi viết lại, hoặc bỏ sót nếu lỗi quay lại. — `apps/web/src/app/(app)/contacts/khung-ho-so.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài tự kiểm nút Đóng có thể vẫn xanh dù sau này ai đó vô tình bỏ nút Đóng khỏi màn thật. Hiện nút vẫn hoạt động đúng, chỉ là lưới an toàn yếu hơn. — `apps/web/src/app/(app)/contacts/khung-ho-so.test.ts`
+- Ngoài-7 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài tự kiểm bề rộng bảng dùng một con số chép tay cho phần vỏ quanh bảng. Nếu sau này vỏ rộng ra, bảng có thể bị hẹp mà bài kiểm vẫn không báo. — `apps/web/src/app/(app)/contacts/khung-ho-so.test.ts`
+- Ngoài-8 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm chỉ thử Esc trong menu, chưa thử riêng hộp chọn và hộp thoại. Nếu sau này ai đó làm hỏng phần đó, bài kiểm có thể không báo, và Esc có thể đóng hồ sơ nhầm. — `apps/web/src/app/(app)/contacts/khung-ho-so.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu sau này đổi tỉ lệ cột hồ sơ, bảng có thể hẹp lại và mất cột mà bài kiểm vẫn báo xanh. Hiện tại màn hình vẫn đúng. — `apps/web/src/app/(app)/contacts/khung-ho-so.test.ts`

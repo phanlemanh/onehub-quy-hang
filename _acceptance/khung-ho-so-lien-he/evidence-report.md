@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: b1281aa1712d2b3dca910a324c45d0547e5a9680
+verified_commit: fed3fec163e6eaa733c3ade9fb4cb6b46231d614
 human_signoff:
 ---
 
@@ -19,7 +19,7 @@ human_signoff:
 | E2 | AC-2 | test | PASS |
 | E3 | AC-3 | test | PASS |
 | E4 | AC-4 | test | PASS |
-| E5 | AC-5 | test | PASS (carry-forward từ round 1) |
+| E5 | AC-5 | test | PASS |
 | E6 | AC-6 | test | PASS |
 | E6b | AC-6 | script | PASS |
 | E7 | AC-7 | test | PASS |
@@ -29,144 +29,142 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-khung-ho-so-lien-he-E1-r2
+  run_id: minted-khung-ho-so-lien-he-E1-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 6716.356084
+    ℹ duration_ms 6471.072167
 
 - eval: E2
-  run_id: minted-khung-ho-so-lien-he-E2-r2
+  run_id: minted-khung-ho-so-lien-he-E2-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 6716.356084
+    ℹ duration_ms 6471.072167
 
 - eval: E3
-  run_id: minted-khung-ho-so-lien-he-E3-r2
+  run_id: minted-khung-ho-so-lien-he-E3-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 6716.356084
+    ℹ duration_ms 6471.072167
 
 - eval: E4
-  run_id: minted-khung-ho-so-lien-he-E4-r2
+  run_id: minted-khung-ho-so-lien-he-E4-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 6716.356084
+    ℹ duration_ms 6471.072167
 
 - eval: E5
   run_id: minted-khung-ho-so-lien-he-E5-r1
   exit_code: 0
+  baseline: n-a
   verifier: config:executors.test.web
   verified_at: 2026-11-08T01:09:23Z
   carried_from_round: 1
-  output: |
-    carry-forward tu round 1 — delta khong cham paths cua eval
+  note: carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E6
-  run_id: minted-khung-ho-so-lien-he-E6-r2
+  run_id: minted-khung-ho-so-lien-he-E6-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.ui_lint
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
   output: |
     npm test -w @quy-hang/ui-lint
-    ℹ duration_ms 32715.547208
+    ℹ duration_ms 30836.878916
 
 - eval: E6b
-  run_id: minted-khung-ho-so-lien-he-E6b-r2
+  run_id: minted-khung-ho-so-lien-he-E6b-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
   output: |
-    design-floor-khuon.mjs --kiem --root .
+    design-floor-khuon --kiem --root .
     7 tệp giao diện ngoài bản đồ
 
 - eval: E7
-  run_id: minted-khung-ho-so-lien-he-E7-r2
+  run_id: minted-khung-ho-so-lien-he-E7-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 6716.356084
+    ℹ duration_ms 6471.072167
 
 - eval: E7b
-  run_id: minted-khung-ho-so-lien-he-E7b-r2
+  run_id: minted-khung-ho-so-lien-he-E7b-r3
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 6716.356084
+    ℹ duration_ms 6471.072167
 
 - eval: E8
-  run_id: minted-khung-ho-so-lien-he-E8-r2
+  run_id: verify-khung-ho-so-lien-he-E8-r3
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-08T01:19:07Z
-  screenshot: evidence/E8v-step1.png
+  verified_at: 2026-11-08T01:27:36Z
+  screenshot: evidence/E8r3-step1.png
   observed: |
-    Đã mở và đọc các frame ở thư mục evidence/ (đường dẫn tuyệt đối /Users/manhphan/dev/onehub-quy-hang/.claude/worktrees/epic-einstein-86dac8/_acceptance/khung-ho-so-lien-he/evidence/).
-    - E8v-list.png (1440, chưa chạm): bảng hết bề ngang vùng làm việc, 4 cột Tên · Người giữ · Cơ hội mở · Căn, một dòng "[Tên] chủ nhà".
-    - E8v-step1.png (1440 sau khi chạm dòng): bảng thu lại còn 4 cột đủ, không thanh cuộn ngang; dòng được tô xám nhạt; ngăn hồ sơ bên phải có viền bo, cao hết cột, đầu hồ sơ có nút X Đóng hồ sơ, phần Số, Cơ hội, Căn, Dòng thời gian.
-    - E8v-step2.png (khung nhìn thấp, thêm 40 dòng nhân bản trong DOM): các dòng bảng cuộn đi, còn tiêu đề "Liên hệ", ô tìm và hàng tên cột vẫn đứng yên; ngăn hồ sơ cuộn riêng.
-    - E8v-step3b.png: gõ "chu" vào ô tìm rồi Esc thì hồ sơ vẫn mở. E8v-step3a.png: sau bấm Đóng hồ sơ đã đóng.
-    - E8v-step4.png (/inventory): hồ sơ căn C-05.10 trong khung bo, có nút mở toàn màn và nút X Đóng.
-    - E8v-step7b.png/E8v-step7c.png: Esc đóng menu Tài khoản mà hồ sơ vẫn mở; sau Đóng hồ sơ bảng rộng hết vùng (bảng rộng 1125px, mép phải 1410 trên khung nhìn 1440).
-    - E8v-step8.png (375): ngăn hồ sơ dạng ngăn kéo từ dưới lên, vừa chiều ngang, không tràn, nội dung đầy đủ. E8v-step8a.png: danh sách dạng thẻ.
-    Khớp mô tả, không thấy lỗi bố cục.
+    E8r3-step1.png (1440, light): table has 4 columns Tên · Người giữ · Cơ hội mở · Căn with no horizontal scrollbar. The row [Tên] chủ nhà is shaded grey. To its right is a bordered profile panel as tall as the column, with an X close button at the top right, holding the Số, Cơ hội, Căn and Dòng thời gian sections. Matches the expected result.
+    E8r3-step2.png (560px high): the rows (cloned in the DOM) have scrolled, the scrollbar sits mid-track, while the title 'Liên hệ', the search box and the header row stay in place. The profile panel scrolls separately. Matches.
+    E8r3-step3a-esc.png, E8r3-step3b-btn.png: measured by the DOM count of the Đóng button (1 to 0 each time). E8r3-step3c-search-esc.png: search shows 'chu' with focus, profile still open. Matches.
+    E8r3-step4.png (/inventory): C-05.10 profile panel with Mở toàn màn and X buttons, price 4,1 tỷ, Ảnh tab, unchanged framing. Matches.
+    E8r3-step6-all.png and E8r3-step6-buyer.png: the pages loaded with 1 row (all) and 0 rows (Buyer); no contacts API call.
+    E8r3-step7b-after-esc.png: the account menu is closed and the profile panel is still open. E8r3-step7c-closed.png: profile closed, the table spans the whole work area to x=1410. Matches.
+    E8r3-step8.png (375): bottom sheet titled '[Tên] chủ nhà' with the profile, X at the top right, content within width, nothing cut off. E8r3-step8-list.png: list as cards, no horizontal overflow. Matches.
   network_observed: clean
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-khung-ho-so-lien-he-SUITE-npm_test_w_quy_hang_core-r2
+  run_id: minted-khung-ho-so-lien-he-SUITE-npm_test_w_quy_hang_core-r3
   exit_code: 0
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-khung-ho-so-lien-he-SUITE-npm_test_w_quy_hang_api-r2
+  run_id: minted-khung-ho-so-lien-he-SUITE-npm_test_w_quy_hang_api-r3
   exit_code: 0
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-khung-ho-so-lien-he-SUITE-npm_test_w_quy_hang_connect-r2
+  run_id: minted-khung-ho-so-lien-he-SUITE-npm_test_w_quy_hang_connect-r3
   exit_code: 0
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
 
 - cmd: npm run test:hooks
-  run_id: minted-khung-ho-so-lien-he-SUITE-test_hooks-r2
+  run_id: minted-khung-ho-so-lien-he-SUITE-test_hooks-r3
   exit_code: 0
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
 
 - cmd: npm run typecheck
-  run_id: minted-khung-ho-so-lien-he-SUITE-typecheck-r2
+  run_id: minted-khung-ho-so-lien-he-SUITE-typecheck-r3
   exit_code: 0
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
 
 - cmd: npm run lint
-  run_id: minted-khung-ho-so-lien-he-SUITE-lint-r2
+  run_id: minted-khung-ho-so-lien-he-SUITE-lint-r3
   exit_code: 0
-  verified_at: 2026-11-08T01:19:07Z
+  verified_at: 2026-11-08T01:27:36Z
 
 ## Known limits
 
@@ -174,12 +172,12 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh ở cả code mới lẫn baseline; chứng minh harness chứ chưa chứng minh feature — cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+carried tu round 2 — baseline khong do lai round nay.
+
+Eval khong-phan-biet (xanh tren ca nhanh lan baseline; chung minh harness chu khong phai feature — can viet lai de assert hanh vi moi hoac xac nhan la regression-guard co chu y):
 - npm test -w @quy-hang/web: E1, E2, E3, E4, E7, E7b
 - npm test -w @quy-hang/ui-lint: E6
-- design-floor-khuon.mjs --kiem --root .: E6b
-
-Các lệnh suite xanh cả hai phía là regression-guard bình thường, không liệt kê.
+- design-floor-khuon --kiem --root .: E6b
 
 ## Variance
 
@@ -187,5 +185,6 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E8 failed — bước 6: sau khi tải xong, máy khách vẫn đọc lại danh sách liên hệ dù máy chủ đã trao trang đầu (canDocLan không chặn lượt đầu ở vung.tsx). Returned to implementation.
-Round 2: tất cả eval đạt; E5 carry-forward từ round 1 (delta không chạm paths của eval); E8 chạy lại trên bản thật, đạt.
+Round 1: sua nut Dong o trang thai tai va loi, khong doc lai danh sach khi bang da dung bo loc; bang chung luot 1. Returned to implementation.
+Round 2: sua bang khong ket khi quay ve bo loc cu; bang chung luot 2. Returned to implementation.
+Round 3: moi eval chay lai tren fed3fec1 deu xanh; E5 carry-forward tu round 1. Verdict PASS.
