@@ -5,7 +5,7 @@ slug: khuon-xac-nhan-danh-muc
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-08-khuon-xac-nhan-danh-muc-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08T07:17:24Z
