@@ -9,6 +9,23 @@ export function khoaLoc(l: { q: string; type: string; status: string; lan: numbe
 /** Trang cuối đã hiện: thuộc bộ lọc nào, và con trỏ đọc tiếp (null = hết). */
 export type TrangCuoi = { khoa: string; tiep: string | null };
 
+/** Trang máy chủ đã đọc sẵn: khoá bộ lọc của nó và con trỏ đọc tiếp. */
+export type TrangMayChu = { khoa: string; nextCursor: string | null };
+
+/** Trang cuối lúc mở màn (hàng vá va-xem-them-noi-lap-dong): trang máy chủ trao thì là trang ấy, không có thì chưa có. */
+export function trangTuMayChu(dau: TrangMayChu | null): TrangCuoi | null {
+  return dau ? { khoa: dau.khoa, tiep: dau.nextCursor } : null;
+}
+
+/**
+ * Trang cuối sau một lượt không đọc lại (bảng đã đúng bộ lọc): máy chủ vừa trao trang mới đúng bộ lọc này thì bảng vừa được
+ * thay bằng trang ấy — lấy con trỏ của nó; không thì giữ trang cuối đang có. Quay về trang máy chủ lúc mở màn khi bảng đã nối
+ * thêm trang là gửi lại con trỏ cũ và lặp dòng (Ngoài-1 của khung-ho-so-lien-he: gõ rồi xoá ô tìm trong 250 ms).
+ */
+export function trangKhiKhongDoc(hienTai: TrangCuoi | null, dauMoi: TrangMayChu | null, khoaLuot: string): TrangCuoi | null {
+  return dauMoi && dauMoi.khoa === khoaLuot ? { khoa: khoaLuot, tiep: dauMoi.nextCursor } : hienTai;
+}
+
 /** Con trỏ để gửi «Xem thêm», hoặc null khi không được gửi (đang tải, hết trang, hay trang cuối của bộ lọc khác). */
 export function conTroXemThem(trang: TrangCuoi | null, khoaHienTai: string, dangHien: boolean): string | null {
   if (!dangHien || !trang || trang.tiep === null) return null;

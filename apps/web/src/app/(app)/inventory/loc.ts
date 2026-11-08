@@ -5,6 +5,7 @@
 import { parseNumberExpression, type ExpressionResult } from "./bieu-thuc-so";
 import type { TuVung } from "@quy-hang/core/labels";
 import { COT, COT_THEO_ID, STATUS_LABEL, chuCuaO, giaTriChon, type CotId, type DongBang } from "./cot";
+import { laKhongDung } from "./loai-hinh";
 import { laCotRieng } from "./truong-rieng";
 
 export type BoLocCot = Partial<Record<CotId, string>>;
@@ -51,8 +52,9 @@ function dieuKien(loc: BoLocCot): ((d: DongBang) => boolean)[] {
       const scale = c.scale ?? 1;
       return [
         (d: DongBang) => {
+          // Ô «không có» của loại hình (hàng 79) không khớp luật số nào.
           const v = d[c.id];
-          return typeof v === "number" && r.test(v / scale);
+          return !laKhongDung(d, c.id) && typeof v === "number" && r.test(v / scale);
         },
       ];
     }

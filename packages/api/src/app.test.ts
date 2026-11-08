@@ -49,6 +49,8 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     // Căn ngoài khu (hàng 76 can-ngoai-khu).
     "POST /api/v1/off-compound-units",
     "GET /api/v1/off-compound-units/{id}",
+    // Danh sách căn ngoài khu của sàn cho Bảng hàng (hàng 79 bang-hang-theo-loai-hinh).
+    "GET /api/v1/off-compound-units",
     "POST /api/v1/imports",
     "POST /api/v1/imports/{importId}/rows",
     "GET /api/v1/imports/agents",

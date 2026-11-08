@@ -45,8 +45,9 @@ import { COT, chuCuaO, mauTrangThai, nhanCot, tatCaCot, type Cot, type CotId, ty
 import { cotTruongRieng, giuCotRieng, laCotRieng } from "./truong-rieng";
 import { useTuVung } from "./tu-vung";
 import { useDanhBaDauChu } from "./danh-ba";
-import { useDanhMuc } from "./danh-muc";
+import { useCanNgoaiKhu, useDanhMuc } from "./danh-muc";
 import { chiMuc, ghepDanhMuc } from "./ghep-danh-muc";
+import { cotHienTheoLoaiHinh, tieuDeViTri } from "./loai-hinh";
 import { CACH_XEM_MAC_DINH, daDoi, luuDe, type CachXem, type GocNhin } from "./goc-nhin";
 import { khoTrinhDuyet, useDatPhamVi, useGocNhinCuaToi, useMoLuuGocNhin } from "./goc-nhin-react";
 import { HangLocContext, HeaderStack, NutXoaLoc, OLoc } from "./hang-loc";
@@ -142,7 +143,7 @@ function ONhom({ row, label, soCan }: { row: Row<Feat, DongLuoi>; label: string;
   );
 }
 
-function taoCot(cotNhanNhom: CotId, tv: TuVung): DefCot[] {
+function taoCot(cotNhanNhom: CotId, tv: TuVung, viTri: string): DefCot[] {
   return [
     {
       id: "row",
@@ -164,14 +165,17 @@ function taoCot(cotNhanNhom: CotId, tv: TuVung): DefCot[] {
       enableCellSelection: false,
       meta: { headerTitle: "Dòng" },
     },
-    ...tatCaCot(tv).map<DefCot>((cot) => ({
+    ...tatCaCot(tv).map<DefCot>((cot) => {
+      // Cột vị trí (Hỏi-1 hàng 79): «Vị trí» khi dòng đã lọc có loại hình khác căn hộ; còn lại tên của sàn hay «Toà».
+      const tieuDe = cot.id === "buildingName" && viTri !== "Toà" ? viTri : nhanCot(cot, tv);
+      return {
       id: cot.id,
       accessorFn: (d: DongLuoi) => (d.kind === "can" ? d.dong[cot.id] : null),
       header: ({ column }) => (
         <HeaderStack
           title={
             <div className={`flex min-w-0 ${cot.kind === "so" ? "-me-2 flex-1 justify-end" : ""}`}>
-              <DataGridColumnHeader column={column} title={nhanCot(cot, tv)} />
+              <DataGridColumnHeader column={column} title={tieuDe} />
             </div>
           }
           filter={<OLoc cot={cot} />}
@@ -185,14 +189,15 @@ function taoCot(cotNhanNhom: CotId, tv: TuVung): DefCot[] {
       size: cot.id === cotNhanNhom ? Math.max(cot.size, 170) : cot.size,
       minSize: 80,
       meta: {
-        headerTitle: nhanCot(cot, tv),
+        headerTitle: tieuDe,
         // Chép ra đúng chữ đang hiện. Ba cột Giá, Phí, Trạng thái mở trình sửa trên ô (hàng 15) qua onCellEditRequest.
         cellEdit: {
           editable: COT_SUA.has(cot.id) || laCotRieng(cot.id) ? (d: DongLuoi) => d.kind === "can" : false,
           format: (_v: unknown, d: DongLuoi) => (d.kind === "can" ? chuCuaO(d.dong, cot.id, tv) : d.label),
         },
       },
-    })),
+    };
+    }),
   ];
 }
 
@@ -265,6 +270,7 @@ export function BangHang({
   const { hang, daKeo, loiMang, thuLai } = useDanhSachTrenMay();
   const suaTrenO = useSuaTrenO();
   const danhMuc = useDanhMuc(san);
+  const ngoaiKhu = useCanNgoaiKhu(san);
   const { ds: gocNhins } = useGocNhinCuaToi();
   const gocNhin: GocNhin | undefined = gocNhinId ? gocNhins.find((g) => g.id === gocNhinId) : undefined;
 
@@ -300,7 +306,7 @@ export function BangHang({
   const moLuu = useCallback(() => setHop({ loai: "moi" }), []);
   useMoLuuGocNhin(moLuu);
 
-  const idx = useMemo(() => chiMuc(danhMuc), [danhMuc]);
+  const idx = useMemo(() => chiMuc(danhMuc, ngoaiKhu), [danhMuc, ngoaiKhu]);
   // Cột «Đầu chủ» (hàng 105): người giữ của hàng đối với danh bạ đầu chủ của sàn; lượt kéo đổi người giữ thì ô đổi theo.
   const nguoiGiu = useMemo(() => hang.map((l) => l.listAgentKey), [hang]);
   // Hàng 48 (Ngoài-10 của 105): đọc danh bạ hỏng thì báo kèm «Thử lại», không nuốt lỗi.
@@ -333,9 +339,13 @@ export function BangHang({
     [locMo, loc, sai, dong, datLoc, xoaLoc, tv],
   );
 
-  const cotNhanNhom: CotId = cot.includes("buildingName") ? "buildingName" : (cot[0] ?? "unitNumber");
-  const columns = useMemo(() => taoCot(cotNhanNhom, tv), [cotNhanNhom, tv]);
-  const columnVisibility = useMemo(() => visibilityTu(cot, tv), [cot, tv]);
+  // Hàng 79: cột hiện = cột người bật trừ cột mà không loại hình nào trong dòng đã lọc dùng; cột Loại hình chỉ khi sàn có
+  // hàng khác căn hộ. `cot` giữ lựa chọn của người — cột bị loại hình ẩn hiện lại khi lọc đổi.
+  const cotHien = useMemo(() => cotHienTheoLoaiHinh(cot, daLoc, dong), [cot, daLoc, dong]);
+  const viTri = useMemo(() => tieuDeViTri(daLoc), [daLoc]);
+  const cotNhanNhom: CotId = cotHien.includes("buildingName") ? "buildingName" : (cotHien[0] ?? "unitNumber");
+  const columns = useMemo(() => taoCot(cotNhanNhom, tv, viTri), [cotNhanNhom, tv, viTri]);
+  const columnVisibility = useMemo(() => visibilityTu(cotHien, tv), [cotHien, tv]);
 
   const onSortingChange = useCallback(
     (u: Updater<SortingState>) => {
@@ -346,10 +356,11 @@ export function BangHang({
   );
   const onColumnVisibilityChange = useCallback((u: Updater<ColumnVisibilityState>) => {
     setCot((cu) => {
-      const v = typeof u === "function" ? u(visibilityTu(cu, tv)) : u;
-      return tatCaCot(tv).map((c) => c.id).filter((id) => v[id] !== false);
+      const v = typeof u === "function" ? u(visibilityTu(cu.filter((id) => cotHien.includes(id)), tv)) : u;
+      // Cột đang bị loại hình ẩn giữ đúng lựa chọn cũ của người — bật tắt cột khác không làm mất nó.
+      return tatCaCot(tv).map((c) => c.id).filter((id) => (cotHien.includes(id) ? v[id] !== false : cu.includes(id)));
     });
-  }, [tv]);
+  }, [tv, cotHien]);
 
   const dongDangMo = useMemo<Record<string, true>>(() => (dangMo ? { [dangMo]: true } : {}), [dangMo]);
   const tableOptions = useMemo(
@@ -361,7 +372,7 @@ export function BangHang({
       getSubRows,
       // Hàng 17: chọn dòng chỉ để đánh dấu hồ sơ đang mở — không có ô tích.
       enableRowSelection: dangMo !== null,
-      state: { rowSelection: dongDangMo, sorting: sap, columnVisibility, expanded, columnPinning: { start: ["row", "buildingName", "unitNumber"].filter((id) => id === "row" || cot.includes(id as CotId)), end: [] } },
+      state: { rowSelection: dongDangMo, sorting: sap, columnVisibility, expanded, columnPinning: { start: ["row", "buildingName", "unitNumber"].filter((id) => id === "row" || cotHien.includes(id as CotId)), end: [] } },
       onSortingChange,
       onColumnVisibilityChange,
       onExpandedChange: setExpanded,
@@ -371,7 +382,7 @@ export function BangHang({
       manualPagination: true,
       autoResetExpanded: false,
     }),
-    [columns, cay, sap, columnVisibility, expanded, cot, onSortingChange, onColumnVisibilityChange, dangMo, dongDangMo],
+    [columns, cay, sap, columnVisibility, expanded, cotHien, onSortingChange, onColumnVisibilityChange, dangMo, dongDangMo],
   );
   const table = useTable(tableOptions, selectGridState);
 
@@ -389,9 +400,9 @@ export function BangHang({
   const moHopXuat = useCallback(() => {
     if (tapXuat.tat) return;
     // Mẫu của sàn (hàng mau-bang-hang-va-bai) đọc một lần lúc mở hộp; đọc lỗi thì hộp vẫn mở, theo góc nhìn.
-    const coDinh = { dong: tapXuat.dong, cot, today: homNay(), tenSan, tenNguoiGui: "", tuVung: tv };
+    const coDinh = { dong: tapXuat.dong, cot: cotHien, today: homNay(), tenSan, tenNguoiGui: "", tuVung: tv };
     void moHopVoiMau(coDinh, (duong) => goiFetch("GET", duong)).then(setMoXuat);
-  }, [tapXuat, cot, tenSan, setMoXuat, tv]);
+  }, [tapXuat, cotHien, tenSan, setMoXuat, tv]);
   // Menu Tạo trỏ `/exports/new` → `/inventory?phat-hang=1`: mở hộp thoại một lần với cách xem đang có.
   const q = useSearchParams();
   const daMoTuMenu = useRef(false);
@@ -409,7 +420,7 @@ export function BangHang({
   const footer =
     daLoc.length > 0 ? (
       <DataGridTableFootRow>
-        <DataGridTableFootRowCell colSpan={cot.length + 1}>
+        <DataGridTableFootRowCell colSpan={cotHien.length + 1}>
           <span className="text-muted-foreground text-xs tabular-nums">
             <span className="text-foreground text-sm font-medium">{daLoc.length}</span> / {dong.length} căn
           </span>

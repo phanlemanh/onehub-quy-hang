@@ -69,10 +69,10 @@ test("E3 ma trận 8 ô — cột ra đúng thứ tự góc nhìn, cột bỏ li
 
 test("E3 bảng cột phủ mọi cột của bảng hàng (inventory/cot.ts) và người giữ", () => {
   // Chép tay từ `CotId` của apps/web/src/app/(app)/inventory/cot.ts — lõi không nhập từ app.
-  const COT_ID = ["buildingName", "unitNumber", "unitType", "livingArea", "floor", "directionFaces", "standardStatus", "listPrice", "feeInclusion", "furnished", "legalStatus", "financing", "occupantType", "confirmedAgeDays", "completeness", "visibility", "closePrice", "closeDate", "withdrawnReason"];
+  const COT_ID = ["buildingName", "unitNumber", "unitType", "livingArea", "floor", "directionFaces", "standardStatus", "listPrice", "feeInclusion", "furnished", "legalStatus", "financing", "occupantType", "confirmedAgeDays", "completeness", "visibility", "closePrice", "closeDate", "withdrawnReason", "propertySubType", "lotSizeArea", "storiesTotal", "frontageLength", "accessRoadWidth"];
   assert.deepEqual(Object.keys(COT_BANG_HANG).sort(), [...COT_ID, "holderName"].sort());
-  // Cột lớp giao dịch và nội bộ không có khoá ra.
-  for (const id of ["closePrice", "closeDate", "withdrawnReason", "holderName", "visibility", "completeness"] as const) {
+  // Cột lớp giao dịch và nội bộ không có khoá ra; năm cột loại hình (hàng 79) chưa ra — hàng 80.
+  for (const id of ["closePrice", "closeDate", "withdrawnReason", "holderName", "visibility", "completeness", "propertySubType", "lotSizeArea", "storiesTotal", "frontageLength", "accessRoadWidth"] as const) {
     assert.equal(COT_BANG_HANG[id].khoa, null, id);
   }
 });

@@ -25,7 +25,8 @@
     "./custom-fields": "./src/custom-fields/index.ts",
     "./thiet-bi": "./src/thiet-bi/index.ts",
     "./property": "./src/property/index.ts",
-    "./address": "./src/address/index.ts"
+    "./address": "./src/address/index.ts",
+    "./confirmation": "./src/confirmation/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",

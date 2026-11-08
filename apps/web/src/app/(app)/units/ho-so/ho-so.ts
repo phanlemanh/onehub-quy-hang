@@ -7,7 +7,8 @@ import { completeness, kiemMaCan, type ListingEvent, type StandardStatus } from 
 import type { LanThu, ListingView } from "@/lib/sync/types";
 import { nhanVai } from "@/lib/vai";
 import { dinhDangGia, FEE_LABEL, STATUS_LABEL } from "../../inventory/cot";
-import { nhanLoaiCan } from "../../inventory/ghep-danh-muc";
+import { nhanLoaiCan, thuocTinhHang, type ChiMucDanhMuc } from "../../inventory/ghep-danh-muc";
+import { loaiDungCot, nhanLoaiHinh } from "../../inventory/loai-hinh";
 
 const chuan = (s: string) => s.trim().toLowerCase();
 const cungCan = (l: { buildingName: string | null; unitNumber: string | null }, toa: string, ma: string) =>
@@ -44,9 +45,12 @@ export function moCot(q: URLSearchParams, c: { ma: string; toa: string; lan: str
   return m.toString();
 }
 
-/** Mở hồ sơ từ một dòng hàng: có mã căn thì theo căn (`moCot`), chưa có thì theo hàng (`?hang=`). */
-export function moHang(q: URLSearchParams, h: { id: string; buildingName: string; unitNumber: string | null }): string {
-  if (h.unitNumber) return moCot(q, { ma: h.unitNumber, toa: h.buildingName, lan: h.id });
+/**
+ * Mở hồ sơ từ một dòng hàng: căn hộ có mã thì theo căn (`moCot`); chưa có mã, hay hàng không toà — lô, ngoài khu (hàng 79,
+ * `theoHang`) — thì theo hàng (`?hang=`): «toà» của dòng ấy là chữ vị trí, không tra được theo toà + mã.
+ */
+export function moHang(q: URLSearchParams, h: { id: string; buildingName: string; unitNumber: string | null; theoHang?: boolean }): string {
+  if (h.unitNumber && !h.theoHang) return moCot(q, { ma: h.unitNumber, toa: h.buildingName, lan: h.id });
   const m = new URLSearchParams(dongCot(q));
   m.set("hang", h.id);
   return m.toString();
@@ -82,12 +86,16 @@ export function timCan(ds: readonly ListingView[], ma: string, toa: string | nul
 
 // ——— Tìm hàng theo mã hàng ———
 
-export type KetQuaHang = { kind: "chua-ma"; hang: ListingView } | { kind: "co-ma"; chon: ChonCan } | { kind: "khong" };
+export type KetQuaHang = { kind: "chua-ma"; hang: ListingView } | { kind: "khong-toa"; hang: ListingView } | { kind: "co-ma"; chon: ChonCan } | { kind: "khong" };
 
-/** Hàng của `?hang=` trên kho trên máy: chưa có mã thì hồ sơ của hàng; đã có mã thì hồ sơ theo căn như mọi hàng. */
+/**
+ * Hàng của `?hang=` trên kho trên máy: hàng không toà (lô, ngoài khu — hàng 79) là hồ sơ theo hàng có mã của nó; căn hộ chưa
+ * có mã thì hồ sơ của hàng; đã có mã thì hồ sơ theo căn như mọi hàng.
+ */
 export function timHang(ds: readonly ListingView[], id: string): KetQuaHang {
   const h = ds.find((l) => l.id === id);
   if (!h) return { kind: "khong" };
+  if (!h.buildingName && (h.blockName || h.subdivisionName || h.offCompoundUnitId)) return { kind: "khong-toa", hang: h };
   return h.unitNumber ? { kind: "co-ma", chon: { ma: h.unitNumber, toa: h.buildingName, lan: h.id } } : { kind: "chua-ma", hang: h };
 }
 
@@ -145,6 +153,45 @@ export function thuocTinh(dm: CatalogData | null, toa: string, ma: string): Thuo
       ["Khu", khu.subdivisionName],
       // Danh mục máy khách đọc (`GET /api/v1/catalog`) có thể chưa mang loại hình — khi vắng thì «—», không đoán.
       ["Loại hình", u.propertySubType ? (LOAI_HINH[u.propertySubType] ?? u.propertySubType) : "—"],
+    ],
+  };
+}
+
+/** Trường thuộc tính theo loại hình, đúng thứ tự hiện (hàng 79): nhãn · cột của bảng loại hình · định dạng. */
+const TRUONG_LOAI_HINH: readonly [string, string, (v: number | string) => string][] = [
+  ["Diện tích đất", "lotSizeArea", (v) => `${so.format(Number(v))} m²`],
+  ["Diện tích sàn", "livingArea", (v) => `${so.format(Number(v))} m²`],
+  ["Số tầng", "storiesTotal", (v) => String(v)],
+  ["Mặt tiền", "frontageLength", (v) => `${so.format(Number(v))} m`],
+  ["Lộ giới", "accessRoadWidth", (v) => `${so.format(Number(v))} m`],
+  ["Phòng ngủ", "unitType", (v) => String(v)],
+  ["Hướng", "directionFaces", (v) => String(v)],
+];
+
+/**
+ * Thuộc tính của hàng không toà (lô, ngoài khu — hàng 79): Loại hình rồi đúng các trường loại hình ấy dùng theo bảng của lõi
+ * (đất: Diện tích đất, Mặt tiền, Lộ giới — không Tầng, Trục, Toà). Trường dùng mà nguồn chưa có là «—». Không thấy loại
+ * hình → «ngoài danh mục». Khoá, không sửa.
+ */
+export function thuocTinhKhongToa(idx: ChiMucDanhMuc, h: ListingView): ThuocTinh {
+  const t = thuocTinhHang(idx, h);
+  const sub = t.propertySubType;
+  if (!sub) return { kind: "ngoai-danh-muc" };
+  const gt: Record<string, number | string | null> = {
+    lotSizeArea: t.lotSizeArea,
+    livingArea: t.livingArea,
+    storiesTotal: t.storiesTotal,
+    frontageLength: t.frontageLength,
+    accessRoadWidth: t.accessRoadWidth,
+    unitType: t.unitType && t.unitType !== "Chưa rõ" ? t.unitType : null,
+    directionFaces: t.directionFaces,
+  };
+  return {
+    kind: "co",
+    khu: h.subdivisionName ?? "",
+    truong: [
+      ["Loại hình", nhanLoaiHinh(sub)],
+      ...TRUONG_LOAI_HINH.filter(([, cot]) => loaiDungCot(sub, cot)).map(([nhan, cot, f]): [string, string] => [nhan, gt[cot] === null || gt[cot] === undefined ? "—" : f(gt[cot]!)]),
     ],
   };
 }

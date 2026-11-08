@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 
 
 import { useBoDongBo, useDanhSachHang } from "@/lib/sync/react";
 import type { ListingView } from "@/lib/sync/types";
-import { useDanhMuc } from "../../inventory/danh-muc";
+import { useCanNgoaiKhu, useDanhMuc } from "../../inventory/danh-muc";
 import { ngheKho } from "../../today/mobile/kho";
 import { type Dich } from "../ready/san-sang";
 import { NutSanSang } from "../ready/nut-san-sang";
@@ -72,23 +72,27 @@ export function CotHoSo(props: HoSoProps) {
   }, [sang]);
   if (!laChonHang(chon)) return <HoSoCan {...props} chon={chon} />;
   if (theoHang?.kind === "co-ma") return <HoSoCan {...props} chon={theoHang.chon} />;
+  // Hàng không toà (lô, ngoài khu — hàng 79): hồ sơ theo hàng, mã của nó là tên hồ sơ.
+  if (theoHang?.kind === "khong-toa") return <HoSoCan {...props} chon={{ ma: theoHang.hang.unitNumber ?? "", toa: null, lan: chon.hang }} khongToa={theoHang.hang} />;
   return <HoSoCan {...props} chon={{ ma: "", toa: null, lan: chon.hang }} chuaMa={theoHang?.kind === "chua-ma" ? theoHang.hang : null} />;
 }
 
-function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa, cho = "toan-man" }: Omit<HoSoProps, "chon"> & { chon: ChonCan; chuaMa?: ListingView | null }) {
+function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa, khongToa, cho = "toan-man" }: Omit<HoSoProps, "chon"> & { chon: ChonCan; chuaMa?: ListingView | null; khongToa?: ListingView | null }) {
   const { bd, vai } = useBoDongBo();
   const ds = useDanhSachHang();
   const ngan = bd.ngan();
   const ngoaiTuyen = useNgoaiTuyen();
   const danhMuc = useDanhMuc(san);
+  const ngoaiKhu = useCanNgoaiKhu(san);
   const than = useThan(cho);
   // Mọi lần rao của căn (để kéo lịch sử ở nền) — cùng luật tìm của mô hình.
   const ids = useMemo(() => {
+    if (khongToa) return khongToa.id;
     if (chuaMa) return chuaMa.id;
     if (chuaMa === null) return "";
     const tim = timCan(ds, chon.ma, chon.toa);
     return tim.kind === "mot" ? cacLanRao(ds, tim.toa, chon.ma, {}).map((r) => r.id).join(",") : "";
-  }, [ds, chon.ma, chon.toa, chuaMa]);
+  }, [ds, chon.ma, chon.toa, chuaMa, khongToa]);
 
   // Kéo lịch sử mọi lần rao của căn ở nền (thường một, hai lần): lần rao xếp theo lúc tạo, lịch sử của lần đang xem.
   // Lần rao đã có lượt kéo xong (thành hay không): chưa có thì phần lịch sử đang tải.
@@ -109,7 +113,7 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa, cho = "toan-man" }
     };
   }, [bd, ids]);
 
-  const m = moHinhHoSo({ nguoi, vai, ds, ngan, danhMuc, chon, chuaMa, daKeo, thieuCua, ngoaiTuyen, dongHref, duong });
+  const m = moHinhHoSo({ nguoi, vai, ds, ngan, danhMuc, chon, chuaMa, khongToa, ngoaiKhu, daKeo, thieuCua, ngoaiTuyen, dongHref, duong });
   // Nút cần bộ đồng bộ dựng ở đây rồi trao vào khe của thân: «Sẵn sàng bán» nằm trong mục «Lần rao đang mở» của thân.
   let khe: KheHoSo = { sanSang: null, oMa: null };
   if (m.kind === "co") {

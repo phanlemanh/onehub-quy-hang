@@ -107,7 +107,7 @@ export function ThanDienThoai({ m, khe, hd, anh, urlAnh }: { m: MoHinhHoSo; khe:
         <div className="relative">
           <AnhLon anh={anh} co={m.co} urlAnh={urlAnh} />
           {/* Chụp ảnh khi đi xem nhà (hàng 41): chỉ khi API ảnh cho sửa — người giữ căn và trưởng nhóm. */}
-          {coNutChup(anh, !!chuaMa) ? <ChupAnh toa={m.toa} ma={m.ma} thayNoiBo={anh.kind === "co" && anh.ds.noiBo === "thay"} /> : null}
+          {coNutChup(anh, !!chuaMa || !!m.khongToa) ? <ChupAnh toa={m.toa} ma={m.ma} thayNoiBo={anh.kind === "co" && anh.ds.noiBo === "thay"} /> : null}
         </div>
         <div className="flex flex-col gap-1" data-khoi="ten">
           <div className="flex min-h-7 items-center justify-between gap-2">
@@ -219,7 +219,13 @@ export function ThanDienThoai({ m, khe, hd, anh, urlAnh }: { m: MoHinhHoSo; khe:
       </Muc>
       <Separator />
       <Muc tieuDe="Ảnh" id={NEO_MUC_ANH} muc="anh" khoi="muc">
-        {chuaMa ? <p className="text-sm text-muted-foreground">Ảnh gắn theo toà và mã căn — gắn mã căn rồi tải ảnh.</p> : <MucAnhCan toa={m.toa} ma={m.ma} />}
+        {chuaMa ? (
+          <p className="text-sm text-muted-foreground">Ảnh gắn theo toà và mã căn — gắn mã căn rồi tải ảnh.</p>
+        ) : m.khongToa ? (
+          <p className="text-sm text-muted-foreground">Ảnh gắn theo toà và mã căn — hàng lô, hàng ngoài khu chưa gắn ảnh.</p>
+        ) : (
+          <MucAnhCan toa={m.toa} ma={m.ma} />
+        )}
       </Muc>
       <Separator />
       <Muc tieuDe="Lịch sử" muc="lich-su" khoi="muc" phai={m.ttls.kind === "tren-may" ? <span className="text-xs text-muted-foreground">{m.ttls.chu}</span> : null}>
@@ -235,7 +241,7 @@ export function ThanDienThoai({ m, khe, hd, anh, urlAnh }: { m: MoHinhHoSo; khe:
 /** Thân điện thoại nối API ảnh: danh sách ảnh của căn đọc đúng đường của mục Ảnh. */
 export function ThanDienThoaiCan({ m, khe, hd }: { m: MoHinhHoSo; khe: KheHoSo; hd: HanhDongHoSo }) {
   const toa = m.kind === "co" ? m.toa : "";
-  const ma = m.kind === "co" && !m.chuaMa ? m.ma : null;
+  const ma = m.kind === "co" && !m.chuaMa && !m.khongToa ? m.ma : null;
   const anh = useAnhCan(toa, ma);
   const urlAnh = (id: string) => nguonApi(toa, ma ?? "").urlAnh(id, "original");
   return <ThanDienThoai m={m} khe={khe} hd={hd} anh={anh} urlAnh={urlAnh} />;

@@ -36,6 +36,12 @@ export const COT_BANG_HANG = {
   closeDate: { nhan: "Ngày bán", khoa: null },
   withdrawnReason: { nhan: "Lý do ngừng", khoa: null },
   holderName: { nhan: "Người giữ", khoa: null },
+  // Hàng 79 (bang-hang-theo-loai-hinh): năm cột loại hình của Bảng hàng — chưa ra ngoài; cho ra là việc của hàng 80 (LH10).
+  propertySubType: { nhan: "Loại hình", khoa: null },
+  lotSizeArea: { nhan: "Diện tích đất", khoa: null },
+  storiesTotal: { nhan: "Số tầng", khoa: null },
+  frontageLength: { nhan: "Mặt tiền", khoa: null },
+  accessRoadWidth: { nhan: "Lộ giới", khoa: null },
 } as const satisfies Record<string, DinhNghiaCot>;
 
 export type CotBangHang = keyof typeof COT_BANG_HANG;
