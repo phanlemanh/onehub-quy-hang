@@ -3,7 +3,7 @@
 //   node _acceptance/chu-san-du-vai/thu/dung-q.mjs          # dựng (chạy lại: dùng lại máy dev của cây này)
 //   node _acceptance/chu-san-du-vai/thu/dung-q.mjs --tat    # tắt máy dev theo PID đã ghi (luật đợt 8: không pkill)
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, openSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, openSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
@@ -37,6 +37,19 @@ if (process.argv.includes("--tat")) {
   }
   process.exit(0);
 }
+
+// Hai bài nhìn màn có thể chạy cùng lúc trong lượt chấm: xếp hàng bằng thư mục khoá để không nạp mẫu và bật máy dev hai lần.
+const KHOA = path.join(NGOAI, "dung.khoa");
+for (let i = 0; ; i++) {
+  try {
+    mkdirSync(KHOA);
+    break;
+  } catch {
+    if (i >= 480) throw new Error(`chờ khoá dựng quá lâu: ${KHOA}`);
+    await ngu(500);
+  }
+}
+process.on("exit", () => rmSync(KHOA, { recursive: true, force: true }));
 
 const song = async () => {
   try {
