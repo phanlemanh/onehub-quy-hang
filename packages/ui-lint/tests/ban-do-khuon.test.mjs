@@ -74,9 +74,6 @@ const BANG = {
       `${W}/app/(app)/leads/mine/page.tsx`,
       `${W}/app/(app)/leads/new/page.tsx`,
       `${W}/app/(app)/me/page.tsx`,
-      `${W}/app/(app)/proto/anh-can-ba-ngan/page.tsx`,
-      `${W}/app/(app)/proto/cot-ho-so-can/page.tsx`,
-      `${W}/app/(app)/proto/nhanh-tuc-thi/page.tsx`,
       `${W}/app/(app)/settings/[section]/page.tsx`,
       `${W}/app/(app)/settings/ai/page.tsx`,
       // Hàng 44: màn Trang môi giới rời trang tạm.
@@ -196,7 +193,7 @@ const NHAN_DIEN_TRANG_THAI = [
   `${W}/app/layout.tsx`,
   `${W}/app/page.tsx`,
   ...["[section]/page.tsx", "ai/cong-tac.tsx", "ai/page.tsx", "dictionary/page.tsx", "dictionary/vung-tu-dien.tsx", "fees/bang-thue-phi.tsx", "fees/page.tsx", "fields/page.tsx", "fields/truong-rieng.tsx", "khung.tsx", "lead-routing/luat-chia-lead.tsx", "lead-routing/page.tsx", "page.tsx", "personal/ca-nhan.tsx", "statuses/anh-toi-thieu.tsx", "statuses/page.tsx", "statuses/trang-thai.tsx", "templates/bao-hong.tsx", "templates/page.tsx", "templates/vung-mau-bai.tsx", "templates/vung-mau-bang.tsx", "templates/vung-mau-nhap.tsx", "users/hop-mat-khau-tam.tsx", "users/page.tsx", "users/quan-nguoi.tsx"].map((p) => `${W}/app/(app)/settings/${p}`),
-  ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
+  ...["account-menu", "app-shell", "app-shell-dong-bo", "company-switcher", "dia-chi-mau", "home-rail", "menu-tao", "mobile-shell", "notifications", "placeholder", "second-column", "shell-layout", "unit-jump"].map(
     (p) => `${W}/components/shell/${p}.tsx`,
   ),
 ];
@@ -511,7 +508,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 28 ngoại lệ · 0 lệch",
+      "trang-tam: 2 tệp theo khuôn · 25 ngoại lệ · 0 lệch",
       "trang-thai: 176 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
