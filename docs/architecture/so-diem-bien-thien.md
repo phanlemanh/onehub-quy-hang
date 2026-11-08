@@ -116,6 +116,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | 32 | Sao cấu hình của một sàn mẫu cho sàn mới | Mới có một sàn | Đội vận hành mở sàn thứ hai thật | CH11 |
 | 34 | Bộ lựa chọn của danh sách hỏi (chế độ cuộc gọi): mặc định ở `DANH_SACH_HOI` (`listing/danh-sach-hoi.ts`), neo mã RESO khi có | Hàng 28 Hỏi-2: sàn ghi đè qua sổ từ vựng, chưa có | Sổ từ vựng (hàng 90) có | hàng 90 |
 | 35 | Tập căn đem so giá trong toà: cùng toà, cùng số phòng ngủ, nấc `SO_GIA_NAC` (Đang bán, Đang giao dịch) | Hàng 28 Hỏi-4: chưa sàn nào xin tập khác | Sàn thật xin so thêm nấc hay khác loại | — |
+| 38 | Cửa nhập file đòi pháp lý, tình trạng sử dụng khi lên Đang bán (mặc định tắt: cửa nhập bỏ hai điều kiện ấy — `MIEN_O_CUA_NHAP`, `listing/status.ts`) | Hàng can-nhap-len-bang-chung Hỏi-2: ngành để nơi đặt luật chọn điều kiện, chưa sàn nào xin giữ chặt | Một sàn thật xin cửa nhập vẫn đòi pháp lý | — |
 
 ## C. Khoá — khai để không ai hỏi lại
 
@@ -162,7 +163,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.
 - **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G). **Đã có trong mã ở hàng 23**: #33 và điều kiện K7 (máy chủ đọc #33; chưa có màn chỉnh).
-- **7 ứng viên** ở phần B (#34, #35 của hàng 28), **31 điều khoá** ở phần C (K27 của hàng 103, K28 của hàng bang-quyen-theo-vai, K29 của hàng 46, K30 của hàng thue-phi, K31 của hàng 47).
+- **8 ứng viên** ở phần B (#34, #35 của hàng 28, #38 của hàng can-nhap-len-bang-chung), **31 điều khoá** ở phần C (K27 của hàng 103, K28 của hàng bang-quyen-theo-vai, K29 của hàng 46, K30 của hàng thue-phi, K31 của hàng 47).
 - Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
   hay 48 gom vào; #33 (hàng 23) chưa có hàng màn — sàn nhận mặc định 1.

@@ -19,7 +19,7 @@ import { bamTep, docTep } from "@/lib/nhap/doc-tep";
 import { cotTheoMau, loiTheoCot, mauCot, nhanLop } from "@/lib/nhap/duong-ong";
 import { canHoi, cauChoDuyet, CHO_DE_XUAT, coTheTiepGhepAi, dongY, dongYHet, hoiDeXuat, khiDoiDich, lyDoKhongHoi, ttDau, type AiMan, type TrangThaiDeXuat } from "@/lib/nhap/de-xuat";
 import { canHoiOLa, CHO_O_LA, dungDeXuat, hoiOLa, lyDoKhongHoiOLa, tatO, ttOLaDau, type TrangThaiOLa } from "@/lib/nhap/o-la";
-import { batDauGhi, deXuatGhep, deXuatOLa, docDauChu, docMau, docTrangThaiAi, ghiTiep, laLoi, tienDoCho, tongGhi, xemThuTatCa, xongGhi, type LoiGoi, type TienDoGhi } from "@/lib/nhap/goi-api";
+import { batDauGhi, deXuatGhep, deXuatOLa, docDauChu, docMau, docTrangThaiAi, ghiTiep, laLoi, tienDoCho, tongGhi, trangThaiGhi, xemThuTatCa, xongGhi, type LoiGoi, type TienDoGhi } from "@/lib/nhap/goi-api";
 import {
   BUOC,
   boDong,
@@ -53,6 +53,7 @@ const DICH: LuaChon[] = [
 ];
 
 const homNay = () => new Date().toISOString().slice(0, 10);
+const viHoa = (c: string) => c.charAt(0).toUpperCase() + c.slice(1);
 const cauTong = (t: TongKet) => `${t.create} căn mới, cập nhật ${t.update}, tin bổ sung ${t.supplement}, bỏ ${t.skip}`;
 
 export function ManNhap({ vai }: { vai: string[] }) {
@@ -414,7 +415,7 @@ export function ManNhap({ vai }: { vai: string[] }) {
           <TrangThai
             kind="notice"
             title="Đã ghi vào Quỹ hàng"
-            description={`Ghi ${cauTong(tongGhi(ghi!))}. Căn mới ở trạng thái Chưa đủ để rao, «Chỉ tôi» của người nhập.`}
+            description={`Ghi ${cauTong(tongGhi(ghi!))}.${trangThaiGhi(ghi!) ? ` ${viHoa(trangThaiGhi(ghi!))}.` : ""} Căn ở Chưa đủ để rao là «Chỉ tôi» của người nhập; mục còn thiếu hiện ở Hôm nay.`}
             hanhDong={
               <Button type="button" variant="outline" onClick={() => setHoanTacId(ghi!.importId)}>
                 <Undo2Icon data-icon="inline-start" aria-hidden="true" />

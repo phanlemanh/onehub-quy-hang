@@ -1,0 +1,5 @@
+Verifier run 2026-11-08 (playwright, 1440/375, truong-nhom@mau.quy-hang.test)
+CPU 4x + latency150ms/1.6Mbps: /contacts and /contacts?type=Buyer, 8s idle after load
+- /contacts: requests to /api/v1/contacts = 0; only GET /api/v1/listings (shell search) ; rows=1
+- /contacts?type=Buyer: requests to /api/v1/contacts = 0; only GET /api/v1/listings ; rows=0
+Console errors (all session): 0. Failed app requests: none observed.

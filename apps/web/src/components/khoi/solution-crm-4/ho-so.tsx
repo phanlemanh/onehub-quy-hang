@@ -12,10 +12,27 @@ import { Separator } from "@/components/ui/separator";
 const TIEU_MUC = "text-xs font-medium uppercase tracking-wide text-muted-foreground";
 
 /**
- * Khung hồ sơ: toàn màn là một Frame (bố cục Hồ sơ căn giữa 48rem); cạnh bảng (`cot`) là một FramePanel cuộn trong cột phụ
- * của Danh sách – chi tiết. Các mảnh con xếp chồng, bố cục chèn đường kẻ giữa chúng.
+ * Khung cột phụ chung (hàng khung-ho-so-lien-he): một Frame dày cao hết cột kéo chia của «Danh sách – chi tiết», thân cuộn
+ * riêng — hồ sơ căn cạnh Bảng hàng (`KhungHoSoCan cotPhu`) và hồ sơ liên hệ cùng dựng qua đây. Con đặt nguyên (không bọc
+ * ThanHoSo) để mỗi hồ sơ giữ thân của mình.
  */
-export function KhungHoSo({ cot = false, nhan = "Hồ sơ", children }: { cot?: boolean; nhan?: string; children: ReactNode }) {
+export function KhungCotPhu({ nhan, children }: { nhan: string; children: ReactNode }) {
+  return (
+    <Frame dense className="h-full min-h-0 w-full">
+      <FramePanel className="flex min-h-0 flex-1 flex-col overflow-y-auto p-0" aria-label={nhan} data-slot="cot-ho-so">
+        {children}
+      </FramePanel>
+    </Frame>
+  );
+}
+
+/**
+ * Khung hồ sơ: toàn màn là một Frame (bố cục Hồ sơ căn giữa 48rem); cạnh bảng (`cot`) là một FramePanel cuộn trong cột phụ
+ * của Danh sách – chi tiết; cột kéo chia (`cotPhu`) là khung cột phụ chung `KhungCotPhu`. Các mảnh con xếp chồng, bố cục
+ * chèn đường kẻ giữa chúng.
+ */
+export function KhungHoSo({ cot = false, cotPhu = false, nhan = "Hồ sơ", children }: { cot?: boolean; cotPhu?: boolean; nhan?: string; children: ReactNode }) {
+  if (cotPhu) return <KhungCotPhu nhan={nhan}>{children}</KhungCotPhu>;
   const than = <ThanHoSo>{children}</ThanHoSo>;
   if (cot)
     return (

@@ -1,0 +1,17 @@
+# Bộ đo của hàng va-nut-ci-ag-root. Chỉ đọc cây kho; kit, kho tạm và HOME rỗng ở thư mục tạm của hệ điều hành.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/va-nut-ci-ag-root/thu/kiem-ag-root.mjs --chay
+    paths: [".github/workflows/ghim-lai-ban-that.yml", "_acceptance/va-nut-ci-ag-root/thu/**"]
+    expected: "exit 0; «ĐẠT bước lấy kit của luồng chạy được (thoát 0)», «ĐẠT dòng lệnh thật của bước «Ghim lại» với kit <KIT_TAG>, HOME rỗng, env của job + GITHUB_ENV + env của bước: làn chạy suite và eval (true), thoát 0», «ĐẠT làn ghi pin: run-log có dòng kind repin, không repin-do ([\"repin\"])», «ĐẠT đối chứng: bỏ --ag-root thì làn không tìm thấy kit, đỏ, không pin (thoát <khác 0>)»; trên cây trước hàng in «HỎNG dòng lệnh thật … thoát 2», «HỎNG làn ghi pin … ([])» kèm dòng «no usable install of \"acceptance-gate\"»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-nut-ci-ag-root/thu/kiem-ag-root.mjs --tinh
+    paths: [".github/workflows/ghim-lai-ban-that.yml", "_acceptance/va-nut-ci-ag-root/thu/**"]
+    expected: "exit 0; «ĐẠT luồng thật: bước ghim lại trỏ --ag-root vào kit lấy theo tag» và bốn dòng «ĐẠT phá thử «<ca>» → hỏng đúng vế «<vế>»» cho «bỏ --ag-root», «--ag-root trỏ cây nhánh» (vế «bước ghim lại truyền --ag-root \"$CLAUDE_PLUGIN_ROOT\"»), «kit không lấy theo tag», «CLAUDE_PLUGIN_ROOT chỉ đặt ở env của bước lấy kit» (vế «CLAUDE_PLUGIN_ROOT là kit lấy theo KIT_TAG, ngoài cây kho, đặt qua GITHUB_ENV ở bước trước «Ghim lại»»); ca phá không áp được vào luồng in «ca phá thử «<ca>» lệch luồng»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

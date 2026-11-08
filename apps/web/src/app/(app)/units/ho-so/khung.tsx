@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { BoCuc } from "@/components/bo-cuc";
+import { KhungCotPhu } from "@/components/khoi/solution-crm-4/ho-so";
 import { Frame, FramePanel } from "@/components/reui/frame";
 
 // Khuôn của nhóm `ho-so-can` (design/patterns/ho-so-can.md): hồ sơ một căn toàn màn (`/units/<mã>`) dựng trong bố cục «Hồ
@@ -20,15 +21,8 @@ export function KhungHoSoCan({
   nhung?: boolean;
   children: ReactNode;
 }) {
-  if (cotPhu) {
-    return (
-      <Frame dense className="h-full min-h-0 w-full">
-        <FramePanel className="flex min-h-0 flex-1 flex-col overflow-y-auto p-0" aria-label="Hồ sơ căn" data-slot="cot-ho-so">
-          {children}
-        </FramePanel>
-      </Frame>
-    );
-  }
+  // Cột kéo chia: khung cột phụ chung của solution-crm-4 (hàng khung-ho-so-lien-he), cùng khung với hồ sơ liên hệ.
+  if (cotPhu) return <KhungCotPhu nhan="Hồ sơ căn">{children}</KhungCotPhu>;
   if (cot) {
     return (
       // eslint-disable-next-line quy-hang-ui/no-layout-arbitrary -- cột phải cuộn riêng trong Frame của Hôm nay, đầu chủ (trên máy tính): cao bằng phần còn lại của khung, không phải trang của hồ sơ
