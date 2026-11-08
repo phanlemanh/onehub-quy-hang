@@ -5,7 +5,7 @@ slug: khung-ho-so-lien-he
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-08-khung-ho-so-lien-he-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -102,3 +102,7 @@ Ngưỡng SỐNG ở `opportunity.md` (chép từ `bat_khi` của hàng). Mỗi 
 - Ngoài-7 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài tự kiểm bề rộng bảng dùng một con số chép tay cho phần vỏ quanh bảng. Nếu sau này vỏ rộng ra, bảng có thể bị hẹp mà bài kiểm vẫn không báo. — `apps/web/src/app/(app)/contacts/khung-ho-so.test.ts`
 - Ngoài-8 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm chỉ thử Esc trong menu, chưa thử riêng hộp chọn và hộp thoại. Nếu sau này ai đó làm hỏng phần đó, bài kiểm có thể không báo, và Esc có thể đóng hồ sơ nhầm. — `apps/web/src/app/(app)/contacts/khung-ho-so.test.ts`
 - Ngoài-9 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu sau này đổi tỉ lệ cột hồ sơ, bảng có thể hẹp lại và mất cột mà bài kiểm vẫn báo xanh. Hiện tại màn hình vẫn đúng. — `apps/web/src/app/(app)/contacts/khung-ho-so.test.ts`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-08:
+  - Ngoài-3: Bảng có thể kẹt ở «đang tải», lỗi hay trống khi quay lại bộ lọc cũ — đã sửa trước lượt 3 (fed3fec1), lượt 3 chấm trên bản sửa.
+  - Ngoài-4: Gõ rồi xoá ô tìm trong lúc đang đọc làm bảng kẹt ở đang tải — đã sửa trước lượt 3 (fed3fec1).
+  - Ngoài-5: Sau khi tìm theo số hay đọc lỗi, xoá ô tìm không hiện lại danh sách — đã sửa trước lượt 3 (fed3fec1).
