@@ -12,7 +12,7 @@ flowchart TD
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>24 việc"]
+  GB --> DG["Đã giao<br/>25 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>123 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
@@ -173,6 +173,7 @@ flowchart TD
 - Vá Che vùng ảnh — trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ (`va-che-vung-anh`)
 - Vá hai kẽ an toàn của mật khẩu do sàn cấp: người vào sàn khác thì phiên cũ cũng bị thu khi mật khẩu gốc sàn cấp bị vô hiệu; đổi mật khẩu ở Cá nhân đếm lần sai mật khẩu hiện tại chung bộ đếm với đăng nhập (`va-dang-nhap-mat-khau`)
 - Vá Điền mã căn — mã căn phải có ít nhất một chữ hay số; mã toàn dấu bị từ chối với lời báo rõ, không khoá hàng (`va-dien-ma-can-cho-hang`)
+- Phép nhìn khung 3 của bài E7 (màn Luật chia lead, cặp hạn hỏng) dựng lỗi bằng phản hồi do máy chủ viết thay cho câu lỗi gõ tay, nên khi chữ lỗi của máy chủ đổi thì phép nhìn đỏ theo. (`va-e7-loi-that-cap-han`) — đã giao — máy thông, bằng chứng xanh-sạch
 - Vá Hệ bố cục — mỗi mục của Hôm nay ở cột thứ hai mở đúng chỗ của nó, mục chưa có chỗ thì báo rõ, không mục nào bấm mà không phản hồi (`va-he-bo-cuc`)
 - Vá hàng 85 «Liên hệ» — ca cách ly cho bảng nối lead với hàng, và hàng tạo từ lead báo «chưa có chủ nhà» thay vì trả tên trống (`va-lien-he`)
 - Vá nút «Gửi căn» (hàng 36 Đã gửi, hàng 37 Hôm nay Đầu khách): ở trạng thái trống, bấm «Gửi căn» mở Bảng hàng (dạng thẻ trên điện thoại) thay vì trang «Không thấy trang này»; có bài kiểm giữ mọi link nội bộ trỏ tới đường có trang (`va-link-gui-can`) — đã giao — máy thông, cửa veto còn mở
