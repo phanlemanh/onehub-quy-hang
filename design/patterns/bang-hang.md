@@ -9,7 +9,6 @@ cam_ngoai_khuon: [Frame, FrameHeader, Card, Placeholder]
 ngoai_le: []
 luat: [KH-bh-mot-khung, KH-bh-tren-may, KH-bh-chi-doc]
 bo_cuc: danh-sach-chi-tiet
-ngoai_le_han: [{ tep: "apps/web/src/app/(app)/proto/nhanh-tuc-thi/page.tsx", han: bang-hang-theo-loai-hinh, ly_do: "Trang thử của bộ đồng bộ, gỡ hay chuyển ở hàng 79." }]
 ---
 # Bảng hàng
 

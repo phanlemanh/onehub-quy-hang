@@ -48,7 +48,7 @@ test("E7b danh sách căn ngoài khu: mỗi sàn đúng căn của mình, đúng
     assert.deepEqual(Object.keys(d).sort(), ["id", "propertySubType", "unparsedAddress"], `dòng ${i} có khoá ngoài ba khoá`);
     for (const k of SOURCE_KEYS) assert.equal(k in d, false, `dòng ${i} mang khoá nguồn ${k}`);
   }
-  assert.deepEqual(da.map((d) => [d.propertySubType, d.unparsedAddress]).sort(), CAN_A.map(([l, dc]) => [l, String(ca.find((c) => c.propertySubType === l)!.unparsedAddress)]).sort());
+  assert.deepEqual(da.map((d) => [d.propertySubType, d.unparsedAddress]).sort(), CAN_A.map(([l]) => [l, String(ca.find((c) => c.propertySubType === l)!.unparsedAddress)]).sort());
   assert.ok(CAN_A.every(([, dc]) => ca.some((c) => String(c.unparsedAddress).includes(dc.split(",")[0]!))), "địa chỉ đã gõ không giữ số nhà và tên đường");
 
   const rb = await doc(b);
