@@ -1,23 +1,4 @@
 {
   "feature_plain": "Bấm nút «Ghim lại hồ sơ cần bản thật» trên GitHub sẽ không còn đỏ vì máy chủ thiếu công cụ quét bí mật (gitleaks): nút tự cài đúng bản công cụ mà CI đang dùng, kiểm tệp tải về, rồi mới chạy lượt ghim lại.",
-  "will_do": [
-    { "id": "AC-1", "p": "Sẽ thêm vào nút một bước cài công cụ quét bí mật, đúng bản CI đang dùng, kiểm tệp tải về trước khi mở, đứng trước bước «Ghim lại», và không mang bí mật nào — chín bản luồng cố ý làm sai phải bị bắt đúng chỗ sai." },
-    { "id": "AC-2", "p": "Sẽ chạy thử bước cài y như máy chủ GitHub: cài được đúng bản cho máy chủ, và tệp tải về sai một ký tự băm thì bước dừng, không cài gì." },
-    { "id": "AC-3", "p": "Sẽ chứng rằng lần bấm đỏ hôm 08/11 chỉ thiếu đúng công cụ này: bài tự kiểm của rào trên máy chấm tái hiện từng dòng của lần đỏ ấy khi thiếu công cụ, và xanh hết khi có." }
-  ],
-  "wont_do": [
-    { "id": "OOS-1", "p": "Không sửa các phép đo môi trường bản thật còn đỏ ở lần bấm ấy — đó là câu về sàn không mang nhãn mẫu đang chờ anh ở #192." },
-    { "id": "OOS-2", "p": "Không đổi luồng CI chung, bài tự kiểm của rào, bản kit, bộ chặn, bộ quét hay cấu hình nghiệm thu." },
-    { "id": "OOS-3", "p": "Không sửa hợp đồng hay phép đo của hai hồ sơ đã ký cùng đo luồng nút — chỉ ghim lại bằng chứng của chúng (Hỏi-3)." }
-  ],
-  "coverage_plain": [
-    { "i": 0, "p": "Phủ ba chỗ: bước cài được khai đúng trong luồng (AC-1, chín bản cố ý làm sai, kể cả một bản sai hai chỗ cùng lúc), bước cài chạy được và chặn tệp sai băm (AC-2), và lần đỏ cũ được giải hết bằng công cụ này (AC-3, so từng dòng với nhật ký lần bấm 08/11)." }
-  ],
-  "gap_probe_plain": [
-    { "i": 0, "p": "P0: máy tự quyết việc ghim lại hai hồ sơ đã ký dựa vào một câu anh chốt cho hàng khác — đã đổi thành câu hỏi Hỏi-3 cho anh, và ghi rõ giám sát đã cấp quyền chạm hồ sơ va-nut-ci-ag-root." },
-    { "i": 1, "p": "P0: máy tự quyết cách đo trước gộp dựa vào tiền lệ, trong khi vẫn có lối chạy thử trên máy chủ ubuntu thật — đã đổi thành câu hỏi Hỏi-2, nêu giá của cả hai lối." },
-    { "i": 2, "p": "P1: bảng ca cố ý làm sai chỉ xét chỗ sai đầu tiên, nên một bản sai hai chỗ vẫn lọt — đã sửa: chấm đủ năm điều kiện, so đúng tập chỗ sai, thêm ca sai kép." },
-    { "i": 3, "p": "P1: lời hứa «không còn chỗ đỏ thứ hai» chưa được so với nhật ký thật của máy chủ — đã sửa: ghim nguyên văn nhật ký lần bấm 08/11 và so từng dòng." },
-    { "i": 4, "p": "P2: điều kiện «không mang bí mật» chỉ nhìn chính bước cài — đã sửa: xét cả biến của cả job và biến bước trước truyền sang, thêm ca bí mật đặt ở cấp job." }
-  ]
+  "scope_plain": "Ba điều đã chốt bỏ ngoài ở Cổng Phạm vi, giữ nguyên:"
 }
