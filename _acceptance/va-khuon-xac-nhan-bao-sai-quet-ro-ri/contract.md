@@ -5,10 +5,10 @@ slug: va-khuon-xac-nhan-bao-sai-quet-ro-ri
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-08-va-khuon-xac-nhan-bao-sai-quet-ro-ri-design.md
-approved_by:
-approved_at:
+approved_by: Manh Phan
+approved_at: 2026-11-08T21:46:51Z
 ---
 
 # Acceptance Contract: va-khuon-xac-nhan-bao-sai-quet-ro-ri
