@@ -44,3 +44,12 @@ chưa loại kết nối nào ràng «chỉ một lớp».
 - Hộp thư đi, API kéo, gom lô làm mờ giờ (hàng 97); token máy (96); bật / tắt theo sàn và nhật ký (98); sinh sự kiện từ
   công việc (100, 101).
 - Toà ngoài danh mục, tầng tên chữ, khung thấp tầng — phiên bản khuôn sau.
+
+## Sửa đổi 09/11 (hàng va-khuon-xac-nhan-bao-sai-quet-ro-ri)
+
+Không đổi hình khuôn v1, chỉ thêm giá trị bị từ chối. **Hai luật theo nguồn của chuỗi:** mã người gõ (`unitNumber`,
+`correctValue` dạng mã căn) cấm mọi dãy từ 9 chữ số nối nhau; khoá máy cấp (`buildingKey`, `upi`) chỉ cấm khi cả một đoạn
+(phân cách bằng `:` hay `_`) là 9–11 chữ số. Không dùng một luật vì ULID của Invest cỡ 1/2000 khoá có 9 chữ số liền. Phần
+dư đã chọn: số nhúng liền chữ trong một đoạn khoá (`x0900000071`) vẫn qua khuôn; hàm dựng vẫn đòi khoá có trong danh mục.
+**Căn UPI lạ:** khuôn chiều vào giữ nguyên, sàn gặp căn như vậy không báo sai được và thấy lý do «UPI ngoài dạng»; chỉ
+Invest sửa được nguồn.

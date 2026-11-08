@@ -6,3 +6,7 @@ packages/connect/src/catalog-confirmation.example.json:generic-api-key:26
 packages/connect/src/catalog-confirmation.example.json:generic-api-key:27
 packages/connect/src/catalog-confirmation.example.json:generic-api-key:41
 packages/connect/src/catalog-confirmation.example.json:generic-api-key:42
+# Báo nhầm generic-api-key (hàng va-khuon-xac-nhan-bao-sai-quet-ro-ri, yêu cầu G-36): khoá mẫu dạng bld_<ULID> do phép đo E7 ghim — không phải bí mật. Chỉ đúng ba dòng.
+packages/connect/src/catalog-confirmation.test.ts:generic-api-key:283
+packages/connect/src/catalog-confirmation.test.ts:generic-api-key:284
+packages/connect/src/catalog-confirmation.test.ts:generic-api-key:341

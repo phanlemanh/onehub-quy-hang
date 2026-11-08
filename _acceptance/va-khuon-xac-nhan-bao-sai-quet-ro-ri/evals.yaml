@@ -1,0 +1,53 @@
+schema_version: 1
+feature_slug: va-khuon-xac-nhan-bao-sai-quet-ro-ri
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` có tên ca, «ok», không SKIP/TODO; ma trận viết trước, số lần so đếm bằng biến và so với độ dài ma trận.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «báo sai: UPI ngoài dạng bị từ chối» có mặt và ok — danh mục mẫu đổi UPI của căn A-01.01 theo ma trận viết trước ba phần tử (urn:onehub:upi:mau/A-01.01, urn:onehub:upi:mau A 01, urn:onehub:upi:mau#01), số lần so bằng 3: ok false, có lỗi truong 'upi'; đối chứng dương trên cùng căn với UPI đúng dạng: ok true. Chiều đỏ: gỡ kiểm MAU_UPI trong dungBaoSai → phần tử đầu đỏ nêu UPI."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «mọi sự kiện hàm dựng nhận đều qua khuôn» có mặt và ok — ma trận viết trước danh mục lạ (ba UPI của E1, UPI urn:onehub:upi:0900000071, khoá toà 'toa/1', 'toa 1', '0900000071', 'bld_0900000071', và mã căn 090.000.0071 ở unitNumber) × ba hàm dựng; mỗi kết quả ok true thì parseCatalogConfirmation ok true; biến đếm số kết quả ok true lớn hơn 0 nhờ một phần tử đối chứng đúng dạng, số lần chạy bằng độ dài ma trận × 3. Chiều đỏ: gỡ kiểm MAU_UPI trong dungBaoSai → ca đỏ nêu UPI và đường lỗi upi."
+    paths: [packages/core/src/confirmation/**, packages/connect/src/catalog-confirmation*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «rò rỉ: mồi đi qua đường dựng» có mặt và ok — danh sách khoá mồi GHIM TRƯỚC trong tệp kiểm (mọi khoá LOP_TRUONG lớp khác catalog có giá trị chuỗi ≥ 4 ký tự, số ≥ 1.000.000 hay số điện thoại trong canMoi(), gồm floorPrice, ownerPhone, closePrice); biến đếm mồi có giá trị bằng độ dài danh sách; một hàm quét duy nhất quetRoRi: đường danh mục — mọi mồi gắn trên căn và toà của danh mục, ba hàm dựng ok true, timRoRi trên JSON từng sự kiện rỗng; đường đầu vào — mọi mồi gắn vào đầu vào, ba hàm dựng ok false nêu khoá lạ. Chiều đỏ ở E4."
+    paths: [packages/core/src/confirmation/**, packages/core/src/redaction/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «rò rỉ: cấy lỗi vào bản sao hàm dựng thì phép quét đỏ» có mặt và ok — ma trận viết trước bảy phép cấy trên bản sao dung.ts ở thư mục tạm (ba hàm dựng × hai đường: trải căn hay toà của danh mục vào sự kiện và bỏ lọc khoá · trải đầu vào vào sự kiện và tắt từ chối khoá lạ; và gán ownerPhone của căn vào unitNumber), số lần so bằng 7: mỗi bản cấy chạy đúng hàm quét của E3 và trả danh sách rò có tên trường mong đợi viết trước; mỗi phép cấy kiểm neo có trong mã nguồn và mã sau cấy khác mã gốc; đối chứng cùng hàm quét trên bản sao không cấy trả rỗng; git status của cây không đổi sau ca. Chiều đỏ: neo đổi tên → ca đỏ nêu neo."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «quét cả lớp: mọi nút chuỗi chặn mồi» có mặt và ok — đi cây CatalogConfirmation liệt mọi nút chuỗi kèm đường, số nút bằng số viết trước; mỗi nút chạy ma trận tám mồi viết trước (câu có khoảng trắng, 0900000071, 090.000.0071, 0900-000-071, 090_000_0071, 090/000/0071, 0900 000 071, +84900000071; nút UPI bọc tiền tố urn:onehub:upi:), số lần so bằng số nút × 8, mỗi lần safeParse thất bại nêu đường nút; giá trị đúng dạng viết trước của từng nút safeParse thành công; đối chứng âm: khuôn thử có z.string().regex(/^.*$/) bị hàm quét gọi tên đường ấy. Chiều đỏ: bỏ luật dáng số điện thoại ở mã căn → mồi 090.000.0071 đỏ nêu đường unitNumber."
+    paths: [packages/connect/src/catalog-confirmation*, packages/core/src/confirmation/dang-dong.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «quét cả lớp: hàm dựng chặn mồi ở mọi chuỗi đầu vào» có mặt và ok — ma trận viết trước chín trường × tám mồi của E5 (unitNumber, directionFaces, stack, stacks, correctValue với field unitNumber, correctValue với field stack, correctValue với field directionFaces, buildingKey, upi — mồi khoá toà và UPI được cấy vào chính danh mục để qua bước tra), số lần so bằng 72: ok false, có lỗi truong đúng trường viết trước; với buildingKey, upi thongDiep chứa «dạng», không phải «không có trong danh mục»; đối chứng dương giá trị đúng dạng từng trường ok true; ca biên «mã căn: 8 số có dấu nối qua, 9 số bị chặn» có mặt và ok — '12.34.56.78' ok true, '12.34.56.789' ok false, số lần so bằng 2. Chiều đỏ: gỡ kiểm MAU_DOAN_SDT ở hàm dựng → mồi upi đỏ nêu trường."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khoá dạng thật không bị từ chối oan» có mặt và ok — ba khoá viết trước (bld_01JC8R4ZQK0123456789ABCDEF, bld_0123456789012345678901ABCD, urn:onehub:upi:1:VN:VN-HN:bld_0123456789012345678901ABCD) qua nút buildingKey hay upi thành công; ca «khoá máy cấp: đoạn số điện thoại bị chặn» có mặt và ok — bld_0900000071 ở buildingKey và urn:onehub:upi:1:VN:VN-HN:0900000071 ở upi bị từ chối, còn phần dư đã chọn x0900000071 ở buildingKey qua (ghim hành vi Hỏi-1), số lần so bằng 3; mọi căn của danhMuc trong packages/db/seed/mau/du-lieu-mau.json dựng được thuộc tính căn và qua khuôn, biến đếm bằng tổng số căn đếm từ tệp. Chiều đỏ: áp luật 9 số liền cho buildingKey → khoá thứ hai đỏ."
+    paths: [packages/connect/src/catalog-confirmation*, packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
