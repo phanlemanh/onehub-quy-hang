@@ -33,7 +33,7 @@ const doc = async (s: San, k = "dc") => send("GET", CAN, undefined, ck(s, k));
 test("E7b danh sách căn ngoài khu: mỗi sàn đúng căn của mình, đúng ba khoá, không khoá nguồn", async () => {
   const a = await sanMoi(VAI);
   const b = await sanMoi(VAI, 60);
-  const ca = [];
+  const ca: Record<string, unknown>[] = [];
   for (const c of CAN_A) ca.push(await tao(a, c));
   const cb = await tao(b, CAN_B);
 
