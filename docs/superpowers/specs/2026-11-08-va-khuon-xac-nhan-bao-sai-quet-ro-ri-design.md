@@ -42,6 +42,8 @@ Lỗ thật phép quét sẽ bắt: mã căn `090.000.0071` lọt (`\d{8,}` ch�
 Vì sao không dùng một luật: khoá thật của Invest là `bld_<ULID>` và `urn:onehub:upi:1:VN:<tỉnh>:<khoá toà>`. ULID có 26 ký
 tự, xác suất chứa 9 chữ số liền cỡ 1/2000 — luật chung sẽ làm một căn thật không báo sai được, không ai giải thích nổi.
 
+*Điều chỉnh ở bước kế hoạch (09/11):* bảng trên ghi dấu nối `.-/` cho khoá máy cấp, nhưng AC-5, AC-6 đòi chặn cả `090_000_0071`, nên `_` vừa là dấu phân đoạn vừa là dấu nối trong dãy số (sổ S2).
+
 Hằng mới ở `dang-dong.ts` (`MAU_DANG_SDT`, `MAU_DOAN_SDT`), khuôn nhập từ đó. Hàm dựng kiểm dạng **trước** khi tra danh mục, lỗi dạng có thông điệp riêng với lỗi «không có trong danh mục». Phần dư đã biết: số nhúng liền chữ trong một đoạn khoá máy cấp (`x0900000071`) vẫn qua khuôn; hàm dựng vẫn đòi khoá ấy có trong danh mục dùng chung.
 
 ## 4. Ngoài phạm vi
