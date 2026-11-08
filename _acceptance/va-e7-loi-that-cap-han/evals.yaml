@@ -14,9 +14,8 @@ evals:
     executor: script
     cmd: node _acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs --doi-cau
     long_running: 30
-    expected_exit: 1
     paths: ["_acceptance/va-e7-loi-that-cap-han/thu/**", "packages/core/src/config/**"]
-    expected: "exit 1 với «khung 3 ĐỎ: màn không báo «chưa áp» nêu «Hạn gọi lần đầu» với lỗi thật của máy chủ»; dòng khung 3 có errors từ GET thật [«cặp hạn trái luật — cặp về mặc định»] (bản sao cây, câu lỗi bỏ tên khoá) và toast «Đã lưu». Đo 08/11: đúng như vậy."
+    expected: "exit 0 với hai dòng cuối «khung 3 ĐỎ: màn không báo «chưa áp» nêu «Hạn gọi lần đầu» với lỗi thật của máy chủ» và «chiều đỏ ĐẠT: thước đỏ đúng như mong đợi» (chế độ chiều đỏ tự đảo mã: không đỏ thì exit 1 «chiều đỏ TRƯỢT», sập thì exit 2); dòng khung 3 có errors từ GET thật [«cặp hạn trái luật — cặp về mặc định»] (bản sao cây, câu lỗi bỏ tên khoá) và toast «Đã lưu». Đo 08/11: đúng như vậy."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E3
@@ -31,7 +30,6 @@ evals:
     criterion: AC-3
     executor: script
     cmd: node _acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs --nguon --tu 5b17fd36
-    expected_exit: 1
     paths: ["_acceptance/va-e7-loi-that-cap-han/thu/kiem-e7.mjs"]
-    expected: "exit 1 với «nguồn ĐỎ: còn phản hồi giả viết tay — /__traGia/, …» trên bản chay-ui.mjs của nhánh chính trước vòng (5b17fd36)."
+    expected: "exit 0 với «nguồn ĐỎ: còn phản hồi giả viết tay — /__traGia/, …» và «chiều đỏ ĐẠT: thước đỏ đúng như mong đợi» trên bản chay-ui.mjs của nhánh chính trước vòng (5b17fd36); không đỏ thì exit 1, ref không đọc được thì exit 2."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
