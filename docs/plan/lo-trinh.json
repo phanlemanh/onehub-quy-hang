@@ -2898,6 +2898,12 @@
         "packages/core/src/sharing/**",
         "apps/web/src/app/(app)/settings/templates/**"
       ]
+    },
+    {
+      "ma": "va-nut-ci-ag-root",
+      "cau_giao": "Nút «Ghim lại hồ sơ cần bản thật» truyền --ag-root trỏ kit lấy theo tag cho làn ghim lại, để làn chạy được trên máy chủ GitHub không cài kit; kèm một phép đo chạy làn ghim lại giống CI (không có kit cài sẵn) để lỗi kiểu này không lọt nữa.",
+      "slug": "va-nut-ci-ag-root",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
     }
   ],
   "chan_troi": [
