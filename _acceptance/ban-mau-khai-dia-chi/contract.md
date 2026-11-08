@@ -5,7 +5,7 @@ slug: ban-mau-khai-dia-chi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-08-ban-mau-khai-dia-chi-design.md
 approved_by:
 approved_at:
@@ -93,3 +93,13 @@ hình thái — xem dòng sổ «bỏ coverage-scan».
 - Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu sổ ghi nhầm địa chỉ khác với địa chỉ trang khai, bộ kiểm tra hiện chưa chắc bắt được. Người dùng cuối không bị ảnh hưởng, chỉ có nguy cơ sổ ghi lệch mà không ai báo. — `packages/ui-lint/tests/khu-ban-mau.test.mjs`
 - Ngoài-3 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Trang mẫu sống có thể sáng nhầm nhà ở một bố cục mà kiểm tra tự động vẫn báo đạt. Hiện chưa thấy lỗi thật, chỉ là lưới kiểm tra chưa chặt. — `_acceptance/ban-mau-khai-dia-chi/evals.yaml`
 - Ngoài-4 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu sau này đổi cách tạo liên kết vào mục nhóm của Hôm nay, kiểm tra tự động có thể vẫn xanh trong khi mục sáng bị lệch. Hiện người dùng chưa gặp gì. — `apps/web/src/components/shell/dia-chi-mau.test.ts`
+- Ngoài-1 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Phép tự kiểm việc cấu hình nghiệm thu không bị đổi chưa từng được thử ở chiều báo đỏ. Người dùng cuối không bị ảnh hưởng, chỉ là lưới kiểm có thể xanh nhầm. — `_acceptance/ban-mau-khai-dia-chi/evals.yaml`
+- Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Khi máy không so được với nhánh chính, phép kiểm báo như thể cấu hình đã đổi. Chỉ gây hiểu nhầm cho người chạy kiểm, không ảnh hưởng người dùng. — `_acceptance/ban-mau-khai-dia-chi/thu/kiem-cau-hinh-khong-doi.mjs`
+- Ngoài-3 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Phép kiểm tự kiểm có thể báo đạt dù thông điệp lỗi không liệt kê tệp. Người dùng cuối không thấy ảnh hưởng. — `_acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs`
+- Ngoài-4 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu sau này sửa trang mẫu sống, kết quả kiểm cũ có thể bị dùng lại dù đã cũ. Hiện chưa có lỗi nào xảy ra với người dùng. — `_acceptance/ban-mau-khai-dia-chi/evals.yaml`
+- Ngoài-5 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Khi thiếu nhánh chính, phép kiểm báo nhầm là cấu hình đã đổi. Người dùng cuối không bị ảnh hưởng. — `_acceptance/ban-mau-khai-dia-chi/thu/kiem-cau-hinh-khong-doi.mjs`
+- Ngoài-6 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Trang bản mẫu hiện huy hiệu lỗi ở môi trường phát triển mà hồ sơ ghi là không có lỗi. Chưa biết lỗi từ thay đổi này hay có sẵn; màn hiển thị vẫn đúng. — `_acceptance/ban-mau-khai-dia-chi/evidence/E1-network.txt`
+- Ngoài-7 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Phép kiểm tự kiểm vẫn báo đạt khi thông điệp lỗi bỏ danh sách tệp. Người dùng cuối không thấy ảnh hưởng. — `_acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs`
+- Ngoài-8 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Phép kiểm cấu hình không đổi có thể báo đạt nhầm trong vài trường hợp lạ như đường dẫn sai. Người dùng cuối không bị ảnh hưởng. — `_acceptance/ban-mau-khai-dia-chi/thu/kiem-cau-hinh-khong-doi.mjs`
+- Ngoài-9 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Một lớp bảo vệ của phép kiểm có thể bị gỡ mà kết quả vẫn xanh. Người dùng cuối không thấy ảnh hưởng. — `_acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs`
+- Ngoài-10 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Khi so Bảng hàng với bản mẫu, cả hai đều chưa có góc nhìn nên chưa thấy mục nào sáng để so. Chưa thấy sai ở màn, chỉ là chưa quan sát được trên giao diện. — `_acceptance/ban-mau-khai-dia-chi/evals.yaml`
