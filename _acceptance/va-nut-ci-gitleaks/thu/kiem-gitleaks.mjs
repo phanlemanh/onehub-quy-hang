@@ -7,7 +7,8 @@
 //   --hooks  bài tự kiểm của rào (lệnh test:hooks của package.json) ở chế độ CI như bước «Ghim lại», so với khối ghim từ
 //            nhật ký run 42440631323 (thu/run-42440631323-suite-4-7.txt): tập dòng ĐỎ của run đúng bằng {gitleaks…};
 //            gitleaks vắng khỏi PATH → dòng kết luận trùng từng dòng với run; gitleaks tới qua một thư mục đặt trước
-//            PATH (cách GitHub áp GITHUB_PATH) → 0 dòng ĐỎ, TỔNG: ĐẠT, kể cả ca chặn bí mật đã stage
+//            PATH (cách GitHub áp GITHUB_PATH) → 0 dòng ĐỎ, TỔNG: ĐẠT, kể cả ca chặn bí mật đã stage. Chạy trên bản sao
+//            cây tại HEAD (git clone --shared, node_modules nối liên kết) để không giẫm suite test:hooks chạy song song
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, openSync, readFileSync, readSync, closeSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -162,8 +163,20 @@ if (process.argv.includes("--tinh")) {
       const sach = (process.env.PATH ?? "").split(delimiter).filter((d) => d && !existsSync(join(d, "gitleaks"))).join(delimiter);
       // Bước «Ghim lại» chạy suite với biến bản thật để trống (feature_loop.repin_ci_blank_env) và CI=true của GitHub.
       const env = { ...process.env, CI: "true", DATABASE_URL: "", SUPABASE_URL: "", SUPABASE_PUBLISHABLE_KEY: "", APP_URL: "" };
+      // Bài tự kiểm tạo rồi xoá một tệp tạm cố định trong packages/core/src: chạy nó trên cây kho cùng lúc với suite
+      // `npm run test:hooks` của lượt chấm là hai lượt giẫm nhau (S4 r1). Chạy trên bản sao cây tại HEAD — git clone
+      // dùng chung đối tượng, các thư mục node_modules của kho nối vào bằng liên kết — để không đụng cây đang chấm.
+      const git = (...a) => spawnSync("git", a, { encoding: "utf8" });
+      const sha = git("-C", GOC, "rev-parse", "HEAD").stdout.trim();
+      const CAY = join(TAM, "cay");
+      const cl = git("clone", "-q", "--shared", "--no-checkout", GOC, CAY);
+      const co = cl.status === 0 ? git("-C", CAY, "checkout", "-q", "--detach", sha) : cl;
+      if (co.status !== 0) throw new Error(`không dựng được bản sao cây tại ${sha}: ${(co.stderr ?? "").trim()}`);
+      const nm = git("-C", GOC, "ls-files", "--", "package.json", "*/package.json").stdout.split("\n").filter(Boolean)
+        .map((p) => dirname(p)).map((d) => join(d, "node_modules")).filter((d) => existsSync(join(GOC, d)));
+      for (const d of nm) symlinkSync(join(GOC, d), join(CAY, d));
       const chay = (path) => {
-        const r = spawnSync("bash", ["-c", lenh], { cwd: GOC, env: { ...env, PATH: path }, encoding: "utf8" });
+        const r = spawnSync("bash", ["-c", lenh], { cwd: CAY, env: { ...env, PATH: path }, encoding: "utf8" });
         return { ma: r.status, ra: (r.stdout ?? "") + (r.stderr ?? "") };
       };
       /** Dòng kết luận của bài tự kiểm: «ĐẠT <ca>», «ĐỎ <ca>», «BỎ QUA <ca>» — bỏ thụt và khoảng cách giữa nhãn và tên ca. */

@@ -63,7 +63,9 @@ Chỉ đọc cây kho. Tệp tải, HOME rỗng và kho tạm nằm ở thư m�
   như `feature_loop.repin_ci_blank_env`): PATH bỏ mọi thư mục có gitleaks → tập dòng kết luận trùng TỪNG DÒNG với khối
   ghim (máy chấm tái hiện đúng cảnh máy chủ); rồi đặt một thư mục chỉ chứa gitleaks của máy chấm trước PATH (đúng cách
   GitHub áp `GITHUB_PATH`) → không dòng ĐỎ nào, giữ mọi dòng ĐẠT của khối ghim, thêm «ĐẠT chặn bí mật đã stage»,
-  `TỔNG: ĐẠT`. So bằng nhau, không so chứa.
+  `TỔNG: ĐẠT`. So bằng nhau, không so chứa. Cả hai lần chạy dùng một bản sao cây kho tại HEAD (`git clone --shared`,
+  các thư mục `node_modules` nối liên kết): bài tự kiểm tạo rồi xoá một tệp tạm cố định trong `packages/core/src`, nên
+  chạy trên cây kho cùng lúc với suite `npm run test:hooks` của lượt chấm là hai lượt giẫm nhau (lượt chấm 1 đỏ vì thế).
 
 Trước gộp không có máy chủ GitHub nào chạy được luồng của nút (nút chỉ chạy từ main, bước đầu từ chối ref khác). Khối
 cài thì tự đứng được (không bí mật), nên một luồng thử kích bởi push trên nhánh nháp chạy được nó trên ubuntu thật trước
