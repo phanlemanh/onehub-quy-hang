@@ -275,7 +275,9 @@ export async function applyCommand(tx: pg.PoolClient, viewer: Viewer, listingId:
     if (!nhan.ok) return { error: API_ERRORS.invalidPayload, details: [{ path: "label", reason: nhan.loi }], reason: nhan.loi };
     if (!nhan.doiNhanTaiCho) {
       const anh = payload.to === "Active" ? await nguCanhAnh(tx, hienTai) : {};
-      const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload, ...anh });
+      // Cửa nhập (hàng can-nhap-len-bang-chung): chỉ đường ghi của lần nhập mang `importId` — khuôn lệnh công khai không nhận
+      // khoá ấy — nên chỉ ở đây căn «còn hàng» lên Đang bán dù thiếu pháp lý, tình trạng sử dụng.
+      const kq = checkTransition(hienTai.standardStatus, payload.to, { ...hienTai, ...payload, ...anh, ...(cmd.importId && { cuaVao: "nhap" as const }) });
       if (!kq.ok) {
         return kq.kind === "invalid-transition"
           ? { error: API_ERRORS.invalidTransition, reason: kq.reason }

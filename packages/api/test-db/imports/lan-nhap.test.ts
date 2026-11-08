@@ -137,11 +137,13 @@ test("lần nhập: dòng mới thành hàng qua một cửa", async () => {
   const kq = await ghi(s.dauChu.cookie, id, rows);
   assert.deepEqual(kq.rows.map((r) => r.action), ["create", "create", "create"]);
   assert.equal(await dem("listings", "company_id = $1", [s.companyId]), truoc + 3, "đúng ba hàng mới");
-  for (const r of kq.rows) {
+  for (const [i, r] of kq.rows.entries()) {
     const hang = await send("GET", `/api/v1/listings/${r.listingId}`, undefined, s.dauChu.cookie);
     assert.equal(hang.status, 200);
-    assert.equal(((await hang.json()) as { standardStatus: string }).standardStatus, "Incomplete");
-    assert.equal((await send("GET", `/api/v1/listings/${r.listingId}`, undefined, s.dauKhach.cookie)).status, 404, "Chỉ tôi của người nhập");
+    // Từ hàng can-nhap-len-bang-chung: dòng file ghi «Đang bán» lên Đang bán (thấy toàn sàn) dù thiếu pháp lý, tình trạng sử dụng.
+    const dangBan = dong[i]!.tt === "Đang bán";
+    assert.equal(((await hang.json()) as { standardStatus: string }).standardStatus, dangBan ? "Active" : "Incomplete");
+    assert.equal((await send("GET", `/api/v1/listings/${r.listingId}`, undefined, s.dauKhach.cookie)).status, dangBan ? 200 : 404, "Chỉ tôi của người nhập, trừ căn lên Đang bán");
     assert.equal(await giuCan(r.listingId!), s.dauChu.userId, "người nhập giữ căn");
   }
   const ids = kq.rows.map((r) => r.listingId);
@@ -151,7 +153,7 @@ test("lần nhập: dòng mới thành hàng qua một cửa", async () => {
   );
   assert.ok(sk.rows.length >= 3);
   assert.equal(sk.rows.filter((e) => e.import_id === id && !e.confirmed_with_owner).length, sk.rows.length, "mọi sự kiện mang lần nhập, không xác nhận");
-  assert.match(kq.rows[2]!.reason, /ở Chưa đủ để rao — thiếu/, "Đang bán theo file mà thiếu điều kiện ghi lý do");
+  assert.match(kq.rows[2]!.reason, /lên Đang bán — còn thiếu pháp lý, tình trạng sử dụng/, "Đang bán theo file, còn thiếu thì nói ra (can-nhap-len-bang-chung)");
 });
 
 test("lần nhập: gửi lại gói không nhân đôi", async () => {
@@ -395,7 +397,8 @@ test("lần nhập: ảnh không còn chặn ở cửa nhập (anh-khong-chan-ba
   const s = await sanMoi("AKCB");
   const { id, rows } = await lanNhap(s.dauChu.cookie, [{ ma: maMoi(), tt: "Đang bán" }]);
   const kq = await ghi(s.dauChu.cookie, id, rows);
-  assert.match(kq.rows[0]!.reason, /ở Chưa đủ để rao — thiếu/, "cửa nhập chưa đọc pháp lý, tình trạng sử dụng (hàng can-nhap-len-bang-chung)");
+  // Từ hàng can-nhap-len-bang-chung: cửa nhập không đòi pháp lý, tình trạng sử dụng — căn «còn hàng» lên Đang bán.
+  assert.equal((await appPool.query<{ s: string }>("select standard_status s from listings where id = $1", [kq.rows[0]!.listingId])).rows[0]!.s, "Active", "căn lên Đang bán");
   assert.doesNotMatch(kq.rows[0]!.reason, /ảnh thật|realPhoto/, "sàn mặc định 0: lý do không nêu ảnh");
   // Sàn đặt tối thiểu 2: lý do nêu «ảnh thật» bằng nhãn, không mã thô.
   const s2 = await sanMoi("AKCB2");

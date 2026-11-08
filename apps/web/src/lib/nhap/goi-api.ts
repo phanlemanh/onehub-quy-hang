@@ -119,6 +119,21 @@ export const tienDoCho = (t: TienDoGhi | null, s: TrangThaiNhap): TienDoGhi | nu
 export const xongGhi = (t: TienDoGhi) => t.loi === null && t.xong.length === t.goi.length;
 export const tongGhi = (t: TienDoGhi): TongKet => tong(t.xong.flatMap((g) => g.rows));
 
+/** Phần trạng thái của câu sau khi ghi, theo trạng thái thật của căn mỗi dòng (hàng can-nhap-len-bang-chung); bỏ vế bằng 0. */
+const VE_TRANG_THAI: readonly [string, string][] = [
+  ["Active", "lên Đang bán"],
+  ["Pending", "ở Đang giao dịch"],
+  ["Hold", "ở Tạm ngừng"],
+  ["Incomplete", "ở Chưa đủ để rao"],
+];
+export function cauTrangThaiGhi(rows: readonly KetQuaDong[]): string {
+  return VE_TRANG_THAI.map(([tt, chu]) => [rows.filter((r) => r.standardStatus === tt).length, chu] as const)
+    .filter(([n]) => n > 0)
+    .map(([n, chu]) => `${n.toLocaleString("vi-VN")} căn ${chu}`)
+    .join(", ");
+}
+export const trangThaiGhi = (t: TienDoGhi): string => cauTrangThaiGhi(t.xong.flatMap((g) => g.rows));
+
 /** Đầu chủ của sàn cho Trưởng nhóm chọn (Hỏi-2). */
 export const docDauChu = (f: Fetch) => goi<{ userId: string; name: string }[]>(f, "/api/v1/imports/agents", { method: "GET" });
 

@@ -21,7 +21,8 @@ export const BUOC = [
 ] as const;
 
 export type HanhDong = "create" | "update" | "supplement" | "skip";
-export type KetQuaDong = { row: number; action: HanhDong; reason: string; listingId?: string };
+/** `standardStatus`: trạng thái căn sau dòng (máy chủ trả từ hàng can-nhap-len-bang-chung). */
+export type KetQuaDong = { row: number; action: HanhDong; reason: string; listingId?: string; standardStatus?: string };
 export type TongKet = Record<HanhDong, number>;
 export type XemThu = { importId: string; rows: KetQuaDong[]; summary: TongKet };
 

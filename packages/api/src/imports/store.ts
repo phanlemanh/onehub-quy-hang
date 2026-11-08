@@ -23,7 +23,7 @@ import {
 } from "@quy-hang/core/import";
 import type { CatalogData } from "@quy-hang/core";
 import { canRead } from "@quy-hang/core/visibility";
-import { nhanDieuKien } from "@quy-hang/core/listing";
+import { MIEN_O_CUA_NHAP, missingFor, nhanDieuKien, type StandardStatus } from "@quy-hang/core/listing";
 import type pg from "pg";
 import { companyAliasesCuaSan } from "../value-aliases/store";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
@@ -58,7 +58,8 @@ export type OpenImportInput = {
   units: { row: number; buildingName: string | null; unitNumber: string | null }[];
 };
 export type BatchRow = { row: number; cells: Cell[]; agentUserId?: string; skip?: boolean };
-export type RowResult = { row: number; action: ImportRowAction; reason: string; listingId?: string };
+/** `standardStatus`: trạng thái căn sau dòng (dòng tạo, cập nhật) — màn kết quả đếm căn lên Đang bán theo nó. */
+export type RowResult = { row: number; action: ImportRowAction; reason: string; listingId?: string; standardStatus?: StandardStatus };
 export type Summary = Record<ImportRowAction, number>;
 export type BatchResult = { importId: string; rows: RowResult[]; summary: Summary };
 
@@ -231,7 +232,8 @@ export async function writeBatch(
     );
     if (cu.rows[0]) {
       const c = cu.rows[0];
-      ketQua.push({ row: r.row, action: c.action, reason: c.reason, ...((c.action === "create" || c.action === "update") && c.listing_id && { listingId: c.listing_id }) });
+      const coCanCu = (c.action === "create" || c.action === "update") && c.listing_id;
+      ketQua.push({ row: r.row, action: c.action, reason: c.reason, ...(coCanCu && { listingId: c.listing_id!, standardStatus: await trangThaiCan(tx, c.listing_id!) }) });
       continue;
     }
     // Áp kế hoạch trên đúng một dòng: trùng trong file xét trên cả file (`duplicate_rows`), không trong gói.
@@ -285,7 +287,13 @@ export async function writeBatch(
        values (app.current_company_id(), $1, $2, $3, $4, $5, $6, $7)`,
       [importId, r.row, kq.action, kq.reason, kq.listingId ?? null, kq.leadId ?? null, kq.versionBefore ?? null],
     );
-    ketQua.push({ row: r.row, action: kq.action, reason: kq.reason, ...((kq.action === "create" || kq.action === "update") && kq.listingId && { listingId: kq.listingId }) });
+    const coCan = (kq.action === "create" || kq.action === "update") && kq.listingId;
+    ketQua.push({
+      row: r.row,
+      action: kq.action,
+      reason: kq.reason,
+      ...(coCan && { listingId: kq.listingId, standardStatus: await trangThaiCan(tx, kq.listingId!) }),
+    });
   }
   await tx.query("update imports set status = 'committed' where company_id = app.current_company_id() and id = $1", [importId]);
   return { importId, rows: ketQua, summary: tong(ketQua) };
@@ -314,6 +322,11 @@ type LamDong = {
   mo: { id: string; version: number; agent: string | null; readable: boolean } | null;
   khoa: KhoaSoChu;
 };
+
+/** Trạng thái hiện tại của căn — đọc sau khi dòng ghi xong. */
+async function trangThaiCan(tx: pg.PoolClient, listingId: string): Promise<StandardStatus> {
+  return (await tx.query<{ s: StandardStatus }>("select standard_status s from listings where company_id = app.current_company_id() and id = $1", [listingId])).rows[0]!.s;
+}
 
 async function lamDong(tx: pg.PoolClient, d: LamDong): Promise<{ action: ImportRowAction; reason: string; listingId?: string; leadId?: string; versionBefore?: number }> {
   const { quyet, dong } = d;
@@ -361,10 +374,12 @@ async function lamDong(tx: pg.PoolClient, d: LamDong): Promise<{ action: ImportR
     [id, version, versionBefore] = [d.mo!.id, d.mo!.version, d.mo!.version];
   }
 
+  let sau: Parameters<typeof missingFor>[1] | null = null;
   const lenh = async (type: string, payload: Record<string, unknown>) => {
     const r = await applyCommand(tx, viewer, id, { type, payload, expectedVersion: version, importId: d.importId });
     if (laTuChoi(r)) return r;
     version = r.state.version;
+    sau = r.state;
     return r;
   };
   if (typeof gia === "number" && typeof phi === "string") chac(await lenh("price_changed", { listPrice: gia, feeInclusion: phi }));
@@ -383,15 +398,24 @@ async function lamDong(tx: pg.PoolClient, d: LamDong): Promise<{ action: ImportR
 
   // Trạng thái theo file: hàng mới bắt đầu Chưa đủ để rao; Đang bán phải qua điều kiện của lõi (ADR-0008).
   const tt = giaTri(dong, "standardStatus");
+  let lenDangBan = false;
   if (quyet.action === "create" && (tt === "Active" || tt === "Pending" || tt === "Hold")) {
     for (const to of tt === "Pending" ? ["Active", "Pending"] : [tt]) {
       const r = await lenh("status_changed", { to });
+      if (!laTuChoi(r) && to === "Active") lenDangBan = true;
       if (laTuChoi(r)) {
         // Nhãn của lõi («ảnh thật», «pháp lý»…), không mã thô (anh-khong-chan-ban, AC-2).
         const thieu = r.missing?.map((m) => (typeof m === "string" ? nhanDieuKien(m) : JSON.stringify(m))).join(", ");
         ghiChu.push(`ở Chưa đủ để rao — ${thieu ? `thiếu ${thieu}` : (r.reason ?? r.error.code)}`);
         break;
       }
+    }
+    // Lên được Đang bán ở cửa nhập mà còn thiếu pháp lý, tình trạng sử dụng: nói ra bằng nhãn — phần ấy thành mục của mức đủ
+    // và việc «Thiếu thông tin» ở Hôm nay (hàng can-nhap-len-bang-chung).
+    const cuoi = sau as Parameters<typeof missingFor>[1] | null;
+    if (lenDangBan && cuoi) {
+      const con = missingFor("Active", cuoi).filter((k) => (MIEN_O_CUA_NHAP as readonly string[]).includes(k));
+      if (con.length) ghiChu.push(`lên Đang bán — còn thiếu ${con.map(nhanDieuKien).join(", ")}`);
     }
   }
   return { action: quyet.action, reason: [quyet.reason, ...ghiChu].join("; "), listingId: id, versionBefore };
@@ -400,8 +424,10 @@ async function lamDong(tx: pg.PoolClient, d: LamDong): Promise<{ action: ImportR
 export async function readImport(tx: pg.PoolClient, importId: string) {
   const lan = await docLanNhap(tx, importId);
   if (!lan) return { error: API_ERRORS.notFound } as Refusal;
-  const { rows } = await tx.query<{ row_number: number; action: ImportRowAction; reason: string; listing_id: string | null }>(
-    "select row_number, action, reason, listing_id from import_rows where company_id = app.current_company_id() and import_id = $1 order by row_number",
+  const { rows } = await tx.query<{ row_number: number; action: ImportRowAction; reason: string; listing_id: string | null; standard_status: StandardStatus | null }>(
+    `select r.row_number, r.action, r.reason, r.listing_id, l.standard_status
+       from import_rows r left join listings l on l.company_id = r.company_id and l.id = r.listing_id
+      where r.company_id = app.current_company_id() and r.import_id = $1 order by r.row_number`,
     [importId],
   );
   const { rows: st } = await tx.query<{ status: string; file_name: string }>("select status, file_name from imports where company_id = app.current_company_id() and id = $1", [importId]);
@@ -409,7 +435,7 @@ export async function readImport(tx: pg.PoolClient, importId: string) {
     row: r.row_number,
     action: r.action,
     reason: r.reason,
-    ...((r.action === "create" || r.action === "update") && r.listing_id && { listingId: r.listing_id }),
+    ...((r.action === "create" || r.action === "update") && r.listing_id && { listingId: r.listing_id, ...(r.standard_status && { standardStatus: r.standard_status }) }),
   }));
   return { id: importId, status: st[0]!.status, fileName: st[0]!.file_name, rows: ds, summary: tong(ds) };
 }
