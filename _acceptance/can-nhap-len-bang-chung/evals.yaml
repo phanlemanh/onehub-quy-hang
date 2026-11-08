@@ -1,0 +1,103 @@
+schema_version: 1
+feature_slug: can-nhap-len-bang-chung
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/listing/status.test.ts ca «cửa nhập bỏ pháp lý, tình trạng sử dụng» có mặt và ok — ma trận viết trước pháp lý {có, thiếu} × tình trạng sử dụng {có, thiếu} trên căn có mã, giá 3,2 tỉ kèm điều kiện phí, 0 ảnh với tối thiểu 0: với cuaVao 'nhap' cả bốn ô missingFor('Active') deepEqual [] (4 assert); không kèm cuaVao cùng bốn ô cho đúng [], ['occupantType'], ['legalStatus'], ['legalStatus','occupantType'] (4 assert); với cuaVao 'nhap' mà thiếu giá → chứa 'listPrice', thiếu điều kiện phí → chứa 'feeInclusion', không mã → chứa 'unitNumber', tối thiểu 1 và 0 ảnh → chứa 'realPhoto' (4 assert, mỗi assert ghim tên mục); checkTransition('Incomplete','Active', {...ctx, cuaVao:'nhap'}) ok khi thiếu cả hai (assert). Chiều đỏ: bỏ nhánh cuaVao trong missingFor → ô 'thiếu cả hai' đỏ với thông điệp nêu 'legalStatus'."
+    paths: [packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0 (Postgres dãy G 5573); trong packages/api/test-db/imports/can-nhap-len-bang-chung.test.ts ca «dòng còn hàng thiếu pháp lý lên Đang bán» có mặt và ok — sàn mới, lần nhập dựng bằng lõi thật (readTable + planFromDictionary) một dòng tạo mới «Đang bán», mã mới, giá, điều kiện phí, không cột pháp lý, tình trạng sử dụng; ghi lần nhập → dòng action 'create' (assert), listings.standard_status = 'Active' (assert), đúng một sự kiện status_changed tới Active của căn (assert đếm 1) và sự kiện ấy có import_id bằng mã lần nhập (assert); lý do dòng khớp /Đang bán/ và /pháp lý/ và /tình trạng sử dụng/ (3 assert) và không khớp /legalStatus|occupantType|Chưa đủ để rao/ (assert). Đối chứng: cùng dòng ở sàn mà dòng ghi trạng thái trống → căn Incomplete (assert). Cùng lệnh chạy packages/api/test-db/imports/lan-nhap.test.ts: ca «ảnh không còn chặn ở cửa nhập (anh-khong-chan-ban E2c)» có mặt và ok — lý do không khớp /ảnh thật|realPhoto/ ở sàn mặc định 0 (assert), căn của dòng ở Active (assert), sàn đặt tối thiểu 2 thì lý do khớp /ảnh thật/ (assert). Chiều đỏ: bỏ cuaVao ở applyCommand → căn Incomplete, ca đỏ ở assert trạng thái."
+    paths: [packages/api/src/imports/**, packages/api/src/listings/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/can-nhap-len-bang-chung.test.ts ca «Đã cọc đi qua Đang bán» có mặt và ok — dòng tạo mới «Đã cọc» đủ giá, điều kiện phí, thiếu pháp lý: căn standard_status 'Pending' (assert); dãy sự kiện status_changed theo thứ tự to = ['Active','Pending'] (deepEqual, assert), cả hai mang import_id của lần nhập (assert). Chiều đỏ: bỏ cuaVao → căn Incomplete, deepEqual dãy đỏ."
+    paths: [packages/api/src/imports/**, packages/api/src/listings/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/can-nhap-len-bang-chung.test.ts ca «giá vẫn chặn ở cửa nhập» có mặt và ok — ma trận viết trước ba dòng «Đang bán» thiếu pháp lý: (a) không giá, (b) có giá mà không điều kiện phí, (c) đủ giá và phí ở sàn đặt listing.ready_min_real_photos = 1 với 0 ảnh: cả ba căn Incomplete (3 assert); lý do (a) khớp /giá/ (assert), (b) khớp /giá chưa ghi vì thiếu điều kiện phí|điều kiện phí/ (assert), (c) khớp /ảnh thật/ (assert); không lý do nào khớp /listPrice|feeInclusion|realPhoto/ (assert). Đối chứng dương: dòng (d) đủ giá, phí ở sàn tối thiểu 0 → Active (assert). Chiều đỏ: cho cuaVao bỏ cả listPrice → dòng (a) Active, ca đỏ."
+    paths: [packages/api/src/imports/**, packages/api/src/listings/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/can-nhap-len-bang-chung.test.ts ca «cửa khác vẫn đòi pháp lý» có mặt và ok — bốn căn đủ mã, giá kèm điều kiện phí, thiếu pháp lý (có tình trạng sử dụng), bốn lệnh POST /api/v1/listings/{id}/events status_changed Active như nút «Sẵn sàng bán» (không madeOffline), ô Trạng thái có mạng (madeOffline false), ô Trạng thái ghi lúc mất mạng (madeOffline true), sửa hàng loạt (lệnh dựng bằng hàm của trình sửa ô, xetDoiTrangThai): mỗi lệnh 400 với error missing-requirement và missing chứa 'legalStatus' (4 assert), căn vẫn Incomplete (4 assert); căn tạo từ lead thiếu pháp lý qua POST /api/v1/leads/{id}/listing (lối chuyển lead thật) rồi lệnh status_changed Active → 400 missing chứa 'legalStatus' (assert); lệnh cùng thân kèm khoá importId → 400 (assert) và căn không có sự kiện mới (assert). Đối chứng dương: thêm details_changed legalStatus rồi lệnh như nút «Sẵn sàng bán» → 200 Active (assert). Chiều đỏ: đặt cuaVao 'nhap' cho mọi lệnh → bốn lệnh 200, ca đỏ."
+    paths: [packages/api/src/listings/**, packages/api/src/leads/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/can-nhap-len-bang-chung.test.ts ca «50 căn nhập, đầu khách thấy» có mặt và ok — một lần nhập 50 dòng tạo mới «Đang bán» đủ giá, phí, mã khác nhau, thiếu pháp lý, tình trạng sử dụng: 50 dòng action 'create' (assert đếm); đầu khách của sàn GET /api/v1/listings thấy đúng 50 căn mang id của lần nhập, đều standardStatus 'Active' (2 assert, so tập id); đầu khách sàn khác thấy 0 căn trong tập id ấy (assert). Chiều đỏ: bỏ cuaVao → đầu khách thấy 0, ca đỏ ở assert 50."
+    paths: [packages/api/src/imports/**, packages/api/src/listings/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: DATABASE_URL="${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres}" npm run test:db -w @quy-hang/web
+    expected: "exit 0; trong apps/web/src/lib/sync/test-db/can-nhap-len-bang-chung.db-test.mts ca «căn nhập vào Thiếu thông tin của người giữ» có mặt và ok — trên API thật: lần nhập hai dòng «Đang bán» thiếu pháp lý, tình trạng sử dụng, dòng X không ghi người giữ (người nhập là đầu chủ A), dòng Y ghi đầu chủ B; bản xem hàng của X có completeness.missing chứa 'legalStatus' và 'occupantType' (2 assert); với phiên A rồi phiên B, đọc bản xem hàng và bộ nhóm của sàn qua đúng các lời gọi màn Hôm nay dùng, dựng dữ kiện căn bằng canHomNay của apps/web/src/app/(app)/today/ly-do.ts và chia bằng chiaNhom của lõi (không lắp dữ kiện tay): file có cột ngày xác nhận hôm nay: X ở nhóm code 'missing_info' của A (assert) và vắng ở B (assert); Y ở 'missing_info' của B (assert) và vắng ở A (assert); file không có ngày xác nhận: căn Z của A ở nhóm 'call_back' của A (assert) và mức đủ của Z vẫn thiếu 'legalStatus' (assert). Đối chứng âm cùng đường: căn đủ năm mục mô tả và có ảnh không vào 'missing_info' (assert). Chiều đỏ: gán Y cho A ở lần nhập → assert Y ở B đỏ với thông điệp nêu mã căn Y."
+    paths: [packages/api/src/imports/**, packages/api/src/listings/**, packages/core/src/listing/**, packages/core/src/today/**, "apps/web/src/app/(app)/today/**", apps/web/src/lib/sync/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/can-nhap-len-bang-chung.test.ts ca «hoàn tác gỡ căn đã lên Đang bán» có mặt và ok — lần nhập một dòng «Đang bán» thiếu pháp lý → căn Active (assert); hoàn tác cả lần nhập qua API hoàn tác của lần nhập → dòng kết cục 'go' (assert); đầu khách GET /api/v1/listings không còn id căn (assert); GET /api/v1/listings/{id} 404 hoặc căn mang dấu đã gỡ theo luật hiện có (assert một chiều đúng). Chiều đỏ: chưa hoàn tác thì đầu khách thấy căn (assert đối chứng dương trước bước hoàn tác)."
+    paths: [packages/api/src/imports/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    expected: "Trên màn đang chạy của dãy G (Postgres 5573, máy dev 3493, webpack): đăng nhập Đầu chủ mẫu ở một sàn mới, nhập một file hai dòng «Đang bán» thiếu pháp lý, tình trạng sử dụng, có cột ngày xác nhận hôm nay; kết quả lần nhập hiện dòng «Đang bán» kèm lời còn thiếu pháp lý, tình trạng sử dụng (không mã thô); Hôm nay của đầu chủ có nhóm «Thiếu thông tin» chứa hai căn ấy; mở hồ sơ một căn → mức đủ hiện pháp lý và tình trạng sử dụng là mục còn thiếu, trạng thái Đang bán; Bảng hàng hiện căn ở Đang bán; tóm tắt lần nhập đếm 2 căn đã lên Đang bán, 0 căn Chưa đủ để rao, và hai dòng không mang tông lỗi hay cảnh báo (ghi biến thể badge hay lớp màu của dòng); khung thêm: đăng nhập đầu chủ B mà file ghi là người giữ một dòng — Hôm nay của B có căn ấy trong «Thiếu thông tin». Ghi mỗi khung một dòng JSON và chụp ở 1440 và 375 vào _acceptance/can-nhap-len-bang-chung/evidence/."
+    steps:
+      - "Dựng chỗ thử dãy G: node _acceptance/can-nhap-len-bang-chung/thu/dung.mjs (máy dev 3493 bằng webpack; chấm xong tắt bằng --tat, không pkill — luật 8, 43)"
+      - "Chạy node _acceptance/can-nhap-len-bang-chung/thu/chup.mjs --kho 1440 rồi --kho 375 — lệnh tự dựng sàn, ghi lần nhập qua API, đăng nhập người mẫu, in mỗi khung một dòng JSON và chụp ảnh"
+      - "Đối chiếu từng dòng JSON với expected và xem từng ảnh ở hai khổ"
+    paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/imports/**", "apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/inventory/**", packages/api/src/imports/**, packages/core/src/listing/**]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/api/test-db/imports/can-nhap-len-bang-chung.test.ts ca «điền dần mục thiếu, căn ở lại Đang bán» có mặt và ok — sau lần nhập như E2 (căn Active, thiếu pháp lý, tình trạng sử dụng), đầu chủ giữ căn gửi lần lượt qua POST /api/v1/listings/{id}/events: details_changed {legalStatus}, price_changed {listPrice, feeInclusion}, details_changed {occupantType}: mỗi lệnh 200 (3 assert), standardStatus vẫn 'Active' sau mỗi bước (3 assert); completeness.missing sau bước một không chứa 'legalStatus' mà chứa 'occupantType' (2 assert), sau bước ba không chứa cả hai (assert). Chiều đỏ: bắt lệnh không đổi trạng thái xét lại missingFor của trạng thái hiện tại → bước một 400, ca đỏ."
+    paths: [packages/api/src/listings/**, packages/core/src/listing/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/nhap-excel.md", "design/patterns/hom-nay-dau-chu.md", "design/patterns/bang-hang.md", "apps/web/src/app/(app)/imports/new/**", "apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm nhap-excel, hom-nay-dau-chu và bang-hang."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -1,0 +1,8 @@
+Verifier run r3 2026-11-08 (playwright, truong-nhom@mau.quy-hang.test, light, 1440/375) origin http://localhost:3491
+Step6: CPU 4x + latency150ms/1.6Mbps, 8s idle after load
+ /contacts            : /api/v1/contacts calls = 0; only GET /api/v1/listings (shell search); rows=1
+ /contacts?type=Buyer : /api/v1/contacts calls = 0; only GET /api/v1/listings; rows=0
+Step5 fetch: /contacts 200 (name x3 in HTML), ?type=Buyer 200 (name absent), ?type=Seller 200 (name x3)
+Console errors (whole session, console listener + .playwright-mcp console log): 0
+Failed app requests (5xx/4xx/conn errors): none observed
+Note: the Playwright console log is at .playwright-mcp/console-2026-11-08T01-19-33-891Z.log

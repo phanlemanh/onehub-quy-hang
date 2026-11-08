@@ -69,7 +69,7 @@ jobs:
           SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
           APP_URL: https://quyhang.onehub.center
         working-directory: nhanh
-        run: node "$CLAUDE_PLUGIN_ROOT/feature-loop/scripts/repin-lane.mjs" --root . --slug "$HO_SO" --reason "ghim lại bằng biến bản thật qua CI" --write
+        run: node "$CLAUDE_PLUGIN_ROOT/feature-loop/scripts/repin-lane.mjs" --root . --slug "$HO_SO" --ag-root "$CLAUDE_PLUGIN_ROOT" --reason "ghim lại bằng biến bản thật qua CI" --write
       # Thông báo lỗi kết nối có thể in nguyên chuỗi kết nối; GitHub không che bí mật trong tệp đính kèm. Gặp thì dừng, không tải.
       - name: Quét bí mật trong tệp sắp tải
         id: quet
