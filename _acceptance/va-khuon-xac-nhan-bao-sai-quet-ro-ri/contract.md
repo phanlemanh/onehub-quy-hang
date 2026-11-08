@@ -5,7 +5,7 @@ slug: va-khuon-xac-nhan-bao-sai-quet-ro-ri
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-08-va-khuon-xac-nhan-bao-sai-quet-ro-ri-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08T21:46:51Z
@@ -69,3 +69,6 @@ Ngưỡng của ô là câu «bật khi» của hàng: căn mã lạ bị từ c
 - Căn UPI lạ: sàn thấy báo sai bị từ chối với lý do «UPI ngoài dạng»; chỉ Invest sửa được nguồn (Hỏi-2).
 - Phần dư của luật khoá máy cấp: số nhúng liền chữ trong một đoạn (`x0900000071`) vẫn qua khuôn (Hỏi-1).
 - Câu hỏi Cổng Phạm vi: Hỏi-1 luật khoá máy cấp · Hỏi-2 căn UPI lạ (thiết kế §5).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-2: Bài kiểm khoá thật dùng mã mẫu viết theo mô tả, chưa đối chiếu với mã do Invest phát ra; dạng thật lệch mô tả thì khoá thật có thể bị từ chối oan.
+  - Ngoài-3: Một đối chứng trong bài kiểm «sự kiện được nhận đều qua khuôn» chưa tách theo từng loại sự kiện, nên lưới ở chỗ đó kém chắc hơn dự định.
