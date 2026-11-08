@@ -9,7 +9,7 @@ import { DanhSachLienHe, type TrangThaiDs } from "./danh-sach";
 import { KhungLienHe } from "./khung";
 import { escDong, HoSoNguoi, type SoDaMo, type TrangThaiHoSo } from "./ho-so";
 import { canDocLan, CHU, docDanhSach, docHoSo, henDoc, luaTim, moSo, timSo, type DongLienHe } from "./lien-he";
-import { conTroXemThem, duocNoi, khoaLoc, type TrangCuoi } from "./xem-them";
+import { conTroXemThem, duocNoi, khoaLoc, trangKhiKhongDoc, trangTuMayChu, type TrangCuoi } from "./xem-them";
 
 /** Trang đầu máy chủ đã đọc (hàng khung-ho-so-lien-he): khoá bộ lọc của nó và kết quả. */
 export type TrangDau = { khoa: string; items: DongLienHe[]; nextCursor: string | null };
@@ -31,7 +31,8 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
   const [ds, setDs] = useState<TrangThaiDs>(dau ? { kieu: "xong", ds: dau.items, con: dau.nextCursor !== null } : { kieu: "dang-tai" });
   const [lan, setLan] = useState(0);
   // Trang cuối mang khoá bộ lọc của nó: đổi bộ lọc thì con trỏ cũ hết hiệu lực ngay (AC-2, va-ho-so-lien-he).
-  const [trang, setTrang] = useState<TrangCuoi | null>(null);
+  // Lúc mở màn, trang cuối là trang máy chủ đã trao (va-xem-them-noi-lap-dong).
+  const [trang, setTrang] = useState<TrangCuoi | null>(() => trangTuMayChu(dau));
   const khoa = khoaLoc({ q, type: loai, status: dauLoc, lan });
   const [chon, setChon] = useState<string | null>(null);
   const [hs, setHs] = useState<TrangThaiHoSo>({ kieu: "dang-tai" });
@@ -43,7 +44,14 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
   // Bộ lọc mà danh sách đang theo (cập nhật cùng lượt đọc): kết quả «Xem thêm» về muộn so với nó, không với closure.
   const khoaHienTai = useRef("");
   // Con trỏ trang cuối đã nối (cập nhật cùng lúc nối): trang về lần hai cho cùng con trỏ thì không nối lại.
-  const tiepHienTai = useRef<string | null>(null);
+  const tiepHienTai = useRef<string | null>(trang?.tiep ?? null);
+  // Trang cuối hiện tại cho hiệu ứng đọc danh sách (không lấy từ closure). Trang cuối, bản ref và con trỏ đổi cùng một chỗ.
+  const trangCuoi = useRef<TrangCuoi | null>(trang);
+  function datTrang(t: TrangCuoi | null) {
+    trangCuoi.current = t;
+    tiepHienTai.current = t?.tiep ?? null;
+    setTrang(t);
+  }
   // Bộ lọc của dữ liệu bảng đang hiện, trang máy chủ đã dùng, ô tìm lần trước (hàng khung-ho-so-lien-he): chỉ gõ ô tìm mới
   // chờ 250 ms; không đọc lại khi bảng đã đúng bộ lọc (kể cả khi hiệu ứng chạy hai lần) hay khi máy chủ vừa trao trang mới.
   const khoaDaCo = useRef<string | null>(dau?.khoa ?? null);
@@ -64,16 +72,13 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
     qTruoc.current = q;
     const dauMoi = dau && dau !== dauDaDung.current ? dau : null;
     if (!canDocLan(dauMoi?.khoa ?? null, khoaLuot, khoaDaCo.current)) {
-      const trangDung = dauMoi && dauMoi.khoa === khoaLuot ? dauMoi : khoaLuot === dau?.khoa ? dau : null;
       if (dauMoi && dauMoi.khoa === khoaLuot) {
         dauDaDung.current = dauMoi;
         setDs({ kieu: "xong", ds: dauMoi.items, con: dauMoi.nextCursor !== null });
       }
       khoaDaCo.current = khoaLuot;
-      if (trangDung) {
-        tiepHienTai.current = trangDung.nextCursor;
-        setTrang({ khoa: khoaLuot, tiep: trangDung.nextCursor });
-      }
+      // Không đọc lại: giữ trang cuối đã nối (gõ rồi xoá ô tìm không đưa con trỏ về trang 1), trừ khi máy chủ vừa trao trang mới.
+      datTrang(trangKhiKhongDoc(trangCuoi.current, dauMoi, khoaLuot));
       return;
     }
     hen.current = setTimeout(async () => {
@@ -95,8 +100,7 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
       if (!kq) return setDs({ kieu: "loi" });
       setDs({ kieu: "xong", ds: kq.items, con: kq.nextCursor !== null });
       khoaDaCo.current = khoaLuot;
-      tiepHienTai.current = kq.nextCursor;
-      setTrang({ khoa: khoaLuot, tiep: kq.nextCursor });
+      datTrang({ khoa: khoaLuot, tiep: kq.nextCursor });
     }, henDoc(lyDo));
     return () => {
       huy = true;
@@ -137,13 +141,12 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
     const guiLuc = { luot: luotDs.current, khoa, cursor };
     const kq = await docDanhSach({ q: q.trim(), type: loai, status: dauLoc, cursor });
     if (!kq || !duocNoi(guiLuc, { luot: luotDs.current, khoa: khoaHienTai.current, cursor: tiepHienTai.current })) return;
-    tiepHienTai.current = kq.nextCursor;
+    datTrang({ khoa: guiLuc.khoa, tiep: kq.nextCursor });
     setDs((cu) =>
       cu.kieu === "xong"
         ? { kieu: "xong", ds: [...cu.ds, ...kq.items], con: kq.nextCursor !== null }
         : cu,
     );
-    setTrang({ khoa: guiLuc.khoa, tiep: kq.nextCursor });
   }
 
   async function hienSo(phoneId: string) {
