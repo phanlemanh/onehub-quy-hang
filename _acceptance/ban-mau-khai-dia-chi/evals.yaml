@@ -48,9 +48,9 @@ evals:
   - id: E5b
     criterion: AC-5
     executor: script
-    cmd: bash -c 'if grep -rn nhaMau apps/web/src --include="*.ts" --include="*.tsx"; then echo "còn nhaMau"; exit 1; fi; echo "không còn nhaMau"'
-    expected: "exit 0, «không còn nhaMau». Đỏ in từng dòng còn dùng và «còn nhaMau»."
-    paths: ["apps/web/src/**"]
+    cmd: node _acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs
+    expected: "exit 0, «không còn nhaMau (đối chứng dương: có diaChiMau)». Thư mục quét được mà còn nhaMau: exit 1 và «còn nhaMau» kèm tệp. Không quét được hay không thấy diaChiMau: exit 2. Chiều đỏ ở E5c."
+    paths: ["apps/web/src/**", "_acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E6
     criterion: AC-6
@@ -83,9 +83,9 @@ evals:
   - id: E9b
     criterion: AC-9
     executor: script
-    cmd: bash -c 'git diff --quiet "$(git merge-base origin/main HEAD)" HEAD -- _acceptance/config.yaml || { echo "cấu hình nghiệm thu ĐÃ ĐỔI"; exit 1; }; echo "cấu hình nghiệm thu không đổi"'
-    expected: "exit 0, «cấu hình nghiệm thu không đổi». Đỏ in «cấu hình nghiệm thu ĐÃ ĐỔI»."
-    paths: ["_acceptance/config.yaml"]
+    cmd: node _acceptance/ban-mau-khai-dia-chi/thu/kiem-cau-hinh-khong-doi.mjs
+    expected: "exit 0, «cấu hình nghiệm thu không đổi so với <sha>». Đổi thì exit 1, «cấu hình nghiệm thu ĐÃ ĐỔI»; không so được thì exit 2."
+    paths: ["_acceptance/config.yaml", "_acceptance/ban-mau-khai-dia-chi/thu/kiem-cau-hinh-khong-doi.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E10
     criterion: AC-6
