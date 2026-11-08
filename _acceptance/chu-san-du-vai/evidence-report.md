@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 16dffc30346f998a7e4369a6490c776c69142d2b
+verified_commit: cddbb868f729db64617d280f8f7e99728d4f968d
 human_signoff: Manh Phan 2026-11-09
 ---
 
@@ -230,3 +230,7 @@ none — every multi-run eval is uniform
 
 Round 1: lượt chấm đầu; phép đo E5b, ma trận E1 và chỗ thử được sửa (commit 16dffc30).
 Round 2: mọi eval và lệnh suite đạt, verdict PASS.
+
+### Re-pin lần 1 — 2026-11-08, do gộp nhánh chính vào nhánh sau chữ ký
+run_id: repin-20261108T215221Z-81056
+sha: cddbb868f729db64617d280f8f7e99728d4f968d · suites: 7 lệnh exit 0 · evals: 11/11 eval máy đạt kỳ vọng · ngoài làn máy: E3, E5b · diff chạm vật đo ngoài làn máy: E5b — chưa chứng lại, đi vòng S4 delta · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
