@@ -3,7 +3,17 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import pg from "pg";
+import goiVai from "../../core/src/access/goi-vai.json" with { type: "json" };
 import { moSan } from "../scripts/mo-san.mjs";
+
+/** Năm vai của người đầu tiên một sàn mới — lấy từ bảng ở lõi (hàng chu-san-du-vai, cách B). */
+const DU_VAI = [...goiVai.company_admin, "company_admin"].sort();
+/** Câu lệch giữa vai thật và vai mong — rỗng là khớp; nêu đúng vai thiếu, vai thừa. */
+export function vaiLech(thuc, mong = DU_VAI) {
+  const thieu = mong.filter((v) => !thuc.includes(v));
+  const thua = thuc.filter((v) => !mong.includes(v));
+  return [...thieu.map((v) => `thiếu vai: ${v}`), ...thua.map((v) => `thừa vai: ${v}`)];
+}
 
 const url = process.env.DATABASE_URL;
 if (!url && process.env.CI) throw new Error("Bộ kiểm mở sàn cần DATABASE_URL trên CI.");
@@ -64,14 +74,14 @@ test("mở sàn: email viết hoa có khoảng trắng gắn vào cùng tài kho
   });
 });
 
-test("mở sàn: người đầu tiên mang vai quản trị sàn", { skip }, async () => {
+test("mở sàn: người đầu tiên mang đủ năm vai lấy từ bảng ở lõi", { skip }, async () => {
   await inTx(async (c) => {
     const { companyId, userId } = await moSan(c, { ten: "[Sàn mở 4]", email: "mo-san-4@example.test" });
     const { rows } = await c.query("select roles from company_members where company_id = $1 and user_id = $2", [companyId, userId]);
-    assert.deepEqual(rows[0]?.roles, ["company_admin"]);
+    assert.deepEqual(vaiLech(rows[0]?.roles ?? []), []);
     await moSan(c, { ten: "[Sàn mở 4]", email: "mo-san-4@example.test" });
     const lai = await c.query("select roles from company_members where company_id = $1 and user_id = $2", [companyId, userId]);
-    assert.deepEqual(lai.rows[0]?.roles, ["company_admin"], "chạy lại làm lặp vai");
+    assert.deepEqual(lai.rows[0]?.roles, rows[0]?.roles, "chạy lại làm đổi vai");
   });
 });
 
@@ -89,7 +99,9 @@ test("mở sàn: tên trùng, email khác → sàn riêng", { skip }, async () =
     const y = await moSan(c, { ten, email: `trung-1y-${NHAN}@example.test` });
     assert.notEqual(y.companyId, x.companyId, "email Y vào sàn cũ");
     assert.deepEqual([x.daCo, x.chayLai, y.daCo, y.chayLai], [0, false, 1, false]);
-    assert.deepEqual(await thanhVien(c, y.companyId), [{ user_id: y.userId, roles: ["company_admin"] }]);
+    const [dauTien, ...khac] = await thanhVien(c, y.companyId);
+    assert.equal(dauTien.user_id, y.userId);
+    assert.deepEqual([vaiLech(dauTien.roles), khac], [[], []]);
     assert.equal((await thanhVien(c, x.companyId)).filter((m) => m.user_id === y.userId).length, 0, "Y là thành viên sàn cũ");
     assert.deepEqual(await thanhVien(c, x.companyId), truoc, "sàn cũ đổi danh sách thành viên");
   });
@@ -129,7 +141,11 @@ test("mở sàn: ba lần cùng tên, ba email → ba sàn", { skip }, async () 
     assert.equal(kq.length, EMAIL.length, "số lần gọi phải bằng ma trận viết trước");
     assert.equal(new Set(kq.map((k) => k.companyId)).size, 3, "ba lần mở không ra ba sàn");
     assert.deepEqual(kq.map((k) => k.daCo), [0, 1, 2]);
-    for (const k of kq) assert.deepEqual(await thanhVien(c, k.companyId), [{ user_id: k.userId, roles: ["company_admin"] }]);
+    for (const k of kq) {
+      const ds = await thanhVien(c, k.companyId);
+      assert.deepEqual(ds.map((m) => m.user_id), [k.userId]);
+      assert.deepEqual(vaiLech(ds[0].roles), []);
+    }
   });
 });
 
@@ -156,4 +172,23 @@ test("dòng lệnh mở sàn: báo trùng tên và chạy lại", { skip }, asyn
     await c.query('delete from identity."user" where email = any($1)', [email]);
     await c.end();
   }
+});
+
+test("mở sàn: sàn đang chạy không đổi vai ai — người chỉ mang Quản trị sàn giữ nguyên khi chạy lại và khi có sàn trùng tên", { skip }, async () => {
+  await inTx(async (c) => {
+    const ten = `[Sàn đang chạy ${NHAN}]`;
+    const email = `dang-chay-${NHAN}@example.test`;
+    const x = await moSan(c, { ten, email });
+    await c.query("update company_members set roles = '{company_admin}' where company_id = $1 and user_id = $2", [x.companyId, x.userId]);
+    const lai = await moSan(c, { ten, email });
+    assert.equal(lai.chayLai, true);
+    await moSan(c, { ten, email: `dang-chay-khac-${NHAN}@example.test` });
+    assert.deepEqual(await thanhVien(c, x.companyId), [{ user_id: x.userId, roles: ["company_admin"] }]);
+  });
+});
+
+test("vaiLech — đối chứng đỏ: bảng thiếu một vai thì nêu đúng vai thiếu", () => {
+  assert.deepEqual(vaiLech(DU_VAI.filter((v) => v !== "telesales")), ["thiếu vai: telesales"]);
+  assert.deepEqual(vaiLech([...DU_VAI, "vai_la"]), ["thừa vai: vai_la"]);
+  assert.deepEqual(vaiLech(DU_VAI), []);
 });

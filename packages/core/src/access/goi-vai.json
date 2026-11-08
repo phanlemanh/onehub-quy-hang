@@ -1,0 +1,4 @@
+{
+  "company_admin": ["telesales", "listing_agent", "buyer_agent", "team_lead"],
+  "team_lead": ["listing_agent", "buyer_agent"]
+}
