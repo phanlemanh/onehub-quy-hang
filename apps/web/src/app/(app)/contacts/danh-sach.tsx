@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { ChoTai } from "@/components/bo-cuc";
 import { Badge } from "@/components/reui/badge";
-import { DataGrid, dataGridFeatures, type DataGridFeatures } from "@/components/reui/data-grid/data-grid";
+import { DataGrid, DataGridContainer, dataGridFeatures, type DataGridFeatures } from "@/components/reui/data-grid/data-grid";
 import { DataGridColumnHeader } from "@/components/reui/data-grid/data-grid-column-header";
 import { DataGridScrollArea } from "@/components/reui/data-grid/data-grid-scroll-area";
 import { DataGridTable } from "@/components/reui/data-grid/data-grid-table";
@@ -33,7 +33,8 @@ export type TrangThaiDs =
 
 const LOAI = ["Seller", "Landlord", "Buyer", "Tenant"] as const;
 const TAT_CA = "tat-ca";
-const TABLE_LAYOUT = { headerSticky: true, dense: true, rowBorder: true, headerBackground: false };
+// width auto: bảng co theo cột kéo chia, cột Người co giãn — đủ bốn cột khi hồ sơ mở 38% ở 1440 (hàng khung-ho-so-lien-he).
+const TABLE_LAYOUT = { headerSticky: true, dense: true, rowBorder: true, headerBackground: false, width: "auto" as const };
 
 /** Chữ đầu của hai từ chữ cuối tên («[Tên] Chủ A» → «CA», bỏ từ số); không tên thì «?». */
 export function chuDau(ten: string | null): string {
@@ -79,71 +80,61 @@ function ONguoiGiu({ ten }: { ten: string | null }) {
   );
 }
 
-function taoCot(onChon: (id: string) => void): ColumnDef<DataGridFeatures, DongLienHe>[] {
+export function taoCot(onChon: (id: string) => void): ColumnDef<DataGridFeatures, DongLienHe>[] {
   return [
     {
       id: "ten",
       accessorFn: tenCua,
       header: ({ column }) => <DataGridColumnHeader column={column} title="Tên" />,
       cell: ({ row }) => <ONguoi d={row.original} onChon={onChon} />,
-      size: 280,
-    },
-    {
-      id: "loai",
-      accessorFn: loaiCua,
-      header: ({ column }) => <DataGridColumnHeader column={column} title="Loại" />,
-      cell: ({ row }) => (
-        <div className="flex flex-wrap gap-1">
-          {row.original.contactTypes.map((t) => (
-            <Badge key={t} variant="outline">
-              {NHAN_LOAI[t] ?? t}
-            </Badge>
-          ))}
-        </div>
-      ),
-      size: 200,
+      size: 220,
     },
     {
       id: "nguoiGiu",
       accessorFn: (d) => d.holderName ?? "",
       header: ({ column }) => <DataGridColumnHeader column={column} title="Người giữ" />,
       cell: ({ row }) => <ONguoiGiu ten={row.original.holderName} />,
-      size: 200,
+      size: 180,
     },
     {
       id: "coHoi",
       accessorKey: "openOpportunities",
       header: ({ column }) => <DataGridColumnHeader column={column} title="Cơ hội mở" />,
       cell: ({ row }) => <span className="tabular-nums">{row.original.openOpportunities}</span>,
-      size: 110,
+      size: 100,
     },
     {
       id: "can",
       accessorKey: "listingCount",
       header: ({ column }) => <DataGridColumnHeader column={column} title="Căn" />,
       cell: ({ row }) => <span className="tabular-nums">{row.original.listingCount}</span>,
-      size: 80,
+      size: 70,
     },
   ];
 }
 
 /** Lưới trên máy tính; sắp xếp chỉ mở khi đã tải hết, để thứ tự không lừa người xem khi còn trang chưa tải. */
-function LuoiLienHe({ ds, con, onChon }: { ds: DongLienHe[]; con: boolean; onChon: (id: string) => void }) {
+function LuoiLienHe({ ds, con, chon, onChon }: { ds: DongLienHe[]; con: boolean; chon: string | null; onChon: (id: string) => void }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const table = useTable({
     features: dataGridFeatures,
     columns: taoCot(onChon),
     data: ds,
     getRowId: (d) => d.id,
-    state: { sorting: con ? [] : sorting, pagination: { pageIndex: 0, pageSize: Math.max(ds.length, 1) } },
+    // Dòng đang mở hồ sơ mang dấu chọn của lưới (data-state="selected"), như Bảng hàng.
+    enableRowSelection: chon !== null,
+    state: { sorting: con ? [] : sorting, rowSelection: chon ? { [chon]: true } : {}, pagination: { pageIndex: 0, pageSize: Math.max(ds.length, 1) } },
     enableSorting: !con,
     onSortingChange: setSorting,
   });
   return (
     <DataGrid table={table} recordCount={ds.length} onRowClick={(d) => onChon(d.id)} tableLayout={TABLE_LAYOUT}>
-      <DataGridScrollArea>
-        <DataGridTable />
-      </DataGridScrollArea>
+      {/* Lưới lấp phần còn lại của khung, vùng cuộn bên trong: tên cột dính đầu, ô tìm đứng yên (như Bảng hàng). */}
+      <DataGridContainer className="min-h-0 flex-1 [&>div:first-child]:h-full">
+        <DataGridScrollArea className="h-full">
+          <DataGridTable />
+        </DataGridScrollArea>
+      </DataGridContainer>
     </DataGrid>
   );
 }
@@ -181,6 +172,7 @@ export function DanhSachLienHe({
   tt,
   q,
   loai,
+  chon,
   onQ,
   onLoai,
   onChon,
@@ -217,10 +209,10 @@ export function DanhSachLienHe({
   else
     than = (
       <>
-        <div className="hidden md:block">
-          <LuoiLienHe ds={tt.ds} con={tt.con} onChon={onChon} />
+        <div className="hidden min-h-0 flex-1 flex-col md:flex">
+          <LuoiLienHe ds={tt.ds} con={tt.con} chon={chon} onChon={onChon} />
         </div>
-        <div className="md:hidden">
+        <div className="min-h-0 flex-1 overflow-y-auto md:hidden">
           <TheLienHe ds={tt.ds} onChon={onChon} />
         </div>
         {tt.con ? (
@@ -234,14 +226,14 @@ export function DanhSachLienHe({
     );
   const dem = tt.kieu === "xong" ? `${tt.ds.length}${tt.con ? "+" : ""} liên hệ` : null;
   return (
-    <Frame spacing="sm" className="w-full min-w-0">
+    <Frame spacing="sm" className="flex h-full min-h-0 w-full min-w-0 flex-col">
       <FrameHeader className="flex-row items-center justify-between gap-3">
         <div className="flex flex-col gap-0.5">
           <FrameTitle>{CHU.tieuDe}</FrameTitle>
           {dem ? <FrameDescription className="text-xs">{dem}</FrameDescription> : null}
         </div>
       </FrameHeader>
-      <FramePanel className="p-0 shadow-none">
+      <FramePanel className="flex min-h-0 flex-1 flex-col p-0 shadow-none">
         <div className="flex flex-wrap items-center gap-2 px-(--frame-panel-header-px) py-(--frame-panel-header-py)">
           <div className="relative min-w-0 flex-1">
             <SearchIcon className="text-muted-foreground pointer-events-none absolute top-2.5 left-2 size-4" aria-hidden="true" />

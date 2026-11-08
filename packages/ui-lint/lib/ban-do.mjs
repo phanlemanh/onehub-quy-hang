@@ -23,9 +23,11 @@ const KHOA = {
 export const KHOA_BAT_BUOC = Object.keys(KHOA);
 /**
  * Khoá thêm của kho: `don_vi` (thiếu thì `man`); `bo_cuc` — bố cục nhóm dựng (hàng 91, ADR-0024); `ngoai_le_han` — màn
- * của hàng đang chạy chưa chuyển sang bố cục, mỗi dòng `{ tep, han: <slug hàng nhận>, ly_do }`.
+ * của hàng đang chạy chưa chuyển sang bố cục, mỗi dòng `{ tep, han: <slug hàng nhận>, ly_do }`; `khe_boc` — `{ <khe>:
+ * <Thành phần> }` (hàng khung-ho-so-lien-he): ở nhóm đơn vị màn, khe ấy truyền vào khuôn phải là JSX có gốc là thành phần
+ * đã khai (vd cột phụ của Liên hệ bọc trong khung hồ sơ chung).
  */
-export const KHOA_TUY_CHON = ["don_vi", "bo_cuc", "ngoai_le_han"];
+export const KHOA_TUY_CHON = ["don_vi", "bo_cuc", "ngoai_le_han", "khe_boc"];
 
 /** Bảy bố cục đọc thẳng từ ma trận của app (một nguồn với BoCuc), không chép danh sách. */
 export function kieuBoCuc(root) {
@@ -326,6 +328,11 @@ export function docBanDo(root) {
     if ("bo_cuc" in data && (typeof data.bo_cuc !== "string" || !kieuBoCuc(root).includes(data.bo_cuc)))
       loiKieu.push(`bo_cuc lạ: «${data.bo_cuc}» không phải một trong bảy bố cục (${kieuBoCuc(root).join(", ")})`);
     if ("ngoai_le_han" in data) kiemNgoaiLeHan(data.ngoai_le_han, loiKieu);
+    if ("khe_boc" in data) {
+      const kb = data.khe_boc;
+      if (!kb || typeof kb !== "object" || Array.isArray(kb)) loiKieu.push("khe_boc phải là { <khe>: <Thành phần> }");
+      else for (const [k, v] of Object.entries(kb)) if (typeof v !== "string" || !/^[A-Z]\w*$/.test(v)) loiKieu.push(`khe_boc.${k}: phải là tên một thành phần`);
+    }
     const donVi = data.don_vi ?? "man";
     if (!DON_VI.includes(donVi)) loiKieu.push(`don_vi: phải là man hay phan-tu (đang là ${JSON.stringify(donVi)})`);
     loiKieu.forEach(L);
@@ -344,6 +351,8 @@ export function docBanDo(root) {
         const ts_ = thamSo(fn);
         for (const k of data.khe_bat_buoc)
           if (!ts_?.includes(k)) L(`khe_bat_buoc: «${k}» không phải tham số của khuôn ${data.khuon.ten}`);
+        for (const k of Object.keys(data.khe_boc ?? {}))
+          if (!ts_?.includes(k)) L(`khe_boc: «${k}» không phải tham số của khuôn ${data.khuon.ten}`);
       }
     }
     const khop = khopGlob(root, data.nhan_dien);
@@ -415,6 +424,17 @@ export function kiemCay(root, banDo) {
           if (thieu.length) {
             lech(tep, `<${ten}> thiếu khe ${thieu.map((k) => `«${k}»`).join(", ")}`, dongE);
             dat = false;
+          }
+          for (const [k, boc] of Object.entries(g.data.khe_boc ?? {})) {
+            const a = thuocTinh(e).find((x) => ts.isJsxAttribute(x) && x.name.getText() === k);
+            if (!a?.initializer) continue;
+            const bt = ts.isJsxExpression(a.initializer) && a.initializer.expression ? boNgoac(a.initializer.expression) : a.initializer;
+            const goc = ts.isJsxElement(bt) || ts.isJsxSelfClosingElement(bt) ? tenThe(bt) : null;
+            if (goc !== boc) {
+              const dongA = sf.getLineAndCharacterOfPosition(a.getStart()).line + 1;
+              lech(tep, `<${ten}> khe «${k}» phải bọc trong <${boc}> (đang là ${goc ? `<${goc}>` : "biểu thức không phải JSX"})`, dongA);
+              dat = false;
+            }
           }
         }
         if (dat && kiemNguon()) r.theoKhuon.push(tep);

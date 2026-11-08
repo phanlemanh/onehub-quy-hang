@@ -7,7 +7,8 @@ mau_dang_chay: { tep: "apps/web/src/app/(app)/contacts/vung.tsx", duong: "/conta
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card]
 ngoai_le: []
-luat: [KH-lh-danh-sach-chi-tiet, KH-lh-khong-so, KH-lh-mo-so, KH-lh-trang-thai]
+luat: [KH-lh-danh-sach-chi-tiet, KH-lh-khong-so, KH-lh-mo-so, KH-lh-trang-thai, KH-lh-mot-khung]
+khe_boc: { cotPhu: KhungHoSo }
 bo_cuc: danh-sach-chi-tiet
 ---
 # Liên hệ
@@ -30,5 +31,8 @@ sơ · Số · Cơ hội · Căn · Dòng thời gian. Khi hàng 105 gộp, ngă
 - **KH-lh-khong-so** — Danh sách, hồ sơ, dòng thời gian không mang số rõ hay giá đáy; số che chỉ ba số cuối.
 - **KH-lh-mo-so** — Số rõ chỉ đi qua «Hiện số» (`POST …/reveal`, mỗi lần một sự kiện), sống trong state của hồ sơ, rời hồ sơ
   là che lại; không lưu kho trên máy, không vào URL. Tìm theo số đi POST.
+- **KH-lh-mot-khung** — Hồ sơ người cạnh bảng nằm trong khung cột phụ chung `KhungHoSo cotPhu` của solution-crm-4 (cùng
+  khung với hồ sơ căn cạnh Bảng hàng): một Frame có viền cao hết cột, thân cuộn riêng, đầu hồ sơ có nút «Đóng hồ sơ», Esc
+  đóng; cả lúc đang tải và lỗi. Lưới khuôn kiểm bằng `khe_boc: { cotPhu: KhungHoSo }` (hàng khung-ho-so-lien-he).
 - **KH-lh-trang-thai** — Đang tải dùng `ChoTai` của bố cục; trống · không khớp · người khác giữ · lỗi đi qua `TrangThai`; lỗi
   có «Thử lại».
