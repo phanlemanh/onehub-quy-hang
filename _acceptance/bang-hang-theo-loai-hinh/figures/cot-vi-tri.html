@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cột vị trí</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper:#f5f5f5; --color-ink:#2d3142; --color-muted:#4f5d75;
+      --font-sans:'Geist', system-ui, sans-serif; --font-serif:'Instrument Serif','Lora',serif; }
+    body { font-family:var(--font-sans); background:var(--color-paper); color:var(--color-ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .frame { max-width:1000px; width:100%; }
+    h1 { font-family:var(--font-serif); font-size:clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight:400; letter-spacing:-0.02em; line-height:1.25; margin-bottom:1rem; }
+    svg { width:100%; display:block; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <h1>Cột vị trí: một cột đổi tiêu đề hay hai cột</h1>
+    <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">Hỏi-1: cột vị trí một cột hay hai cột</title>
+      <desc id="d">Hai phương án cạnh nhau, mỗi phương án là hàng tiêu đề bảng giả lập ở hai trạng thái. Phương án A, khuyến nghị: một cột, tiêu đề Toà khi dòng đã lọc toàn căn hộ, tiêu đề Vị trí ở bảng trộn với ô Toà A, [Mẫu] Khu thấp tầng thử · LK1, 45/12 Đường Mẫu 1, Sài Gòn. Phương án B: hai cột Toà và Khu · dãy · địa chỉ, ô trống ở cột không hợp; sàn chỉ căn hộ thấy thêm một cột trống.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+      </defs>
+      <rect width="1000" height="500" fill="#f5f5f5"/>
+<text x="40" y="28" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start" font-weight="500" letter-spacing="0.18em">HỎI-1 · CỘT VỊ TRÍ · AC-2, AC-8</text>
+<rect x="208" y="52" width="96" height="16" fill="none" stroke="#eb6c36" stroke-width="0.8" rx="2"/><text x="256" y="64" fill="#ba4513" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PHƯƠNG ÁN A</text>
+<text x="208" y="100" fill="#2d3142" font-size="16" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Một cột</text>
+<rect x="288" y="80" width="112" height="24" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1" rx="4"/>
+<text x="344" y="96" fill="#ba4513" font-size="11" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">Khuyến nghị: A</text>
+<rect x="560" y="52" width="96" height="16" fill="none" stroke="rgba(45,49,66,0.40)" stroke-width="0.8" rx="2"/><text x="608" y="64" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PHƯƠNG ÁN B</text>
+<text x="560" y="100" fill="#2d3142" font-size="16" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Hai cột</text>
+<rect x="208" y="120" width="320" height="272" fill="#f5f5f5" rx="8"/>
+<rect x="208" y="120" width="320" height="272" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4" rx="8"/>
+<rect x="560" y="120" width="400" height="272" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1" rx="8"/>
+<text x="40" y="164" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Dòng đã lọc</text>
+<text x="40" y="180" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">toàn căn hộ</text>
+<text x="40" y="260" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Bảng trộn</text>
+<rect x="224" y="144" width="288" height="64" fill="#ffffff"/>
+<path d="M228,144 H508 Q512,144 512,148 V176 H224 V148 Q224,144 228,144 Z" fill="rgba(45,49,66,0.05)"/>
+<line x1="224" y1="176" x2="512" y2="176" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<text x="236" y="164" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Toà</text>
+<text x="236" y="196" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start">Toà A</text>
+<rect x="224" y="144" width="288" height="64" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1" rx="4"/>
+<rect x="576" y="144" width="368" height="64" fill="#ffffff"/>
+<path d="M580,144 H940 Q944,144 944,148 V176 H576 V148 Q576,144 580,144 Z" fill="rgba(45,49,66,0.05)"/>
+<line x1="576" y1="176" x2="944" y2="176" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<text x="588" y="164" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Toà</text>
+<text x="588" y="196" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start">Toà A</text>
+<line x1="688" y1="144" x2="688" y2="208" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<text x="700" y="164" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Khu · dãy · địa chỉ</text>
+<rect x="576" y="144" width="368" height="64" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1" rx="4"/>
+<rect x="224" y="240" width="288" height="128" fill="#ffffff"/>
+<path d="M228,240 H508 Q512,240 512,244 V272 H224 V244 Q224,240 228,240 Z" fill="rgba(45,49,66,0.05)"/>
+<line x1="224" y1="272" x2="512" y2="272" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<line x1="224" y1="304" x2="512" y2="304" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<line x1="224" y1="336" x2="512" y2="336" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<text x="236" y="260" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Vị trí</text>
+<text x="236" y="292" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start">Toà A</text>
+<text x="236" y="324" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start">[Mẫu] Khu thấp tầng thử · LK1</text>
+<text x="236" y="356" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start">45/12 Đường Mẫu 1, Sài Gòn</text>
+<rect x="224" y="240" width="288" height="128" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1" rx="4"/>
+<rect x="576" y="240" width="368" height="128" fill="#ffffff"/>
+<path d="M580,240 H940 Q944,240 944,244 V272 H576 V244 Q576,240 580,240 Z" fill="rgba(45,49,66,0.05)"/>
+<line x1="576" y1="272" x2="944" y2="272" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<line x1="576" y1="304" x2="944" y2="304" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<line x1="576" y1="336" x2="944" y2="336" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<text x="588" y="260" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Toà</text>
+<text x="588" y="292" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start">Toà A</text>
+<line x1="688" y1="240" x2="688" y2="368" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<text x="700" y="260" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start" font-weight="600">Khu · dãy · địa chỉ</text>
+<text x="700" y="324" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start">[Mẫu] Khu thấp tầng thử · LK1</text>
+<text x="700" y="356" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="start">45/12 Đường Mẫu 1, Sài Gòn</text>
+<rect x="576" y="240" width="368" height="128" fill="none" stroke="rgba(45,49,66,0.30)" stroke-width="1" rx="4"/>
+<text x="560" y="424" fill="#4f5d75" font-size="14" font-family="'Instrument Serif', 'Lora', serif" text-anchor="start" font-style="italic">sàn chỉ căn hộ thấy thêm một cột trống</text>
+<line x1="40" y1="448" x2="960" y2="448" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="40" y="476" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.14em">CHÚ GIẢI</text>
+<rect x="136" y="464" width="40" height="16" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4" rx="4"/>
+<text x="188" y="476" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">Phương án khuyến nghị</text>
+<rect x="384" y="464" width="40" height="16" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1" rx="2"/>
+<text x="436" y="476" fill="#2d3142" font-size="11" font-family="'Geist', sans-serif" text-anchor="start">ô trống ở cột không hợp</text>
+    </svg>
+  </main>
+</body>
+</html>

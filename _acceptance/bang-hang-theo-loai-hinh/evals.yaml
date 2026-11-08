@@ -1,0 +1,150 @@
+schema_version: 1
+feature_slug: bang-hang-theo-loai-hinh
+# Lệnh máy: executors.test.web (bộ kiểm thuần apps/web), executors.test.api (bộ kiểm thuần packages/api), executors.test.doi_nhan_db
+# (bộ kiểm cách ly + packages/api/test-db trên Postgres dãy X 5576, ghim cứng — worktree X không có .env.local),
+# executors.script.typecheck, executors.script.lint, executors.test.ui_lint, executors.design.khuon, executors.design.floor.
+# ui-check trên chỗ thử dãy X (_acceptance/bang-hang-theo-loai-hinh/thu/dung-x.mjs: Postgres 5576 nạp sàn mẫu hàng 5, thêm
+# căn ngoài khu mỗi loại hình và hàng trên chúng qua API — nhãn mẫu, số 0900 000 0xx; máy dev tạm cổng 3496), Chrome không đầu.
+# Tắt máy dev bằng dung-x.mjs --tat khi xong. Ma trận viết trước nằm trong chính tệp kiểm (mảng hằng), số assert = số phần tử.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**", "packages/core/src/catalog/property-type.ts"]
+    expected: "exit 0; bộ «loại hình của dòng» trong apps/web/src/app/(app)/inventory/loai-hinh.test.ts chạy ma trận viết trước 3 dạng × loại hình (căn hộ dạng toà; Townhouse, Single Family Residence, Unimproved Land ở dạng lô và ngoài khu) + 2 ca chưa rõ, dữ liệu rút từ bộ mẫu hàng 5 và du-lieu-mau-thap-tang.json (không viết tay khuôn danh mục); lô tra bằng chính hàm đọc lô của lõi (buildLotIndex) trên danh mục cùng kiểu CatalogData mà /api/v1/catalog trả — bên đọc của E7a; mỗi ca so loại hình và từng trường của PROPERTY_SUBTYPE_FIELDS (giá trị nguồn · «chưa rõ» · «không có»); ca bản giữ trên máy cho cùng kết quả khi đọc mạng lỗi. Chiều đỏ ghim: dòng đất mang floor của nguồn thì ca báo «trường floor không thuộc Unimproved Land»; bỏ nguồn căn ngoài khu thì ca báo «loại hình Chưa rõ, mong Townhouse»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**", "packages/core/src/catalog/property-type.ts"]
+    expected: "exit 0; bộ «cột theo loại hình» chạy đủ 15 tập con khác rỗng + tập rỗng (số ca = 16, đếm trong tệp); toàn căn hộ so bằng đúng danh sách cột ghim viết trước (Toà, Mã căn, Loại căn, Diện tích, Tầng, Hướng, Trạng thái, Giá, Phí, Nội thất, Pháp lý, Tài chính, Tình trạng sử dụng, Xác nhận, Đầu chủ, Mức đủ, Ai thấy + ba cột ẩn mặc định); toàn đất không có floor, directionFaces, unitType, livingArea; cột tắt ở menu Cột vẫn tắt; cột vị trí theo Hỏi-1 đã chốt — tiêu đề «Toà» cho tập toàn căn hộ, «Vị trí» cho mọi tập có loại khác; ô hàng lô «<khu> · <dãy>», ô hàng ngoài khu bằng đúng unparsedAddress của căn, ô căn hộ bằng mã toà (đối chứng). Chiều đỏ ghim: thêm floor vào trường của Unimproved Land trên bản sao bảng thì ca «toàn đất» báo «cột floor hiện cho tập [Unimproved Land]»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; trên cùng bảng trộn căn hộ + đất: ô floor của dòng đất là \"\" ở chữ ô và chữ chép, lọc «5-15» không giữ dòng đất; ô floor của căn hộ chưa có tầng là «—»; ô lotSizeArea của căn hộ là \"\". Cặp hai chiều cùng bảng: ca đối chứng dòng căn hộ có tầng 7 giữ được qua lọc «5-15»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; lọc cột propertySubType theo từng giá trị của bảng trộn bốn loại hình + một chưa rõ giữ đúng dòng của giá trị ấy (5 ca, đếm khớp); chữ hiện Căn hộ · Nhà phố · Biệt thự · Đất khi sàn không đặt cách gọi, và đúng cách gọi riêng khi bộ từ vựng của sàn có nhãn cho propertySubType; chữ «Chưa rõ» cho dòng không nguồn."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; nhomDong «loai-hinh» và «loai-hinh-toa» trên bảng trộn cho nhóm và số căn bằng bảng đếm viết trước; NHOM_MAC_DINH vẫn «toa-loai»; ở cấp Loại căn dòng đất mang nhãn «Đất»; goc-nhin đọc được cách xem lưu «loai-hinh» và vẫn đọc cách xem cũ «toa-loai» như trước. Chiều đỏ: cách nhóm lạ «khong-co» vẫn bị từ chối (null)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; mở hồ sơ từ dòng lô và dòng ngoài khu dựng `?hang=<id>` (không unit/toa); mục thuộc tính của mỗi loại hình ra đúng danh sách nhãn viết trước — Đất: Loại hình, Diện tích đất, Mặt tiền, Lộ giới (không Tầng, Trục, Toà); Nhà phố, Biệt thự: Loại hình, Diện tích đất, Diện tích sàn, Số tầng, Mặt tiền, Lộ giới, Phòng ngủ, Hướng; căn hộ giữ đúng bảy nhãn hôm nay. Chiều đỏ ghim: hàng lô có unitNumber mà mở theo toà thì ca báo «hồ sơ hàng lô phải mở theo hàng»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7a
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.api
+    paths: ["packages/api/src/catalog/**"]
+    expected: "exit 0; GET /api/v1/catalog với danh mục lô mẫu (rút từ du-lieu-mau-thap-tang.json) trả blocks của khu thấp tầng với lô và lotSizeArea, storiesTotal, frontageLength, accessRoadWidth; khoá lạ và khoá nguồn (ownerPhone) cài vào gói vào không có trong thân trả; danh mục lô mặc định cho blocks rỗng ở mọi khu; khuôn căn hộ giữ nguyên chín khoá; thân trả đọc lại bằng buildLotIndex + lookupLot của lõi (cùng hàm Bảng hàng dùng) ra đúng lô LK1-01 với lotSizeArea của bộ mẫu — round-trip từ bên ghi thật; kiểu thân trả satisfies CatalogData của lõi (E14 bắt lệch tên khoá)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    paths: ["packages/api/src/off-compound-units/**", "packages/api/test-db/bang-hang-theo-loai-hinh/**"]
+    expected: "exit 0; bộ packages/api/test-db/bang-hang-theo-loai-hinh: sàn A tạo ba căn ngoài khu, sàn B một căn; GET /api/v1/off-compound-units của A trả đúng ba căn của A (mã, propertySubType, unparsedAddress — không khoá nguồn), của B đúng một; người của sàn không có Bảng hàng nhận 403; chưa đăng nhập 401. Chiều đỏ ghim: ca «A không thấy căn của B» nêu mã căn lọt."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/bang-hang-theo-loai-hinh/thu/dung-x.mjs rồi node _acceptance/bang-hang-theo-loai-hinh/thu/chay-ui.mjs --ra _acceptance/bang-hang-theo-loai-hinh/evidence"
+      - "Đối chiếu dòng e8 của chay-ui: lúc đầu tiêu đề cột hiện gồm Loại hình; lọc Loại hình = Đất → mọi dòng thấy được có ô Loại hình «Đất», tiêu đề cột không có «Tầng», «Hướng», «Loại căn», có «Diện tích đất», «Mặt tiền», «Lộ giới»; nhóm «Loại hình» (bỏ lọc) → hàng nhóm «Căn hộ», «Nhà phố», «Biệt thự», «Đất» mỗi nhóm số căn bằng số dung-x.mjs in; bấm một dòng đất → cột hồ sơ có nhãn «Loại hình» giá trị «Đất» và không có nhãn «Tầng»; theo Hỏi-1 đã chốt: tiêu đề cột đầu khi bảng trộn là «Vị trí» và ô của một dòng đất ngoài khu bằng đúng địa chỉ dung-x.mjs đã tạo"
+    target: "http://localhost:3496/inventory"
+    expected: "Ảnh E8-loc-dat.png (không cột Tầng, Hướng, Loại căn), E8-nhom-loai-hinh.png (bốn nhóm có số căn), E8-ho-so-dat.png (Loại hình Đất, không Tầng); dòng e8 khớp đủ các điều trên."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8b
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.doi_nhan_db
+    layer: backend-effect
+    paths: ["packages/api/src/off-compound-units/**", "packages/api/test-db/bang-hang-theo-loai-hinh/**"]
+    expected: "exit 0; ca «màn đọc được loại hình của hàng ngoài khu»: tạo căn ngoài khu Unimproved Land và một hàng trên nó qua API, rồi GET /api/v1/listings trả hàng ấy với offCompoundUnitId khớp mã một căn trong GET /api/v1/off-compound-units mang propertySubType «Unimproved Land» — đúng cặp khoá Bảng hàng dùng để ghép."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.lint
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/proto/nhanh-tuc-thi/**", "packages/ui-lint/**"]
+    expected: "exit 0 trên cây thật; dòng kiểm chuẩn không in «ngoại lệ có hạn: …proto/nhanh-tuc-thi/page.tsx → hàng 79»; không dòng «hạn đã tới» nào."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.ui_lint
+    paths: ["design/patterns/**", "packages/ui-lint/**", "apps/web/src/app/(app)/proto/nhanh-tuc-thi/**"]
+    expected: "exit 0; ca «ngoại lệ có hạn» của rang-bo-cuc.test.mjs: bản đồ thật không còn ngoại lệ nào trỏ bang-hang-theo-loai-hinh; theo Hỏi-2 đã chốt — chuyển: tệp apps/web/src/app/(app)/proto/nhanh-tuc-thi/page.tsx còn và không nằm trong vungMienHan; gỡ: tệp không còn và không bài nào trỏ nó; chiều đỏ trên bản sao — thêm lại ngoại lệ của trang thử với hạn là một hàng đã gộp thì lechCua báo đúng một dòng «hạn đã tới»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: judgment
+    inputs: [docs/product/tham-chieu.md]
+    question: "Sổ quyết định (§12) của tệp có một dòng ngày 08/11 hay sau ghi rằng Bảng hàng và hồ sơ căn hiện cột và trường theo loại hình từ bảng của lõi, lọc và nhóm theo loại hình, và ô của trường loại hình không dùng khác ô chưa rõ không? Dòng ấy có nói đất không có cột tầng không?"
+    expected: "Có dòng nêu đủ bốn ý: cột theo loại hình, hồ sơ theo loại hình, lọc và nhóm theo loại hình, ô không dùng khác ô chưa rõ (đất không cột tầng)."
+    evidence_required: [run_id, verdict, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "apps/web/src/app/(app)/inventory/page.tsx", "apps/web/src/app/(app)/inventory/views/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/ho-so-can.md", "apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx", "apps/web/src/app/(app)/proto/anh-can-ba-ngan/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm ho-so-can"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/**"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.typecheck
+    paths: ["apps/web/src/**", "packages/api/src/**"]
+    expected: "exit 0; kiểm kiểu mọi gói xanh"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
