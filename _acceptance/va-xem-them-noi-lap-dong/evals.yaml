@@ -1,0 +1,62 @@
+schema_version: 1
+feature_slug: va-xem-them-noi-lap-dong
+# Luật con trỏ chấm bằng bài kiểm thuần của màn (apps/web), đọc nối dây trong vung.tsx, khuôn và sàn thiết kế, và một lượt
+# nhìn màn có nhật ký mạng. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/contacts/xem-them.test.ts ca «xem thêm: trang cuối sau lượt không đọc lại» có mặt và ok — bảng viết trước năm dòng, đếm 5: (1) trangTuMayChu có trang máy chủ {K0, c1} → {khoa K0, tiep c1} (đối chứng dương: «Xem thêm» lúc mở màn gửi c1 qua conTroXemThem); (2) trangTuMayChu không trang máy chủ → null; (3) trangKhiKhongDoc(trang {K0, c3}, không trang mới, K0) → {K0, c3} — không phải c1 của trang máy chủ lúc mở màn; (4) trangKhiKhongDoc(trang {K0, c3}, trang máy chủ mới {K0, c1'}, K0) → {K0, c1'}; (5) trangKhiKhongDoc(trang {K0, c3}, trang máy chủ mới của bộ lọc khác {K1, x}, K0) → {K0, c3}. Chiều đỏ (phá thử ở S3, cùng tệp): đổi nhánh «không trang mới» của trangKhiKhongDoc sang trả con trỏ trang 1 (hay trả null) → ca đỏ với thông điệp ghim «không đọc lại, không trang mới: giữ trang đã nối»."
+    paths: ["apps/web/src/app/(app)/contacts/xem-them.ts", "apps/web/src/app/(app)/contacts/xem-them.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong apps/web/src/app/(app)/contacts/xem-them.test.ts bốn ca mới có mặt và ok, dựng trên bộ phát lại manLienHe (luật thật khoaLoc, canDocLan, conTroXemThem, duocNoi, trangTuMayChu; trang máy chủ mới nhận theo đối tượng, mã liên hệ duy nhất): (1) «gõ rồi xoá ô tìm trong 250 ms không lặp dòng» — ba trang 50, 50, 10: gõ «a» hẹn đọc, xoá «a» không đọc lại, con trỏ đã gửi = [c1, c2], bảng 110 dòng, tập mã 110, đúng thứ tự trang 1, 2, 3; đối chứng: luật cũ trên cùng kịch bản gửi [c1, c1] và lặp đúng 50 mã; (2) «hai lần Xem thêm liền sau gõ-xoá đi đúng c2 rồi c3» — bốn trang 50, 50, 50, 10: gửi [c1, c2, c3], 160 mã không trùng, đúng thứ tự; (3) «gõ-xoá trong lúc trang Xem thêm đang về thì trang ấy bỏ, lần bấm kế nối nó một lần» — bảng còn 50 sau khi trang về, gửi [c1, c1, c2], 110 mã đúng thứ tự; (4) «vẽ lại với cùng trang máy chủ giữ trang đã nối; trang máy chủ mới thay bảng và con trỏ» — cùng đối tượng trang máy chủ: gửi [c1, c2]; đối tượng mới cùng khoá: bảng bằng đúng 50 dòng của trang ấy, gửi [c1, c1], bảng 100 mã. Năm ca cũ của «Xem thêm» (khoá bộ lọc 6 dòng, bấm trong 250 ms sau khi đổi bộ lọc, không gửi khi đang tải hay hết trang 4 dòng, trang về sau khi bộ lọc đã đổi, bấm hai lần trước khi trang về) vẫn có mặt và ok. Chiều đỏ (phá thử ở S3, cùng tệp): trangKhiKhongDoc trả con trỏ trang 1 ở nhánh «không trang mới» → ca (1), (2), (4) đỏ với thông điệp ghim «lần Xem thêm sau gõ-xoá phải gửi con trỏ trang 3», «hai lần Xem thêm sau gõ-xoá phải gửi c2 rồi c3», «vẽ lại cùng trang máy chủ: trang cuối phải giữ c2»; trả null → «Xem thêm phải bấm được»."
+    paths: ["apps/web/src/app/(app)/contacts/xem-them.ts", "apps/web/src/app/(app)/contacts/xem-them.test.ts", "apps/web/src/app/(app)/contacts/lien-he.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: judgment
+    inputs: ["apps/web/src/app/(app)/contacts/vung.tsx", "apps/web/src/app/(app)/contacts/xem-them.ts", "_acceptance/va-xem-them-noi-lap-dong/vung-goc.tsx.txt"]
+    question: "vung-goc.tsx.txt là vung.tsx trước bản vá. Trong vung.tsx hiện tại: (1) trạng thái trang cuối (useState) và ref con trỏ trang cuối đã nối (tiepHienTai) cùng ref trang cuối (trangCuoi) có khởi đầu từ trangTuMayChu(dau) (hay giá trị rút từ nó) không, và mọi chỗ đặt trang cuối sau lúc khởi đầu có đi qua MỘT hàm đặt (datTrang) đổi cùng lúc trạng thái, ref trang cuối và tiepHienTai không? (2) trong hiệu ứng đọc danh sách, nhánh không đọc lại (canDocLan trả false) có còn chỗ nào đặt trang cuối hay tiepHienTai từ `dau` khi `dau` không phải trang máy chủ mới (dauMoi) — tức không còn biểu thức kiểu `khoaLuot === dau?.khoa ? dau` — và trang cuối ở nhánh ấy có chỉ đổi qua trangKhiKhongDoc không; ref tiepHienTai có luôn cùng giá trị con trỏ với trang cuối vừa đặt không? (3) trang máy chủ mới (dauMoi) có được tính theo ĐỐI TƯỢNG — khác null chỉ khi đối tượng dau khác đối tượng giữ trong ref dauDaDung của lượt trước (so theo khoá bộ lọc là FAIL) — và ở lượt dùng dauMoi đúng bộ lọc, bảng có được thay bằng dauMoi.items trong cùng nhánh với lúc trang cuối lấy con trỏ của dauMoi không? (4) so với vung-goc.tsx.txt: them() và nhánh đọc lại sau 250 ms có chỉ khác ở chỗ đặt trang cuối (gọi datTrang thay cho gán tiepHienTai rồi setTrang, cùng khoá và con trỏ), cách lấy con trỏ qua conTroXemThem và điều kiện nối qua duocNoi giữ nguyên, phần JSX được vẽ (KhungLienHe, HoSoNguoi, DanhSachLienHe và prop của chúng) cùng mọi chuỗi chữ giữ nguyên không?"
+    expected: "PASS khi cả bốn vế đúng trên ba tệp; FAIL nêu dòng nếu dauMoi so theo khoá, bảng và con trỏ của dauMoi không đổi cùng nhánh, trang cuối còn được đặt từ trang máy chủ lúc mở màn ở nhánh không đọc lại, khởi đầu trang cuối không qua trangTuMayChu, tiepHienTai lệch con trỏ trang cuối, hay JSX, chữ và đường đọc khác bản trước."
+    paths: ["apps/web/src/app/(app)/contacts/vung.tsx", "apps/web/src/app/(app)/contacts/xem-them.ts"]
+    evidence_required: [run_id, verdict, judges, verified_at]
+
+  - id: E4
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/lien-he.md", "apps/web/src/app/(app)/contacts/vung.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm lien-he"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.design_floor
+    paths: ["apps/web/src/app/(app)/contacts/**"]
+    expected: "exit 0; sàn thiết kế M1 không chặn tệp giao diện nào của vòng (không mã màu thô trong apps/web/src/app/(app)/contacts/)"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    setup:
+      - "Postgres dãy L (5571) có sàn mẫu (DATABASE_URL=postgres://postgres:quyhang@localhost:5571/postgres node packages/db/seed/nap.mjs --nap); máy chủ dev của dãy L ở http://localhost:3491 (không dùng cổng 3460 của chủ kho), nhật ký tee ra .acceptance-runs/web-L.log; mã đăng nhập dev nằm ở dòng «[ma-dang-nhap] <email> <mã>» của tệp ấy. Đăng nhập dau-chu-1 của sàn mẫu (@mau.quy-hang.test)."
+    steps:
+      - "Đăng nhập Đầu chủ 1 của bộ mẫu. Danh sách Liên hệ không lọc cần ít nhất 101 dòng (ba trang 50): thiếu thì dựng thêm qua fetch trong trang (POST /api/v1/listings rồi PUT /api/v1/listings/{id}/owner, ownerName «[Tên] Thử xem thêm <n>» với n duy nhất, số mới trong dải giả 0900 000 xxx chưa dùng). Sau khi dựng, đọc GET /api/v1/contacts (không bộ lọc) qua các trang và ghi tổng vào observed; dưới 101 thì eval HỎNG có tên «thiếu dữ liệu ba trang», không chấm tiếp"
+      - "Khổ 1440: mở /contacts (không bộ lọc), chờ danh sách hiện và có nút «Xem thêm». Số «N liên hệ» ở đầu danh sách là số dòng đang có trong danh sách (danh-sach.tsx: độ dài danh sách, thêm «+» khi còn trang). Ghi N1 và số dòng đếm trên lưới → chụp evidence/E6-step1.png"
+      - "Bấm «Xem thêm», chờ danh sách dài thêm; ghi N2, số dòng trên lưới, con trỏ (tham số cursor) của yêu cầu GET /api/v1/contacts vừa gửi và tập id trong thân phản hồi (nhật ký mạng) → chụp evidence/E6-step2.png"
+      - "Gõ rồi xoá ô tìm trong MỘT đoạn mã chạy trong trang (không qua hai lần gọi công cụ): đặt giá trị «a» cho ô tìm bằng bộ đặt giá trị gốc của input rồi phát sự kiện input, chờ 100 ms bằng setTimeout trong trang, đặt lại «» và phát sự kiện input; ghi performance.now() của hai lần phát vào observed (khoảng cách phải dưới 250 ms). Chờ 1 giây. Ghi mọi yêu cầu GET /api/v1/contacts gửi trong lúc ấy: có yêu cầu nào KHÔNG mang cursor thì eval là KHÔNG KẾT LUẬN (nhánh không đọc lại không chạy) — làm lại bước này một lần; vẫn có thì báo UNCERTAIN, không tính đạt"
+      - "Bấm «Xem thêm» lần nữa, chờ danh sách dài thêm → chụp evidence/E6-step3.png; ghi vào observed (a) con trỏ của yêu cầu «Xem thêm» thứ hai, có khác con trỏ của yêu cầu thứ nhất không, (b) tập id trong thân phản hồi thứ hai có rời tập id của phản hồi thứ nhất không, (c) N3, số dòng đếm trên lưới, số tên khác nhau trên lưới, và tên của các dòng ở vị trí N2+1… có đúng là tên trong phản hồi thứ hai theo đúng thứ tự không"
+    cmd: config:executors.ui-check
+    expected: "Bước 1: danh sách không lọc có ít nhất 101 dòng. Bước 3: N2 > N1, số dòng trên lưới = N2. Bước 4: hai lần phát cách nhau dưới 250 ms và không có yêu cầu đọc lại không mang cursor (nếu có: KHÔNG KẾT LUẬN, không đạt). Bước 5: con trỏ của yêu cầu «Xem thêm» thứ hai khác con trỏ của yêu cầu thứ nhất, hai phản hồi không chung id nào, N3 = N2 + số dòng của phản hồi thứ hai = số dòng trên lưới = số tên khác nhau trên lưới, các dòng sau vị trí N2 đúng thứ tự của phản hồi thứ hai — không dòng nào lặp."
+    paths: ["apps/web/src/app/(app)/contacts/**"]
+    evidence_required: [run_id, verifier, verified_at, screenshot, observed]
