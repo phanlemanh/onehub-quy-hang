@@ -124,9 +124,9 @@
 **Files:**
 - Create: `docs/adr/0027-khuon-xac-nhan-danh-muc.md` (khuôn như ADR-0015: bối cảnh, năm quyết định của Cổng Phạm vi, hệ quả, không làm)
 - Modify (chỉ thêm dòng): `docs/product/tham-chieu.md` §12 dòng 08/11 · `docs/product/doi-chieu-nganh.md` mục mới «12. Xác nhận danh mục» (RESO EntityEvent, Google Maps, Waze, kèm nguồn) · `docs/architecture/so-diem-bien-thien.md` một dòng điều khoá «sáu trường báo sai, ba loại sự kiện — nghĩa chuẩn để so giữa các sàn»
-- Vẽ lại `PRODUCT-MAP.md`, `LO-TRINH.html` bằng `scripts/product-map.mjs --root .` sau khi dời tệp chưa theo dõi ra ngoài cây (luật 79).
+- Vẽ lại `PRODUCT-MAP.md`, `LO-TRINH.html` bằng `product-map.mjs` của gói acceptance-gate (kho không có bản riêng; khối MAP-STAGE của lệnh duyệt) sau khi dời tệp chưa theo dõi ra ngoài cây (luật 79).
 
-- [ ] **Step 1:** Viết ADR và ba dòng thêm; `node scripts/product-map.mjs --root . --check` → khớp sau khi vẽ lại.
+- [ ] **Step 1:** Viết ADR và ba dòng thêm; `node "$AG/scripts/product-map.mjs" --root . --check` → khớp sau khi vẽ lại.
 - [ ] **Step 2:** `npm run lint` → PASS. Commit `docs: ADR-0027 khuôn xác nhận danh mục v1, Tham chiếu và đối chiếu ngành`.
 
 ### Sau Task 5
