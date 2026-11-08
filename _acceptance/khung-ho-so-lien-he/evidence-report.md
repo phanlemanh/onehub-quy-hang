@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: fed3fec163e6eaa733c3ade9fb4cb6b46231d614
+verified_commit: 909bf73c7d33db247f1ddf2dda12036a78408ce8
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -188,3 +188,7 @@ none — every multi-run eval is uniform
 Round 1: sua nut Dong o trang thai tai va loi, khong doc lai danh sach khi bang da dung bo loc; bang chung luot 1. Returned to implementation.
 Round 2: sua bang khong ket khi quay ve bo loc cu; bang chung luot 2. Returned to implementation.
 Round 3: moi eval chay lai tren fed3fec1 deu xanh; E5 carry-forward tu round 1. Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-08, do gộp main
+run_id: repin-20261108T030331Z-72617
+sha: 909bf73c7d33db247f1ddf2dda12036a78408ce8 · suites: 7 lệnh exit 0 · evals: 9/9 eval máy đạt kỳ vọng · ngoài làn máy: E8 · AC không có chốt máy: AC-8 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
