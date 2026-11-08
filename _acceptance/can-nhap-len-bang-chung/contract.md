@@ -5,7 +5,7 @@ slug: can-nhap-len-bang-chung
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-08-can-nhap-len-bang-chung-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -95,3 +95,10 @@ chỗ thấy → AC-6, AC-7, AC-9; đảo → AC-8; sau lần nhập → AC-10. 
 - Ca «ảnh không còn chặn ở cửa nhập» của hồ sơ `anh-khong-chan-ban` (E2c) đang ghim vế «dòng vẫn ở Chưa đủ để rao» — vế
   ấy chính là điều hàng này đổi (hồ sơ kia ghi rõ chờ hàng này). Hàng này sửa ca ấy giữ vế «lý do không nêu ảnh», đổi vế
   trạng thái thành «căn lên Đang bán»; E2 của hồ sơ này chạy lại đích danh ca ấy.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-08:
+  - Ngoài-1: Bản chụp «đầu chủ B không thấy căn của A» có thể báo đạt oan khi mã căn hiện bằng gạch nối khác loại.
+  - Ngoài-2: Bản chụp có thể ghi nhóm Hôm nay trống hay báo đạt sai khi mã căn dùng gạch nối khác loại.
+  - Ngoài-3: Ở khổ điện thoại, bản chụp chỉ xác nhận căn có trên Bảng hàng, chưa xác nhận căn ở Đang bán.
+  - Ngoài-4: Phép kiểm «không thấy căn của A» của bản chụp đọc chữ khác cách phép chờ, nên không tự đối chứng.
+  - Ngoài-6: Dòng nhập «Đã cọc» ghi «lên Đang bán — còn thiếu …» dù căn đã ở Đang giao dịch.
+  - Ngoài-7: Bài thử cửa sửa hàng loạt dùng lệnh gõ tay, không đi qua trình sửa thật trên màn.

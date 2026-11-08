@@ -11,9 +11,9 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>23 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>115 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>116 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -32,10 +32,6 @@ flowchart TD
 - Sự kiện «xác nhận danh mục» chỉ dựng được từ lõi theo khuôn phiên bản 1 — khung toà, thuộc tính căn, báo sai, biểu mẫu đóng, kèm mã công ty và mã người mờ — và thoả thuận loại «xác nhận danh mục» chiều ra không mang được lớp nào ngoài danh mục (`khuon-xac-nhan-danh-muc`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
 
-## Đang làm
-
-- Đầu chủ nhập bảng hàng cũ từ Sheet và căn mà file ghi «còn hàng» lên ngay bảng hàng chung dù file thiếu pháp lý hay tình trạng sử dụng; mục thiếu hiện ở mức đủ và thành việc ở Hôm nay (`can-nhap-len-bang-chung`)
-
 ## Đã giao — chờ phiên nghiệm thu
 
 - Đầu chủ kéo hoặc dán ảnh từ Zalo trên máy tính vào hồ sơ căn và xếp vào ba ngăn; ngăn nội bộ không bao giờ ra ngoài, không lưu trên máy (`anh-can-ba-ngan`)
@@ -52,6 +48,7 @@ flowchart TD
 - Quản trị sàn đổi tên hiển thị của trường chuẩn và thêm giá trị riêng neo vào giá trị chuẩn; cùng một căn hiện đúng ở bảng hàng, đội khác và trang khách (`cach-goi-rieng`)
 - Mọi người dùng có một khu Cài đặt — nhóm Cá nhân ai cũng thấy, nhóm Sàn chỉ quản trị; hai đường vào; nội dung bề rộng đọc cạnh cột mục lục (`cai-dat-hop-nhat`)
 - Hàng tạo được trên lô thấp tầng trong khu và trên nhà, đất ngoài khu định danh bằng địa chỉ chuẩn; căn ngoài khu là bản ghi của sàn, sàn khác không thấy, và hàng cũ gấp lại ra đúng như trước (`can-ngoai-khu`)
+- Đầu chủ nhập bảng hàng cũ từ Sheet và căn mà file ghi «còn hàng» lên ngay bảng hàng chung dù file thiếu pháp lý hay tình trạng sử dụng; mục thiếu hiện ở mức đủ và thành việc ở Hôm nay (`can-nhap-len-bang-chung`)
 - Đầu chủ gõ mã căn trùng ở hai toà cùng dự án thì thấy cả hai căn kèm tên toà để chọn, không bị điền lặng lẽ thuộc tính của căn toà khác (`can-trung-ma-hai-toa`)
 - Mỗi sàn giữ cấu hình riêng: đổi một điểm qua một lệnh API thành sự kiện chỉ thêm ghi người và vai, sàn chưa đổi thì nhận mặc định của sổ, đối tượng tạo sau lần đổi mang số mới còn đối tượng cũ giữ số lúc tạo, và sàn khác không đọc hay đổi được (`cau-hinh-theo-san`)
 - Cách gọi riêng chặn tên riêng của một giá trị trùng tên đang hiện (riêng hay mặc định) của giá trị khác cùng tập đóng, ở máy chủ và ngay ở ô đang sửa (`chan-trung-ten-gia-tri`)

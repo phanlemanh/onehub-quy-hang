@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: c2b9a519e59797e095f7ab36e67e5841547509f9
-human_signoff:
+human_signoff: Manh Phan 2026-11-08
 ---
 
 # Evidence Report: can-nhap-len-bang-chung
