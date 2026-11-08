@@ -1,0 +1,120 @@
+schema_version: 1
+feature_slug: khuon-xac-nhan-danh-muc
+# Lệnh máy: `executors.test.core` (lõi: thoả thuận, hàm dựng), `executors.test.connect` (khuôn), `executors.script.typecheck`
+# (dấu kiểu của lõi), `executors.script.nhap_tac_tu` (migrate + bộ cách ly + test-db trên Postgres dãy G, cổng 5573).
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output` — dòng reporter liệt tên ca — và người chấm đối chiếu từng tên
+# ca nêu trong `expected`: có mặt, «ok», không «# SKIP»/«# TODO». Mọi ma trận viết trước trong tệp kiểm, số lần so đếm
+# bằng biến đếm và so với độ dài ma trận.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/agreements.test.ts ca «xác nhận danh mục: trần theo loại, bảy lớp» có mặt và ok — ma trận viết trước bảy lớp của DATA_CLASSES × specialTerms (false, true), mỗi phần tử một lần so, số lần so bằng 14: thoả thuận catalog_confirmation outbound liệt ĐỦ bảy lớp (dựng tay, như hàng lệch trong cơ sở dữ liệu) cho mayFlow ok: true chỉ ở catalog, mọi lớp khác ok: false với reason chứa «Xác nhận danh mục» (riêng source giữ lý do lớp nguồn); ca «xác nhận danh mục: lỗi cấu trúc» có mặt và ok — agreementErrors trả [] cho { outbound, [catalog], specialTerms false } (đối chứng dương); ma trận dựng bằng lặp DATA_CLASSES trừ catalog (thêm từng lớp vào [catalog]) cộng hai phần tử chiều vào và specialTerms true, số lần so bằng 8 (so với DATA_CLASSES.length − 1 + 2): mỗi lần có ít nhất một lỗi nhắc «Xác nhận danh mục» (source, company_internal được mang thêm lỗi cũ của chúng); ca «sáu loại cũ và ai_processing giữ hành vi» có mặt và ok — với mỗi loại khác catalog_confirmation trong CONNECTION_KINDS (đếm bằng CONNECTION_KINDS.length − 1), thoả thuận outbound có transaction + specialTerms true vẫn cho transaction chảy. Chiều đỏ: gỡ nhánh trần theo loại trong mayFlow → phần tử transaction/specialTerms true của ma trận đỏ, thông điệp nêu lớp ấy."
+    paths: [packages/core/src/agreements.ts, packages/core/src/agreements.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.script.nhap_tac_tu
+    expected: "exit 0; trong packages/db/tests/xac-nhan-danh-muc.test.mjs (chạy dưới vai quy_hang_app, đặt app.current_company_id, mỗi ca rollback) ca «xác nhận danh mục: cơ sở dữ liệu chỉ nhận lớp danh mục» có mặt và ok — ma trận viết trước sáu lớp ngoài danh mục (shareable_listing, company_internal, custom_field, source, transaction, behavior), mỗi lớp một insert data_classes = {catalog, <lớp>}, số lần so bằng 6: với shareable_listing, custom_field, transaction, behavior err.constraint đúng bằng agreements_xac_nhan_chi_danh_muc; với source, company_internal err.constraint là ràng buộc cũ (agreements_never_source, agreements_internal_stays — ghim từng tên) VÀ cùng ca, trong savepoint gỡ hai ràng buộc cũ (bằng chủ bảng), cùng insert ra err.constraint đúng bằng agreements_xac_nhan_chi_danh_muc; thêm ba phần tử: direction inbound, special_terms true, và update một dòng hợp lệ sang data_classes = {catalog, transaction} — mỗi lần err.constraint = agreements_xac_nhan_chi_danh_muc; đối chứng dương cùng ca: { catalog_confirmation, outbound, {catalog}, special_terms false } thêm được (rowCount 1). Ca «mọi loại kết nối đều thêm được» có mặt và ok — danh sách loại đọc từ thân 040 (đọc tệp theo đường suy từ vị trí tệp kiểm), mỗi loại thêm một dòng hợp lệ, số dòng thêm bằng độ dài danh sách và bằng 8. Ca «thứ tự của bản thật: áp lại 040 sau 052» có mặt và ok — trên cơ sở dữ liệu đã có mọi migration, trong giao dịch chủ bảng chạy lại nguyên thân tệp 040 (không lỗi), rồi phần tử transaction và đối chứng dương của ma trận chạy lại cho cùng kết quả. Ca «không migration nào sau 040 đổi lại ràng buộc» có mặt và ok — mọi tệp packages/db/migrations/NNN_*.sql với NNN > 040 không chứa chuỗi agreements_kind_check hay agreements_xac_nhan_chi_danh_muc; đối chứng âm cùng hàm quét: một chuỗi thử chứa agreements_kind_check bị gọi tên. Chiều đỏ: bỏ ràng buộc trong migration 040 → phần tử transaction thêm được, ca đỏ nêu lớp."
+    paths: [packages/db/migrations/**, packages/db/tests/xac-nhan-danh-muc.test.mjs]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; trong packages/connect/src/catalog-confirmation.test.ts ca «khuôn v1: ba sự kiện của lõi đọc được» có mặt và ok — ba sự kiện dựng bằng dungKhungToa, dungThuocTinhCan, dungBaoSai của @quy-hang/core/confirmation (không viết tay) trên danh mục mẫu qua parseCatalogConfirmation ra ok: true và deepEqual đầu ra hàm dựng; CATALOG_CONFIRMATION_SCHEMA_VERSION === 1; ca «tệp ví dụ trùng đầu ra hàm dựng» có mặt và ok — đọc catalog-confirmation.example.json theo đường suy từ vị trí tệp kiểm, so chuỗi JSON.stringify(…, null, 2) + '\\n' của ba sự kiện dựng lại với khoá bên nhận thử cố định: bằng nhau; ca «phiên bản và loại sự kiện sai bị từ chối» có mặt và ok — ma trận viết trước schemaVersion 0, 2, vắng và eventType 'listing_status', mỗi phần tử một lần so, số lần so bằng 4: ok: false với path ['schemaVersion'] hoặc ['eventType']. Chiều đỏ: khuôn bỏ literal phiên bản → phần tử schemaVersion 2 đỏ nêu path."
+    paths: [packages/connect/src/catalog-confirmation*, packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/confirmation/ ca «không bao giờ có: hàm dựng từ chối» có mặt và ok — ma trận viết trước sáu trường (ownerName, ownerPhone, floorPrice, titleDeedPhoto, closePrice, standardStatus) × ba loại sự kiện, số lần so bằng 18: đầu vào hợp lệ chèn thêm trường ấy (giá trị lấy từ canMoi()) cho ok: false với đúng một lỗi có truong bằng tên trường; đối chứng dương: cùng đầu vào không chèn cho ok: true; ca «không bao giờ có: bộ kiểm rò rỉ trên sự kiện từ căn mồi» có mặt và ok — dựng ba loại sự kiện từ các khoá danh mục của canMoi(), timRoRi trên JSON của từng sự kiện với mồi của mọi khoá lớp ngoài danh mục trả rỗng; đối chứng: chèn chuỗi mồi giá đáy vào một chuỗi rồi quét thì timRoRi gọi tên floorPrice."
+    paths: [packages/core/src/confirmation/**, packages/core/src/redaction/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «mọi đối tượng của khuôn là strict» có mặt và ok — hàm đi hết cây zod của CatalogConfirmation liệt mọi ZodObject kèm đường; số đối tượng đếm được bằng số viết trước trong tệp kiểm và mỗi đối tượng có unknownKeys 'strict'; ca «không bao giờ có: khuôn từ chối khoá chèn ở mọi cấp» có mặt và ok — danh sách cấp RÚT từ chính hàm đi cây ấy (không viết tay), với mỗi cấp của mỗi loại sự kiện chèn lần lượt sáu khoá (ownerName, ownerPhone, floorPrice, titleDeedPhoto, closePrice, standardStatus) vào sự kiện hợp lệ của hàm dựng, số lần so bằng 6 × số cấp: ok: false với lỗi có path bằng đường cấp ấy và message nhắc tên khoá; đối chứng dương: cùng sự kiện không chèn cho ok: true. Chiều đỏ: bỏ .strict() ở gốc unit_attributes → ca strict gọi tên đường ấy và phần tử ownerPhone đỏ nêu path."
+    paths: [packages/connect/src/catalog-confirmation*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «không chữ tự do: mọi chuỗi của khuôn có mẫu hoặc tập đóng» có mặt và ok — hàm đi hết cây zod của CatalogConfirmation (union, object, array, nullable, optional) liệt mọi ZodString kèm đường, mỗi chuỗi phải có ít nhất một kiểm regex, hoặc là ZodEnum/ZodLiteral; số chuỗi đếm được bằng số viết trước trong tệp kiểm và danh sách chuỗi thiếu mẫu rỗng; đối chứng âm cùng hàm: khuôn thử có thêm z.string() trần thì hàm gọi tên đường của nó. Ca «không chữ tự do: khuôn từ chối» có mặt và ok — ma trận viết trước (unitNumber 'gọi chủ nhé', unitNumber '0900000071', directionFaces 'Đông Nam view hồ', stack 'TRUC-MOI-53', correctValue chuỗi có khoảng trắng), số lần so bằng 5: ok: false với path nêu trường."
+    paths: [packages/connect/src/catalog-confirmation*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «không chữ tự do: hàm dựng từ chối» có mặt và ok — cùng ma trận năm phần tử của E6 đưa vào hàm dựng tương ứng (thuộc tính căn, khung toà, báo sai), số lần so bằng 5: ok: false với lỗi có truong bằng trường viết trước; đối chứng dương cùng ca: unitNumber 'a-12.06' chuẩn hoá thành 'A-12.06', directionFaces 'Đông Nam' ra 'Southeast', đều ok: true."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «chỉ dựng với thoả thuận xác nhận đang bật» có mặt và ok — ma trận viết trước năm thoả thuận (loại listing_channel có catalog, status paused, validUntil đã qua, validFrom chưa tới, thiếu lớp catalog), số lần so bằng 5: mỗi loại sự kiện ra ok: false với lỗi truong 'thoaThuan'; đối chứng dương thoả thuận đúng cho ok: true; ca «khoá phát ra đều lớp danh mục» có mặt và ok — với mỗi loại sự kiện, tập khoá phần riêng của sự kiện dựng ra (trừ danh sách khoá vỏ viết trước năm phần tử schemaVersion, eventType, officeKey, memberKey, observedOn) bằng danh sách GHIM TRƯỚC trong tệp kiểm (building_frame: buildingKey, storiesTotal, skippedFloors, stacks · unit_attributes: buildingKey, upi, unitNumber, livingArea, bedroomsTotal, directionFaces, floor, stack · correction: buildingKey, upi, field, correctValue); khoá cấp căn và storiesTotal tra lớp ở LOP_TRUONG (qua bảng nguồn khoá, storiesTotal → buildingFloorsTotal) ra 'catalog'; ba khoá cấp toà (buildingKey, skippedFloors, stacks) tra ở bảng lớp của khuôn ra 'catalog'; giao của khoá bảng lớp khuôn với khoá LOP_TRUONG rỗng; đối chứng âm cùng hàm kiểm: bảng khai thử có thêm listPrice thì hàm kiểm gọi tên listPrice với lớp shareable_listing, và bảng khuôn thử chứa unitNumber thì hàm kiểm gọi tên unitNumber là khoá hai nơi."
+    paths: [packages/core/src/confirmation/**, packages/core/src/redaction/lop-truong.ts, packages/core/src/agreements.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.typecheck
+    expected: "exit 0; packages/core/src/confirmation/ có một dòng `// @ts-expect-error` ngay trên phép gán đối tượng tự viết (đủ khoá của một sự kiện hợp lệ) vào kiểu SuKienXacNhan — tsc không báo lỗi «Unused '@ts-expect-error' directive». Chiều đỏ (đã thử ở S3, ghi trong run-log phần phá thử): gỡ dấu khỏi kiểu → npm run typecheck exit ≠ 0 với TS2578 trỏ đúng dòng ấy."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «mã mờ theo bên nhận» có mặt và ok — với khoá bên nhận thử K1, K2 (32 byte, khác nhau) và hai sàn, hai người viết trước: cùng (sàn, người, K1) hai lần cho officeKey và memberKey bằng nhau; (K2) khác (K1); sàn khác cho officeKey khác; mỗi mã khớp /^[A-Za-z0-9_-]{43}$/ và không chứa companyId hay userId gốc; officeKey khác memberKey khi companyId bằng userId (tách miền); ma trận viết trước khoá bên nhận vắng, 0 byte, 31 byte — số lần so bằng 3, mỗi lần ok: false với lỗi truong 'khoaBenNhan'; đối chứng: 32 byte cho ok: true. Chiều đỏ: bỏ tiền tố miền → ca officeKey ≠ memberKey đỏ."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «không trỏ hàng, mốc thô» có mặt và ok — tập mọi khoá xuất hiện ở mọi cấp của khuôn (đi cây zod) giao với danh sách viết trước các khoá trỏ hàng/giá/trạng thái (listingId, listingKey, contactId, leadId, listPrice, closePrice, standardStatus, mlsStatus, shareId) rỗng, và tập khoá gốc mỗi loại bằng tập viết trước; observedOn của ba sự kiện dựng bằng ngày đưa vào ('2026-11-08'); ma trận viết trước observedOn '2026-11-08T09:15:00Z', '2026-11-08 09:15', '08/11/2026' — số lần so bằng 3, mỗi lần ok: false với path ['observedOn']."
+    paths: [packages/connect/src/catalog-confirmation*, packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E12
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; danh mục của mọi ca là danhMuc của bộ dữ liệu mẫu hàng 5 (packages/db/seed/mau/du-lieu-mau.json, đọc theo đường suy từ vị trí tệp kiểm — chính tệp mà khuôn chiều vào v1 đọc được, E1 của nhan-danh-muc-invest), không danh mục viết tay; ca «báo sai: sáu trường» có mặt và ok — ma trận viết trước sáu trường (unitNumber, livingArea, bedroomsTotal, directionFaces, floor, stack) mỗi trường một giá trị khác giá trị danh mục mẫu của căn A-01.01, số lần so bằng 6: ok: true, field và correctValue đúng giá trị viết trước (directionFaces ra giá trị RESO); ca «báo sai: trùng danh mục bị từ chối» có mặt và ok — ma trận viết trước tám phần tử: sáu trường mỗi trường đúng giá trị danh mục của căn ấy, cộng unitNumber 'a-01.01' (chữ thường) và directionFaces 'Southeast' khi danh mục ghi 'Đông Nam' — số lần so bằng 8, mỗi lần ok: false với truong 'correctValue' và thongDiep nhắc «trùng danh mục»; ca «báo sai: từ chối khác» có mặt và ok — ma trận viết trước: field 'buildingName' · livingArea '74,5' (chuỗi) · bedroomsTotal 2.5 · UPI không có trong toà · buildingKey không có trong danh mục — số lần so bằng 5, mỗi lần ok: false với lỗi có truong viết trước."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E13
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «khung toà: hợp lệ» có mặt và ok — toà mẫu trong danh mục, storiesTotal 15, skippedFloors [4, 13], stacks ['01'..'06'] cho ok: true đúng giá trị; ca «khung toà: từ chối» có mặt và ok — ma trận viết trước: storiesTotal 0 · 121 · skippedFloors [16] · [13, 4] (không tăng dần) · [4, 4] · stacks ['01', '01'] · stacks [] · buildingKey lạ — số lần so bằng 8, mỗi lần ok: false với lỗi có truong viết trước. Chiều đỏ: bỏ kiểm tầng bị bỏ vượt số tầng → phần tử [16] đỏ."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E14
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; trong packages/core/src/agreements.test.ts ca «danh sách loại của ràng buộc cơ sở dữ liệu trùng CONNECTION_KINDS» có mặt và ok — đọc thân packages/db/migrations/040_*.sql theo đường suy từ vị trí tệp kiểm, rút danh sách chuỗi trong check của agreements_kind_check; tập rút ra bằng tập CONNECTION_KINDS, độ dài bằng nhau và bằng 8, so từng phần tử; đối chứng âm cùng hàm rút: một chuỗi SQL thử thiếu 'catalog_confirmation' thì hàm so gọi tên loại thiếu ấy."
+    paths: [packages/core/src/agreements.ts, packages/core/src/agreements.test.ts, packages/db/migrations/040_*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
