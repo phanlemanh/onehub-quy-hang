@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PhoneIcon } from "lucide-react";
+import { PhoneIcon, XIcon } from "lucide-react";
 
 import { ChoTai } from "@/components/bo-cuc";
 import { CapGiaTri, DauHoSo, MucHoSo, ThanHoSo } from "@/components/khoi/solution-crm-4/ho-so";
@@ -55,16 +55,31 @@ function DongCoHoi({ o }: { o: CoHoi }) {
   );
 }
 
+/** Esc đóng hồ sơ đang mở — trừ khi phím đã có chỗ dùng (hộp, menu, ô nhập, vùng soạn) (Hỏi-2, hàng khung-ho-so-lien-he). */
+export function escDong(
+  e: { key: string; defaultPrevented: boolean; target: { tagName?: string; isContentEditable?: boolean; closest?: (s: string) => unknown } | null },
+  dangMo: boolean,
+): boolean {
+  if (e.key !== "Escape" || !dangMo || e.defaultPrevented) return false;
+  const t = e.target;
+  if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return false;
+  if (t?.closest?.('[role="menu"],[role="listbox"],[role="dialog"],[role="alertdialog"]')) return false;
+  return true;
+}
+
 export function HoSoNguoi({
   tt,
   daMo,
   onHienSo,
   onThuLai,
+  onDong,
 }: {
   tt: TrangThaiHoSo;
   daMo: SoDaMo;
   onHienSo: (phoneId: string) => void;
   onThuLai: () => void;
+  /** Đóng hồ sơ (máy tính): nút «Đóng hồ sơ» ở đầu hồ sơ, như hồ sơ căn. */
+  onDong?: () => void;
 }) {
   if (tt.kieu === "dang-tai") return <ChoTai kieu="ho-so" />;
   if (tt.kieu === "loi")
@@ -89,6 +104,13 @@ export function HoSoNguoi({
         trangThai={c.status === "lead" ? CHU.lead : CHU.lienHe}
         trangThaiTone={c.status === "lead" ? "warning-light" : "success-light"}
         phu={`${phones.length} số · ${opportunities.length} cơ hội · ${listings.length} căn`}
+        nut={
+          onDong ? (
+            <Button variant="ghost" size="icon-sm" aria-label={CHU.dongHoSo} onClick={onDong}>
+              <XIcon aria-hidden="true" />
+            </Button>
+          ) : undefined
+        }
       />
       <MucHoSo tieuDe="Số">
         {phones.length === 0 ? (

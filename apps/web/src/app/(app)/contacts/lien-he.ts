@@ -25,6 +25,7 @@ export type HoSo = {
 };
 
 export const CHU = {
+  dongHoSo: "Đóng hồ sơ",
   tieuDe: "Liên hệ",
   moTa: "Tìm một người bằng tên hay số, xem cơ hội và căn của họ",
   timGoi: "Tên hay số điện thoại",
@@ -87,7 +88,7 @@ export function luaTim(s: string): "so" | "ten" {
 export const giaTy = (v: number | null) => (v === null ? "—" : `${(v / 1_000_000_000).toLocaleString("vi-VN", { maximumFractionDigits: 2 })} tỷ`);
 export const tenCan = (b: string, u: string | null) => (u ? `${b} · ${u}` : b);
 
-type Goi = (u: string, i?: RequestInit) => Promise<Response>;
+export type Goi = (u: string, i?: RequestInit) => Promise<Response>;
 const goiMacDinh: Goi = (u, i) => fetch(u, { cache: "no-store", ...i });
 
 export async function docDanhSach(q: { type?: string; status?: string; q?: string; cursor?: string }, goi: Goi = goiMacDinh) {
@@ -115,3 +116,15 @@ export async function moSo(contactId: string, phoneId: string, goi: Goi = goiMac
   if (!r?.ok) return null;
   return ((await r.json().catch(() => null)) as { phone?: string } | null)?.phone ?? null;
 }
+
+// ── Tốc độ (hàng khung-ho-so-lien-he) ────────────────────────────────────────────────────────────────────────────────
+/** Trang đầu của danh sách theo bộ lọc URL — trang máy chủ đọc cùng lượt đọc phiên rồi trao xuống vùng. */
+export async function trangDauLienHe(loc: { type?: string | null; status?: string | null }, goi: Goi) {
+  return docDanhSach({ type: loc.type ?? "", status: loc.status ?? "" }, goi);
+}
+
+/** Chờ trước khi hỏi danh sách: chỉ khi đang gõ ô tìm; mở màn và đổi bộ lọc hỏi ngay. */
+export const henDoc = (lyDo: "mo-man" | "doi-loc" | "go-tim"): number => (lyDo === "go-tim" ? 250 : 0);
+
+/** Lượt đọc này có phải hỏi máy chủ không: lượt đầu cùng bộ lọc với trang đầu máy chủ đã trao thì không. */
+export const canDocLan = (khoaDau: string | null, khoaHienTai: string, lanDau: boolean): boolean => !(lanDau && khoaDau !== null && khoaDau === khoaHienTai);

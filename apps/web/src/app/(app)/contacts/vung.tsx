@@ -3,31 +3,36 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { KhungHoSo } from "@/components/khoi/solution-crm-4/ho-so";
+
 import { DanhSachLienHe, type TrangThaiDs } from "./danh-sach";
 import { KhungLienHe } from "./khung";
-import { HoSoNguoi, type SoDaMo, type TrangThaiHoSo } from "./ho-so";
-import { CHU, docDanhSach, docHoSo, luaTim, moSo, timSo } from "./lien-he";
+import { escDong, HoSoNguoi, type SoDaMo, type TrangThaiHoSo } from "./ho-so";
+import { canDocLan, CHU, docDanhSach, docHoSo, henDoc, luaTim, moSo, timSo, type DongLienHe } from "./lien-he";
 import { conTroXemThem, duocNoi, khoaLoc, type TrangCuoi } from "./xem-them";
 
+/** Trang đầu máy chủ đã đọc (hàng khung-ho-so-lien-he): khoá bộ lọc của nó và kết quả. */
+export type TrangDau = { khoa: string; items: DongLienHe[]; nextCursor: string | null };
+
 /** Màn Liên hệ (hàng 103): tìm theo tên hay số, lọc loại, chạm dòng mở hồ sơ người cạnh bảng; Hiện số → Gọi. */
-export default function VungLienHe() {
+export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
   const [q, setQ] = useState("");
   // Loại và dấu Lead nằm trên URL (`?type=`, `?status=`) để cột thứ hai của nhà Liên hệ mở đúng bộ lọc.
   const thamSo = useSearchParams();
   const router = useRouter();
   const loai = thamSo.get("type") ?? "";
-  const dau = thamSo.get("status") ?? "";
+  const dauLoc = thamSo.get("status") ?? "";
   const setLoai = (l: string) => {
     const m = new URLSearchParams(thamSo.toString());
     if (l) m.set("type", l);
     else m.delete("type");
     router.replace(m.size ? `/contacts?${m}` : "/contacts");
   };
-  const [ds, setDs] = useState<TrangThaiDs>({ kieu: "dang-tai" });
+  const [ds, setDs] = useState<TrangThaiDs>(dau ? { kieu: "xong", ds: dau.items, con: dau.nextCursor !== null } : { kieu: "dang-tai" });
   const [lan, setLan] = useState(0);
   // Trang cuối mang khoá bộ lọc của nó: đổi bộ lọc thì con trỏ cũ hết hiệu lực ngay (AC-2, va-ho-so-lien-he).
   const [trang, setTrang] = useState<TrangCuoi | null>(null);
-  const khoa = khoaLoc({ q, type: loai, status: dau, lan });
+  const khoa = khoaLoc({ q, type: loai, status: dauLoc, lan });
   const [chon, setChon] = useState<string | null>(null);
   const [hs, setHs] = useState<TrangThaiHoSo>({ kieu: "dang-tai" });
   const [daMo, setDaMo] = useState<SoDaMo>({});
@@ -39,14 +44,27 @@ export default function VungLienHe() {
   const khoaHienTai = useRef("");
   // Con trỏ trang cuối đã nối (cập nhật cùng lúc nối): trang về lần hai cho cùng con trỏ thì không nối lại.
   const tiepHienTai = useRef<string | null>(null);
+  // Lượt đọc đầu và ô tìm lần trước: chỉ gõ ô tìm mới chờ 250 ms (hàng khung-ho-so-lien-he).
+  const daDoc = useRef(false);
+  const qTruoc = useRef(q);
 
-  // Danh sách: gõ xong 250 ms mới đọc; chuỗi số từ chín chữ số đi lối tìm theo số (POST, số không vào URL).
+  // Danh sách: gõ ô tìm thì chờ 250 ms, mở màn và đổi bộ lọc hỏi ngay; lượt đầu cùng bộ lọc với trang máy chủ đã trao thì
+  // không hỏi lại. Chuỗi số từ chín chữ số đi lối tìm theo số (POST, số không vào URL).
   useEffect(() => {
     let huy = false;
     if (hen.current) clearTimeout(hen.current);
     luotDs.current++;
-    const khoaLuot = khoaLoc({ q, type: loai, status: dau, lan });
+    const khoaLuot = khoaLoc({ q, type: loai, status: dauLoc, lan });
     khoaHienTai.current = khoaLuot;
+    const lanDau = !daDoc.current;
+    daDoc.current = true;
+    const lyDo = lanDau ? "mo-man" : q !== qTruoc.current ? "go-tim" : "doi-loc";
+    qTruoc.current = q;
+    if (!canDocLan(dau?.khoa ?? null, khoaLuot, lanDau) && dau) {
+      tiepHienTai.current = dau.nextCursor;
+      setTrang({ khoa: khoaLuot, tiep: dau.nextCursor });
+      return;
+    }
     hen.current = setTimeout(async () => {
       setDs({ kieu: "dang-tai" });
       if (q.trim() && luaTim(q) === "so") {
@@ -59,17 +77,28 @@ export default function VungLienHe() {
         setDs({ kieu: "xong", ds: [], con: false });
         return chonNguoi(kq.contactId);
       }
-      const kq = await docDanhSach({ q: q.trim(), type: loai, status: dau });
+      const kq = await docDanhSach({ q: q.trim(), type: loai, status: dauLoc });
       if (huy) return;
       if (!kq) return setDs({ kieu: "loi" });
       setDs({ kieu: "xong", ds: kq.items, con: kq.nextCursor !== null });
       tiepHienTai.current = kq.nextCursor;
       setTrang({ khoa: khoaLuot, tiep: kq.nextCursor });
-    }, 250);
+    }, henDoc(lyDo));
     return () => {
       huy = true;
     };
-  }, [q, loai, dau, lan]);
+    // `dau` chỉ dùng ở lượt đầu; không theo nó.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [q, loai, dauLoc, lan]);
+
+  // Esc đóng hồ sơ đang mở (máy tính), trừ khi phím đã có chỗ dùng (Hỏi-2).
+  useEffect(() => {
+    const nghe = (e: KeyboardEvent) => {
+      if (escDong({ key: e.key, defaultPrevented: e.defaultPrevented, target: e.target as HTMLElement | null }, chon !== null)) chonNguoi(null);
+    };
+    window.addEventListener("keydown", nghe);
+    return () => window.removeEventListener("keydown", nghe);
+  }, [chon]);
 
   // Hồ sơ: đọc khi chọn người (hay thử lại); trạng thái chờ và che số đặt ở lúc chọn.
   useEffect(() => {
@@ -94,7 +123,7 @@ export default function VungLienHe() {
     const cursor = conTroXemThem(trang, khoa, ds.kieu === "xong");
     if (!cursor) return;
     const guiLuc = { luot: luotDs.current, khoa, cursor };
-    const kq = await docDanhSach({ q: q.trim(), type: loai, status: dau, cursor });
+    const kq = await docDanhSach({ q: q.trim(), type: loai, status: dauLoc, cursor });
     if (!kq || !duocNoi(guiLuc, { luot: luotDs.current, khoa: khoaHienTai.current, cursor: tiepHienTai.current })) return;
     tiepHienTai.current = kq.nextCursor;
     setDs((cu) =>
@@ -114,15 +143,18 @@ export default function VungLienHe() {
   return (
     <KhungLienHe
       cotPhu={
-        <HoSoNguoi
-          tt={hs}
-          daMo={daMo}
-          onHienSo={(p) => void hienSo(p)}
-          onThuLai={() => {
-            setHs({ kieu: "dang-tai" });
-            setLanHs((n) => n + 1);
-          }}
-        />
+        <KhungHoSo cotPhu nhan={CHU.hoSo}>
+          <HoSoNguoi
+            tt={hs}
+            daMo={daMo}
+            onHienSo={(p) => void hienSo(p)}
+            onThuLai={() => {
+              setHs({ kieu: "dang-tai" });
+              setLanHs((n) => n + 1);
+            }}
+            onDong={() => chonNguoi(null)}
+          />
+        </KhungHoSo>
       }
       chiTiet={{
         mo: chon !== null,

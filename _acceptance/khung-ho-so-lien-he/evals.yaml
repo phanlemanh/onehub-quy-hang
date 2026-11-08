@@ -7,7 +7,7 @@ evals:
     criterion: AC-1
     executor: test
     cmd: config:executors.test.web
-    expected: "exit 0; bài thuần của apps/web/src/app/(app)/contacts/ dựng phần cột phụ mà vung.tsx truyền (hàm cotPhuLienHe hay tương đương) cho ba trạng thái hồ sơ đang tải · lỗi · xong: thành phần dựng là CotPhuLienHe được xuất và chính vung.tsx dùng (bài đọc mã nguồn vung.tsx thấy <CotPhuLienHe trong cotPhu); với mỗi trạng thái, nút gốc của HTML (thẻ, lớp, data-slot) bằng đúng nút gốc của KhungHoSo cotPhu dựng cùng thân rỗng, và data-slot=\"cot-ho-so\" nằm trong nó, đúng một khung; đếm 3. Đối chứng: KhungHoSo cotPhu và KhungHoSoCan cotPhu cùng nút gốc. Chiều đỏ: bỏ khung ở trạng thái lỗi → ca đỏ nêu «lỗi nằm trần trong cột»."
+    expected: "exit 0; bài thuần của apps/web/src/app/(app)/contacts/ dựng phần cột phụ mà vung.tsx truyền (hàm cotPhuLienHe hay tương đương) cho ba trạng thái hồ sơ đang tải · lỗi · xong: bài dựng đúng cách vung.tsx dựng cột phụ — <KhungHoSo cotPhu> bọc <HoSoNguoi> (bài đọc mã nguồn vung.tsx thấy đúng cách ghép ấy trong cotPhu); với mỗi trạng thái, nút gốc của HTML (thẻ, lớp, data-slot) bằng đúng nút gốc của KhungHoSo cotPhu dựng cùng thân rỗng, và data-slot=\"cot-ho-so\" nằm trong nó, đúng một khung; đếm 3. Đối chứng: KhungHoSo cotPhu và KhungHoSoCan cotPhu cùng nút gốc. Chiều đỏ: bỏ khung ở trạng thái lỗi → ca đỏ nêu «lỗi nằm trần trong cột»."
     paths: ["apps/web/src/app/(app)/contacts/**", "apps/web/src/components/khoi/solution-crm-4/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
