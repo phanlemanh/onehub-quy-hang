@@ -3054,6 +3054,12 @@
         "packages/db/migrations/053_*.sql",
         "_acceptance/tao-can-tay/**"
       ]
+    },
+    {
+      "ma": "va-ci-secrets-quet-dung-lich-su",
+      "cau_giao": "Job secrets của CI chỉ quét đúng lịch sử của commit đang xét thay vì mọi nhánh đã đẩy, vẫn phủ toàn bộ lịch sử main và nhánh PR: giá trị mẫu trên một nhánh khác không còn làm đỏ main và PR khác, khoá thật trên nhánh PR hay trong lịch sử main vẫn đỏ.",
+      "slug": "va-ci-secrets-quet-dung-lich-su",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-08"
     }
   ],
   "chan_troi": [

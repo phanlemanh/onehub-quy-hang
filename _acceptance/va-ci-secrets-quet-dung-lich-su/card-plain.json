@@ -1,0 +1,33 @@
+{
+  "feature_plain": "Một nhánh đang làm dở không còn làm đỏ cả main và các PR khác; khoá thật nằm trong lịch sử của bản đang kiểm vẫn bị chặn như trước.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ báo đỏ khi một khoá thật từng nằm trên chính nhánh của PR, kể cả đã gỡ ở lần sửa sau."},
+    {"id": "AC-2", "p": "Sẽ báo đỏ khi một khoá thật nằm trong lịch sử main, cả lúc kiểm PR lẫn lúc gộp vào main."},
+    {"id": "AC-4", "p": "Sẽ chỉ đổi phạm vi quét, cách đọc từng thay đổi giữ y như cũ."},
+    {"id": "AC-5", "p": "Sẽ vẫn tôn trọng danh sách báo nhầm đã duyệt, và việc này không thêm bớt dòng nào trong đó."},
+    {"id": "AC-6", "p": "Sẽ hết đỏ ở đúng hai lần đỏ thật ngày 08/11 khi dựng lại chúng từ lịch sử kho."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Sẽ KHÔNG báo đỏ vì giá trị chỉ nằm trên một nhánh khác hoặc một tag không thuộc bản đang kiểm."},
+    {"id": "AC-7", "p": "Sẽ KHÔNG nới rào ở chỗ nào khác: việc quét vẫn chặn được gộp và triển khai, kết quả vẫn che giá trị bí mật."},
+    {"id": "OOS-1", "p": "Không làm thêm việc kiểm tính nguyên vẹn của công cụ quét khi tải về."},
+    {"id": "OOS-2", "p": "Không thêm lịch quét định kỳ; tag ngoài lịch sử và nhánh không bao giờ mở PR thì CI không quét nữa (câu Hỏi-1)."},
+    {"id": "OOS-3", "p": "Không xoá hay sửa dòng nào trong danh sách báo nhầm, không viết lại lịch sử."},
+    {"id": "OOS-4", "p": "Không đụng rào trên máy lập trình và các bước kiểm khác của CI."},
+    {"id": "OOS-5", "p": "Không đẩy khoá mẫu lên kho này, không dựng kho GitHub tạm để đo (câu Hỏi-3)."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Đã xét đủ sáu chỗ một giá trị có thể nằm: không đâu cả, nhánh PR, main, nhánh đã gộp, nhánh khác, tag. Thước đo là danh sách nhánh và tag mà máy CI thật sự tải về."},
+    {"i": 1, "p": "Đã xét cả hai lúc CI chạy: khi kiểm PR và khi gộp vào main."},
+    {"i": 2, "p": "Đã xét cả hai trường hợp giá trị có và không có trong danh sách báo nhầm."},
+    {"i": 3, "p": "Mỗi ca chạy cả lệnh mới và lệnh cũ trên cùng dữ liệu, để thấy phép đo phân biệt được hai lệnh."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Câu hỏi ban đầu làm người ký tưởng phần CI thôi quét chỉ đến muộn hơn, trong khi tag và nhánh bỏ hoang thì mất hẳn. Đã viết lại thành Hỏi-1."},
+    {"i": 1, "p": "Máy ghi chỉ có một cách đổi lệnh, thực ra còn một cách khác làm được. Đã đưa thành Hỏi-2 kèm giá của từng cách."},
+    {"i": 2, "p": "Máy ghi không thể đo trên GitHub thật, thực ra một kho tạm làm được; và phép đo chưa bắt được ai đó đổi cách máy CI lấy mã. Đã đưa thành Hỏi-3 và thêm một vế chặn, một ca đối chứng."},
+    {"i": 3, "p": "Số đếm ở hai lần đỏ thật phụ thuộc máy chấm có những nhánh nào. Đã dựng kho tạm chỉ có đúng nhánh cần, đo lại ra 6 và 3 phát hiện."},
+    {"i": 4, "p": "Phép đo «không nới rào» chưa bắt được ai thêm dòng vào danh sách báo nhầm. Đã đo theo từng lần sửa của việc này và ghi cố định bảy điều kiện của rào."}
+  ],
+  "scope_plain": "Việc này chỉ đổi phạm vi quét của một bước CI."
+}

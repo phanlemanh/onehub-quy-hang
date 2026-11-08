@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phạm vi quét của CI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper:#f5f5f5; --color-ink:#2d3142; --color-muted:#4f5d75;
+      --font-sans:'Geist', system-ui, sans-serif; --font-serif:'Instrument Serif','Lora',serif; --font-mono:'Geist Mono', ui-monospace, monospace; }
+    body { font-family:var(--font-sans); background:var(--color-paper); color:var(--color-ink); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .frame { max-width:1120px; width:100%; }
+    .eyebrow { font-family:var(--font-mono); font-size:0.66rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--color-muted); margin-bottom:0.5rem; }
+    h1 { font-family:var(--font-serif); font-size:clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight:400; letter-spacing:-0.02em; line-height:1.25; margin-bottom:1.25rem; }
+    svg { width:100%; display:block; }
+    .ten { font-family:'Geist', sans-serif; font-size:12px; font-weight:600; fill:#2d3142; }
+    .ten-xam { font-family:'Geist', sans-serif; font-size:12px; font-weight:600; fill:#4f5d75; }
+    .phu { font-family:'Geist', sans-serif; font-size:10px; fill:#4f5d75; }
+    .phu-nhan { font-family:'Geist', sans-serif; font-size:10px; font-weight:500; fill:#ba4513; }
+    .ma { font-family:'Geist Mono', monospace; font-size:9px; fill:#636b80; }
+    .cot { font-family:'Geist', sans-serif; font-size:16px; font-weight:600; fill:#2d3142; }
+    .ket { font-family:'Geist', sans-serif; font-size:12px; fill:#2d3142; }
+    .ket-phu { font-family:'Geist', sans-serif; font-size:12px; fill:#4f5d75; }
+    .moc { font-family:'Geist', sans-serif; font-size:10px; fill:#636b80; }
+    .quet { fill:none; stroke:#2d3142; stroke-width:2.4; }
+    .bo { fill:none; stroke:rgba(45,49,66,0.40); stroke-width:1.2; stroke-dasharray:4,4; }
+    .dot { fill:#2d3142; }
+    .dot-bo { fill:#f5f5f5; stroke:rgba(45,49,66,0.40); stroke-width:1.2; }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <p class="eyebrow">Trước / sau · Hỏi-1 · AC-1, AC-2, AC-3</p>
+    <h1>CI quét đến đâu, hôm nay và sau bản vá</h1>
+    <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+      <title id="t">So sánh phạm vi quét bí mật của CI trước và sau bản vá</title>
+      <desc id="d">Hai cột cùng một sơ đồ nhánh. Hôm nay: quét main, nhánh PR, commit gộp, nhánh khác, nhánh bỏ hoang và tag ngoài main. Sau bản vá: chỉ quét main, nhánh PR và commit gộp; ba phần còn lại không quét ở lượt này.</desc>
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+      <line x1="500" y1="40" x2="500" y2="528" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+
+      <!-- Cột 1: hôm nay -->
+      <g transform="translate(40,0)">
+        <text x="0" y="64" class="cot">Hôm nay: quét mọi nhánh và tag</text>
+
+        <path class="quet" d="M24 288 V128 Q24 120 32 120 H120"/>
+        <path class="quet" d="M64 288 V184 Q64 176 72 176 H144"/>
+        <path class="quet" d="M144 288 V240 Q144 232 152 232 H224"/>
+        <path class="quet" d="M24 288 H200 Q208 288 208 296 V328"/>
+        <path class="quet" d="M104 288 V392 Q104 400 112 400 H200 Q208 400 208 392 V360"/>
+
+        <circle class="dot" cx="64" cy="120" r="6"/><circle class="dot" cx="104" cy="120" r="6"/>
+        <circle class="dot" cx="104" cy="176" r="6"/><circle class="dot" cx="144" cy="176" r="6"/>
+        <circle class="dot" cx="184" cy="232" r="6"/><circle class="dot" cx="224" cy="232" r="6"/>
+        <circle class="dot" cx="24" cy="288" r="6"/><circle class="dot" cx="64" cy="288" r="6"/><circle class="dot" cx="104" cy="288" r="6"/><circle class="dot" cx="144" cy="288" r="6"/><circle class="dot" cx="184" cy="288" r="6"/>
+        <circle class="dot" cx="144" cy="400" r="6"/><circle class="dot" cx="184" cy="400" r="6"/>
+
+        <rect x="120" y="108" width="40" height="24" rx="4" fill="#2d3142"/>
+        <text x="140" y="124" fill="#f5f5f5" font-size="10" font-family="'Geist Mono', monospace" text-anchor="middle">tag</text>
+
+        <rect x="168" y="328" width="80" height="32" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1.2"/>
+        <text x="208" y="348" fill="#2d3142" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">HEAD</text>
+
+        <text x="24" y="312" class="moc" text-anchor="middle">cũ</text>
+        <text x="184" y="312" class="moc" text-anchor="middle">đỉnh</text>
+
+        <text x="268" y="116" class="ten">Tag ngoài main</text><text x="268" y="132" class="phu">có quét</text>
+        <text x="268" y="172" class="ten">Nhánh bỏ hoang, chưa mở PR</text><text x="268" y="188" class="phu">có quét</text>
+        <text x="268" y="228" class="ten">Nhánh khác đã đẩy</text><text x="268" y="244" class="phu">có quét</text>
+        <text x="268" y="284" class="ten">Nhánh chính main</text><text x="268" y="300" class="phu">có quét</text>
+        <text x="268" y="336" class="ten">Commit gộp của PR (HEAD)</text><text x="268" y="352" class="ma">refs/pull/N/merge</text><text x="268" y="368" class="phu">có quét</text>
+        <text x="268" y="396" class="ten">Nhánh PR</text><text x="268" y="412" class="phu">có quét</text>
+
+        <line x1="0" y1="440" x2="440" y2="440" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <text x="0" y="464" class="ket">Giá trị mẫu trên một nhánh khác làm đỏ main và mọi PR.</text>
+        <text x="0" y="484" class="ket-phu">Đã xảy ra hai lần ngày 08/11.</text>
+      </g>
+
+      <!-- Cột 2: sau bản vá -->
+      <g transform="translate(520,0)">
+        <text x="0" y="64" class="cot">Sau bản vá: chỉ quét lịch sử của HEAD</text>
+
+        <path class="bo" d="M24 288 V128 Q24 120 32 120 H120"/>
+        <path class="bo" d="M64 288 V184 Q64 176 72 176 H144"/>
+        <path class="bo" d="M144 288 V240 Q144 232 152 232 H224"/>
+        <path class="quet" d="M24 288 H200 Q208 288 208 296 V328"/>
+        <path class="quet" d="M104 288 V392 Q104 400 112 400 H200 Q208 400 208 392 V360"/>
+
+        <circle class="dot-bo" cx="64" cy="120" r="6"/><circle class="dot-bo" cx="104" cy="120" r="6"/>
+        <circle class="dot-bo" cx="104" cy="176" r="6"/><circle class="dot-bo" cx="144" cy="176" r="6"/>
+        <circle class="dot-bo" cx="184" cy="232" r="6"/><circle class="dot-bo" cx="224" cy="232" r="6"/>
+        <circle class="dot" cx="24" cy="288" r="6"/><circle class="dot" cx="64" cy="288" r="6"/><circle class="dot" cx="104" cy="288" r="6"/><circle class="dot" cx="144" cy="288" r="6"/><circle class="dot" cx="184" cy="288" r="6"/>
+        <circle class="dot" cx="144" cy="400" r="6"/><circle class="dot" cx="184" cy="400" r="6"/>
+
+        <rect x="120" y="108" width="40" height="24" rx="4" fill="#f5f5f5" stroke="rgba(45,49,66,0.40)" stroke-width="1.2" stroke-dasharray="4,4"/>
+        <text x="140" y="124" fill="#4f5d75" font-size="10" font-family="'Geist Mono', monospace" text-anchor="middle">tag</text>
+
+        <rect x="168" y="328" width="80" height="32" rx="6" fill="#f5f5f5"/>
+        <rect x="168" y="328" width="80" height="32" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.4"/>
+        <text x="208" y="348" fill="#ba4513" font-size="10" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">HEAD</text>
+
+        <text x="24" y="312" class="moc" text-anchor="middle">cũ</text>
+        <text x="184" y="312" class="moc" text-anchor="middle">đỉnh</text>
+
+        <text x="268" y="116" class="ten-xam">Tag ngoài main</text><text x="268" y="132" class="phu">không quét ở lượt này</text>
+        <text x="268" y="172" class="ten-xam">Nhánh bỏ hoang, chưa mở PR</text><text x="268" y="188" class="phu">không quét ở lượt này</text>
+        <text x="268" y="228" class="ten-xam">Nhánh khác đã đẩy</text><text x="268" y="244" class="phu">không quét ở lượt này</text>
+        <text x="268" y="284" class="ten">Nhánh chính main</text><text x="268" y="300" class="phu">có quét, toàn bộ lịch sử</text>
+        <text x="268" y="336" class="ten">Commit gộp của PR (HEAD)</text><text x="268" y="352" class="ma">refs/pull/N/merge</text><text x="268" y="368" class="phu-nhan">có quét, bắt đầu từ đây</text>
+        <text x="268" y="396" class="ten">Nhánh PR</text><text x="268" y="412" class="phu">có quét, toàn bộ lịch sử</text>
+
+        <line x1="0" y1="440" x2="440" y2="440" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <text x="0" y="464" class="ket">Khoá thật trên main hoặc nhánh PR vẫn làm đỏ.</text>
+        <text x="0" y="484" class="ket">Giá trị ở phần xám không làm đỏ lượt này.</text>
+        <text x="0" y="504" class="ket-phu">Nhánh khác: được quét khi mở PR hoặc gộp.</text>
+        <text x="0" y="524" class="ket-phu">Nhánh không bao giờ mở PR và tag ngoài main: CI không bao giờ quét.</text>
+      </g>
+    </svg>
+  </main>
+</body>
+</html>
