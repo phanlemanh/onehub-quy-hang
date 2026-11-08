@@ -1,0 +1,103 @@
+# Bộ đo của hàng ban-mau-khai-dia-chi. Chỗ thử dãy D: Postgres 5575/postgres, máy dev 3495.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Dựng chỗ thử dãy D trên đúng cây được chấm: node _acceptance/luat-chia-lead/thu/dung-d.mjs (máy dev http://localhost:3495). Mở trình duyệt, gắn cookie của khoá dau-chu-1 trong .acceptance-runs/luat-chia-lead/phien.json (vai có nhà Bảng hàng), khổ 1440x900, giao diện sáng."
+      - "Mở /inventory, chụp _acceptance/ban-mau-khai-dia-chi/evidence/ban-mau-may-tinh-that.png. Mở /proto/nhanh-tuc-thi, chờ trang chạy, chụp _acceptance/ban-mau-khai-dia-chi/evidence/ban-mau-may-tinh-mau.png."
+      - "Trên mỗi đường ghi: có thanh trên, nhà đang sáng trong cột biểu tượng (aria-current), danh sách mục cột thứ hai (data-slot=second-column), mục có aria-current=page."
+      - "Màn thật có tham số: ở /today đọc href mục nhóm đầu tiên của cột thứ hai (dạng /today?nhom=<mã>), mở đúng địa chỉ ấy, ghi mục có aria-current=page."
+      - "Trang mẫu sống: mở /mau/he-bo-cuc, ghi nhà đang sáng và có cột thứ hai hay không."
+    expected: "Hai đường đầu cùng có thanh trên, cùng nhà Bảng hàng sáng, cùng danh sách mục cột thứ hai và cùng mục sáng. /today?nhom=<mã> sáng đúng mục có href ấy. /mau/he-bo-cuc có nhà sáng và có cột thứ hai. Chiều đỏ: bản mẫu không khai địa chỉ thì cột biểu tượng không sáng nhà nào và không có cột thứ hai — đo ở E3 (đường giữ nguyên) và E7."
+    paths: ["apps/web/src/components/shell/**", "packages/core/src/navigation*", "apps/web/src/app/(app)/proto/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+  - id: E2
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Cùng phiên với E1, khổ 375x812. Mở /inventory, chụp _acceptance/ban-mau-khai-dia-chi/evidence/ban-mau-dien-thoai-that.png; mở /proto/nhanh-tuc-thi, chờ trang chạy, chụp _acceptance/ban-mau-khai-dia-chi/evidence/ban-mau-dien-thoai-mau.png."
+      - "Trên mỗi đường ghi chữ tiêu đề đầu màn của vỏ và tab dưới có aria-current=page (data-slot=mobile-tab-bar)."
+      - "Xong thì tắt máy dev: node _acceptance/luat-chia-lead/thu/dung-d.mjs --tat."
+    expected: "Hai đường cùng tiêu đề «Bảng hàng» và cùng một tab sáng; không đường nào hiện «Quỹ hàng»."
+    paths: ["apps/web/src/components/shell/**", "packages/core/src/navigation*", "apps/web/src/app/(app)/proto/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; packages/core/src/navigation.test.ts có ca duongCuaVo: khu bản mẫu + khai hợp lệ → địa chỉ khai và tham số của nó; đường ngoài khu → đường thật; không khai → đường thật; khai địa chỉ không thuộc nhà nào → đường thật; /today với tham số nhom=x không khai → giữ nguyên tham số thật; trang mẫu sống (cờ mau) ở /mau/he-bo-cuc với địa chỉ khai → địa chỉ khai. Ca hai chiều trên cùng đầu vào: cùng địa chỉ khai, đổi đường /proto/x thành /inventory thì kết quả đổi từ địa chỉ khai về đường thật."
+    paths: ["packages/core/src/navigation*"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; apps/web/src/components/shell/dia-chi-mau.test.ts: danh sách mục Cài đặt thật và địa chỉ /settings/labels → mục /settings/labels; danh sách mục Hôm nay và /today?nhom=<mã> → đúng mục nhóm; đường thật có ?loi=reui không đổi mục sáng; các ca nối đúng hàm thật: kết quả của duongCuaVo đưa thẳng vào mucDangChon. Chiều đỏ trên cùng danh sách: đưa đường thật /proto/x vào thay địa chỉ khai → không mục nào sáng."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(app)/today/mo-nhom.ts", "packages/core/src/navigation*"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.script.typecheck
+    expected: "exit 0 trên cả kho với apps/web/src/app/mau/he-bo-cuc/trang-mau.tsx truyền diaChiMau. Đỏ là lỗi kiểu nêu đúng prop khi trang mẫu sống còn truyền nhaMau."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/mau/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E5b
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs
+    expected: "exit 0, «không còn nhaMau (đối chứng dương: có diaChiMau)». Thư mục quét được mà còn nhaMau: exit 1 và «còn nhaMau» kèm tệp. Không quét được hay không thấy diaChiMau: exit 2. Chiều đỏ ở E5c."
+    paths: ["apps/web/src/**", "_acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5c
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs --chieu-do
+    expected: "exit 0, «chiều đỏ ĐẠT: còn nhaMau thì mã 1, nêu tệp». Thước không đỏ trên thư mục còn nhaMau thì exit 1, «chiều đỏ HỎNG»."
+    paths: ["_acceptance/ban-mau-khai-dia-chi/thu/kiem-khong-con-nhamau.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; packages/ui-lint/tests/khu-ban-mau.test.mjs trên bản sao: đối chứng dương — cây lành, bộ quét mã 0, không tệp proto nào trong nhóm trang-tam hay ngoai-ban-do; chiều đỏ trên cùng bản sao — một trang mới ngoài khu thiếu khuôn vẫn đỏ, và gỡ tru_nhan_dien thì trang proto đỏ lại ở nhóm trang-tam; design/patterns/trang-tam.md không còn đường proto/ trong ngoai_le (ghim bằng đọc frontmatter thật). ban-do-khuon.test.mjs đếm lại từ cây."
+    paths: ["packages/ui-lint/**", "design/patterns/trang-tam.md"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; khu-ban-mau.test.mjs: đối chứng dương trang khai đúng; ba ca đỏ trên cùng bản sao, mỗi ca ghim thông điệp: «chưa khai địa chỉ», «phải là chuỗi cố định», «không thuộc nhà nào», đều nêu đường tệp."
+    paths: ["packages/ui-lint/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.ui_lint
+    expected: "exit 0; khu-ban-mau.test.mjs: đối chứng dương sổ có địa chỉ; ca đỏ cùng bản sao bỏ địa chỉ khỏi sổ, ghim «design-pass chưa ghi địa chỉ thật» và đường sổ; hồ sơ signed-off với sổ thiếu địa chỉ thì xanh."
+    paths: ["packages/ui-lint/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.script.lint
+    expected: "exit 0 trên cây của vòng, tức cả ba trang proto đã khai và bộ quét xanh."
+    paths: ["packages/ui-lint/**", "apps/web/src/app/(app)/proto/**", "design/patterns/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E9b
+    criterion: AC-9
+    executor: script
+    cmd: node _acceptance/ban-mau-khai-dia-chi/thu/kiem-cau-hinh-khong-doi.mjs
+    expected: "exit 0, «cấu hình nghiệm thu không đổi so với <sha>». Đổi thì exit 1, «cấu hình nghiệm thu ĐÃ ĐỔI»; không so được thì exit 2."
+    paths: ["_acceptance/config.yaml", "_acceptance/ban-mau-khai-dia-chi/thu/kiem-cau-hinh-khong-doi.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E10
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    expected: "exit 0, không lệch mới ở tệp trong khu bản mẫu. Lệch chỉ vì kit 2.37.0 chưa biết tru_nhan_dien: ghi «báo oan — giới hạn kit 2.37.0» kèm đúng tệp vào báo cáo theo luật đợt 33 và báo giám sát; không giữ lại ngoại lệ để lưới im."
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/proto/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

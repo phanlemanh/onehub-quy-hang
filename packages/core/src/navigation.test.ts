@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { describe, it, test } from "node:test";
 import {
   type Action,
   activeTab,
@@ -17,6 +17,7 @@ import {
   settingsLanding,
   type Tab,
   TAB_PATH,
+  duongCuaVo,
 } from "./navigation";
 
 // Bảng §9 của Tham chiếu, đọc theo cột vai.
@@ -348,4 +349,29 @@ test("Đổi đầu chủ hàng loạt: chỉ hai tổ hợp có Trưởng nhóm
 
 test("Đối chứng đỏ: hàm giả cho đầu chủ đổi → gọi tên tổ hợp", () => {
   assert.deepEqual(lechDoiDauChu((r) => canReassignListingAgents(r) || r.includes("listing_agent")), ["đầu chủ"]);
+});
+
+describe("duongCuaVo — địa chỉ vỏ đọc", () => {
+  const that = { duong: "/proto/x", thamSo: "loi=reui" };
+  it("khu bản mẫu có khai hợp lệ thì dùng địa chỉ khai và tham số của nó", () => {
+    assert.deepEqual(duongCuaVo({ pathname: "/proto/x", thamSo: "loi=reui", khai: "/today?nhom=a" }), { duong: "/today", thamSo: "nhom=a" });
+    assert.deepEqual(duongCuaVo({ pathname: "/proto/x", thamSo: "loi=reui", khai: "/settings/labels" }), { duong: "/settings/labels", thamSo: "" });
+  });
+  it("không khai thì giữ đường và tham số thật", () => {
+    assert.deepEqual(duongCuaVo({ pathname: "/proto/x", thamSo: "loi=reui" }), that);
+  });
+  it("khai địa chỉ không thuộc nhà nào thì giữ đường thật", () => {
+    assert.deepEqual(duongCuaVo({ pathname: "/proto/x", thamSo: "loi=reui", khai: "/khong-co" }), that);
+  });
+  it("hai chiều: cùng địa chỉ khai, đường màn thật thì không đổi", () => {
+    assert.deepEqual(duongCuaVo({ pathname: "/proto/x", khai: "/settings/labels" }).duong, "/settings/labels");
+    assert.deepEqual(duongCuaVo({ pathname: "/inventory", khai: "/settings/labels" }), { duong: "/inventory", thamSo: "" });
+  });
+  it("màn thật có tham số giữ nguyên tham số", () => {
+    assert.deepEqual(duongCuaVo({ pathname: "/today", thamSo: "nhom=x" }), { duong: "/today", thamSo: "nhom=x" });
+  });
+  it("trang mẫu sống nhận địa chỉ khai ngoài khu bản mẫu", () => {
+    assert.deepEqual(duongCuaVo({ pathname: "/mau/he-bo-cuc", khai: "/settings", mau: true }), { duong: "/settings", thamSo: "" });
+    assert.deepEqual(duongCuaVo({ pathname: "/mau/he-bo-cuc", khai: "/settings" }), { duong: "/mau/he-bo-cuc", thamSo: "" });
+  });
 });

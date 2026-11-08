@@ -177,6 +177,35 @@ export function homeOfPath(path: string): Home | null {
   return null;
 }
 
+/** Khu bản mẫu của design-pass: đường ở đây không thuộc nhà nào, trang khai màn thật nó đứng thay. */
+export const KHU_BAN_MAU = "/proto/";
+
+export interface DuongVo {
+  duong: string;
+  thamSo: string;
+}
+
+/**
+ * Địa chỉ vỏ đọc để tính nhà, tiêu đề, tab và mục sáng. Chỉ nhận địa chỉ khai ở khu bản mẫu và trang mẫu sống (`mau`):
+ * màn thật không bao giờ đổi địa chỉ. Địa chỉ không thuộc nhà nào thì giữ đường thật.
+ */
+export function duongCuaVo({
+  pathname,
+  thamSo = "",
+  khai,
+  mau = false,
+}: {
+  pathname: string;
+  thamSo?: string;
+  khai?: string | null;
+  mau?: boolean;
+}): DuongVo {
+  const that = { duong: pathname, thamSo };
+  if (!khai || (!mau && !pathname.startsWith(KHU_BAN_MAU))) return that;
+  const [duong = "", thamSoKhai = ""] = khai.split("?");
+  return homeOfPath(duong) === null ? that : { duong, thamSo: thamSoKhai };
+}
+
 /**
  * Cột thứ hai của từng nhà trên máy tính (§9): `true` = có cột, mặc định mở. Mọi nhà có cột thứ hai và mặc định mở
  * (chủ kho 02/11, hàng 91: «Mặc định luôn giữ và có sub nav»); người gập thì nhớ theo người, sàn, nhà.
