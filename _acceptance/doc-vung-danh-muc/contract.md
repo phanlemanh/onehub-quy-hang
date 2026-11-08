@@ -5,7 +5,7 @@ slug: doc-vung-danh-muc
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-09-doc-vung-danh-muc-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -89,3 +89,13 @@ Trục: nơi đọc (gõ mã · cả danh mục · Nhập Excel · toà của le
 - Sửa giao diện Bảng hàng, hồ sơ căn.
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu hai dự án khác nhau có cùng tên toà và cùng mã căn, Bảng hàng và hồ sơ căn có thể hiện diện tích, loại căn của dự án kia mà không báo gì. — `apps/web/src/app/(app)/inventory/ghep-danh-muc.ts`
+- Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Khi máy chủ chưa đọc được danh mục, Bảng hàng có thể hiện căn đang có trong danh mục là «Chưa rõ» như căn ngoài danh mục, và không báo là đang lỗi. — `apps/web/src/app/(app)/inventory/danh-muc.ts`
+- Ngoài-3 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Khi hệ thống tạm không đọc được danh mục, ở màn Nhập Excel người dùng có thể thấy một dòng báo lỗi bằng chữ kỹ thuật tiếng Anh thay vì câu tiếng Việt dễ hiểu. — `packages/api/src/catalog/nguon.ts`
+- Ngoài-4 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Tài liệu API dành cho bên ngoài thiếu một mã lỗi mà hai chức năng thực sự có thể trả; người dùng cuối không thấy khác biệt. — `packages/api/src/leads/routes.ts`
+- Ngoài-5 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu danh mục tạm không đọc được, bản xem trước khi nhập Excel vẫn hiện bình thường nhưng không đối chiếu căn với danh mục, nên kết quả lúc ghi thật có thể khác bản xem trước. — `apps/web/src/app/(app)/imports/new/man-nhap.tsx`
+- Ngoài-6 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Khi danh mục tạm lỗi, ô chọn Toà khi nhập lead hiện trống mà không giải thích, người dùng không biết vì sao không chọn được. — `apps/web/src/app/(app)/leads/new/page.tsx`
+- Ngoài-8 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài chụp màn E10 có thể chạy trên bản chép dữ liệu thiếu mà không báo, làm ảnh chụp sai bối cảnh; người dùng sản phẩm không bị ảnh hưởng. — `_acceptance/doc-vung-danh-muc/thu/nap-goi-thu.mjs`
+- Ngoài-9 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Một số tổ hợp, như danh mục lỗi hoặc vừa đổi gói ở Nhập Excel và danh sách toà, chưa có bài kiểm riêng nên chưa được chứng minh bằng máy. — `_acceptance/doc-vung-danh-muc/contract.md`
+- Ngoài-10 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm chiều đỏ của Bảng hàng chưa chứng minh được rằng nạp gói khác diện tích thì Bảng hàng đổi theo qua đường thật. — `packages/api/test-db/catalog/doc-vung.test.ts`
