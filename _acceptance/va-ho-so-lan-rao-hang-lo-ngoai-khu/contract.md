@@ -5,7 +5,7 @@ slug: va-ho-so-lan-rao-hang-lo-ngoai-khu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-08-va-ho-so-lan-rao-hang-lo-ngoai-khu-design.md
 approved_by:
 approved_at:
@@ -51,3 +51,5 @@ Ngoài-5 của hàng 79 (`_acceptance/bang-hang-theo-loai-hinh/`), chủ kho ch�
 - Hai hàng vá cùng đợt: cột thấp tầng khi lọc rỗng, lỗi đọc căn ngoài khu.
 
 ## Notes
+
+- Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Nếu sau này đổi cách nhận biết hàng không toà, bộ kiểm vẫn xanh dù link lần rao có thể mở sai hồ sơ. Hiện người dùng chưa gặp lỗi nào. — `apps/web/src/app/(app)/units/ho-so/lan-rao-khong-toa.test.ts`
