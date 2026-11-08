@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>25 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>127 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>129 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -41,6 +41,7 @@ flowchart TD
 - Lưới bảng hàng 5.000 dòng × 20 cột cuộn, sửa trên ô và dán 500 ô từ Excel mà không giật trên máy tính văn phòng (`bai-thu-luoi-5000-dong`)
 - Link trang khách dán vào Zalo hiện ảnh xem trước, và lượt Zalo tự lấy ảnh không bị tính là khách mở (`bai-thu-zalo`)
 - Kho có bản đồ khuôn cho các nhóm màn đã có — Cài đặt sàn, Xác thực, trang tạm, trạng thái trống · lỗi · báo — và mỗi nhóm một khuôn có khe mà mọi màn của nhóm dựng qua (`ban-do-khuon-nhom-da-co`)
+- Mỗi trang bản mẫu khai một địa chỉ màn thật nó đứng thay; vỏ lấy nhà, tiêu đề điện thoại, tab dưới và mục sáng cột thứ hai theo địa chỉ ấy; bộ quét bản đồ khuôn coi khu proto là khu bản mẫu riêng và đỏ khi trang bản mẫu không khai địa chỉ (`ban-mau-khai-dia-chi`)
 - Đầu khách mở Bảng hàng trên điện thoại, lọc theo nhu cầu khách thành thẻ, giữ lâu một thẻ để chọn nhiều căn (`bang-hang-dang-the`)
 - Đầu chủ mở hồ sơ căn từ Bảng hàng thì hồ sơ là một cột đứng cạnh bảng, ngoài khung bảng, cao từ đỉnh vùng làm việc tới đáy màn, đẩy bảng sang trái và kéo chia 28–50%; thanh trên của vỏ giữ nguyên, nhóm nút Nhóm · Lọc · Cột · Xuất và +Lead không bị che; điện thoại không đổi; Bảng hàng có cột Đầu chủ (`bang-hang-danh-sach-chi-tiet`)
 - Đầu chủ mở Bảng hàng trên máy tính và thấy hàng của sàn dày như Sheet: lọc mọi cột, nhóm theo toà rồi loại căn, lưu góc nhìn (`bang-hang-kieu-sheet`)
@@ -56,6 +57,7 @@ flowchart TD
 - Cách gọi riêng chặn tên riêng của một giá trị trùng tên đang hiện (riêng hay mặc định) của giá trị khác cùng tập đóng, ở máy chủ và ngay ở ô đang sửa (`chan-trung-ten-gia-tri`)
 - Che vùng ảnh: đầu chủ kéo khung che lên ảnh căn rồi lưu một bản che nhẹ ở ngăn Gửi được; bản gốc giữ nguyên và sang ngăn Nội bộ (`che-vung-anh`)
 - Lead không trùng được chia theo luật của sàn trong một phút; quá 15 phút chưa nhận hay 30 phút chưa gọi thì trưởng nhóm được báo (`chia-lead-va-han`)
+- Trao Quản trị sàn — ở công cụ mở sàn hay màn Người dùng — là trao luôn bốn vai làm việc, gỡ bớt được; Trưởng nhóm kéo theo vai của thành viên: một luật «vai kéo theo vai», không đổi luật theo dòng, không đổi vai của ai đang có. (`chu-san-du-vai`)
 - Ở bước xem trước nhập file, đầu chủ gõ «dong nam», «bp», «Đang gd» thì thấy máy gợi giá trị chuẩn; chọn gợi ý thành đề xuất từ điển của sàn; quản trị sàn duyệt ở màn Từ điển và xem sức khoẻ dữ liệu; cách gõ đã duyệt chuẩn hoá thẳng ở mọi lần nhập sau (`chuan-hoa-moi-cua`)
 - Đầu chủ chụp ảnh khi đi xem nhà ngay trên điện thoại và ảnh vào đúng ngăn của căn, tải lên ở nền (`chup-anh-dien-thoai`)
 - Đầu chủ chọn một căn và thấy cột hồ sơ cạnh bảng — thuộc tính tự điền, lần rao, lịch sử giá và trạng thái ai sửa khi nào; thấy thuộc tính sai thì bấm «Báo sai thông tin căn» (`cot-ho-so-can`)
