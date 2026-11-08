@@ -35,10 +35,20 @@ Luật thuần mới trong `apps/web/src/app/(app)/contacts/xem-them.ts`, cạnh
 không-đọc dùng `trangKhiKhongDoc`. Con trỏ «Xem thêm» vẫn lấy qua `conTroXemThem`, trang về vẫn chỉ nối khi `duocNoi`.
 Chữ, khối, bố cục và mọi đường đọc khác của màn không đổi.
 
-Bài kiểm `xem-them.test.ts` thêm: phát lại đúng kịch bản trên bằng luật thuần (kể cả `canDocLan` và `khoaLoc` thật của màn),
-đếm dòng của bảng sau lần «Xem thêm» thứ hai — không trùng, đúng thứ tự trang 1, 2, 3; luật cũ (nhánh dự phòng) chạy trên
-cùng kịch bản để chứng nó là kịch bản lỗi (lặp 50 dòng). Thêm bảng ca của `trangKhiKhongDoc` (mở màn, hiệu ứng chạy hai lần,
-máy chủ trao trang mới, trang mới của bộ lọc khác).
+Mọi chỗ đặt trang cuối sau lúc khởi đầu (nhánh không đọc lại, nhánh đọc lại sau 250 ms, `them()`) đi qua một hàm
+`datTrang` đổi cùng lúc trạng thái trang cuối, bản ref của nó (để hiệu ứng đọc trang cuối hiện tại, không lấy từ closure) và
+`tiepHienTai` — ba chỗ giữ con trỏ không lệch nhau.
+
+Bài kiểm `xem-them.test.ts` thêm một bộ phát lại hiệu ứng đọc và «Xem thêm» dựng trên luật thật của màn (`khoaLoc`,
+`canDocLan`, `conTroXemThem`, `duocNoi`, `trangTuMayChu`) và nhận trang máy chủ mới theo đối tượng như `vung.tsx`; luật nhánh
+không đọc lại thay được, để chạy cả luật cũ trên cùng kịch bản. Ca: gõ-xoá rồi «Xem thêm» (110 dòng, không trùng, đúng thứ
+tự; luật cũ lặp 50) · hai lần «Xem thêm» liền (bốn trang, 160 dòng) · gõ-xoá trong lúc trang đang về · vẽ lại cùng trang máy
+chủ và trang máy chủ mới · bảng ca của `trangKhiKhongDoc`. Bộ phát lại là mô hình viết tay của hiệu ứng; quan hệ giữa nó và
+`vung.tsx` (cách tính `dauMoi`, thay bảng cùng lượt) do eval đọc E3 soi trên mã thật, và lượt nhìn màn E6 chứng trên màn chạy.
+
+Gõ-xoá trong lúc một trang «Xem thêm» đang về: hai lượt đọc mới làm trang ấy bị bỏ khi về (luật lượt đọc của
+`va-ho-so-lien-he`, giữ nguyên) — trang cuối vẫn là trang trước, lần bấm kế gửi lại cùng con trỏ và nối trang ấy một lần.
+Không lặp dòng; người dùng bấm thêm một lần.
 
 ## 3. Không đổi
 

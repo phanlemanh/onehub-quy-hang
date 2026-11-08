@@ -31,24 +31,30 @@ rồi xoá ô tìm trong 250 ms làm con trỏ «Xem thêm» quay về trang 1, 
   của màn (`khoaLoc`, `canDocLan`, `conTroXemThem`, `duocNoi` và luật mới) với ba trang dữ liệu mẫu · When bấm «Xem thêm»
   sau khi ô tìm đã trở về · Then yêu cầu gửi con trỏ của trang 3, bảng có đủ dòng của trang 1, 2, 3 theo đúng thứ tự, không
   dòng nào lặp; luật trước bản vá chạy trên cùng kịch bản thì gửi lại con trỏ của trang 2 và lặp đủ một trang (chứng đó là
-  kịch bản lỗi); năm ca cũ của «Xem thêm» (`va-ho-so-lien-he` AC-2) vẫn đạt.
+  kịch bản lỗi). Cùng bộ phát lại: với bốn trang (50, 50, 50, 10), hai lần «Xem thêm» liền sau gõ-xoá gửi con trỏ trang 3
+  rồi trang 4, bảng 160 dòng không trùng; gõ-xoá trong lúc trang 2 đang về thì trang ấy về sau không được nối (luật lượt
+  đọc của `va-ho-so-lien-he`), lần bấm kế gửi lại con trỏ trang 2 và nối nó đúng một lần; vẽ lại với cùng trang máy chủ
+  (cùng đối tượng) giữ con trỏ trang 3, còn trang máy chủ mới đúng bộ lọc thì bảng thay bằng trang ấy và con trỏ là của nó
+  trong cùng lượt. Năm ca cũ của «Xem thêm» (`va-ho-so-lien-he` AC-2) vẫn đạt.
 - **AC-3 — Màn Liên hệ dùng đúng luật ấy, giao diện không đổi.** Given màn Liên hệ của một Đầu chủ có hơn hai
   trang liên hệ · When bấm «Xem thêm», gõ rồi xoá một ký tự ô tìm trong 250 ms, rồi bấm «Xem thêm» lần nữa · Then yêu cầu
   «Xem thêm» thứ hai mang con trỏ khác yêu cầu thứ nhất, trên màn không tên nào lặp và các dòng đi đúng thứ tự trang; trong
   `vung.tsx` trang cuối khởi đầu từ trang máy chủ qua luật của AC-1, nhánh không đọc lại chỉ đổi trang cuối qua luật ấy
-  (không còn gán trang máy chủ lúc mở màn), và so với bản trước, JSX, chữ và mọi đường đọc khác không đổi; tệp màn vẫn theo
+  (không còn gán trang máy chủ lúc mở màn), trang máy chủ mới nhận theo đối tượng và khi trang cuối lấy con trỏ của nó thì
+  bảng thay bằng nó trong cùng nhánh, mọi chỗ đặt trang cuối đổi cùng lúc con trỏ đã nối, và so với bản trước, JSX, chữ và mọi đường đọc khác không đổi; tệp màn vẫn theo
   khuôn nhóm Liên hệ.
 
 ## Coverage
 
-Bỏ quét độ phủ (sổ quyết định, dòng «bỏ coverage-scan»): lỗi một chiều trên một nhánh của một hiệu ứng; các ca của luật mới
-liệt kê đủ trong một bảng viết trước.
+Quét độ phủ làm ngay trong hợp đồng (sổ quyết định, dòng thay dòng «bỏ coverage-scan»): ba trục, mọi ô có tiêu chí.
 
-- Trục **lượt hiệu ứng**: mở màn có trang máy chủ | mở màn không trang máy chủ | không đọc lại, không trang mới | không đọc
-  lại, có trang máy chủ mới đúng bộ lọc | có trang máy chủ mới của bộ lọc khác [thước CE: hai nhánh của hiệu ứng đọc
-  danh sách trong `vung.tsx` cộng khởi đầu trạng thái]
-- Trục **chuỗi thao tác**: «Xem thêm» → gõ-xoá trong 250 ms → «Xem thêm» | «Xem thêm» hai lần liền sau gõ-xoá [thước CE: câu
-  giao của hàng]
+- Trục **lượt hiệu ứng** — mở màn có trang máy chủ (AC-1) | mở màn không trang máy chủ (AC-1) | không đọc lại, không trang
+  mới (AC-1, AC-2) | vẽ lại với cùng trang máy chủ (AC-2) | có trang máy chủ mới đúng bộ lọc (AC-1, AC-2) | trang máy chủ
+  mới của bộ lọc khác (AC-1) [thước CE: hai nhánh của hiệu ứng đọc danh sách trong `vung.tsx` cộng khởi đầu trạng thái và
+  cách nhận trang máy chủ mới theo đối tượng]
+- Trục **«Xem thêm» lúc gõ-xoá** — rảnh (AC-2, AC-3) | đang về (AC-2) [thước CE: luật lượt đọc `duocNoi` của
+  `va-ho-so-lien-he`]
+- Trục **số lần «Xem thêm» sau gõ-xoá** — một (AC-2, AC-3) | hai liền (AC-2) [thước CE: câu giao của hàng]
 
 ## Đường đo
 
