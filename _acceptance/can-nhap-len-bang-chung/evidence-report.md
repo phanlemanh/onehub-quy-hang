@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 2884fc4c27b59d2dfd9d8b12e602848b2bc9a6cd
+verified_commit: a65ec2e174182868c83beb906d851a386d8b8e4e
 human_signoff:
 ---
 
@@ -15,179 +15,206 @@ human_signoff:
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
-| E1 | AC-1 | test | PASS |
-| E2 | AC-2 | test | PASS |
-| E3 | AC-3 | test | PASS |
-| E4 | AC-4 | test | PASS |
-| E5 | AC-5 | test | PASS |
-| E6 | AC-6 | test | PASS |
-| E7 | AC-7 | test | PASS |
-| E8 | AC-8 | test | PASS |
-| E9 | AC-9 | ui-check | REJECT |
-| E10 | AC-10 | test | PASS |
-| E11 | AC-9 | script | PASS |
+| E1 | AC-1 | test | PASS (carry-forward round 1) |
+| E2 | AC-2 | test | PASS (carry-forward round 1) |
+| E3 | AC-3 | test | PASS (carry-forward round 1) |
+| E4 | AC-4 | test | PASS (carry-forward round 1) |
+| E5 | AC-5 | test | PASS (carry-forward round 1) |
+| E6 | AC-6 | test | PASS (carry-forward round 1) |
+| E7 | AC-7 | test | PASS (carry-forward round 1) |
+| E8 | AC-8 | test | PASS (carry-forward round 1) |
+| E9 | AC-9 | ui-check | FAIL |
+| E10 | AC-10 | test | PASS (carry-forward round 1) |
+| E11 | AC-9 | script | PASS (carry-forward round 1) |
 
-## Analyst
-
-Eval không-phân-biệt (xanh trên cả HEAD lẫn baseline — chứng minh harness chứ chưa chứng minh feature; cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
-
-- `npm test -w @quy-hang/core` — E1
-- `DATABASE_URL=... sh -c 'npm run db:migrate && npm run db:test'` — E2, E3, E4, E5, E6, E8, E10
-- `DATABASE_URL=... npm run test:db -w @quy-hang/web` — E7
-- `node "$R/scripts/design-floor-khuon.mjs" --kiem --root .` — E11
-
-Lệnh không gắn eval: `ui-check:E9` thất bại (E9, đã nêu ở Evidence).
+E9 trượt vì khung Bảng hàng ở 375 trái điều đã hứa: ảnh gần như trống, không có căn nào ở Đang bán. Các khung còn lại đều khớp. Chưa phân định được máy dev chậm hay màn lỗi thật.
 
 ## Evidence
+
+- eval: E9
+  run_id: minted-can-nhap-len-bang-chung-E9-r2
+  exit_code: 1
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-08T03:45:13Z
+  screenshot: evidence/E9-ket-qua-nhap-1440.png
+  observed: |
+    1440 (đã mở từng ảnh):
+    - ket-qua-nhap: khối "Đã ghi vào Quỹ hàng" ghi "Ghi 2 căn mới, cập nhật 0, tin bổ sung 0, bỏ 0. 2 căn lên Đang bán...". Khối có tông thường, không đỏ, không cảnh báo. Không có dòng nào đếm "Chưa đủ để rao". Có nút "Hoàn tác lần nhập này" và "Mở Bảng hàng". Khớp expected.
+    - hom-nay: nhóm "Thiếu thông tin" đếm 2, chứa A-05.05 và A-05.06 (dòng "Thiếu: nội thất, pháp lý, tài chính, tình trạng s…"). Khớp.
+    - ho-so: A-05.05, badge xanh "Đang bán", "Xác nhận hôm nay". Dòng mức đủ ghi "thiếu Nội thất, Pháp lý, Tài chính, Tình trạng sử dụng, Ảnh thật", 1/6. Khớp.
+    - bang-hang: lưới có 2 căn A-05.05 và A-05.06, cột Trạng thái là badge xanh "Đang bán". Khớp.
+    - hom-nay-b (người giữ B): nhóm "Thiếu thông tin" đếm 1, chứa A-05.04, không thấy căn của A. Khớp.
+    375 (đã mở từng ảnh):
+    - ket-qua-nhap: cùng nội dung "2 căn lên Đang bán", không đỏ, không cảnh báo, vừa khổ, không tràn ngang. Khớp.
+    - hom-nay: nhóm "Thiếu thông tin" đếm 2 với A-08.05 và A-08.06 dạng thẻ. Khớp.
+    - ho-so: "Căn A-08.05", badge "Đang bán", dòng mức đủ liệt kê thiếu Nội thất, Pháp lý, Tài chính, Tình trạng sử dụng, Ảnh thật, 1/6. Khớp.
+    - bang-hang: ảnh gần như trống, chỉ có tiêu đề "Bảng hàng", vòng quay tải trên thanh trên và thanh dưới. Không có căn A-08.05 hay A-08.06, không có trạng thái Đang bán. MÂU THUẪN với expected.
+    - hom-nay-b: nhóm "Thiếu thông tin" đếm 1 với A-08.04. Khớp.
+  network_observed: n-a (driver)
+  output: |
+    Dựng máy dev 3493 bằng dung.mjs: lên được. Tắt bằng --tat: đã tắt (PID 91546); cổng 3493 trả 000 sau đó.
+    Chạy chup.mjs:
+    - 1440 lần 1: hết giờ chờ A-07.05 ở Bảng hàng (log máy dev báo ChunkLoadError, "Manifest file is empty"). Chạy lại: đủ 5 dòng JSON.
+    - 375 lần 1: hết giờ chờ "Thiếu thông tin" ở Hôm nay. Lần 2: đủ 5 dòng JSON. Lần 3 (xem khung Bảng hàng có lặp lại không): hết giờ chờ "Thiếu thông tin" ở Hôm nay.
+    - Máy dev dãy G không ổn định, nhiều lần hết giờ chờ.
+    Khung 1440: ket-qua-nhap, hom-nay, ho-so, bang-hang, hom-nay-b đều ĐẠT; tranNgang=false ở cả 5 khung.
+    Khung 375 (lần chạy đủ JSON): ket-qua-nhap, hom-nay, ho-so, hom-nay-b ĐẠT. bang-hang TRƯỢT: JSON ghi coCan=false; ảnh E9-bang-hang-375.png trống, chỉ có tiêu đề và vòng quay tải. Expected nói Bảng hàng hiện căn ở Đang bán.
+    Không đọc được network qua driver này, nên không có E9-network.txt.
+    Ảnh đã lưu trong _acceptance/can-nhap-len-bang-chung/evidence/: E9-{ket-qua-nhap,hom-nay,ho-so,bang-hang,hom-nay-b}-{1440,375}.png.
 
 - eval: E1
   run_id: minted-can-nhap-len-bang-chung-E1-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.core
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 13460.81825
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E2
   run_id: minted-can-nhap-len-bang-chung-E2-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 138284.760292
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E3
   run_id: minted-can-nhap-len-bang-chung-E3-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 138284.760292
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E4
   run_id: minted-can-nhap-len-bang-chung-E4-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 138284.760292
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E5
   run_id: minted-can-nhap-len-bang-chung-E5-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 138284.760292
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E6
   run_id: minted-can-nhap-len-bang-chung-E6-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 138284.760292
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E7
   run_id: minted-can-nhap-len-bang-chung-E7-r1
   exit_code: 0
-  baseline: green
-  verifier: config:executors.test
+  baseline: n-a
+  verifier: test
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 14321.229625
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E8
   run_id: minted-can-nhap-len-bang-chung-E8-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 138284.760292
-    __EXIT=0
-
-- eval: E9
-  run_id: minted-can-nhap-len-bang-chung-E9-r1
-  exit_code: 1
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-08T03:07:35Z
-  screenshot: evidence/E9-ket-qua-nhap-1440.png
-  observed: |
-    Import-result frame shows the Excel summary "Đã ghi vào Quỹ hàng", both rows "lên Đang bán — còn thiếu pháp lý, tình trạng sử dụng", no raw code, no error tone; Hôm nay shows 2 rows in "Thiếu thông tin".
-    The hồ sơ căn frames at 1440 and 375 are only a grey loading skeleton: no mức đủ, no pháp lý/tình trạng sử dụng, no "Đang bán", contradicting Expected (reproduced on two runs).
-    The hom-nay-b frame at 375 was never taken (team-lead login failed with a server error, dev log "Manifest file is empty"); the file in the folder is stale. Bang-hang at 375 has no card for the căn.
-  network_observed: n-a (driver)
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E10
   run_id: minted-can-nhap-len-bang-chung-E10-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.script.nhap_tac_tu
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    ℹ duration_ms 138284.760292
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E11
   run_id: minted-can-nhap-len-bang-chung-E11-r1
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.design.khuon
   verified_at: 2026-11-08T03:07:35Z
+  carried_from_round: 1
   output: |
-    1 tệp giao diện ngoài bản đồ
-    __EXIT=0
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 ### Lệnh suite (hồi quy)
 
-- cmd: npm test -w @quy-hang/api
-  run_id: minted-can-nhap-len-bang-chung-SUITE-npm_test_w_quy_hang_api-r1
+- cmd: npm test -w @quy-hang/core
+  run_id: minted-can-nhap-len-bang-chung-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-08T03:07:35Z
+  verified_at: 2026-11-08T03:45:13Z
+
+- cmd: npm test -w @quy-hang/api
+  run_id: minted-can-nhap-len-bang-chung-SUITE-npm_test_w_quy_hang_api-r2
+  exit_code: 0
+  verified_at: 2026-11-08T03:45:13Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-can-nhap-len-bang-chung-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-can-nhap-len-bang-chung-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-08T03:07:35Z
+  verified_at: 2026-11-08T03:45:13Z
 
 - cmd: npm run test:hooks
-  run_id: minted-can-nhap-len-bang-chung-SUITE-test_hooks-r1
+  run_id: minted-can-nhap-len-bang-chung-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-08T03:07:35Z
+  verified_at: 2026-11-08T03:45:13Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-can-nhap-len-bang-chung-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-can-nhap-len-bang-chung-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-08T03:07:35Z
+  verified_at: 2026-11-08T03:45:13Z
 
 - cmd: npm run typecheck
-  run_id: minted-can-nhap-len-bang-chung-SUITE-typecheck-r1
+  run_id: minted-can-nhap-len-bang-chung-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-08T03:07:35Z
+  verified_at: 2026-11-08T03:45:13Z
 
 - cmd: npm run lint
-  run_id: minted-can-nhap-len-bang-chung-SUITE-lint-r1
+  run_id: minted-can-nhap-len-bang-chung-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-08T03:07:35Z
+  verified_at: 2026-11-08T03:45:13Z
+
+Lệnh fail không gắn eval: ui-check:E9 (gắn eval E9, đã nêu ở trên).
 
 ## Known limits
 
 ## Ngoài hợp đồng
+
+## Analyst
+
+carried tu round 1 — baseline khong do lai round nay (evals.yaml khong doi tu lan baseline cuoi). Field baseline cua moi eval la n-a.
+
+Eval không phân biệt (pass trên cả HEAD lẫn baseline; nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+- npm test -w @quy-hang/core — eval E1
+- npm run db:migrate && npm run db:test (Postgres dãy G 5573) — evals E2, E3, E4, E5, E6, E8, E10
+- npm run test:db -w @quy-hang/web (Postgres dãy G 5573) — eval E7
+- design-floor-khuon.mjs --kiem --root . — eval E11
 
 ## Variance
 
@@ -195,4 +222,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E9 failed — hồ sơ căn chỉ hiện khung chờ ở cả 1440 và 375 (không thấy mức đủ, pháp lý, tình trạng sử dụng, Đang bán); khung hom-nay-b ở 375 không chụp được vì đăng nhập trưởng nhóm lỗi máy chủ; Bảng hàng ở 375 không có thẻ căn. Returned to implementation.
+Round 1: E1-E8, E10, E11 đạt (các eval này được mang sang round 2).
+Round 2: E9 failed — khung Bảng hàng ở 375 trống, không hiện căn ở Đang bán; máy dev dãy G không ổn định (nhiều lần hết giờ chờ). Returned to implementation.
