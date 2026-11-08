@@ -1,0 +1,18 @@
+---
+slug: va-nut-ci-gitleaks
+at: 2026-11-08T07:14:00Z
+verdict: findings
+p0: 2
+p1: 2
+p2: 1
+---
+
+## Findings
+
+| Sev | Artifact | Thiếu gì | Kịch bản fail | Thước đo | Xử lý |
+|---|---|---|---|---|---|
+| P0 | design | Sổ d-20261108T070834Z-5 ghi nguồn mục tiêu, nhưng câu trích là quyết định chủ kho đưa cho RIÊNG hàng va-nut-ci-ag-root về hồ sơ ghim-lai-ban-that-qua-ci, không quyết cho hàng này và không nói gì về ghim lại chính va-nut-ci-ag-root [va-nut-ci-ag-root#F1]. Design ghi Q-14 «chưa cấp thì để cũ», Notes hợp đồng không ghi gì. | Cổng 1 đọc -5 là máy tự quyết theo câu trích nên bỏ qua: hai hồ sơ T3 đã ký bị ghim lại mà người ký không xét; hoặc Q-14 không cấp, va-nut-ci-ag-root cũ âm thầm. | Dòng S1 mới thay -5 dạng chỉ-người (Hỏi) hoặc một-lối có lối chết; Notes ghi trạng thái Q-14; gói Cổng 2 nêu sha mỗi hồ sơ ghim lại trỏ tới. | human-gate1: dòng d-20261108T071750Z-9 thay -5 thành Hỏi-3 (khuyến nghị giữ nguyên tệp, ghim lại cả hai); Notes hợp đồng ghi Q-14 đã cấp (máy, 06:59Z) và hai hồ sơ ghim lại; design nêu sha ở gói Cổng 2. |
+| P0 | design | Sổ d-20261108T070834Z-4 ghi nguồn mục tiêu, trích cách đo của va-nut-ci-ag-root cho hai bước khác; ràng buộc «nút từ chối ref khác main» không giết lối chạy khối cài (không bí mật, tự đứng) trên ubuntu thật trước gộp bằng luồng thử kích bởi push [va-nut-ci-ag-root#F2]. | Bản dựng lại trên máy chấm (bash, tar, sha256sum của macOS, arm64) xanh nhưng khối cài khác hành vi trên ubuntu, hoặc tệp ELF x86-64 không chạy được — cả hai không lộ trên máy chấm; lượt bấm sau gộp đỏ lại. | Dòng S1 mới thay -4: một-lối với lối chết nêu được, hoặc chỉ-người kèm giá. | human-gate1: dòng d-20261108T071750Z-8 thay -4 thành Hỏi-2 (khuyến nghị dựng lại tại máy + Đường đo; lối khác: luồng thử push-trigger, giá một tệp .github/workflows ngoài vùng); Notes hợp đồng và design nêu giá. |
+| P1 | evals | Ma trận E1 đòi mỗi ca «hỏng ĐÚNG một vế» nhưng ca «bỏ bước cài» mất cả ba dòng của các vế sau; không định cách chấm khi bước vắng, và bộ chấm dừng ở vế đầu thì một bản phá hai vế vẫn báo đạt. | Bộ chấm dừng ở vế hỏng đầu: bản phá kép (kiểm băm sau tar và bỏ GITHUB_PATH) vẫn ĐẠT; ma trận mất sức phân biệt. | Bảng ca × tập vế viết trước, bộ đo so tập hỏng bằng nhau; bỏ bước thì vế còn lại «không áp». | fixed: bộ chấm chấm đủ năm vế (không dừng sớm), bước vắng → bốn vế «không áp»; ma trận ghi tập vế phải hỏng từng ca và so bằng nhau; thêm ca phá kép phải hỏng đúng hai vế. AC-1 và E1 ghi lại theo đó. |
+| P1 | contract | AC-3 hứa quan hệ «gitleaks là thứ DUY NHẤT bài tự kiểm còn thiếu» nhưng E3 chỉ đo chuỗi có mặt trên máy chấm đủ đồ; không so với tập dòng ĐỎ thật của run 42440631323 trên máy chủ. | Nhật ký trọn của run còn một dòng ĐỎ khác do máy chủ thiếu thứ máy chấm có; E3 vẫn xanh; lượt bấm sau gộp vẫn đỏ. | Ghim tập dòng ĐỎ từ nhật ký run làm đầu vào, đòi bằng {gitleaks…}, và đối chứng máy chấm có tập dòng bằng tập ấy. | fixed: khối bài tự kiểm của run ghim nguyên văn ở thu/run-42440631323-suite-4-7.txt (12 dòng kết luận, 1 dòng ĐỎ); E3 đòi tập ĐỎ của khối ghim bằng đúng {gitleaks phải có trên CI}, đối chứng máy chấm trùng từng dòng kết luận với khối ghim, lần có gitleaks giữ mọi dòng ĐẠT của khối và 0 dòng ĐỎ. |
+| P2 | evals | Vế «bước không mang bí mật» chỉ nhìn khối env của bước; bước còn thừa hưởng env của job và GITHUB_ENV do bước trước ghi. | Bí mật nằm ở env của job hay GITHUB_ENV từ bước trước, curl của bước cài chạy cạnh nó mà vế vẫn ĐẠT. | Vế chấm env hiệu lực; thêm ca phá bí mật ở env của job. | fixed: vế chấm env của job + env của bước + bước trước ghi GITHUB_ENV từ một bí mật; thêm ca phá «bí mật ở env của job» phải hỏng đúng vế ấy. |
