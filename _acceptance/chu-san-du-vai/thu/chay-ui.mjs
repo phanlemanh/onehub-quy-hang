@@ -128,28 +128,47 @@ try {
   }
   if (arg("--e5b")) {
     const nhaCua = (t) => t.tinh(`[...document.querySelectorAll("[data-sidebar=menu-button], a[href]")].map((a) => a.getAttribute("href")).filter((h) => h && /^\\/(today|inventory|shares|contacts|team|settings)/.test(h)).map((h) => h.split(/[/?]/)[1]).filter((v, i, a) => a.indexOf(v) === i)`);
-    const nutTao = (t) => t.tinh(`document.body.innerText`);
+    // Chờ lần đồng bộ đầu xong: trước đó màn còn khung chờ nên bấm menu trượt và ảnh không chứng được gì.
+    const choNoiDung = (t) => t.cho(`document.body.innerText.includes("Đã đồng bộ") && !document.querySelector("[data-slot=skeleton]")`, 180000);
+    const banh = (sel) => `(() => { const r = document.querySelector(${J(sel)})?.getBoundingClientRect(); return r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : null; })()`;
     const t = await mo("dau-tien", "/today", `!!document.querySelector("[data-slot=sidebar-inset]")`);
-    await ngu(1500);
+    await choNoiDung(t);
+    await ngu(800);
     in1({ ca: "dau-tien-nha", nha: await nhaCua(t), url: await t.tinh("location.pathname") });
     await chup(t, "E5b-dau-tien-1440");
-    const nut = await t.tinh(`(() => { const r = document.querySelector('[aria-label="Việc tạo khác"]').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
-    await t.gui("Input.dispatchMouseEvent", { type: "mouseMoved", x: nut.x, y: nut.y });
-    await t.gui("Input.dispatchMouseEvent", { type: "mousePressed", x: nut.x, y: nut.y, button: "left", buttons: 1, clickCount: 1 });
-    await t.gui("Input.dispatchMouseEvent", { type: "mouseReleased", x: nut.x, y: nut.y, button: "left", buttons: 0, clickCount: 1 });
-    await ngu(800);
-    const chu = await nutTao(t);
-    in1({ ca: "dau-tien-nut", lead: chu.includes("Lead"), nhap: chu.includes("Nhập Excel"), xuat: chu.includes("Xuất") });
+    // Đo đúng phần tử: nút chính trong nhóm «Tạo» và từng mục của menu mở từ nút «Việc tạo khác», không đo chữ của cả trang.
+    const chinh = await t.tinh(`document.querySelector('[aria-label="Tạo"]')?.querySelector("a,button")?.textContent.trim() ?? null`);
+    let menu = [];
+    for (let i = 0; i < 6 && menu.length === 0; i++) {
+      const nut = await t.tinh(banh('[aria-label="Việc tạo khác"]'));
+      if (nut) {
+        await t.gui("Input.dispatchMouseEvent", { type: "mouseMoved", x: nut.x, y: nut.y });
+        await t.gui("Input.dispatchMouseEvent", { type: "mousePressed", x: nut.x, y: nut.y, button: "left", buttons: 1, clickCount: 1 });
+        await t.gui("Input.dispatchMouseEvent", { type: "mouseReleased", x: nut.x, y: nut.y, button: "left", buttons: 0, clickCount: 1 });
+      }
+      await ngu(900);
+      menu = await t.tinh(`[...document.querySelectorAll('[role=menuitem]')].map((x) => x.textContent.trim())`);
+    }
+    in1({ ca: "dau-tien-nut", chinh, menu });
     await chup(t, "E5b-menu-tao-1440");
     t.dong();
+    const docTrang = (t) => t.tinh(`({ url: location.pathname, tieuDe: document.querySelector("[data-slot=sidebar-inset] h1")?.textContent.trim() ?? null, khongThay: document.body.innerText.includes("Không thấy trang này") })`);
     const bang = await mo("dau-tien", "/inventory", `!!document.querySelector("[data-slot=sidebar-inset]")`);
-    await ngu(1500);
-    in1({ ca: "dau-tien-bang-hang", url: await bang.tinh("location.pathname"), bao404: (await bang.tinh("document.body.innerText")).includes("404") });
+    await choNoiDung(bang);
+    await ngu(800);
+    in1({ ca: "dau-tien-bang-hang", ...(await docTrang(bang)) });
     await chup(bang, "E5b-bang-hang-1440");
     bang.dong();
+    // Đối chứng dương của phép «không phải trang lỗi»: một đường không tồn tại phải bị đọc ra khongThay true.
+    // Đường lạ rơi vào trang «Không thấy» ngoài vỏ nên không chờ thanh bên.
+    const sai = await mo("dau-tien", "/khong-co-trang-nay", `document.body.innerText.length > 0`);
+    await ngu(500);
+    in1({ ca: "doi-chung-khong-thay", ...(await docTrang(sai)) });
+    sai.dong();
     const qt = await mo("quan-tri", "/settings/users", `!!document.querySelector("[data-slot=sidebar-inset]")`);
-    await ngu(1200);
-    in1({ ca: "chi-cau-hinh-nha", nha: await nhaCua(qt) });
+    await choNoiDung(qt);
+    await ngu(800);
+    in1({ ca: "chi-cau-hinh-nha", nha: await nhaCua(qt), coNhomTao: await qt.tinh(`!!document.querySelector('[aria-label="Tạo"]')`) });
     await chup(qt, "E5b-chi-cau-hinh-1440");
     qt.dong();
   }

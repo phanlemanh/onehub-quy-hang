@@ -74,7 +74,7 @@ evals:
       - "Đối chiếu từng dòng JSON với expected rồi tắt máy dev: node _acceptance/chu-san-du-vai/thu/dung-q.mjs --tat. Xem ảnh E5b-dau-tien-1440, E5b-menu-tao-1440, E5b-bang-hang-1440, E5b-chi-cau-hinh-1440."
     target: "http://localhost:3497/today"
     paths: ["packages/core/src/navigation.ts", "packages/db/scripts/mo-san.mjs", "packages/core/src/access/goi-vai.*"]
-    expected: "dau-tien-nha: nha đúng [today, inventory, shares, contacts, team, settings], url /today. dau-tien-nut: lead, nhap, xuat đều true. dau-tien-bang-hang: url /inventory, bao404 false. chi-cau-hinh-nha: nha đúng [settings]. Ảnh khớp các dòng."
+    expected: "dau-tien-nha: nha đúng [today, inventory, shares, contacts, team, settings], url /today. dau-tien-nut: chinh chứa «Lead»; menu chứa «Nhập Excel» và «Xuất bảng hàng» (đo từ nhóm «Tạo» và các mục menu, không đo chữ cả trang). dau-tien-bang-hang: url /inventory, tieuDe chứa «Bảng hàng», khongThay false. doi-chung-khong-thay: khongThay true (đối chứng dương). chi-cau-hinh-nha: nha đúng [settings], coNhomTao false. Ảnh khớp các dòng, đã hết khung chờ."
     evidence_required: [screenshot, observed, verified_at]
 
   - id: E5c

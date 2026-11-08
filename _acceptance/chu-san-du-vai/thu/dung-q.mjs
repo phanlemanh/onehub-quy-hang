@@ -64,6 +64,8 @@ for (const [lenh, args] of [["npm", ["run", "db:migrate"]], ["node", ["packages/
   if (r.status !== 0) throw new Error(`${lenh} ${args.join(" ")} hỏng: ${r.stderr}`);
 }
 if (!(await song())) {
+  // Bộ nhớ đệm dev của lần chạy trước làm trang tự nạp lại vài lần mỗi giây (đo 09/11, lượt chấm 1 trượt E5b vì thế): máy mới dựng từ đầu.
+  rmSync(path.join(GOC, "apps/web/.next/dev"), { recursive: true, force: true });
   const out = openSync(LOG, "a");
   const p = spawn("npx", ["next", "dev", "-p", String(CONG), "apps/web"], {
     cwd: GOC,

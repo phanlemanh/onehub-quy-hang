@@ -16,18 +16,29 @@ test("bảng kéo theo đúng điều chủ kho chốt (cách B 06/11, Hỏi-1)"
   giong(DU_NAM_VAI, TAT_CA, "đủ năm vai");
 });
 
-// Ma trận viết trước: [vai bật, vai đang có, kết quả mong].
+// Ma trận viết trước, toàn phần: năm vai × ba trạng thái (chưa có gì · đã có một phần · đã có đủ). [vai bật, vai đang có, kết quả mong].
+const CK = ["team_lead", "listing_agent", "buyer_agent", "telesales"];
 const BAT: [string, string[], string[]][] = [
   ["company_admin", [], TAT_CA],
-  ["company_admin", ["telesales"], TAT_CA],
   ["company_admin", ["team_lead", "listing_agent"], TAT_CA],
+  ["company_admin", CK, TAT_CA],
   ["team_lead", [], ["team_lead", "listing_agent", "buyer_agent"]],
-  ["team_lead", ["telesales"], ["telesales", "team_lead", "listing_agent", "buyer_agent"]],
-  ["team_lead", ["listing_agent"], ["team_lead", "listing_agent", "buyer_agent"]],
+  ["team_lead", ["listing_agent", "telesales"], ["telesales", "team_lead", "listing_agent", "buyer_agent"]],
+  ["team_lead", ["listing_agent", "buyer_agent"], ["team_lead", "listing_agent", "buyer_agent"]],
   ["telesales", [], ["telesales"]],
+  ["telesales", ["buyer_agent"], ["buyer_agent", "telesales"]],
+  ["telesales", ["telesales"], ["telesales"]],
+  ["listing_agent", [], ["listing_agent"]],
   ["listing_agent", ["telesales"], ["telesales", "listing_agent"]],
+  ["listing_agent", ["listing_agent"], ["listing_agent"]],
   ["buyer_agent", [], ["buyer_agent"]],
+  ["buyer_agent", ["telesales"], ["telesales", "buyer_agent"]],
+  ["buyer_agent", ["buyer_agent"], ["buyer_agent"]],
 ];
+test("ma trận bật đủ năm vai × ba trạng thái", () => {
+  assert.equal(BAT.length, ROLES.length * 3);
+  for (const vai of ROLES) assert.equal(BAT.filter(([v]) => v === vai).length, 3, `vai ${vai} thiếu trạng thái`);
+});
 for (const [vai, co, mong] of BAT) {
   test(`bật ${vai} khi đang có [${co.join(", ")}]`, () => {
     const kq = doiVaiKhiTich(co, vai, true);
@@ -36,11 +47,12 @@ for (const [vai, co, mong] of BAT) {
   });
 }
 
-// Tắt một vai chỉ bớt đúng vai ấy: năm vai, mỗi vai tắt từ người đủ năm vai và từ người chỉ có vai ấy.
+// Tắt một vai chỉ bớt đúng vai ấy: năm vai × đã có đủ năm vai, chỉ có vai ấy, chưa có vai ấy.
 for (const vai of TAT_CA) {
   test(`tắt ${vai} chỉ bớt đúng vai ấy`, () => {
     giong(doiVaiKhiTich(TAT_CA, vai, false), TAT_CA.filter((v) => v !== vai), "từ đủ năm vai");
     giong(doiVaiKhiTich([vai], vai, false), [], "từ người chỉ có vai ấy");
+    giong(doiVaiKhiTich(TAT_CA.filter((v) => v !== vai), vai, false), TAT_CA.filter((v) => v !== vai), "đang không có vai ấy");
   });
 }
 
