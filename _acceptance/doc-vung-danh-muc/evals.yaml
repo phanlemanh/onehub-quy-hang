@@ -100,3 +100,11 @@ evals:
     expected: "Ô Gõ mã mở đúng hồ sơ căn của mã đó; hồ sơ căn hiện đúng khu, toà, tầng, diện tích, phòng ngủ, hướng của gói thử; Bảng hàng có hàng của mã đó với đúng loại căn và diện tích."
     paths: ["packages/api/src/catalog/**", "apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/[code]/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+  - id: E10b
+    criterion: AC-10
+    executor: script
+    layer: backend-effect
+    cmd: node _acceptance/doc-vung-danh-muc/thu/kiem-tang-sau.mjs
+    expected: "exit 0; doc-vung.test.ts chạy riêng trên Postgres thật: gói nạp qua cửa nhận, đường tra mã và cả danh mục mà màn đọc trả đúng thuộc tính; chiều đỏ trong cùng tệp."
+    paths: ["packages/api/src/catalog/**", "packages/api/test-db/catalog/**", "_acceptance/doc-vung-danh-muc/thu/kiem-tang-sau.mjs"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
