@@ -5,7 +5,7 @@ slug: khuon-xac-nhan-danh-muc
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api, db]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-08-khuon-xac-nhan-danh-muc-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08T07:17:24Z
@@ -133,3 +133,8 @@ không cần mã đo mới.
   Tham chiếu + Đối chiếu ngành + Sổ điểm biến thiên (chỉ thêm dòng), vẽ lại `PRODUCT-MAP.md`, `LO-TRINH.html` (luật 27).
 - Câu hỏi Cổng Phạm vi: Hỏi-1 mốc ngày hay tuần · Hỏi-2 ô xác minh chủ với sổ · Hỏi-3 toà ngoài danh mục · Hỏi-4 giữ cứng
   danh sách trường báo sai · Hỏi-5 cách sinh mã mờ (khó đảo) (thiết kế §6).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-08:
+  - Ngoài-1: Hàm dựng chưa kiểm thoả thuận có đúng là của sàn đang dựng hay không; chưa có đường chảy nên chưa ai bị ảnh hưởng, hàng 97 phải đóng chỗ này trước khi dữ liệu chảy thật.
+  - Ngoài-2: Mẫu bên Invest chép lại vài giới hạn thay vì lấy chung từ lõi; đổi giới hạn thì phải đổi cả hai bên.
+  - Ngoài-4: Tên «Xác nhận danh mục» chưa có trong bảng từ vựng chung.
+  - Ngoài-6: Ngày không có thật (như 31/11) vẫn lọt qua hàm dựng nếu nơi gọi đưa sai; ngày do máy chủ cấp nên gần như không xảy ra.
