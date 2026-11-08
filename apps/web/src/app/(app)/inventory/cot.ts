@@ -46,6 +46,8 @@ export type DongBang = {
    * ngoài khu từ căn của sàn; `null` khi không thấy nguồn («Chưa rõ»).
    */
   propertySubType?: string | null;
+  /** Hàng không toà — lô, ngoài khu (hàng 79): hồ sơ mở theo hàng, không theo toà + mã. Không phải cột. */
+  theoHang?: boolean;
   /** Trường thấp tầng của loại hình (hàng 79, ADR-0016 quyết định 2): diện tích đất, số tầng, mặt tiền, lộ giới. */
   lotSizeArea?: number | null;
   storiesTotal?: number | null;
@@ -61,7 +63,7 @@ export type DongBang = {
 };
 
 /** Cột chuẩn của bảng. */
-export type CotChuanId = Exclude<keyof DongBang, "id" | "needsCallBack" | "statusLabel" | CotRiengId>;
+export type CotChuanId = Exclude<keyof DongBang, "id" | "needsCallBack" | "statusLabel" | "theoHang" | CotRiengId>;
 /** Cột chuẩn hay cột trường riêng của sàn (hàng 47). */
 export type CotId = CotChuanId | CotRiengId;
 /** Kiểu ô lọc của cột: chữ chứa · chọn một giá trị · luật số. */

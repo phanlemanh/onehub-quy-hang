@@ -62,5 +62,19 @@ export const coLoaiKhacCanHo = (dong: readonly { propertySubType?: string | null
 /** Tiêu đề cột vị trí (Hỏi-1 Cổng Phạm vi): «Toà» khi mọi dòng đã lọc là căn hộ (hay chưa rõ), «Vị trí» khi có loại khác. */
 export const tieuDeViTri = (dong: readonly { propertySubType?: string | null }[]) => (coLoaiKhacCanHo(dong) ? "Vị trí" : "Toà");
 
+/**
+ * Cột hiện của Bảng hàng: cột người bật (`cot`, giữ thứ tự) trừ cột loại hình mà không loại hình nào trong dòng đã lọc
+ * dùng, và trừ cột Loại hình khi dữ liệu của sàn (chưa lọc) chỉ có căn hộ — sàn chỉ căn hộ thấy bảng như trước hàng 79.
+ */
+export function cotHienTheoLoaiHinh<T extends string>(
+  cot: readonly T[],
+  dongDaLoc: readonly { propertySubType?: string | null }[],
+  dongTatCa: readonly { propertySubType?: string | null }[],
+): T[] {
+  const an = cotAnTheoLoaiHinh(dongDaLoc) as Set<string>;
+  const coLoai = coLoaiKhacCanHo(dongTatCa);
+  return cot.filter((id) => !an.has(id) && (id !== "propertySubType" || coLoai));
+}
+
 /** Nhãn mặc định của một loại hình; giá trị lạ giữ nguyên chữ RESO. */
 export const nhanLoaiHinh = (sub: string) => LOAI_HINH[sub] ?? sub;

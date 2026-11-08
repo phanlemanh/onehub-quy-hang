@@ -8,6 +8,7 @@ import type { CatalogData } from "@quy-hang/core";
 import { lopPhuHoSo, type CoHoSo } from "@quy-hang/core/access";
 import { nhanViTri, type ListingEvent } from "@quy-hang/core/listing";
 import type { LanThu, ListingView } from "@/lib/sync/types";
+import { chiMuc, type CanNgoaiKhuXem } from "../../inventory/ghep-danh-muc";
 import { khoCuaSo } from "../../today/mobile/kho";
 import { dauCuaCan, hienNutSanSang, type Dich } from "../ready/san-sang";
 import {
@@ -19,6 +20,7 @@ import {
   NHAN_PHAN,
   phanLanRao,
   thuocTinh,
+  thuocTinhKhongToa,
   timCan,
   trangThaiLichSu,
   type ChonCan,
@@ -101,6 +103,10 @@ export type VaoHoSo = {
   chon: ChonCan;
   /** Hồ sơ theo hàng (`?hang=`): hàng chưa có mã, hay `null` khi không thấy hàng; vắng là hồ sơ theo căn. */
   chuaMa?: ListingView | null;
+  /** Hồ sơ theo hàng của hàng không toà — lô, ngoài khu (hàng 79): thuộc tính theo loại hình, không ô gắn mã. */
+  khongToa?: ListingView | null;
+  /** Căn ngoài khu của sàn giữ trên máy (hàng 79) — loại hình, địa chỉ của hàng ngoài khu. */
+  ngoaiKhu?: readonly CanNgoaiKhuXem[] | null;
   /** Lần rao đã có lượt kéo lịch sử xong. */
   daKeo: Readonly<Record<string, true>>;
   /** Điều còn thiếu sau lần bấm «Sẵn sàng bán» gần nhất (hàng 23). */
@@ -117,6 +123,8 @@ export type HoSoCo = {
   ma: string;
   toa: string;
   chuaMa: ListingView | null;
+  /** Hàng không toà đang xem (hàng 79) — ảnh, hỏi đầu chủ, báo sai thông tin căn khoá theo toà + mã nên không có. */
+  khongToa: ListingView | null;
   can: ListingView;
   dangXem: LanRao;
   /** Mọi lần rao của căn, mới nhất trên, kèm đường chọn và số thứ tự «Lần n». */
@@ -156,7 +164,10 @@ function danhDauChuaCo(nhan: string, dich: readonly Dich[]): boolean {
 }
 
 export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
-  const { ds, ngan, chon, chuaMa, duong } = v;
+  const { ds, ngan, chon, duong } = v;
+  // Hàng không toà đi đường hồ sơ theo hàng như hàng chưa có mã; khác ở thuộc tính và ô gắn mã.
+  const khongToa = v.khongToa ?? null;
+  const chuaMa = khongToa ?? v.chuaMa;
   const dongHref = v.dongHref ?? null;
 
   // Kho trên máy chưa có hàng: lượt kéo đầu đang chạy thì khung chờ; lượt kéo hỏng thì lỗi kèm «Thử lại».
@@ -167,7 +178,8 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
   }
 
   const theoHang = chuaMa !== undefined;
-  const tim = chuaMa ? { kind: "mot" as const, toa: chuaMa.buildingName ?? nhanViTri(chuaMa), hang: [chuaMa] } : theoHang ? { kind: "khong" as const } : timCan(ds, chon.ma, chon.toa);
+  const viTriHang = (h: ListingView) => h.buildingName ?? ((h.offCompoundUnitId && v.ngoaiKhu?.find((c) => c.id === h.offCompoundUnitId)?.unparsedAddress) || nhanViTri(h));
+  const tim = chuaMa ? { kind: "mot" as const, toa: viTriHang(chuaMa), hang: [chuaMa] } : theoHang ? { kind: "khong" as const } : timCan(ds, chon.ma, chon.toa);
   if (tim.kind === "khong") return { kind: "khong", theoHang, ma: chon.ma, dongHref };
   if (tim.kind === "nhieu") return { kind: "nhieu", ma: chon.ma, toa: tim.toa.map((t) => ({ ten: t, href: duong({ ma: chon.ma, toa: t, lan: null }) })), dongHref };
 
@@ -175,7 +187,7 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
   const lanRao = chuaMa ? [lanRaoCua(chuaMa, ngan.history)] : cacLanRao(ds, toa, chon.ma, ngan.history);
   const lanId = chonLanRao(lanRao, chon.lan);
   const can = ds.find((l) => l.id === lanId)!;
-  const tt = chuaMa ? null : thuocTinh(v.danhMuc, toa, chon.ma);
+  const tt = khongToa ? thuocTinhKhongToa(chiMuc(v.danhMuc, v.ngoaiKhu), khongToa) : chuaMa ? null : thuocTinh(v.danhMuc, toa, chon.ma);
   const p = phanLanRao(can);
   const lichSuGoc = ngan.history[can.id] ?? [];
   const ttls = trangThaiLichSu({ coBan: lichSuGoc.length > 0, dangTai: !v.daKeo[can.id], lan: ngan.lastAttempt, ngoaiTuyen: v.ngoaiTuyen });
@@ -191,14 +203,15 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
     kind: "co",
     ma: chon.ma,
     toa,
-    chuaMa: chuaMa ?? null,
+    chuaMa: khongToa ? null : (chuaMa ?? null),
+    khongToa,
     can,
     dangXem,
     lan: lanRao.map((r, i) => ({ ...r, href: duong({ ma: chon.ma, toa, lan: r.id }), thu: lanRao.length - i })),
     co,
     dauChu,
     tt,
-    coBaoSai: tt !== null && coBaoSai(tt),
+    coBaoSai: tt !== null && !khongToa && coBaoSai(tt),
     thongSo: chuaMa ? null : thongSoChinh(v.danhMuc, toa, chon.ma),
     dauCot: [tt?.kind === "co" ? tt.khu : null, toa, loaiHinh === "—" ? null : loaiHinh].filter(Boolean).join(" · "),
     xacNhan: tuoi?.confirmed ? (tuoi.ageDays === 0 ? "Xác nhận hôm nay" : `Xác nhận ${tuoi.ageDays} ngày trước`) : "Chưa xác nhận với chủ nhà",

@@ -166,7 +166,13 @@ export function ThanCot({ m, khe, hd }: { m: MoHinhHoSo; khe: KheHoSo; hd: HanhD
       </div>
       <Separator />
       <Muc tieuDe="Ảnh" id={NEO_MUC_ANH} muc="anh">
-        {chuaMa ? <p className="text-sm text-muted-foreground">Ảnh gắn theo toà và mã căn — gắn mã căn rồi tải ảnh.</p> : <MucAnhCan toa={m.toa} ma={m.ma} />}
+        {chuaMa ? (
+          <p className="text-sm text-muted-foreground">Ảnh gắn theo toà và mã căn — gắn mã căn rồi tải ảnh.</p>
+        ) : m.khongToa ? (
+          <p className="text-sm text-muted-foreground">Ảnh gắn theo toà và mã căn — hàng lô, hàng ngoài khu chưa gắn ảnh.</p>
+        ) : (
+          <MucAnhCan toa={m.toa} ma={m.ma} />
+        )}
       </Muc>
       <Separator />
       <Muc
@@ -246,7 +252,7 @@ export function ThanCot({ m, khe, hd }: { m: MoHinhHoSo; khe: KheHoSo; hd: HanhD
           </Timeline>
         </PhanLichSu>
       </Muc>
-      {m.co.hoiDauChu && !chuaMa ? <NutHoiDauChu key={can.id} listingId={can.id} dauChu={m.dauChu} ma={m.ma} toa={m.toa} /> : null}
+      {m.co.hoiDauChu && !chuaMa && !m.khongToa ? <NutHoiDauChu key={can.id} listingId={can.id} dauChu={m.dauChu} ma={m.ma} toa={m.toa} /> : null}
     </div>
   );
 }

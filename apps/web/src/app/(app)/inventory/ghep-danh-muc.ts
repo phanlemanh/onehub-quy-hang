@@ -140,6 +140,8 @@ export function ghepDanhMuc(l: ListingView, idx: ChiMucDanhMuc, danhBa?: DanhBaD
     // Hàng lô: «Khu · Dãy»; hàng ngoài khu: địa chỉ đã gõ của căn (Hỏi-1 hàng 79), vắng căn thì chữ chỗ của lõi.
     buildingName: (l.offCompoundUnitId && idx.ngoaiKhu?.get(l.offCompoundUnitId)?.unparsedAddress) || nhanViTri(l),
     unitNumber: l.unitNumber,
+    // Hàng không toà mở hồ sơ theo hàng (hàng 79); hàng có toà giữ đúng dòng cũ.
+    ...(l.buildingName ? {} : { theoHang: true }),
     ...thuocTinhHang(idx, l),
     standardStatus: l.standardStatus,
     // Nhãn trạng thái riêng (hàng 46): chỉ khi căn mang — căn không nhãn giữ đúng dòng cũ.
