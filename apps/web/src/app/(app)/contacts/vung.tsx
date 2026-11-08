@@ -97,7 +97,6 @@ export default function VungLienHe({ dau = null }: { dau?: TrangDau | null }) {
     return () => {
       huy = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q, loai, dauLoc, lan, dau]);
 
   // Esc đóng hồ sơ đang mở (máy tính), trừ khi phím đã có chỗ dùng (Hỏi-2).
