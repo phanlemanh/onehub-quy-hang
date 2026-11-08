@@ -83,7 +83,7 @@ const nhom = await dongNhom(t3);
 await chup(t3, "E8-nhom-loai-hinh");
 
 const NHAN = { Condominium: "Căn hộ", Townhouse: "Nhà phố", "Single Family Residence": "Biệt thự", "Unimproved Land": "Đất" };
-const soNhom = Object.fromEntries(Object.entries(NHAN).map(([k, n]) => [n, Number((nhom.find((x) => x.startsWith(n)) ?? "").match(/(\d+) căn/)?.[1] ?? -1)]));
+const soNhom = Object.fromEntries(Object.values(NHAN).map((n) => [n, Number((nhom.find((x) => x.startsWith(n)) ?? "").match(/(\d+) căn/)?.[1] ?? -1)]));
 const e8 = {
   tron: { tieuDe: td1, coLoaiHinh: coCot(td1, "Loại hình"), cotDau: coCot(td1, "Vị trí") ? "Vị trí" : coCot(td1, "Toà") ? "Toà" : null, oDiaChiDat: oDiaChi },
   locDat: {
