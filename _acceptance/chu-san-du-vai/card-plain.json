@@ -1,0 +1,38 @@
+{
+  "feature_plain": "Người mở sàn mới đăng nhập là thấy đủ các nhà và nút tạo, vì trao Quản trị sàn là trao luôn bốn vai làm việc, gỡ bớt được; trao Trưởng nhóm cũng kéo theo vai của thành viên.",
+  "will_do": [
+    { "id": "AC-1", "p": "Sẽ có một bảng duy nhất nói vai nào kéo theo vai nào: tích vai trên thì thêm vai đi kèm, bỏ một vai thì chỉ bớt đúng vai ấy." },
+    { "id": "AC-2", "p": "Sẽ cho người đầu tiên của sàn mới mang đủ năm vai; mở lại không thêm bớt gì, người của sàn đang chạy giữ nguyên." },
+    { "id": "AC-3", "p": "Sẽ tích sẵn các vai đi kèm trên màn Người dùng, có dòng giải thích, gỡ bớt được ở cả hộp Mời và hộp Sửa, và lưu đúng điều đã chọn." },
+    { "id": "AC-4", "p": "Sẽ để máy chủ lưu đúng danh sách vai được gửi: không tự thêm vai, và gỡ bớt là gỡ thật." },
+    { "id": "AC-5", "p": "Sẽ cho người đủ vai thấy Hôm nay, Bảng hàng, Đã gửi, Liên hệ, Đội, Cài đặt và các nút Lead, Nhập Excel, Xuất; người chỉ cấu hình vẫn chỉ có Cài đặt." },
+    { "id": "AC-6", "p": "Sẽ cho người đủ vai thấy chủ nhà cả sàn, mỗi lần mở số để lại một vết; người chỉ cấu hình vẫn bị từ chối, không có vết." },
+    { "id": "AC-7", "p": "Sẽ giữ nguyên luật cách ly và quyền trong cơ sở dữ liệu, và cập nhật Tham chiếu cùng hai quyết định kiến trúc cho đúng điều đang đúng." },
+    { "id": "AC-8", "p": "Sẽ giữ màn Người dùng đúng khuôn của nhóm Cài đặt sàn." }
+  ],
+  "wont_do": [
+    { "id": "OOS-1", "p": "Không đổi cách chia lead hay quyền giữ căn: cả hai đi theo vai Đầu chủ như hiện nay." },
+    { "id": "OOS-2", "p": "Không làm các bước gợi ý sau khi mở sàn (tạo vùng, mời người, nhập bảng hàng cũ) và các chỗ gãy khác của bản rà sàn mới." },
+    { "id": "OOS-3", "p": "Không cho từng sàn tự đặt bảng vai kéo theo, theo khuyến nghị ở Hỏi-4." },
+    { "id": "OOS-4", "p": "Không đổi vai của bất kỳ ai đang có trên các sàn đang chạy." }
+  ],
+  "coverage_plain": [
+    { "i": 0, "p": "Bốn đường trao vai, mỗi đường xét bật, gỡ bớt, chạy lại và sàn đang chạy:" },
+    { "i": 1, "p": "Bảng ở lõi: bật và gỡ do AC-1 (quy tắc kéo theo); chạy lại, sàn đang chạy không áp dụng." },
+    { "i": 2, "p": "Công cụ mở sàn: bật, chạy lại, sàn đang chạy do AC-2 (mở sàn mới); công cụ không gỡ vai." },
+    { "i": 3, "p": "Màn Người dùng: bật, gỡ bớt, người có sẵn vai do AC-3 (hộp Mời và Sửa)." },
+    { "i": 4, "p": "Máy chủ: bật, gỡ bớt, người có sẵn vai do AC-4 (lưu đúng điều gửi)." },
+    { "i": 5, "p": "Hệ quả quyền, so người đủ vai với người chỉ cấu hình:" },
+    { "i": 6, "p": "Nhà và nút: AC-5 (thấy đủ, hoặc chỉ Cài đặt)." },
+    { "i": 7, "p": "Xem chủ nhà: AC-6 (thấy, hoặc bị từ chối)." },
+    { "i": 8, "p": "Vết mở số: AC-6 (mỗi lần một vết, hoặc không vết)." },
+    { "i": 9, "p": "Thước để biết đã đủ: bản rà sàn mới ngày đầu và bảng nhà theo vai trong Tham chiếu." }
+  ],
+  "gap_probe_plain": [
+    { "i": 0, "p": "Chưa đo tới chỗ lưu thật của màn Người dùng — đã sửa: sau Mời và Sửa đọc lại vai trên cơ sở dữ liệu." },
+    { "i": 1, "p": "Ghi sai căn cứ cho việc bỏ quét độ phủ, và chưa phủ ca gỡ bớt ở máy chủ, hộp Sửa — đã thêm bảng phủ, thêm ca, và chuyển thành câu hỏi (Hỏi-6)." },
+    { "i": 2, "p": "Ghi sai căn cứ cho việc bỏ bản bấm được trước cổng — đã chuyển thành câu hỏi (Hỏi-5), vẫn khuyên bỏ." },
+    { "i": 3, "p": "Lời hứa «đăng nhập lần đầu thấy đủ» chưa có phép nhìn trên bản chạy — đã thêm một bài kiểm giao diện, và ghi rõ ai chạy thử trên bản thật." },
+    { "i": 4, "p": "Ca từ chối người chỉ cấu hình chưa ghim mã lỗi — đã ghim mã và thêm đối chứng cùng phiên." }
+  ]
+}
