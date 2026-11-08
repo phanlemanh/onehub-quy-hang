@@ -5,7 +5,7 @@ slug: doc-vung-danh-muc
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-09-doc-vung-danh-muc-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -99,3 +99,7 @@ Trục: nơi đọc (gõ mã · cả danh mục · Nhập Excel · toà của le
 - Ngoài-8 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài chụp màn E10 có thể chạy trên bản chép dữ liệu thiếu mà không báo, làm ảnh chụp sai bối cảnh; người dùng sản phẩm không bị ảnh hưởng. — `_acceptance/doc-vung-danh-muc/thu/nap-goi-thu.mjs`
 - Ngoài-9 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Một số tổ hợp, như danh mục lỗi hoặc vừa đổi gói ở Nhập Excel và danh sách toà, chưa có bài kiểm riêng nên chưa được chứng minh bằng máy. — `_acceptance/doc-vung-danh-muc/contract.md`
 - Ngoài-10 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm chiều đỏ của Bảng hàng chưa chứng minh được rằng nạp gói khác diện tích thì Bảng hàng đổi theo qua đường thật. — `packages/api/test-db/catalog/doc-vung.test.ts`
+- Ngoài-1 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Người dùng sản phẩm không bị ảnh hưởng. Chỉ có nguy cơ bài kiểm báo đỏ oan khi hai bài chạy cùng lúc, làm lượt nghiệm thu phải chạy lại. — `_acceptance/doc-vung-danh-muc/thu/kiem-tang-sau.mjs`
+- Ngoài-2 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Sản phẩm vẫn chạy đúng với người dùng. Bài kiểm nghiệm thu có thể báo đỏ oan nếu hai bài chạy chồng nhau, gây mất một lượt chấm. — `_acceptance/doc-vung-danh-muc/thu/kiem-tang-sau.mjs`
+- Ngoài-3 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm chưa chứng minh bằng máy rằng Bảng hàng hiện đúng khu, toà, tầng, hướng của căn. Nếu có sai ở các trường này thì bài kiểm vẫn báo xanh. — `_acceptance/doc-vung-danh-muc/evals.yaml`
+- Ngoài-4 (máy định tuyến 2026-11-08, đề xuất S4 known-limits): Bài kiểm chưa chứng minh được rằng khi nạp gói có diện tích khác thì Bảng hàng đổi theo qua đường thật. Người dùng chỉ bị ảnh hưởng nếu có lỗi thật mà bài kiểm không bắt được. — `_acceptance/doc-vung-danh-muc/thu/kiem-tang-sau.mjs`

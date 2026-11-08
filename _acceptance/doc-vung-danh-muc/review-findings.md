@@ -1,3 +1,5 @@
+# Review findings: doc-vung-danh-muc (round 3)
+
 ## Trong hợp đồng
 
 (không có)
@@ -6,14 +8,42 @@
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Hai khu có cùng tên toà và mã căn: Bảng hàng và hồ sơ căn lặng lẽ lấy thuộc tính của khu sau**
+- **E10b chạy doc-vung.test.ts trên đúng Postgres 5575 mà api_db dùng, tái lập lỗi đụng nhau đã làm đỏ lượt chấm 1**
+  Người dùng thấy gì: Người dùng sản phẩm không bị ảnh hưởng. Chỉ có nguy cơ bài kiểm báo đỏ oan khi hai bài chạy cùng lúc, làm lượt nghiệm thu phải chạy lại.
+  Căn cứ: Hậu quả nhẹ và không chạm dữ liệu hay người dùng thật; nếu đỏ oan thì chạy lại là xong, nên ghi nhận thành hạn chế đã biết.
+  file: `_acceptance/doc-vung-danh-muc/thu/kiem-tang-sau.mjs`
+  severity: medium
+  Đề xuất: known-limits
+
+- **E10b chạy doc-vung.test.ts trên đúng Postgres 5575/postgres mà api_db đang dùng, lặp lại lỗi đụng nhau đã làm lượt chấm 1 đỏ**
+  Người dùng thấy gì: Sản phẩm vẫn chạy đúng với người dùng. Bài kiểm nghiệm thu có thể báo đỏ oan nếu hai bài chạy chồng nhau, gây mất một lượt chấm.
+  Căn cứ: Không ảnh hưởng người dùng hay dữ liệu thật, chỉ tốn thêm một lượt chấm khi gặp; thử lại được, nên ghi thành hạn chế đã biết.
+  file: `_acceptance/doc-vung-danh-muc/thu/kiem-tang-sau.mjs`
+  severity: high
+  Đề xuất: known-limits
+
+- **Hình dạng 5, tuyên quét LỚP nhưng chỉ có điểm-case: E10b nói đường màn đọc trả đúng thuộc tính, nhưng trên đường đó chỉ assert 2 trong 6 thuộc tính**
+  Người dùng thấy gì: Bài kiểm chưa chứng minh bằng máy rằng Bảng hàng hiện đúng khu, toà, tầng, hướng của căn. Nếu có sai ở các trường này thì bài kiểm vẫn báo xanh.
+  Căn cứ: Chưa thấy lỗi thật, chỉ là chưa được máy chứng minh; người dùng thấy sai thì dễ phát hiện và sửa sau, nên ghi nhận hạn chế và bổ sung bài kiểm khi có dịp.
+  file: `_acceptance/doc-vung-danh-muc/evals.yaml`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 2, fixture VIẾT TAY đúng khuôn bên đọc: chiều đỏ mà E10b viện dẫn cho đường cả danh mục không đi qua cửa nhận hay GET /catalog**
+  Người dùng thấy gì: Bài kiểm chưa chứng minh được rằng khi nạp gói có diện tích khác thì Bảng hàng đổi theo qua đường thật. Người dùng chỉ bị ảnh hưởng nếu có lỗi thật mà bài kiểm không bắt được.
+  Căn cứ: Đã được ghi trong hợp đồng như hạn chế đã biết, chưa có lỗi thật nào; bổ sung bài kiểm sau không ảnh hưởng dữ liệu người dùng.
+  file: `_acceptance/doc-vung-danh-muc/thu/kiem-tang-sau.mjs`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hai khu có cùng tên toà và mã căn: Bảng hàng và hồ sơ căn lặng lẽ lấy thuộc tính của khu sau (r2)**
   Người dùng thấy gì: Nếu hai dự án khác nhau có cùng tên toà và cùng mã căn, Bảng hàng và hồ sơ căn có thể hiện diện tích, loại căn của dự án kia mà không báo gì.
   Căn cứ: Chỉ xảy ra khi hai dự án trùng cả tên toà lẫn mã căn, hiếm; sai thông tin hiển thị nhưng không mất dữ liệu, và sửa đúng cần quyết định cách phân biệt khu nên không rẻ.
   file: `apps/web/src/app/(app)/inventory/ghep-danh-muc.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Lỗi 500 mới của GET /api/v1/catalog bị useDanhMuc nuốt: căn trong danh mục hiện như ngoài danh mục**
+- **Lỗi 500 mới của GET /api/v1/catalog bị useDanhMuc nuốt: căn trong danh mục hiện như ngoài danh mục (r2)**
   Người dùng thấy gì: Khi máy chủ chưa đọc được danh mục, Bảng hàng có thể hiện căn đang có trong danh mục là «Chưa rõ» như căn ngoài danh mục, và không báo là đang lỗi.
   Căn cứ: Chỉ xảy ra trong lúc vùng danh mục đọc lỗi, thường ngắn ngủi như ngay sau khởi động; người dùng tải lại là hết, không mất dữ liệu, và sửa chạm vào giao diện đang nằm ngoài phạm vi.
   file: `apps/web/src/app/(app)/inventory/danh-muc.ts`
