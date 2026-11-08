@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 16dffc30346f998a7e4369a6490c776c69142d2b
-human_signoff:
+human_signoff: Manh Phan 2026-11-09
 ---
 
 # Evidence Report: chu-san-du-vai
@@ -35,7 +35,7 @@ human_signoff:
   run_id: minted-chu-san-du-vai-E1-r2
   exit_code: 0
   baseline: n-a
-  verifier: packages/core/src/access/goi-vai.test.ts
+  verifier: config:executors.test.chu_san_goi_vai
   verified_at: 2026-11-08T17:22:20Z
   output: |
     node --import tsx --test packages/core/src/access/goi-vai.test.ts
@@ -68,7 +68,7 @@ human_signoff:
   run_id: minted-chu-san-du-vai-E3b-r2
   exit_code: 0
   baseline: n-a
-  verifier: apps/web/src/app/(app)/settings/users/vai-trong-hop.test.ts
+  verifier: config:executors.test.chu_san_vai_trong_hop
   verified_at: 2026-11-08T17:22:20Z
   output: |
     node --import tsx --test "apps/web/src/app/(app)/settings/users/vai-trong-hop.test.ts"
@@ -98,7 +98,7 @@ human_signoff:
   run_id: minted-chu-san-du-vai-E5-r2
   exit_code: 0
   baseline: n-a
-  verifier: packages/core/src/access/nguoi-du-vai.test.ts
+  verifier: config:executors.test.chu_san_nguoi_du_vai
   verified_at: 2026-11-08T17:22:20Z
   output: |
     node --import tsx --test packages/core/src/access/nguoi-du-vai.test.ts

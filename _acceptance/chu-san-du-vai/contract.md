@@ -5,7 +5,7 @@ slug: chu-san-du-vai
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ui, api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-08-chu-san-du-vai-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -107,3 +107,11 @@ do AC-6. «Sàn đang chạy không đổi vai ai» do AC-2 và AC-7 (không mig
 ## Notes
 
 - `packages/db/tests/mo-san.test.mjs` đổi kỳ vọng ở các chỗ ghi người mở sàn chỉ mang `company_admin`; từng dòng nêu ở Cổng Bằng chứng.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Khi hai bài nhìn màn chạy cùng lúc, bài xong trước có thể tắt máy thử của bài kia và làm bài đó báo đỏ oan; chạy lại là qua.
+  - Ngoài-2: Ca kiểm bảng hợp lệ chưa bắt được bảng vô tình thiếu một vai đi kèm.
+  - Ngoài-3: Bài kiểm mở sàn so với chính bảng vai, nên bảng co lại thì bài vẫn xanh.
+  - Ngoài-4: Bài nhìn màn đếm mọi đường dẫn trong trang thay vì đúng cột nhà của người đó, nên một mục thiếu ở cột nhà có thể lọt.
+  - Ngoài-5: Kiểm tài liệu không quét phần bảng nhà theo vai (§9) của Tham chiếu.
+  - Ngoài-6: Hai bộ kiểm nhỏ chép tay cách ô chọn vai phát dữ liệu; ô đổi cách phát thì chỉ bài nhìn màn mới bắt được.
+  - Ngoài-7: Ca «mở hộp Sửa, không bấm gì» dùng đầu vào hộp thật không phát, nên đo yếu việc giữ nguyên vai.
