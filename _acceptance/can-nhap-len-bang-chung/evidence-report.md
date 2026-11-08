@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: c2b9a519e59797e095f7ab36e67e5841547509f9
+verified_commit: 21dac6f6018a25d244bb7efacecb7eb32d4a77a5
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -193,3 +193,7 @@ none — every multi-run eval is uniform
 Round 1: E9 failed — khung hồ sơ dò chữ ở cả trang thay vì dò mục còn thiếu. Returned to implementation.
 Round 2: E9 failed — khung bang-hang 375 chụp lúc trang đang tải. Returned to implementation.
 Round 3: tất cả eval đạt — E9 chạy lại với một kiểu chờ dữ liệu cho mọi khung; E1-E8, E10, E11 carry-forward từ round 1.
+
+### Re-pin lần 1 — 2026-11-08, do hoá cũ do gộp main vào nhánh trước khi gộp
+run_id: repin-20261108T054031Z-75089
+sha: 21dac6f6018a25d244bb7efacecb7eb32d4a77a5 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E9 · diff chạm vật đo ngoài làn máy: E9 — chưa chứng lại, đi vòng S4 delta · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
