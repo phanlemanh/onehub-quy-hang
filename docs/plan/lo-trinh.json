@@ -2249,7 +2249,7 @@
       "cau_giao": "Máy thu của bên kia kéo sự kiện xác nhận danh mục từ hộp thư đi bằng token máy, theo số thứ tự, chỉ của sàn có thoả thuận đang bật; kéo lại không trùng, không sót, và khi máy thu tắt thì sự kiện nằm chờ",
       "vai": "nen",
       "tieu_chi": 10,
-      "vi_sao": "Issue #94 việc 3; ADR-0017 §6 sửa đổi: Invest không nhận webhook và không có cửa vào, nên Quỹ hàng giữ sự kiện và mở API kéo thay vì giao qua webhook như ADR-0017 §4",
+      "vi_sao": "Issue #94 việc 3; ADR-0017 §6 sửa đổi: Invest không nhận webhook và không có cửa vào, nên Quỹ hàng giữ sự kiện và mở API kéo thay vì giao qua webhook như ADR-0017 §4 Known limits của hàng 95 (Ngoài-1, chủ kho 08/11, d-20261108T113141Z-33): hàm dựng chưa kiểm thoả thuận có đúng là của sàn đang dựng; hàng này phải đóng chỗ đó trước khi dữ liệu chảy thật.",
       "hang": "T3",
       "dung_tren": [
         "95",
@@ -2971,6 +2971,22 @@
         "packages/core/src/labels/**",
         "apps/web/src/app/(app)/settings/labels/**",
         "_acceptance/loai-hinh-trong-cach-goi/**"
+      ]
+    },
+    {
+      "ma": "va-khuon-xac-nhan-bao-sai-quet-ro-ri",
+      "cau_giao": "Sự kiện báo sai của Xác nhận danh mục chỉ dựng được khi mã căn đúng dạng UPI như khuôn; phép quét rò rỉ của sự kiện đỏ được khi hàm dựng làm rò (đối chứng dương trên chính đường dựng); và phép quét cả lớp chuỗi đo được khuôn có chặn chữ tự do và dãy số dáng điện thoại, không chỉ «có khuôn».",
+      "slug": "va-khuon-xac-nhan-bao-sai-quet-ro-ri",
+      "vi_sao": "Ngoài-5, Ngoài-7, Ngoài-8 của khuon-xac-nhan-danh-muc (#206): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 08/11 (sổ d-20261108T113141Z-37, -39, -40); làm trước hoặc trong hàng 97, khi chưa có đường chảy thật. Hàng không mã — đã quyết. Dãy G.",
+      "hang": "T3",
+      "bat_khi": "Căn mã lạ thì báo sai bị từ chối ngay ở sàn; cấy một trường rò vào hàm dựng thì phép quét rò rỉ đỏ; chuỗi có chữ tự do hay dãy số dáng điện thoại bị phép quét cả lớp bắt",
+      "sau": [
+        "khuon-xac-nhan-danh-muc"
+      ],
+      "vung": [
+        "packages/core/src/confirmation/**",
+        "packages/connect/src/catalog-confirmation*",
+        "_acceptance/va-khuon-xac-nhan-bao-sai-quet-ro-ri/**"
       ]
     }
   ],
