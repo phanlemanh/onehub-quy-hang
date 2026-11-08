@@ -13,6 +13,7 @@ import { ZonesTab } from "@/components/khoi/solution-users-8/zones-tab";
 import { TrangThai } from "@/components/trang-thai";
 import { HopMatKhauTam, type KetQuaCap } from "./hop-mat-khau-tam";
 import { nhanVai, VAI } from "@/lib/vai";
+import { apDoiVai, MO_TA_VAI } from "./vai-trong-hop";
 
 export type Khu = Vung;
 export type { ThanhVien };
@@ -170,7 +171,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
             description="Người được mời vào sàn với vai và vùng chọn dưới đây."
             submitLabel="Mời"
             email={{ value: email, onChange: setEmail, error: loiMoi }}
-            roles={{ choices: VAI, value: vai, onChange: setVai }}
+            roles={{ choices: VAI, value: vai, onChange: (sau) => setVai(apDoiVai(vai, sau)), description: MO_TA_VAI }}
             zones={{ choices: cacKhu, value: khuChon, onChange: setKhuChon }}
             onSubmit={moi}
           />
@@ -181,7 +182,7 @@ export function QuanNguoi({ thanhVien, khu, toi }: { thanhVien: ThanhVien[]; khu
             title={`Sửa ${sua?.email ?? ""}`}
             description="Đổi vai và vùng phụ trách của người này ở sàn."
             submitLabel="Lưu"
-            roles={{ choices: VAI, value: suaVai, onChange: setSuaVai }}
+            roles={{ choices: VAI, value: suaVai, onChange: (sau) => setSuaVai(apDoiVai(suaVai, sau)), description: MO_TA_VAI }}
             zones={{ choices: cacKhu, value: suaKhu, onChange: setSuaKhu }}
             error={loiSua && <TrangThai kind="error" title={loiSua} />}
             onSubmit={luu}

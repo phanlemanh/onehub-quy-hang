@@ -25,6 +25,7 @@ export function ChoiceChecks({
   value,
   onChange,
   empty,
+  description,
 }: {
   legend: string;
   choices: Choice[];
@@ -32,6 +33,8 @@ export function ChoiceChecks({
   onChange: (value: string[]) => void;
   /** Câu hiện khi chưa có lựa chọn nào (sàn chưa có vùng). */
   empty?: string;
+  /** Câu giải thích dưới nhóm ô. */
+  description?: string;
 }) {
   const id = useId();
   return (
@@ -56,6 +59,7 @@ export function ChoiceChecks({
           ))}
         </div>
       )}
+      {description ? <FieldDescription>{description}</FieldDescription> : null}
     </FieldSet>
   );
 }
@@ -82,7 +86,7 @@ export function MemberDialog({
   submitLabel: string;
   /** Có khi mời: ô email và lỗi gắn ô. */
   email?: { value: string; onChange: (value: string) => void; error: string };
-  roles: { choices: Choice[]; value: string[]; onChange: (value: string[]) => void };
+  roles: { choices: Choice[]; value: string[]; onChange: (value: string[]) => void; description?: string };
   zones: { choices: Choice[]; value: string[]; onChange: (value: string[]) => void };
   error?: ReactNode;
   onSubmit: (event: FormEvent) => void;
@@ -115,7 +119,13 @@ export function MemberDialog({
                 )}
               </Field>
             ) : null}
-            <ChoiceChecks legend="Vai" choices={roles.choices} value={roles.value} onChange={roles.onChange} />
+            <ChoiceChecks
+              legend="Vai"
+              choices={roles.choices}
+              value={roles.value}
+              onChange={roles.onChange}
+              description={roles.description}
+            />
             <ChoiceChecks
               legend="Vùng phụ trách"
               choices={zones.choices}
