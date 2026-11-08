@@ -117,3 +117,61 @@ test("ai_processing: chỉ catalog và shareable_listing ra Anthropic", async ()
   assert.ok(agreementErrors({ ...ai, dataClasses: ["catalog", "source"] }).length > 0, "thêm source là thoả thuận sai");
   assert.equal(mayFlow({ ...ai, status: "paused" }, "catalog", ctx).ok, false, "tạm ngừng thì không ra");
 });
+
+// Hàng 95 (ADR-0017 §6 sửa đổi 03/11 của Invest): loại «Xác nhận danh mục» chỉ chiều ra, chỉ lớp danh mục, không điều
+// khoản riêng — trần theo loại đứng trước bước điều khoản riêng.
+const xacNhan = (overrides: Partial<Agreement> = {}): Agreement =>
+  agreement({ kind: "catalog_confirmation", counterparty: "onehub-invest", dataClasses: ["catalog"], ...overrides });
+
+test("xác nhận danh mục: trần theo loại, bảy lớp", () => {
+  // Thoả thuận lệch liệt đủ bảy lớp (như một hàng lệch trong cơ sở dữ liệu): chỉ danh mục chảy.
+  const lech = (specialTerms: boolean) => xacNhan({ dataClasses: [...DATA_CLASSES], specialTerms });
+  const ctx = { at, aggregated: true, fieldSharedByCompany: true };
+  let dem = 0;
+  for (const specialTerms of [false, true]) {
+    for (const dc of DATA_CLASSES) {
+      const kq = mayFlow(lech(specialTerms), dc, ctx);
+      if (dc === "catalog") assert.deepEqual(kq, { ok: true }, `catalog chảy (specialTerms ${specialTerms})`);
+      else {
+        assert.equal(kq.ok, false, `${dc} không chảy (specialTerms ${specialTerms})`);
+        const tu = dc === "source" ? "Nguồn" : "Xác nhận danh mục";
+        assert.ok(!kq.ok && kq.reason.includes(tu), `${dc}: lý do nêu «${tu}», được «${!kq.ok && kq.reason}»`);
+      }
+      dem++;
+    }
+  }
+  assert.equal(dem, DATA_CLASSES.length * 2);
+  assert.equal(dem, 14);
+});
+
+test("xác nhận danh mục: lỗi cấu trúc", () => {
+  assert.deepEqual(agreementErrors(xacNhan()), [], "đối chứng dương: chiều ra, chỉ danh mục, không điều khoản riêng");
+  const maTran: Agreement[] = [
+    ...DATA_CLASSES.filter((dc) => dc !== "catalog").map((dc) => xacNhan({ dataClasses: ["catalog", dc] })),
+    xacNhan({ direction: "inbound" }),
+    xacNhan({ specialTerms: true }),
+  ];
+  let dem = 0;
+  for (const a of maTran) {
+    const loi = agreementErrors(a);
+    assert.ok(
+      loi.some((e) => e.includes("Xác nhận danh mục")),
+      `${a.direction} ${a.dataClasses.join(",")} specialTerms ${a.specialTerms}: thiếu lỗi «Xác nhận danh mục» (${JSON.stringify(loi)})`,
+    );
+    dem++;
+  }
+  assert.equal(dem, DATA_CLASSES.length - 1 + 2);
+  assert.equal(dem, 8);
+});
+
+test("sáu loại cũ và ai_processing giữ hành vi", async () => {
+  const { CONNECTION_KINDS } = await import("./agreements");
+  let dem = 0;
+  for (const kind of CONNECTION_KINDS) {
+    if (kind === "catalog_confirmation") continue;
+    const a = agreement({ kind, dataClasses: ["catalog", "transaction"], specialTerms: true });
+    assert.deepEqual(mayFlow(a, "transaction", { at }), { ok: true }, `${kind}: giá chốt theo điều khoản riêng vẫn chảy`);
+    dem++;
+  }
+  assert.equal(dem, CONNECTION_KINDS.length - 1);
+});
