@@ -2954,6 +2954,23 @@
         "_acceptance/ghim-lai-ban-that-qua-ci/**",
         "_acceptance/va-nut-ci-gitleaks/**"
       ]
+    },
+    {
+      "ma": "loai-hinh-trong-cach-goi",
+      "cau_giao": "Quản trị sàn đặt tên riêng cho loại hình (Liền kề, Shophouse…) ở Cài đặt › Cách gọi, neo vào giá trị RESO; cột Loại hình của Bảng hàng và hồ sơ căn hiện tên ấy.",
+      "slug": "loai-hinh-trong-cach-goi",
+      "vi_sao": "Known limits của hàng 79 bang-hang-theo-loai-hinh: vế «chữ cột Loại hình theo cách gọi riêng của sàn» của AC-4 không đo được vì tập đóng của Cách gọi (hàng 45) chưa có loại hình. Chủ kho 08/11 ở phiên X: «Thu, mở hàng sau». Hàng không mã — đã quyết. Dãy X.",
+      "hang": "T2",
+      "bat_khi": "Quản trị đổi tên một loại hình ở Cách gọi: cột Loại hình của Bảng hàng và hồ sơ căn hiện tên mới; xoá tên riêng thì về tên mặc định",
+      "sau": [
+        "bang-hang-theo-loai-hinh",
+        "cach-goi-rieng"
+      ],
+      "vung": [
+        "packages/core/src/labels/**",
+        "apps/web/src/app/(app)/settings/labels/**",
+        "_acceptance/loai-hinh-trong-cach-goi/**"
+      ]
     }
   ],
   "chan_troi": [
