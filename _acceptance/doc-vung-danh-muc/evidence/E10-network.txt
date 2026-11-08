@@ -1,0 +1,5 @@
+E10 network (playwright, phien sach sau khi tat dev, xoa apps/web/.next/dev, dung lai; origin http://localhost:3495)
+Lan chay dau tren cache cu: dev server tu nap lai vo han (hang chuc nghin request chunk, ERR_CONNECTION_REFUSED) - la loi moi truong dev cache cu, da dung lai sach roi chay lai.
+Lan chay sach: moi fetch app-origin 200: /inventory, /api/v1/catalog, /off-compound-units, /company/member-names, /listings, /listings/7faf5fc9-..., /units/photos?...ma=P-20.05, /units/P-20.05
+Ngoai le: 404 GET /api/v1/units/photos/14caaefb-31e1-466d-9550-f724289ec8e7/thumb (anh thumbnail cua anh mau; ghi chu, khong tinh FAIL - tai nguyen anh)
+Console errors: 2 x "Failed to load resource: 404" (chinh thumbnail tren)
