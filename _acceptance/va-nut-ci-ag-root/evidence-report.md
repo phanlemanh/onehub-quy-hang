@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7b603459b4bc191341a2a45431f21a43a2d3e4d8
+verified_commit: 8873cfdb3c0a1bf0f87cd65bcdf3caaf63e6bb85
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -94,3 +94,7 @@ none — every multi-run eval is uniform
 ## Iterations
 
 Round 1: E1, E2 đạt; các lệnh suite xanh. Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-08, do ghim lại sau gộp main
+run_id: repin-20261108T024608Z-76415
+sha: 8873cfdb3c0a1bf0f87cd65bcdf3caaf63e6bb85 · suites: 7 lệnh exit 0 · evals: 2/2 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
