@@ -5,7 +5,7 @@ slug: va-nut-ci-ag-root
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-08-va-nut-ci-ag-root-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
