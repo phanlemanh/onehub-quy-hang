@@ -157,7 +157,7 @@ export function AppShell({
   }
 
   return (
-    <NguCanhDiaChi.Provider value={{ khai, mau, datKhai }}>
+    <NguCanhDiaChi.Provider value={{ khai, mau: Boolean(mau), datKhai }}>
     <SidebarProvider
       className={cn(
         "h-svh",
