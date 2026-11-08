@@ -1,0 +1,30 @@
+{
+  "feature_plain": "Làm chắc mẫu «lời xác nhận căn» trước khi có dữ liệu chảy thật: căn mang mã lạ bị từ chối ngay ở sàn, phép quét rò rỉ thật sự báo đỏ khi có rò, và số điện thoại đội lốt mã bị chặn ở mọi ô chữ.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ từ chối ngay ở sàn khi báo sai một căn mang mã căn (UPI) ngoài dạng, kèm lý do."},
+    {"id": "AC-2", "p": "Sẽ bảo đảm mọi lời xác nhận sàn thấy được nhận thì bên Invest cũng nhận — không còn cảnh sàn tưởng xong mà bên kia từ chối."},
+    {"id": "AC-3", "p": "Sẽ cho phép quét rò rỉ chạy trên dữ liệu thật sự mang thông tin chủ nhà, giá đáy, giá chốt đi qua hàm dựng."},
+    {"id": "AC-4", "p": "Sẽ chứng minh phép quét biết đỏ: cố tình cấy lỗi rò vào một bản sao của hàm dựng thì phép quét phải gọi tên đúng trường rò."},
+    {"id": "AC-5", "p": "Sẽ thử mọi ô chữ của mẫu với câu tự do và tám kiểu viết số điện thoại — ô nào cũng phải chặn."},
+    {"id": "AC-6", "p": "Sẽ thử cùng các mồi đó trên mọi ô đầu vào của hàm dựng, kể cả khi mồi nằm sẵn trong danh mục."},
+    {"id": "AC-7", "p": "Sẽ không từ chối oan khoá thật của Invest và mọi căn của bộ dữ liệu mẫu."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Không đổi mẫu danh mục Invest gửi sang (chiều vào) — chờ anh chọn ở Hỏi-2."},
+    {"id": "OOS-2", "p": "Không làm ba hạn chế đã ghi ở hàng 95: kiểm thoả thuận đúng sàn (hàng 97), giới hạn chép hai nơi, ngày không có thật."}
+  ],
+  "scope_plain": "Không thêm màn hình, không đổi hình mẫu v1 mà Invest sẽ ghim; chỉ từ chối thêm những giá trị xấu.",
+  "coverage_plain": [
+    {"i": 0, "p": "Đo ở cả hai tầng hàm dựng và mẫu, và đo quan hệ giữa hai tầng (AC-1, AC-2, AC-5, AC-6)."},
+    {"i": 1, "p": "Đủ các kiểu mồi: câu tự do, số liền, số nối dấu, số cách khoảng trắng, +84 (AC-5, AC-6)."},
+    {"i": 2, "p": "Tách chuỗi người gõ với khoá máy cấp để không từ chối oan khoá thật (AC-5, AC-7)."},
+    {"i": 3, "p": "Mồi đi vào hàm dựng bằng cả hai đường: danh mục và đầu vào (AC-3, AC-4)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Luật cho khoá do máy cấp thuộc mẫu Invest sẽ ghim và còn phần dư rủi ro — không phải việc máy tự quyết, đã đưa lên thành Hỏi-1, và khoá kiểu bld_0900000071 giờ bị chặn."},
+    {"i": 1, "p": "Việc giữ nguyên mẫu chiều vào làm căn mã lạ bị kẹt — đã đưa lên thành Hỏi-2 và ghi rõ sàn sẽ thấy gì."},
+    {"i": 2, "p": "Phép đo ô đầu vào có thể xanh nhầm vì lỗi tra danh mục — đã cấy mồi vào chính danh mục, ghim lời báo lỗi, thử đủ chín ô."},
+    {"i": 3, "p": "Phép quét rò rỉ chưa chắc mồi có đi qua — đã ghim danh sách mồi, dùng một hàm quét cho cả hai đường, cấy lỗi theo từng hàm."},
+    {"i": 4, "p": "Thiếu vài kiểu viết số và ca biên — đã thêm dấu gạch dưới, gạch chéo, khoảng trắng, và ca 8 số qua, 9 số chặn."}
+  ]
+}
