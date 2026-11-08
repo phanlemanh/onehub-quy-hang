@@ -1,0 +1,37 @@
+{
+  "feature_plain": "Quỹ hàng có sẵn mẫu «lời xác nhận căn» để gửi Invest: chỉ chở thông tin danh mục (khung toà, thuộc tính căn, báo sai) kèm mã sàn và mã người đã che, và loại kết nối này không bao giờ mở được lớp nào khác — nhưng chưa có gì chảy đi (hộp thư đi, bật theo sàn là các việc sau).",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ để loại kết nối «Xác nhận danh mục» chỉ chạy chiều ra và chỉ mở lớp danh mục — giá chốt cũng không mở được, kể cả có điều khoản riêng."},
+    {"id": "AC-2", "p": "Sẽ để cơ sở dữ liệu tự từ chối mọi thoả thuận loại này mang lớp khác danh mục, chạy chiều vào hay có điều khoản riêng — đúng cả khi bản thật áp thay đổi sau các bản đã có."},
+    {"id": "AC-3", "p": "Sẽ có mẫu phiên bản 1 cho ba loại lời xác nhận (khung toà, thuộc tính căn, báo sai) và một tệp ví dụ cho Invest, sinh từ chính hàm dựng nên không lệch mẫu."},
+    {"id": "AC-5", "p": "Sẽ từ chối chữ tự do ở mọi ô: mã căn, mã trục, hướng chỉ nhận đúng dạng đóng; số điện thoại đội lốt mã căn bị chặn."},
+    {"id": "AC-6", "p": "Sẽ chỉ dựng lời xác nhận khi sàn có thoả thuận «Xác nhận danh mục» đang bật, và mọi ô trong lời xác nhận đều thuộc lớp danh mục theo bảng lớp của luật ẩn."},
+    {"id": "AC-7", "p": "Sẽ che tên sàn và tên người bằng mã: cùng sàn gửi cùng một bên nhận thì luôn cùng mã, bên nhận khác thì khác mã, không ai giải ngược được."},
+    {"id": "AC-9", "p": "Sẽ cho báo sai đúng sáu thuộc tính căn (mã căn, diện tích, số phòng, hướng, tầng, trục) trên căn đã có trong danh mục; báo «sai» mà giá trị trùng danh mục thì bị chặn."},
+    {"id": "AC-10", "p": "Sẽ cho khai khung toà (số tầng, tầng bị bỏ, danh sách trục) với toà có trong danh mục, chặn số tầng vô lý hay trục trùng."}
+  ],
+  "wont_do": [
+    {"id": "AC-4", "p": "Sẽ KHÔNG bao giờ chở chủ nhà, số điện thoại, giá đáy, ảnh sổ, giá chốt hay trạng thái hàng — đưa vào là bị từ chối, không lọc lặng."},
+    {"id": "AC-8", "p": "Sẽ KHÔNG trỏ tới hàng, lead, liên hệ hay giá; mốc thời gian chỉ tới ngày."},
+    {"id": "OOS-1", "p": "Chưa làm hộp thư đi để Invest kéo về, gom lô làm mờ giờ, và chỗ giữ khoá bên nhận — việc 97."},
+    {"id": "OOS-2", "p": "Chưa làm token máy (việc 96), chưa làm màn bật / tắt thoả thuận theo sàn có nhật ký (việc 98)."},
+    {"id": "OOS-3", "p": "Chưa sinh lời xác nhận từ công việc hằng ngày, chưa chặn điền sẵn giá trị chưa chắc — việc 100, 101."},
+    {"id": "OOS-4", "p": "Chưa nhận toà ngoài danh mục, tầng có tên chữ (12A) hay khung thấp tầng — phiên bản mẫu sau."},
+    {"id": "OOS-5", "p": "Chưa có ô «sàn đã xác minh chủ với sổ» — chờ anh chọn ở Hỏi-2."},
+    {"id": "OOS-6", "p": "Không tự báo Invest ở kho bên đó — việc của anh, ngoài kho này."}
+  ],
+  "scope_plain": "Việc này chỉ dựng mẫu và luật chặn; các bước làm lời xác nhận chảy thật sang Invest nằm ở các việc 96–101.",
+  "coverage_plain": [
+    {"i": 0, "p": "Bốn tầng chặn đều có tiêu chí: hàm dựng (AC-4, AC-5, AC-6), mẫu (AC-3, AC-4, AC-5), luật thoả thuận (AC-1), cơ sở dữ liệu (AC-2); tầng hộp thư đi để việc 97."},
+    {"i": 1, "p": "Cả bảy lớp dữ liệu, chữ tự do và ô lạ đều được thử: danh mục là đối chứng chảy, sáu lớp kia và chữ tự do bị chặn (AC-1, AC-2, AC-4, AC-5)."},
+    {"i": 2, "p": "Đủ ba loại lời xác nhận: khung toà (AC-10), thuộc tính căn (AC-3), báo sai (AC-9)."},
+    {"i": 3, "p": "Đủ bốn ca danh tính: cùng sàn cùng bên nhận, cùng sàn khác bên nhận, khác sàn, thiếu khoá (AC-7)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Cách che tên sàn, tên người là lựa chọn về riêng tư và là cam kết với Invest, không phải việc máy tự quyết — đã đưa lên thành Hỏi-5 cho anh, ghi rõ hệ quả khi đổi khoá; hai câu mốc thời gian và giữ cứng danh sách báo sai cũng đánh dấu khó đảo."},
+    {"i": 1, "p": "Phép đo cơ sở dữ liệu chưa thử đúng thứ tự bản thật áp thay đổi — đã thêm ca áp lại sau mọi thay đổi có sẵn, ca cấm thay đổi sau ghi đè, và ca so danh sách loại kết nối với lõi."},
+    {"i": 2, "p": "Danh mục thử tự viết tay và «báo sai mà trùng danh mục» chỉ thử một ca — đã chuyển sang bộ dữ liệu mẫu thật và thử đủ sáu thuộc tính, kể cả hai ca viết khác dạng mà cùng nghĩa."},
+    {"i": 3, "p": "Bảng lớp riêng cho ba ô cấp toà có thể tự chứng nhận ô mới — đã ghim sẵn danh sách ô của từng loại và đòi hai bảng lớp không trùng ô nào."},
+    {"i": 4, "p": "Hai phép đo chưa phủ hết: thoả thuận mới thử 3/6 lớp, mẫu chưa thử mọi tầng lồng — đã thử đủ sáu lớp và rút mọi tầng của mẫu bằng máy."}
+  ]
+}
