@@ -23,6 +23,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+import { BaoHong } from "./bao-hong";
 import { batTatCot, CHU_MAU, doiCho, LUA_CHON_COT, nhanCot, sauKhiLuuMau, thanPutBang, type TrangThaiMauSan } from "./mau-san";
 
 const ghi = async (than: unknown) => {
@@ -80,6 +81,7 @@ export function BangMauBang({ tt, lamMoi, baoDau = null }: { tt: TrangThaiMauSan
   const nutThem = <Button onClick={() => mo(null)}>{CHU_MAU.them}</Button>;
   return (
     <div className="flex flex-col gap-4">
+      <BaoHong cau={tt.baoHong} />
       {bao ? <TrangThai kind={bao === CHU_MAU.daLuu ? "notice" : "error"} title={bao} /> : null}
       {ds.length === 0 ? (
         <TrangThai kind="empty" title={CHU_MAU.trongBang} hanhDong={nutThem} />

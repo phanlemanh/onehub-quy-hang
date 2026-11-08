@@ -30,8 +30,14 @@ import { doCaoThe, uocLuongDong } from "./do-the";
 import { DongNhomToa, TheCan } from "./the-can";
 import { batDauChon, doiChon, giuChonHopLe, lenThe, locNhuCau, NHU_CAU_RONG, nhomTheoToa, phang, theLoc, type NhuCau } from "./the";
 
+// Kho trên máy chỉ có ở trình duyệt: lượt dựng trên máy chủ và lượt hydrat đầu cùng thấy «chưa kéo» (khung đang tải) để
+// khỏi lệch hydration — dữ liệu trên máy hiện ngay lượt dựng sau (va-bang-hang-hydration, nếp của units/call/push/ep-gia.tsx).
+const khongDangKy = () => () => {};
+const RONG: never[] = [];
+
 function useDanhSachTrenMay() {
   const { bd } = useBoDongBo();
+  const oMay = useSyncExternalStore(khongDangKy, () => true, () => false);
   const dangKy = useCallback((f: () => void) => bd.dangKy(f), [bd]);
   const phienBan = useSyncExternalStore(dangKy, bd.phienBan, () => 0);
   const n = useMemo(() => {
@@ -44,6 +50,7 @@ function useDanhSachTrenMay() {
     void queue;
     return bd.danhSach();
   }, [bd, listings, queue]);
+  if (!oMay) return { hang: RONG, daKeo: false, loiMang: false, thuLai: () => void bd.thuNgay() };
   return { hang, daKeo: listings !== null, loiMang: lastAttempt === "mang", thuLai: () => void bd.thuNgay() };
 }
 
@@ -109,7 +116,7 @@ function BangThe({ san, an }: { san: string; an: boolean }) {
     count: dong.length,
     getScrollElement: () => cuon,
     estimateSize: (i) => uocLuongDong(dong[i]?.kind === "nhom" ? "nhom" : "can"),
-    // Khe ẩn (máy tính, hay hồ sơ đang mở) đo ra cao 0 — trả ước lượng để vòng đo không nuốt cả 5.000 dòng (React #185).
+    // Khe ẩn (máy tính, hay hồ sơ đang mở) đo ra cao 0 — trả ước lượng để vòng đo không nuốt cả 5.000 dòng (lỗi React số 185).
     measureElement: (el) => doCaoThe(el, uocLuongDong(dong[Number(el.getAttribute("data-index"))]?.kind === "nhom" ? "nhom" : "can")),
     overscan: 6,
     scrollMargin: le,

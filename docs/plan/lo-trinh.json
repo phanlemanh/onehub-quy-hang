@@ -2900,6 +2900,25 @@
       ]
     },
     {
+      "ma": "man-mau-bao-mau-hong",
+      "cau_giao": "Màn Mẫu của Cài đặt › Sàn báo cho Quản trị khi mẫu bảng hàng hay mẫu bài đã lưu có chỗ không đọc được, nói rõ chỗ nào; lần lưu kế không lặng lẽ xoá các chỗ ấy mà Quản trị biết trước điều sẽ xảy ra.",
+      "slug": "man-mau-bao-mau-hong",
+      "vi_sao": "Ngoài-9 của mau-bang-hang-va-bai (#191): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 07/11 (sổ d-20261107T114018Z-46). Hàng không mã — đã quyết.",
+      "sau": [
+        "mau-api-ten-truong-tieng-anh"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/settings/templates/**",
+        "packages/api/src/mau-san/**"
+      ]
+    },
+    {
+      "ma": "va-bang-hang-hydration",
+      "cau_giao": "Bảng hàng không báo lỗi hydration khi mở: máy chủ dựng khung đang tải còn máy khách dựng trạng thái trống hay thanh công cụ có dữ liệu cục bộ (bốn khung lỗi ghi ở _acceptance/mau-bang-hang-va-bai/evidence/E10-console-errors.txt); bài nhìn màn nào mở Bảng hàng cũng sạch console.",
+      "slug": "va-bang-hang-hydration",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-07"
+    },
+    {
       "ma": "va-nut-ci-ag-root",
       "cau_giao": "Nút «Ghim lại hồ sơ cần bản thật» truyền --ag-root trỏ kit lấy theo tag cho làn ghim lại, để làn chạy được trên máy chủ GitHub không cài kit; kèm một phép đo chạy làn ghim lại giống CI (không có kit cài sẵn) để lỗi kiểu này không lọt nữa.",
       "slug": "va-nut-ci-ag-root",

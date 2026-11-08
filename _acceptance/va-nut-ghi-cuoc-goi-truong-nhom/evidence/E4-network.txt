@@ -1,0 +1,3 @@
+Tom tat network (Playwright, app-origin http://localhost:3494, bo static): moi request /units/*, /api/v1/catalog|listings|listings/<id>|listings/<id>/owner|units/photos* deu 200 cho truong-nhom, dau-chu-1, dau-khach, truong-nhom(+listing_agent). Khong co requestfailed, khong console error, khong 4xx/5xx.
+Luu y: lan chay dau (dung listing id thay vi ma can A-04.06) dau-khach nhan 500 o /units/<uuid> - lan do sai tham so cua verifier, chay lai dung ma thi 200.
+Trang /units/call?hang=<id> cua truong-nhom tra HTTP 200 voi noi dung "Khong thay trang nay" (notFound render trong khung).
