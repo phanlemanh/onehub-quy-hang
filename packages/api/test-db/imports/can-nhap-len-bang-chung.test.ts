@@ -194,6 +194,14 @@ test("cửa khác vẫn đòi pháp lý (can-nhap-len-bang-chung E5)", async () 
   const truoc = (await suKienTrangThai(gia)).length;
   const rg = await lenh(gia, { ...len, importId: "00000000-0000-0000-0000-000000000000" });
   assert.equal(rg.status, 400, "khoá importId lạ");
+  // Bị chặn ở khuôn lệnh (khoá lạ), không phải vì thiếu pháp lý: mã lỗi khuôn, không có danh sách điều thiếu.
+  const bg = (await rg.json()) as { error?: { issues?: { code: string; keys?: string[] }[] }; missing?: unknown };
+  assert.deepEqual(
+    bg.error?.issues?.map((i) => [i.code, i.keys]),
+    [["unrecognized_keys", ["importId"]]],
+    `khuôn lệnh từ chối khoá lạ: ${JSON.stringify(bg)}`,
+  );
+  assert.equal(bg.missing, undefined, "không phải lỗi điều thiếu");
   assert.equal((await suKienTrangThai(gia)).length, truoc, "không sự kiện mới");
   // Đối chứng dương: điền pháp lý thì nút lên được.
   assert.equal((await lenh(gia, { type: "details_changed", payload: { legalStatus: "pink_book" } })).status, 200);

@@ -92,18 +92,27 @@ try {
     await thay(cho);
   }
   const bangTrung = await t.tinh(`document.querySelector('[aria-label="Từng dòng thành gì"]')?.innerText ?? ""`);
+  // Huy hiệu «Thành» của từng dòng (biến thể theo hành động, không theo lý do).
+  const badgeTrung = await t.tinh(`[...document.querySelectorAll('[aria-label="Từng dòng thành gì"] tbody [data-slot=badge]')].map((b) => ({ chu: b.textContent.trim(), bienThe: b.getAttribute("data-variant") ?? b.className.match(/(success|info|warning|destructive|secondary)[-a-z]*/)?.[0] ?? null }))`);
   await bam("Tiếp");
   await thay("căn mới, cập nhật");
   await bam("Ghi vào Quỹ hàng");
   await thay("Đã ghi vào Quỹ hàng");
-  const thongBao = await t.tinh(`(() => { const n = [...document.querySelectorAll("*")].find((x) => x.childElementCount < 6 && x.textContent.includes("Đã ghi vào Quỹ hàng") && x.textContent.includes("căn mới")); return n ? { chu: n.innerText, lop: n.className, vai: n.getAttribute("role") } : null; })()`);
+  // Khối báo sau ghi là Alert của TrangThai: tông lỗi = role «alert» hay biến thể destructive; tông thường = role «status».
+  const TONG_LOI = `(n) => n.getAttribute("role") === "alert" || /destructive/.test(n.className) || n.getAttribute("data-variant") === "destructive"`;
+  const thongBao = await t.tinh(`(() => { const n = [...document.querySelectorAll("[data-slot=alert], [role=status], [role=alert]")].find((x) => x.textContent.includes("Đã ghi vào Quỹ hàng")); return n ? { chu: n.innerText, vai: n.getAttribute("role"), loi: (${TONG_LOI})(n) } : null; })()`);
+  // Đối chứng dương cho bộ dò tông: một khối giả mang role «alert» phải bị dò ra là tông lỗi.
+  const doiChung = await t.tinh(`(() => { const g = document.createElement("div"); g.setAttribute("role", "alert"); const kq = (${TONG_LOI})(g); return kq; })()`);
   ghiNhan("ket-qua-nhap", {
     lyDoDong: bangTrung.match(/lên Đang bán — còn thiếu[^\n\t]*/g) ?? [],
     coMaTho: /legalStatus|occupantType/.test(bangTrung),
     thongBao: thongBao?.chu ?? null,
     demDangBan: thongBao?.chu.match(/(\d+) căn lên Đang bán/)?.[1] ?? null,
     coChuaDu: /\d+ căn ở Chưa đủ để rao/.test(thongBao?.chu ?? ""),
-    tongLoi: /destructive|error|text-destructive/.test(thongBao?.lop ?? "") || thongBao?.vai === "alert",
+    vaiThongBao: thongBao?.vai ?? null,
+    tongLoi: thongBao?.loi ?? null,
+    doiChungTongLoi: doiChung,
+    huyHieuDong: badgeTrung,
     tranNgang: await tran(),
   });
   await chup("ket-qua-nhap");
@@ -117,10 +126,17 @@ try {
 
   // Khung 3 — hồ sơ căn đầu.
   await t.di(`/units/${encodeURIComponent(ma[0])}`);
-  await thay("Mức đủ", 180000).catch(() => undefined);
+  // Chờ hồ sơ dựng xong (khối mức đủ có mặt) — không chụp khung chờ tải.
+  const daDung = `!!document.querySelector('[data-slot=ho-so-can] [data-muc=muc-du]')`;
+  // Máy dev chậm có lúc giữ hồ sơ ở khung chờ tải: chờ 2 phút, chưa xong thì tải lại trang một lần rồi chờ tiếp.
+  await t.cho(daDung, 120000).catch(async () => {
+    await t.di(`/units/${encodeURIComponent(ma[0])}`);
+    await t.cho(daDung, 180000);
+  });
   await ngu(1500);
-  const s3 = await chu();
-  ghiNhan("ho-so", { trangThai: s3.includes("Đang bán"), mucDu: s3.match(/\d\/6/)?.[0] ?? null, thieuPhapLy: /Pháp lý/.test(s3), thieuTinhTrang: /Tình trạng sử dụng/.test(s3) });
+  const hoSo = await t.tinh(`(() => { const h = document.querySelector('[data-slot=ho-so-can]'); const m = h.querySelector('[data-muc=muc-du]'); const TT = ["Chưa đủ để rao", "Đang bán", "Đang giao dịch", "Tạm ngừng", "Đã bán", "Ngừng bán"]; const b = [...h.querySelectorAll('[data-slot=badge]')].map((x) => x.textContent.trim()).find((x) => TT.includes(x)); return { trangThai: b ?? null, mucDu: m.innerText }; })()`);
+  const thieu = hoSo.mucDu.match(/thiếu ([^\n]*)/)?.[1] ?? "";
+  ghiNhan("ho-so", { trangThai: hoSo.trangThai, mucDu: hoSo.mucDu.match(/\b\d\/[5-6]\b/)?.[0] ?? null, dongThieu: thieu, thieuPhapLy: /pháp lý/i.test(thieu), thieuTinhTrang: /tình trạng sử dụng/i.test(thieu) });
   await chup("ho-so");
 
   // Khung 4 — Bảng hàng.
@@ -132,7 +148,7 @@ try {
   ghiNhan(
     "bang-hang",
     KHO < 768
-      ? { trangThai: "không có ở thẻ điện thoại (khuôn bang-hang)", coCan: (await chu()).includes(ma[0]), tranNgang: await tran() }
+      ? { trangThai: "không có ở thẻ điện thoại (khuôn bang-hang)", coCan: (await chu()).replace(/[\u2010-\u2015\u2212]/g, "-").includes(ma[0]), tranNgang: await tran() }
       : { dangBan: (dongBang ?? "").includes("Đang bán"), tranNgang: await tran() },
   );
   await chup("bang-hang");
@@ -140,7 +156,16 @@ try {
   // Khung 5 — trưởng nhóm nhập hộ một dòng giao B; Hôm nay của B.
   const maB = `A-0${(Number(stamp) % 9) + 1}.04`;
   const ckTn = cookieCua(TN_EMAIL, san).join("; ");
-  const idB = tsx("nhap-ho.mts", URL_GOC, ckTn, idCua(B_EMAIL), maB);
+  // Máy dev có lúc trả lỗi tạm khi đang dựng lại (manifest rỗng): thử lại tối đa ba lần.
+  let idB = null;
+  for (let lan = 1; !idB; lan++) {
+    try {
+      idB = tsx("nhap-ho.mts", URL_GOC, ckTn, idCua(B_EMAIL), maB);
+    } catch (e) {
+      if (lan >= 3) throw e;
+      await ngu(10000);
+    }
+  }
   await vaoSan(cookieCua(B_EMAIL, san), "/today");
   await thay(maB);
   ghiNhan("hom-nay-b", { idB, nhom: await nhomCua(maB), khongThayCuaA: !(await chu()).includes(ma[0]), tranNgang: await tran() });
