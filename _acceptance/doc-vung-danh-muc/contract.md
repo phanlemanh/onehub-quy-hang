@@ -44,7 +44,7 @@ Source input: hàng 99 (`docs/plan/lo-trinh.json`) · ô cơ hội đã ký · t
 - **AC-5** — Vùng có dữ liệu thì gói mẫu tắt; vùng rỗng thì dùng gói mẫu.
   Given vùng có một khu,
   When tra mã chỉ có trong gói mẫu,
-  Then `not_in_catalog`; vùng rỗng thì `found` theo gói mẫu.
+  Then không ra `found`: khu có cách đọc mã trả `not_in_catalog`, khu chưa có cách đọc mã trả `unreadable`; vùng rỗng thì `found` theo gói mẫu.
 
 - **AC-6 (cross-layer)** — Nhập Excel và «chỉ biết toà» đọc cùng nguồn.
   Given gói nạp qua cửa nhận,
@@ -69,7 +69,7 @@ Source input: hàng 99 (`docs/plan/lo-trinh.json`) · ô cơ hội đã ký · t
 - **AC-10 (cross-layer)** — Trên màn thấy đúng gói.
   Given gói đã nạp qua cửa nhận, có một căn Đang bán mang mã không có trong gói mẫu,
   When đầu chủ gõ mã ở ô Gõ mã căn, mở Bảng hàng và mở hồ sơ căn ấy,
-  Then cả ba chỗ hiện đúng thuộc tính của gói.
+  Then ô Gõ mã mở đúng hồ sơ căn ấy; Bảng hàng và hồ sơ căn hiện đúng thuộc tính của gói.
 
 ## Coverage
 

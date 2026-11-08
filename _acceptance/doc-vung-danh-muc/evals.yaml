@@ -34,7 +34,7 @@ evals:
     criterion: AC-5
     executor: test
     cmd: config:executors.test.api
-    expected: "exit 0; nguon.test.ts: vùng rỗng → found theo gói mẫu; vùng một khu, cùng mã mẫu → not_in_catalog. Hai ca cùng mã."
+    expected: "exit 0; nguon.test.ts: vùng rỗng → found theo gói mẫu; vùng một khu có cách đọc mã, cùng mã mẫu → not_in_catalog; vùng một khu chưa có cách đọc mã, cùng mã mẫu → unreadable. Ba ca cùng mã."
     paths: ["packages/api/src/catalog/nguon*"]
     evidence_required: [run_id, exit_code, verifier, verified_at]
   - id: E5b
@@ -94,9 +94,9 @@ evals:
     layer: ui-observed
     steps:
       - "Dựng chỗ thử dãy D trên đúng cây được chấm: node _acceptance/luat-chia-lead/thu/dung-d.mjs. Nạp gói thử qua cửa nhận thật và tạo một căn Đang bán của gói bằng node _acceptance/doc-vung-danh-muc/thu/nap-goi-thu.mjs (in mã căn, thuộc tính; mã không có trong gói mẫu, lệnh đỏ nếu có). Gắn cookie khoá dau-chu-1 trong .acceptance-runs/luat-chia-lead/phien.json, khổ 1440x900."
-      - "Mở ô Gõ mã căn (phím tắt hoặc nút thanh trên), gõ mã căn in ở bước trước, chụp _acceptance/doc-vung-danh-muc/evidence/go-ma.png, ghi các thuộc tính hiện."
+      - "Mở ô Gõ mã căn (phím tắt hoặc nút thanh trên), gõ mã căn in ở bước trước, chụp _acceptance/doc-vung-danh-muc/evidence/go-ma.png, Enter và ghi địa chỉ trang vừa mở."
       - "Mở /inventory, tìm hàng của mã đó, chụp _acceptance/doc-vung-danh-muc/evidence/bang-hang.png, ghi loại căn và diện tích."
       - "Mở hồ sơ căn của mã đó (/units/<mã>), chụp _acceptance/doc-vung-danh-muc/evidence/ho-so.png, ghi các thuộc tính. Xong tắt máy dev: node _acceptance/luat-chia-lead/thu/dung-d.mjs --tat."
-    expected: "Ô Gõ mã và hồ sơ căn hiện đúng khu, toà, tầng, diện tích, phòng ngủ, hướng của gói thử; Bảng hàng có hàng của mã đó với đúng loại căn và diện tích."
+    expected: "Ô Gõ mã mở đúng hồ sơ căn của mã đó; hồ sơ căn hiện đúng khu, toà, tầng, diện tích, phòng ngủ, hướng của gói thử; Bảng hàng có hàng của mã đó với đúng loại căn và diện tích."
     paths: ["packages/api/src/catalog/**", "apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/[code]/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]

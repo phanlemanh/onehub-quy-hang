@@ -5,11 +5,11 @@
   {"id":"AC-2","p":"Sẽ ghép đúng loại căn và diện tích vào Bảng hàng theo gói đã nhận."},
   {"id":"AC-3","p":"Sẽ thấy gói mới ngay ở lần đọc kế, không cần khởi động lại, kể cả khi nạp và đọc ở hai máy chủ khác nhau."},
   {"id":"AC-4","p":"Sẽ giữ đường «ngoài danh mục» như hiện nay với căn chưa có."},
-  {"id":"AC-5","p":"Sẽ dùng gói mẫu khi danh mục dùng chung còn trống, và tắt hẳn gói mẫu khi đã có khu thật (theo khuyến nghị ở Hỏi-1)."},
+  {"id":"AC-5","p":"Sẽ dùng gói mẫu khi danh mục dùng chung còn trống, và tắt hẳn gói mẫu khi đã có khu thật; mã mẫu lúc đó báo «chưa có trong danh mục», hoặc «không đọc được» nếu khu chưa có cách đọc mã."},
   {"id":"AC-6","p":"Sẽ dùng cùng nguồn danh mục cho Nhập Excel và danh sách toà khi nhập lead."},
   {"id":"AC-7","p":"Sẽ chỉ còn một chỗ duy nhất trong mã biết tới gói mẫu."},
   {"id":"AC-8","p":"Sẽ chỉ đưa ra thuộc tính danh mục, không lộ thoả thuận hay bên cung cấp; cách ly giữa các sàn giữ nguyên."},
-  {"id":"AC-10","p":"Sẽ hiện đúng gói ở ô Gõ mã căn, Bảng hàng và hồ sơ căn trên màn thật."}
+  {"id":"AC-10","p":"Sẽ để ô Gõ mã căn mở đúng hồ sơ căn, và Bảng hàng cùng hồ sơ căn hiện đúng thuộc tính của gói trên màn thật."}
  ],
  "wont_do": [
   {"id":"AC-9","p":"Sẽ KHÔNG bao giờ lấy gói mẫu khi đọc danh mục bị lỗi: đang có bản thật thì trả bản ấy, chưa có thì báo lỗi."},
