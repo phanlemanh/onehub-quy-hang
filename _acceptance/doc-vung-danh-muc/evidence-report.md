@@ -144,7 +144,7 @@ human_signoff:
 - eval: E10
   run_id: minted-doc-vung-danh-muc-E10-r1
   exit_code: 0
-  verifier: ui-check
+  verifier: config:executors.ui-check
   verified_at: 2026-11-08T22:19:14Z
   carried_from_round: 1
   # carry-forward từ round 1 — delta không chạm paths của eval
