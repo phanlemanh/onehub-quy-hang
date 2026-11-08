@@ -16,13 +16,14 @@ Soát trên mã `main` `001ae667`, bản thật `https://quyhang.onehub.center` 
 mở (#192, #211, #214 — không PR nào chạm màn này).
 
 **Chưa soát được.** Tìm trong lịch sử phiên không thấy lần audit Hôm nay nào ngoài các hồ sơ kể trên, nên «audit cũ» ở
-đây là những gì kho ghi lại. Bản thật không đo được giao diện vì không đăng nhập; mọi số đo bố cục lấy ở bản máy. Không
-xác định được ai giữ hết 15 kết nối lúc 05:33–05:37: nhật ký chỉ chứng minh trần đã cạn.
+đây là những gì kho ghi lại. Bản thật không đo được giao diện vì không đăng nhập; mọi số đo bố cục lấy ở bản máy. Nhật
+ký của chính pooler Supabase không đọc được, nên phần «ai giữ kết nối» ở mục Truy nguyên gốc suy từ nhật ký Vercel.
 
 ## Kết luận
 
-1. **Băng lỗi ở ảnh 05:37 không phải lỗi của màn hay của vai.** Cơ sở dữ liệu bản thật hết kết nối đúng giây màn mở.
-   Bản vá gốc đã ký từ 06/11, chỉ chờ chủ kho bật công tắc; bản thật vẫn chạy chế độ cũ.
+1. **Băng lỗi ở ảnh 05:37 không phải lỗi của vai.** Cơ sở dữ liệu bản thật hết kết nối đúng giây màn mở, và chính một
+   người dùng mở app đã đủ làm cạn trần. Bản vá gốc đã ký từ 06/11, chỉ chờ chủ kho bật công tắc; bản thật vẫn chạy chế
+   độ cũ.
 2. **Màn phản ứng với lỗi đó kém.** Một lỗi nói ba chỗ, không tự thử lại, kéo theo «0 đầu chủ» và mã thô. Phần này chưa
    có kế hoạch.
 3. **Bốn vùng xếp chồng là điều đã chốt khi đa vai còn hiếm.** Từ 08/11 chủ sàn mới mang đủ năm vai nên đây thành màn mặc
@@ -30,6 +31,50 @@ xác định được ai giữ hết 15 kết nối lúc 05:33–05:37: nhật k
 4. **Cột thứ hai chỉ phục vụ đầu chủ**: không số đếm, không theo vai, không theo bộ nhóm của sàn. Lời hứa số đếm rơi
    giữa hai hàng.
 5. Tổng 41 vấn đề: **8 đã sửa · 2 đã có kế hoạch · 31 chưa có kế hoạch.**
+
+## Truy nguyên gốc
+
+### Vì sao hết 15 kết nối (A1, A2)
+
+Chuỗi nguyên nhân, từ gần tới xa:
+
+1. **Bản thật còn ở chế độ phiên.** Mỗi kết nối bị giữ suốt đời của nó, cả dự án chung trần 15. Nhật ký mỗi lần dựng bể
+   đều ghi `cổng 5432`.
+2. **Phép tính ngân sách kết nối sai giả định.** Mã tính mỗi hàm một phiên bản: (4 + 2) × 2 bản triển khai + 2 khách khác
+   = 14, vừa dưới trần (`lib/api.ts:19-30`). Thực đo: chỉ bản chính thức đã dựng 5 phiên bản hàm trang và 3 phiên bản bước
+   chặn đầu trong 45 giây (22:33:17–22:34:02Z), tức tới 26 kết nối. Bản xem trước không góp: không dòng nhật ký nào.
+3. **Một người mở app tạo đồng thời cao.** Cả năm phút cao tải 22:26–22:44Z đều chỉ một chuỗi nhận diện trình duyệt,
+   nên nhiều khả năng là một người. Hai nguồn:
+   - Hôm nay bắn 8 lời gọi cùng lúc (A2); lúc 22:37:25 chúng rơi vào ít nhất hai phiên bản hàm, một phiên bản vừa khởi
+     động và báo lỗi ngay ở lần đọc lược đồ danh tính.
+   - Mọi `Link` ở cột nhà và cột thứ hai tải trước theo mặc định, và **mỗi lần tải trước đi qua bước chặn đầu, đọc phiên
+     từ cơ sở dữ liệu** (`proxy.ts:33`, `lib/session-refresh.ts:21`, kho không có `prefetch=` nào). 22:33:15–45: `/today`
+     ×11, `/team`, `/shares`, `/contacts`, `/settings`, `/leads/new` ×4 mỗi đường. 22:44:26–27: 6 phiên bản bước chặn đầu
+     dựng trong 2 giây, mỗi phiên bản một đường.
+4. **Đồng bộ nền giữ phiên bản ấm**: `/api/v1/listings` mỗi 30 giây, nên kết nối rảnh 5 giây của lần đọc trước còn đang
+   giữ khi màn mở (22:37:20 và 22:37:25).
+
+Đã loại: CI (job đưa lên bản thật bị bỏ qua lúc đó, các job khác dùng Postgres riêng) và bản xem trước (không dòng nhật
+ký nào). Máy dev trên máy này không có kết nối ra cổng 5432 hay 6543 lúc soát, nhưng lúc soát đã sau sự cố. **Chưa chứng
+minh**: số kết nối đúng tại giây 22:37:25, và chưa thử tắt tải trước để đo chênh lệch. Lỗi 5xx từ 02/11 tới 08/11 có 27
+đợt; 06/11 nhiều đợt trùng lúc CI đẩy bản thật, 4 trong 6 đợt từ 07/11 không trùng CI. Chưa đọc lý do từng đợt cũ.
+
+### Vì sao nhịp chia lead không chạy (A12)
+
+Từ 01/11 chỉ có 4 lần gọi: 06/11 07:58Z và 09:02Z trả 503 (Vercel chưa có `JOB_SECRET`), 06/11 09:12Z và 07/11 01:15Z trả
+401 (khoá hai bên lệch, theo ADR-0017), rồi không lần nào nữa. Lịch mỗi phút thì phải có khoảng 1 lần mỗi phút, nên lịch
+`pg_cron` hiện **không gọi tới**. Bước vận hành dừng giữa chừng sau lần thử 401. Lịch trong cơ sở dữ liệu chưa đọc được.
+
+### Sáu gốc chung của phần còn lại
+
+| Gốc | Mục | Vì sao thành lỗi |
+| --- | --- | --- |
+| Mỗi vùng tự đọc, tự báo lỗi; «đọc hỏng» bị xử như «rỗng» | A3, A4, A8, A9, A10, A11 | Không có lớp đọc chung của màn. Kết quả lỗi thành danh sách rỗng hay `null`, rồi câu «không có việc» chạy trên đó |
+| Cùng một thứ đọc từ hai nguồn | A5, A6, A7, C4, C7 | Nhãn đọc máy chủ, bảng đọc máy; cột đọc bộ mặc định, thân đọc bộ của sàn; ô Hàng cũ đọc ngưỡng mặc định; tên thay thế chỉ áp khi vắng, không áp khi chuỗi rỗng |
+| Khối cả trang đặt làm một vùng | B2, B3, B4, C6 | `dashboard-6` là khối trang: có vùng chính, tiêu đề cấp một, đường dẫn, bề rộng tối đa. Luật «chuyển thể chỉ đổi dữ liệu, chữ, prop» giữ nguyên chúng khi khối chỉ còn là một vùng |
+| Vùng theo vai thiết kế cho một, hai vai | B1, B5, B6, B8, C1 | `vungTheoVai` cộng dồn; mỗi vùng là một hàng riêng ở một đợt riêng, không hàng nào chịu trách nhiệm cả trang khi đủ vai |
+| Nhãn dài trong nút rộng cố định | D1, D2 | Nhãn duyệt ở AC-3, bề rộng `w-36` chung; điện thoại dành chỗ nút trước, tên căn chịu ép |
+| Việc hẹn không có chủ | C2, C3, A7, A8, A9, C7, D3–D6, B2, B3 | `va-he-bo-cuc` hẹn số đếm sang hàng 42, hợp đồng 42 không nhận. Known limit ký ở Cổng Bằng chứng không sinh hàng lộ trình nào, nên chưa mục nào được quay lại |
 
 ## Bảng đối chiếu
 
@@ -42,7 +87,7 @@ là `app/(app)/today/`.
 | # | Vấn đề | Nguồn | Căn cứ | Tác động | Tình trạng |
 | --- | --- | --- | --- | --- | --- |
 | A1 | Băng «Không tải được lead quá hạn» và «Không tải được lead đã nhập»: API hàng đợi trưởng nhóm, đầu chủ của sàn và lead đã nhập cùng trả 500. Không theo vai: cùng người, cùng lần mở, «lead giao cho tôi» và «đầu khách» vẫn 200; lần 05:33 thì tập API hỏng khác hẳn | Lần này | Nhật ký Vercel 22:37:25Z: `team/lead-queue`, `team/listing-agents`, `leads` = 500, `leads/assigned`, `today/buyer` = 200. Lý do: `EMAXCONNSESSION … pool_size: 15`; mọi dòng lỗi 24 giờ qua là lý do này hay hệ quả của nó | Cao | **Đã có kế hoạch** — hàng `pooler-che-do-giao-dich` (T3, đã ký, PR #162, dãy V đang nghỉ). Còn đúng bước E7: chủ kho duyệt đổi bản thật. Biến `DATABASE_POOLER_PORT` chưa đặt, nhật ký 22:44Z vẫn ghi `cổng 5432` |
-| A2 | Mở Hôm nay với người đủ vai bắn 8 lời gọi cùng lúc, mỗi lời gọi đọc phiên rồi đọc dữ liệu, tự nhân áp lực lên trần kết nối | Lần này | Bản máy: 8 lời gọi API riêng. Bản thật: các lời gọi của Hôm nay trong 5 mili giây. Nguồn đọc rải ở `today/truong-nhom.tsx:127`, `today/hom-nay-dau-chu.tsx:312`, `today/buyer/vung.tsx:10` | Vừa | **Chưa có kế hoạch** → R5 |
+| A2 | Mở Hôm nay với người đủ vai bắn 8 lời gọi cùng lúc, mỗi lời gọi đọc phiên rồi đọc dữ liệu, tự nhân áp lực lên trần kết nối | Lần này | Bản máy: 8 lời gọi API riêng. Bản thật: các lời gọi của Hôm nay trong 5 mili giây. Nguồn đọc rải ở `today/truong-nhom.tsx:127`, `today/hom-nay-dau-chu.tsx:312`, `today/buyer/vung.tsx:10`. Cộng thêm tải trước đường dẫn qua bước chặn đầu, xem Truy nguyên gốc | Cao | **Chưa có kế hoạch** → R5 |
 | A3 | Lỗi thoáng qua đứng yên trên màn tới khi người bấm tay; mỗi vùng một nút «Thử lại» riêng | Lần này | `today/nguon.ts:72-78` không thử lại; ảnh 05:37 có hai nút | Vừa | **Chưa có kế hoạch** → R1 |
 | A4 | Một lỗi nói ba chỗ: băng đầu trang, hai ô số «—», thẻ «Lead quá hạn và ngoại lệ» | Lần này | Ảnh 05:37; `today/truong-nhom.tsx:196,205,266-284,304-306` | Vừa | **Chưa có kế hoạch** → R1 |
 | A5 | Thẻ «0 đầu chủ» cạnh bảng có hai đầu chủ. Bảng đọc căn trên máy, nhãn đọc danh sách đầu chủ của máy chủ, hai nguồn khác nhau; không lỗi vẫn lệch | Lần này | Ảnh 05:37; `today/truong-nhom.tsx:293`. Bản máy không lỗi: «3 đầu chủ» cạnh 2 dòng, vì người thứ ba chưa giữ căn nào | Vừa | **Chưa có kế hoạch** → R1 |
@@ -154,10 +199,10 @@ sở dữ liệu, trừ R5 thêm lối đọc API.
     "ma_audit": "R5 — A2",
     "vai": "Mọi vai",
     "hang": "T2",
-    "cau_giao": "Mở Hôm nay tốn ít kết nối cơ sở dữ liệu: các phần đọc gộp một lượt hoặc xếp lần lượt, không bắn cùng lúc",
-    "bat_khi": "Người đủ năm vai mở Hôm nay: tối đa 3 lời gọi đồng thời, đo bằng bài kiểm; bài kiểm cách ly xanh; người một vai không chậm hơn",
-    "vung": ["apps/web/src/app/(app)/today/**", "packages/api/src/team/**", "packages/api/src/today/**"],
-    "ghi_chu": "Đo lại sau khi bản thật sang chế độ giao dịch; nếu hết lỗi thì hạ ưu tiên"
+    "cau_giao": "Mở app tốn ít kết nối cơ sở dữ liệu: các phần đọc của Hôm nay gộp một lượt hoặc xếp lần lượt, và tải trước các đường ở cột nhà không đọc phiên từ cơ sở dữ liệu",
+    "bat_khi": "Người đủ năm vai mở Hôm nay: tối đa 3 lời gọi đồng thời, đo bằng bài kiểm; lần tải trước đường dẫn không làm bước chặn đầu đọc phiên, cookie phiên vẫn trượt theo ngày khi người thật mở trang; bài kiểm cách ly xanh; người một vai không chậm hơn",
+    "vung": ["apps/web/src/app/(app)/today/**", "apps/web/src/proxy.ts", "apps/web/src/lib/session-refresh.ts", "apps/web/src/components/shell/**", "packages/api/src/team/**", "packages/api/src/today/**"],
+    "ghi_chu": "Đo lại sau khi bản thật sang chế độ giao dịch; nếu hết lỗi thì hạ ưu tiên. Chế độ giao dịch nới trần nhưng không giảm số lần đọc phiên, nên phần tải trước vẫn đáng làm khi sàn đông người"
   },
   {
     "slug": "hang-cu-theo-nguong-san",
