@@ -5,7 +5,7 @@ slug: va-nut-ci-ag-root
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-08-va-nut-ci-ag-root-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-08
@@ -65,3 +65,5 @@ gộp, vì `workflow_dispatch` chỉ chạy luồng đã có ở main. Timebox: 
 - E4 (`kiem-nut.mjs --trong`) của hồ sơ ghim-lai-ban-that-qua-ci chạy trên máy có kit cài sẵn nên không chứng được «nút
   chạy được trên máy chủ GitHub»; từ hàng này, bằng chứng ấy là AC-1 ở đây. E4 vẫn chứng đúng điều nó hứa (bộ kiểm chung
   không thấy chuỗi kết nối).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-08:
+  - Ngoài-1: Thẻ duyệt Cổng Phạm vi của hàng này xếp nhầm tiêu chí 1 vào mục «Sẽ KHÔNG làm» (tiêu đề tiêu chí có chữ «không»); hợp đồng và bản sửa vẫn đúng.

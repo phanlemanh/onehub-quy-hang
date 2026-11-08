@@ -1,21 +1,4 @@
 {
-  "feature_plain": "Sửa nút «Ghim lại hồ sơ cần bản thật» trên GitHub để lượt bấm kế tiếp chạy qua bước ghim lại thay vì dừng vì không tìm thấy bộ công cụ kiểm nghiệm thu.",
-  "will_do": [
-    {"id": "AC-1", "p": "Sẽ chạy lại đúng hai bước của nút như máy chủ GitHub (máy không cài sẵn bộ công cụ), và đòi bước ghim lại chạy hết, ghi được dòng ghim; bỏ chỗ sửa thì phép đo phải đỏ đúng lỗi của lượt bấm 08/11."},
-    {"id": "AC-2", "p": "Sẽ bắt nút lấy bộ công cụ từ bản đã gắn nhãn mà nhánh chính chọn, không từ nhánh của PR; bốn bản phá thử, mỗi bản phải đỏ đúng chỗ."}
-  ],
-  "wont_do": [
-    {"id": "OOS-1", "p": "KHÔNG sửa phép đo cũ của hồ sơ nút CI đã ký (phép đo chạy trên máy có bộ công cụ cài sẵn); phép đo mới của hàng này phủ chỗ nó hở."},
-    {"id": "OOS-2", "p": "KHÔNG đổi bản bộ công cụ, bộ chặn, bộ quét bí mật; các việc anh đã chọn «mở hợp đồng mới» ở hàng nút CI đi hàng riêng."}
-  ],
-  "coverage_plain": [
-    {"i": 0, "p": "Hai thứ được đo: dòng lệnh của bước ghim lại (chạy thật như máy chủ GitHub, kèm bản bỏ chỗ sửa phải đỏ) và nguồn bộ công cụ (bốn bản phá). Thước: chính lỗi của lượt bấm 08/11."}
-  ],
-  "gap_probe_plain": [
-    {"i": 0, "p": "Việc giữ nguyên hồ sơ nút CI đã ký trong khi phép đo cũ của nó mù với lỗi này là việc người ký chọn — đã chuyển thành câu Hỏi-1 cho anh."},
-    {"i": 1, "p": "Máy chưa nói vì sao không đo trên máy chủ GitHub thật — đã ghi: nút chỉ chạy được từ nhánh chính, nên máy chủ thật là lượt bấm sau khi gộp."},
-    {"i": 2, "p": "Phép đo cũ tự gán biến, không dựng môi trường như máy chủ — đã sửa: mọi biến và cách chạy rút từ chính tệp của nút, thêm một bản phá."},
-    {"i": 3, "p": "Phép đo chưa kiểm dòng ghim đã ghi — đã thêm."},
-    {"i": 4, "p": "Chưa ghi lượt bấm sau gộp chạy từ đâu — đã ghi: bấm từ nhánh chính, nhật ký phải mang chỗ sửa."}
-  ]
+  "feature_plain": "Nút «Ghim lại hồ sơ cần bản thật» trên GitHub nay tìm được bộ công cụ kiểm nghiệm thu, nên lượt bấm kế tiếp chạy qua bước ghim lại thay vì dừng như lượt 08/11.",
+  "analyst_plain": ""
 }

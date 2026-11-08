@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: 7b603459b4bc191341a2a45431f21a43a2d3e4d8
-human_signoff:
+human_signoff: Manh Phan 2026-11-08
 ---
 
 # Evidence Report: va-nut-ci-ag-root
