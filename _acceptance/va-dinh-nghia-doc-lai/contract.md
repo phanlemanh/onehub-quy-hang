@@ -5,7 +5,7 @@ slug: va-dinh-nghia-doc-lai
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-09-va-dinh-nghia-doc-lai-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -92,3 +92,10 @@ Later: hai thẻ trình duyệt cùng mở, một thẻ gửi giá (thẻ kia đ
 - Hiện dòng định nghĩa trên Bảng hàng hay màn cuộc gọi.
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Khi mạng yếu làm nội dung trả về bị đứt dù máy chủ báo thành công, dòng định nghĩa ngày có thể vắng mặt cho tới khi giá hoặc điều kiện phí đổi. Không có thông báo lỗi nào hiện ra. — `apps/web/src/app/(app)/units/ho-so/doc-dau.ts`
+- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm trên máy chủ thật chưa phân biệt được máy chủ trả «không có dấu» với trả «không tìm thấy». Người dùng hiện không thấy khác biệt nào. — `apps/web/src/lib/sync/test-db/dinh-nghia-doc-lai.db-test.mts`
+- Ngoài-3 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm chưa chắc chắn rằng lúc kiểm có thao tác khác đang chờ gửi. Người dùng vẫn thấy dòng định nghĩa giữ nguyên đúng như mong đợi. — `apps/web/src/app/(app)/units/ho-so/dinh-nghia-doc-lai.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm mới thử một loại thao tác khác để chắc dòng định nghĩa không bị đụng tới, chưa thử hết các loại. Người dùng chưa gặp lỗi nào. — `apps/web/src/app/(app)/units/ho-so/dinh-nghia-doc-lai.test.ts`
+- Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Ca đổi giá đi rồi đổi về chưa được kiểm trọn qua bộ đồng bộ thật. Hiện tại dòng vẫn đổi đúng khi giá lên máy chủ. — `apps/web/src/app/(app)/units/ho-so/dinh-nghia-doc-lai.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Chưa có bài kiểm cho tình huống phản hồi cũ về đúng lúc giá còn chờ gửi. Người dùng chưa gặp lỗi, nhưng tình huống này hiếm và chưa được xác nhận. — `apps/web/src/app/(app)/units/ho-so/dinh-nghia-doc-lai.test.ts`
