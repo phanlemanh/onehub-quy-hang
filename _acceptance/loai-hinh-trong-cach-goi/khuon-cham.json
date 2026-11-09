@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "den": "1aad447d7b6f7da60bd3b9b5df453d091772e39c",
+  "den": "82586b82d139bcefaada34c2692d742d0b6c53c3",
   "base": "13d1c633006abbbec16f765ffb9dd99e606ef8e3",
   "ghim": {
     "bang-hang": "d7bd4262ebe606a9c9e4535dc3768858d6c5e0c1",
@@ -25,6 +25,7 @@
   },
   "theo_khuon": [
     "apps/web/src/app/(app)/inventory/bang-hang.tsx",
+    "apps/web/src/app/(app)/inventory/khung.tsx",
     "apps/web/src/app/(app)/settings/labels/cach-goi.tsx",
     "apps/web/src/app/(app)/units/ho-so/cot-ho-so.tsx"
   ],
@@ -53,7 +54,7 @@
     }
   ],
   "khong_do": [],
-  "ngoai_ban_do": 13,
+  "ngoai_ban_do": 14,
   "nhom": [
     "bang-hang",
     "cai-dat-san",

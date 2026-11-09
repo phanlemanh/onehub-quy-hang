@@ -5,7 +5,7 @@ slug: loai-hinh-trong-cach-goi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api, config]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-09-loai-hinh-trong-cach-goi-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -85,3 +85,13 @@ chưa có loại hình. Chủ kho 08/11: «Thu, mở hàng sau». Sàn thêm nh�
 - Thêm giá trị loại hình ngoài RESO, sàn tắt bớt giá trị (ADR-0016, can-ngoai-khu Hỏi-3).
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Đầu cột trong hồ sơ căn vẫn hiện đúng tên riêng của loại hình. Nhưng bài kiểm tự động chưa bắt được nếu phần tên khu trong đầu cột sai hay lặp, nên lỗi kiểu đó sau này có thể lọt qua. — `apps/web/src/app/(app)/units/ho-so/loai-hinh-cach-goi.test.ts`
+- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm chỉ thử một số tiêu đề của hồ sơ căn chứ không thử hết. Nếu sau này thêm dòng thuộc tính mới, có thể không ai nhắc cần thêm ca kiểm cho nó. — `apps/web/src/app/(app)/units/ho-so/loai-hinh-cach-goi.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Hồ sơ cạnh Bảng hàng hiện đúng tên riêng hôm nay. Nhưng bài kiểm tự động chưa bắt được trường hợp ai đó đổi nguồn tên mà vẫn giữ tên biến, nên lỗi kiểu đó chỉ được phát hiện khi kiểm tay trên màn. — `apps/web/src/app/(app)/units/ho-so/loai-hinh-cach-goi.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Khi nhân viên bấm báo sai thông tin một căn, lời báo có thể mang tên riêng của sàn (ví dụ «Liền kề») thay vì tên chuẩn. Người bên nhận sửa danh mục có thể không hiểu tên đó. — `apps/web/src/app/(app)/units/ho-so/ho-so.ts`
+- Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Lời báo sai thông tin căn có thể ghi tên riêng loại hình của sàn thay cho tên chuẩn, nên bên nhận khó đối chiếu. — `apps/web/src/app/(app)/units/ho-so/ho-so.ts`
+- Ngoài-6 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bộ kiểm tự động có thể bỏ sót trường hợp một trang mở hồ sơ nhận nhầm bộ tên mặc định, khiến sàn thấy tên mặc định thay vì tên riêng mà không ai báo lỗi. — `apps/web/src/app/(app)/units/ho-so/loai-hinh-cach-goi.test.ts`
+- Ngoài-7 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Một ca kiểm tự động của Bảng hàng có thể vẫn xanh dù luật bắt buộc bảng nằm trong khung tên riêng bị hỏng. Người dùng không gặp lỗi ngay. — `apps/web/src/app/(app)/inventory/tu-vung.test.ts`
+- Ngoài-8 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bộ kiểm tự động chưa chứng minh chọn tên riêng trong ô lọc ra đúng các căn. Nếu sau này hỏng, người dùng có thể lọc ra 0 căn mà kiểm tự động không báo. — `apps/web/src/app/(app)/inventory/loai-hinh-cach-goi.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu có người thêm chỗ mở hồ sơ thứ năm viết xuống dòng, bộ kiểm tự động có thể không phát hiện và chỗ đó có thể hiện tên mặc định thay vì tên riêng của sàn. — `apps/web/src/app/(app)/units/ho-so/loai-hinh-cach-goi.test.ts`
