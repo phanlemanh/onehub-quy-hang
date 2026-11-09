@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { dungKhungToa, dungThuocTinhCan } from "@quy-hang/core/confirmation";
+import { dungBaoSai, dungKhungToa, dungThuocTinhCan } from "@quy-hang/core/confirmation";
 import {
   bocUpi,
   danhMucMau,
+  dauBaoSai,
   dauKhungToa,
   dauThuocTinhCan,
   DAU_NOI_DOI_CHUNG,
@@ -97,8 +98,17 @@ test("khoá dạng thật qua cả hai tầng", () => {
     .flatMap((s) => s.buildings)
     .reduce((n, b) => n + b.units.length, 0);
   assert.ok(tongTuTep > 0);
+  const tongToaTuTep = (JSON.parse(readFileSync(DUONG_MAU, "utf8")) as { danhMuc: ReturnType<typeof danhMucMau> }).danhMuc.subdivisions.flatMap((s) => s.buildings).length;
+  assert.ok(tongToaTuTep > 0);
   let dem = 0;
+  let demToa = 0;
+  let demBaoSai = 0;
   for (const b of nc.danhMuc.subdivisions.flatMap((s) => s.buildings)) {
+    const khungB = dungKhungToa({ ...dauKhungToa(), buildingKey: b.buildingKey }, nc);
+    assert.ok(khungB.ok, `khung toà ${b.buildingKey}: ${JSON.stringify(!khungB.ok && khungB.loi)}`);
+    const rKhung = parseCatalogConfirmation(khungB.suKien);
+    assert.ok(rKhung.ok, `khung toà ${b.buildingKey}: ${JSON.stringify(!rKhung.ok && rKhung.errors)}`);
+    demToa++;
     for (const u of b.units) {
       const kq = dungThuocTinhCan(
         {
@@ -117,9 +127,16 @@ test("khoá dạng thật qua cả hai tầng", () => {
       const r = parseCatalogConfirmation(kq.suKien);
       assert.ok(r.ok, `${u.unitNumber}: ${JSON.stringify(!r.ok && r.errors)}`);
       dem++;
+      const baoSai = dungBaoSai({ ...dauBaoSai(), buildingKey: b.buildingKey, upi: u.upi, field: "unitNumber", correctValue: `${u.unitNumber}-Z` }, nc);
+      assert.ok(baoSai.ok, `báo sai ${u.unitNumber}: ${JSON.stringify(!baoSai.ok && baoSai.loi)}`);
+      const rBaoSai = parseCatalogConfirmation(baoSai.suKien);
+      assert.ok(rBaoSai.ok, `báo sai ${u.unitNumber}: ${JSON.stringify(!rBaoSai.ok && rBaoSai.errors)}`);
+      demBaoSai++;
     }
   }
   assert.equal(dem, tongTuTep);
+  assert.equal(demBaoSai, tongTuTep);
+  assert.equal(demToa, tongToaTuTep);
 });
 
 test("khoá máy cấp: đoạn đứng riêng 9 đến 11 chữ số", () => {
