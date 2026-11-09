@@ -17,9 +17,12 @@ const KHU: LotCatalogData = JSON.parse(
 ).danhMucThapTang;
 
 const SAN = { id: "00000000-0000-4000-8000-0000000000a1", name: "[Mẫu] Sàn thử", roles: ["dau_chu"] };
-/** Kho giả: mọi câu lệnh của withCompany trả rỗng, câu đọc sàn trả đúng `san`. */
+/** Kho giả: mọi câu lệnh của withCompany trả rỗng, câu đọc sàn trả đúng `san`, câu dấu của vùng danh mục trả vùng rỗng. */
 function khoGia(san: unknown[]): pg.Pool {
-  const client = { query: async (sql: string) => ({ rows: /from companies/.test(sql) ? san : [] }), release() {} };
+  const client = {
+    query: async (sql: string) => ({ rows: /from companies/.test(sql) ? san : /so_khu/.test(sql) ? [{ so_khu: 0, chuoi: "0" }] : [] }),
+    release() {},
+  };
   return { connect: async () => client } as unknown as pg.Pool;
 }
 const dangNhap = (co: boolean) => ({ api: { getSession: async () => (co ? { user: { id: "u-mau" } } : null) } }) as unknown as Auth;

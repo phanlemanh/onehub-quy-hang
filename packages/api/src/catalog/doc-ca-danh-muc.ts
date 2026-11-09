@@ -7,7 +7,7 @@ import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { LOT_CATALOG_MAC_DINH } from "./lots";
-import { SAMPLE_CATALOG } from "./sample";
+import { LOI_DOC_DANH_MUC, nguonCua, type NguonDanhMuc } from "./nguon";
 
 /**
  * Đọc cả danh mục một lần (hàng 14): Bảng hàng ghép loại căn, diện tích, tầng, hướng theo toà + mã căn mà không tra từng
@@ -107,11 +107,21 @@ function chepKhuon(catalog: CatalogData, lots: LotCatalogData): z.infer<typeof C
 
 export function registerCatalogReadAll(
   api: OpenAPIHono,
-  { appPool, auth }: ApiDeps,
-  catalog: CatalogData = SAMPLE_CATALOG,
+  deps: ApiDeps,
+  catalog?: CatalogData | NguonDanhMuc,
   lots: LotCatalogData = LOT_CATALOG_MAC_DINH,
 ) {
-  const than = chepKhuon(catalog, lots);
+  const { appPool, auth } = deps;
+  const nguon = nguonCua(deps, catalog);
+  // Thân trả dựng một lần cho mỗi bản danh mục; nguồn đổi bản thì khoá đổi.
+  const daChep = new WeakMap<CatalogData, ReturnType<typeof chepKhuon>>();
+  const thanCua = (cat: CatalogData) => {
+    const co = daChep.get(cat);
+    if (co) return co;
+    const moi = chepKhuon(cat, lots);
+    daChep.set(cat, moi);
+    return moi;
+  };
 
   // Cùng luật vào với tuyến tra mã căn (`routes.ts`): chép lại thay vì tách, vì `routes.ts` đang ở vùng của dãy D.
   async function vao(c: Context): Promise<ApiErrorEntry | null> {
@@ -132,12 +142,15 @@ export function registerCatalogReadAll(
         401: err("Chưa đăng nhập"),
         403: err("Chưa gắn sàn"),
         409: err("Thuộc nhiều sàn, chưa chọn"),
+        500: err("Không đọc được danh mục"),
       },
     }),
     async (c) => {
       const loi = await vao(c);
       if (loi) return c.json({ error: loi.code }, loi.status as 401);
-      return c.json(than, 200);
+      const ban = await nguon.doc().catch(() => null);
+      if (!ban) return c.json({ error: LOI_DOC_DANH_MUC.code }, LOI_DOC_DANH_MUC.status);
+      return c.json(thanCua(ban.catalog), 200);
     },
   );
 }
