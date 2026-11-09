@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 7317fd038234bf2f0187db181f5d50f93d8079a4
+verified_commit: e1ec5be5f6ba3b2b325604a1629ceed69635fdfc
 human_signoff: Manh Phan 2026-11-09
 ---
 
@@ -207,3 +207,7 @@ Round 2: E1-E4, E5b, E6-E10 chạy lại và đạt; E5, E11, E12 giữ nguyên 
 ### Re-pin lần 1 — 2026-11-09, do gộp main sau lượt chấm 2
 run_id: repin-20261109T061315Z-92018
 sha: 7317fd038234bf2f0187db181f5d50f93d8079a4 · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E10 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
+
+### Re-pin lần 2 — 2026-11-09, do gộp main sau chữ ký
+run_id: repin-20261109T071205Z-68842
+sha: e1ec5be5f6ba3b2b325604a1629ceed69635fdfc · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E10 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
