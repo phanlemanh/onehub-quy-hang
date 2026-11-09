@@ -1,34 +1,4 @@
 {
- "feature_plain": "Khi một phần của Hôm nay, Đội hay tin của khách ở Đã gửi đọc lỗi, màn tự thử lại trước khi báo, báo đúng một câu ở đúng chỗ và không chỗ nào nói sai về số việc.",
- "will_do": [
-  {"id":"AC-2","p":"Sẽ tự hồi khi bộ nhóm, danh sách đầu chủ hay hàng đợi ở Đội lỗi thoáng qua, không cần bấm và không nháy câu lỗi trong lúc thử lại."},
-  {"id":"AC-3","p":"Sẽ báo một câu kèm một «Thử lại» khi danh sách đầu chủ không tải được ở Hôm nay, và mở lại nút «Giao lại» khi đọc được."},
-  {"id":"AC-4","p":"Sẽ có đúng một báo lỗi cho cả màn Đội, tên chưa đọc được hiện «Chưa rõ tên» và ô tròn «—»."},
-  {"id":"AC-5","p":"Sẽ tự đọc lại màn Đội khi mạng trở lại, hết báo mất mạng mà không phải tải lại trang."},
-  {"id":"AC-6","p":"Sẽ để trống số ở cột thứ hai khi chưa đọc được, thay vì ghi 0."},
-  {"id":"AC-7","p":"Sẽ nói một câu «Chưa đọc được việc của bạn» khi mở Hôm nay lúc mất mạng, thay vì để trống thân màn."},
-  {"id":"AC-8","p":"Sẽ báo ngay ở dòng khi «Giao lại» bị máy chủ từ chối trên máy tính (phụ thuộc câu hỏi 1)."},
-  {"id":"AC-9","p":"Sẽ hiện lỗi có «Thử lại» thay vì khung chờ mãi khi tin của khách ở Đã gửi hỏng nội dung, và tự đọc lại khi có mạng."},
-  {"id":"AC-10","p":"Sẽ dùng một khối báo lỗi chung cho Hôm nay, Đội, tin của khách và Lead đã nhập; phần đã đúng của Hôm nay giữ nguyên."}
- ],
- "wont_do": [
-  {"id":"AC-1","p":"Sẽ KHÔNG báo lỗi bộ nhóm với người không có vai Đầu chủ khi không có lỗi gì (phụ thuộc câu hỏi 1)."},
-  {"id":"OOS-1","p":"Không gộp lỗi nhiều nguồn của Hôm nay thành một câu; mỗi nguồn vẫn một câu."},
-  {"id":"OOS-2","p":"Không đổi dữ liệu máy chủ trả về cho tên đầu chủ; màn đã thay chữ ở mọi chỗ."},
-  {"id":"OOS-3","p":"Không áp khối lỗi mới cho các nhà khác; nhà nào có việc chạm tới thì áp lúc đó."},
-  {"id":"OOS-4","p":"Không đếm lại nhãn «N đầu chủ» khi bảng có dòng «Chưa có người giữ»."}
- ],
- "scope_plain": "Đo lại trên bản mới: bốn trong chín vấn đề đã hết nên bỏ khỏi việc này (một lỗi nói nhiều chỗ, nhãn lệch số dòng, đầu chủ chưa đặt tên, báo «không có việc» cạnh dòng lỗi).",
- "coverage_plain": [
-  {"i":0,"p":"Mọi nguồn đọc còn lỗi đều có tiêu chí: bộ nhóm, danh sách đầu chủ, hàng đợi ở Đội, tin của khách, Lead đã nhập; bốn nguồn đã đúng được giữ ở AC-10 (khối chung)."},
-  {"i":1,"p":"Đủ các kiểu hỏng: lỗi một lần, lỗi kéo dài, mất mạng lúc mở, mạng trở lại, nội dung hỏng, và lần ghi bị từ chối."},
-  {"i":2,"p":"Đủ các chỗ có thể nói sai: thân màn, cột thứ hai, nút và dòng, ô số và ô tròn."}
- ],
- "gap_probe_plain": [
-  {"i":0,"p":"Việc gộp hai lỗi ngoài chín vấn đề vốn là quyết định của anh, máy đã ghi nhầm là tự quyết. Đã chuyển thành câu hỏi 1; hai căn cứ khác được dẫn lại đúng chỗ."},
-  {"i":1,"p":"Lý do bỏ bước dựng bản mẫu dẫn sai câu, và chưa đo vị trí nút ở khổ điện thoại. Đã dẫn lại đúng câu của thành phần gốc, kèm hình khối lỗi hiện tại, và thêm đo ở hai khổ. Không đưa thành câu hỏi vì chỉ là một chỗ đặt nút, anh bác được ngay ở cổng này."},
-  {"i":2,"p":"Lý do chọn «mất mạng chỉ theo trình duyệt» chưa loại được lối khác, và thiếu ca Wi-Fi còn mà không ra mạng. Đã nêu đúng ràng buộc và thêm ca đo."},
-  {"i":3,"p":"Ca mạng trở lại chưa đo thật ở tin của khách và nút «Giao lại». Đã thêm bước đo và bảng mỗi nguồn một dòng."},
-  {"i":4,"p":"«Thử lại trước khi báo» mới đo kết cục, chưa đo việc câu lỗi không nháy. Đã thêm vế vào tiêu chí và bộ đếm từ lúc mở trang."}
- ]
+  "feature_plain": "Khi một phần của Hôm nay, Đội, tin của khách ở Đã gửi hay Lead đã nhập đọc lỗi, màn tự thử lại rồi mới báo một câu đúng chỗ kèm một nút «Thử lại», mạng về thì tự đọc lại, và không chỗ nào hiện số 0 khi chưa đọc được.",
+  "analyst_plain": "Với các bài kiểm luật tự động và hai bài soi khuôn, bản cũ cũng cho kết quả xanh, vì bản cũ chưa có các luật mới để chạy hay vì bài chỉ soi khuôn chung. Bằng chứng phân biệt bản mới với bản cũ nằm ở các bài nhìn màn thật với lỗi giả lập."
 }
