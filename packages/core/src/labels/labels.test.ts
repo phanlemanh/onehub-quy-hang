@@ -258,7 +258,8 @@ test("loại hình: tập đóng khớp bảng loại hình của lõi", () => {
   assert.deepEqual(lechLoaiHinh(tap), []);
   // Chiều đỏ: bản sao có thêm một khoá ngoài bảng, và bản sao thiếu một khoá.
   assert.deepEqual(lechLoaiHinh({ ...tap, Shophouse: "Shophouse" }), ["thừa Shophouse"]);
-  const { Townhouse: _bo, ...thieu } = tap;
+  const thieu = { ...tap };
+  delete thieu.Townhouse;
   assert.deepEqual(lechLoaiHinh(thieu), ["thiếu Townhouse"]);
   const bang = bangNhan(null);
   assert.deepEqual(bang.fields.filter((f) => f.field === "propertySubType").map((f) => f.default), ["Loại hình"]);

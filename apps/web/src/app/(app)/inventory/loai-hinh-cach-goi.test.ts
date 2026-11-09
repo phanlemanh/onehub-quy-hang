@@ -62,7 +62,11 @@ test("bảng hàng theo tên riêng loại hình: cấp Loại căn của đất
   const cac = (tv: TuVung) => {
     const ra: string[] = [];
     const di = (ds: DongLuoi[]) => {
-      for (const d of ds) if (d.kind === "nhom") (ra.push(d.label), di(d.subRows as DongLuoi[]));
+      for (const d of ds) {
+        if (d.kind !== "nhom") continue;
+        ra.push(d.label);
+        di(d.subRows as DongLuoi[]);
+      }
     };
     di(nhomDong([DONG[2]!], "toa-loai", tv));
     return ra;
