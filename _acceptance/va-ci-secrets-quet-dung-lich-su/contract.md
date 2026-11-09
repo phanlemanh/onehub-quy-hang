@@ -5,7 +5,7 @@ slug: va-ci-secrets-quet-dung-lich-su
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-09-va-ci-secrets-quet-dung-lich-su-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -110,3 +110,8 @@ còn lại là tổ hợp mà `git log HEAD` đã quyết định như nhau.
   phần chạy thật trên GitHub chỉ thấy chiều xanh ở job `secrets` của chính PR này (Hỏi-3).
 - Lệnh chép đối số mặc định của gitleaks 8.30.1; nâng `GITLEAKS_VERSION` thì lệnh không tự theo mặc định mới. E4 đọc đối số
   thật của cả hai lệnh, nên bản mới đổi mặc định sẽ đỏ khi đo lại (Hỏi-2).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Một ghi chú trong cấu hình nghiệm thu đếm thiếu một ca thử; kết quả kiểm không đổi.
+  - Ngoài-2: Khi máy chấm sai bản công cụ quét, bộ đo chạy tiếp và in nhiều dòng lỗi thay vì dừng ở một lỗi gốc; kết quả cuối vẫn báo hỏng.
+  - Ngoài-3: Phần kiểm văn bản chỉ nhận hai cách viết của việc tắt báo đỏ; phần chạy thật vẫn bắt cờ nằm trên dòng lệnh quét.
+  - Ngoài-4: Việc hook lúc commit còn quét khoá chỉ được xác nhận bằng đọc chữ trong tệp; bài chạy hook thật ở bộ kiểm khác của kho sẽ bắt.

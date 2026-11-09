@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: a3992dc11c660673e9559f368b8044f3d848cc0b
-human_signoff:
+human_signoff: Manh Phan 2026-11-09
 ---
 
 # Evidence Report: va-ci-secrets-quet-dung-lich-su
