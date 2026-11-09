@@ -38,19 +38,37 @@ Vì sao: R1 của audit màn Hôm nay 09/11 (`docs/plan/audit-man-hom-nay.md` tr
 - A10 · lead giao cho tôi tải lỗi mà vẫn báo «không có việc» (Known limit 02/11)
 - A11 · nội dung hỏng ở vùng Đầu khách hiện khung chờ mãi (Known limit 05/11)
 
-Cổng Đáng: chủ kho gõ tại phiên dãy L 09/11, nguyên văn «build». Chưa vào thiết kế: hàng `hom-nay-mot-danh-sach-viec` (nhánh cùng tên, chạm gần hết `today/**` và `leads/mine/**`) gộp trước; sau đó dãy L đo lại chín vấn đề trên bản mới và thu phạm vi (giám sát, 09/11). Ngưỡng dưới đây còn nhãn đề xuất vì sẽ chốt theo phạm vi đã thu.
+Cổng Đáng: chủ kho gõ tại phiên dãy L 09/11, nguyên văn «build». Hàng `hom-nay-mot-danh-sach-viec` đã gộp trước (#230, 5d55d0cc); dãy L đo lại chín vấn đề trên bản mới theo lời giám sát 09/11.
+
+**Đo lại 09/11 trên 5d55d0cc** (màn chạy thật, sàn mẫu, lỗi giả lập):
+
+| Mã | Còn không | Thấy gì trên bản mới |
+|---|---|---|
+| A3 | Một phần | Bốn nguồn việc ở Hôm nay tự hồi. Còn đứng yên: bộ nhóm, danh sách đầu chủ, và cả màn Đội |
+| A4 | Hết | Hôm nay mỗi nguồn một câu. Đội một câu, hai ô số «—» là ô chưa có số |
+| A5 | Hết | Nhãn «2 đầu chủ» bằng 2 dòng, cùng một nguồn |
+| A6 | Một phần | Mã thô đã hết, nhưng lỗi bị nuốt: Đội hiện mọi dòng «Chưa rõ tên», ô tròn «TÊ», không báo gì; Hôm nay tắt «Giao lại» kèm câu sai «Sàn chưa có đầu chủ nào» |
+| A7 | Hết | Chưa đặt tên hiện «Chưa rõ tên» ở Hôm nay, Đội và danh sách giao |
+| A8 | Một phần | Hôm nay tự đọc lại. Đội vẫn đứng «Đang mất mạng» sau khi có mạng, phải tải lại trang |
+| A9 | Một phần | Không còn câu «Không lead nào quá hạn», nhưng cột thứ hai ghi «Tất cả việc 0» khi chưa đọc được gì, và thân màn trống |
+| A10 | Hết | «Lead mới» không còn báo không có việc cạnh dòng lỗi |
+| A11 | Dời chỗ | Hôm nay đã đúng. Vùng tin của khách dời sang Đã gửi và vẫn hiện khung chờ mãi |
+
+**Phát sinh, cùng gốc «màn nói sai khi đọc»:** mọi người không có vai Đầu chủ luôn thấy câu «Đang dùng bộ mặc định — chưa tải được bộ nhóm của sàn» dù không lỗi gì (do #230, đo trên ba vai); «Giao lại» bị máy chủ từ chối trên máy tính thì màn im (chủ kho tách khỏi #230 thành việc riêng, chưa hàng nào nhận).
+
+Khối báo lỗi dùng chung của ADR-0024 vẫn chưa có: bốn chỗ đang tự ghép.
 
 ## Ngưỡng chết / ngưỡng UAT
 
-- Câu hỏi phép đo trả lời: [đề xuất] khi một nguồn của Hôm nay đọc lỗi, màn có nói đúng và tự hồi không?
-- Kết quả nào là SỐNG: [đề xuất] đạt đủ tám ca, đo trên màn thật với lỗi giả lập:
-  1. lời gọi trả 500 một lần rồi 200 thì màn tự hồi, không cần bấm;
-  2. lỗi kéo dài thì mỗi nguồn đúng một câu và một «Thử lại»;
-  3. danh sách đầu chủ lỗi thì không hiện «0 đầu chủ», không hiện mã thô;
-  4. đầu chủ chưa đặt tên có chữ thay thế;
-  5. số trên nhãn bằng số dòng của bảng;
-  6. mạng trở lại thì tự đọc và mở lại «Giao lại»;
-  7. mở lúc mất mạng hay lead tải lỗi thì không câu nào báo «không có việc»;
-  8. nội dung hỏng ở vùng Đầu khách ra trạng thái lỗi.
-- Kết quả nào là CHẾT: [đề xuất] còn bất kỳ ca nào trong tám ca chưa đạt khi hết timebox, nhất là ca 7 (màn nói sai về số việc).
-- Timebox: [đề xuất] một vòng của đợt, tối đa ba lượt chấm; không đặt số lần báo lỗi trên bản thật vì chưa có đường đo.
+- Câu hỏi phép đo trả lời: sau khi thu phạm vi, những chỗ còn lại trên Hôm nay, Đội và Đã gửi có nói đúng và tự hồi khi một nguồn đọc lỗi không?
+- Kết quả nào là SỐNG (máy thu sau đo lại; chủ kho xem ở Cổng Phạm vi), đủ tám ca đo trên màn thật với lỗi giả lập:
+  1. người không có vai Đầu chủ không thấy câu về bộ nhóm khi không có lỗi;
+  2. bộ nhóm, danh sách đầu chủ, hàng đợi ở Đội trả lỗi một lần rồi được thì màn tự hồi, không cần bấm;
+  3. danh sách đầu chủ lỗi kéo dài thì có một câu và một «Thử lại», không câu nào nói sàn chưa có đầu chủ;
+  4. Đội có một báo lỗi cho cả vùng, không hiện mã thô hay ký hiệu vô nghĩa;
+  5. mạng trở lại thì Đội tự đọc, hết báo mất mạng;
+  6. nguồn lỗi hay mở lúc mất mạng thì không chỗ nào hiện số 0 và thân màn có đúng một câu;
+  7. «Giao lại» bị từ chối thì báo ngay ở dòng, trên máy tính và điện thoại;
+  8. nội dung hỏng ở tin của khách ra lỗi có «Thử lại»; bốn chỗ báo lỗi dùng một khối.
+- Kết quả nào là CHẾT: còn ca nào trong tám ca chưa đạt khi hết timebox, nhất là ca 1 và ca 6 (màn nói sai).
+- Timebox: một vòng của đợt, tối đa ba lượt chấm; không đặt số lần báo lỗi trên bản thật vì chưa có đường đo.

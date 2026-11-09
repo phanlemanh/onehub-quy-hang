@@ -1,0 +1,229 @@
+schema_version: 1
+feature_slug: hom-nay-chiu-loi-tung-phan
+# Luật thuần chấm bằng bài kiểm của apps/web; nối dây bằng một eval đọc; mỗi tiêu chí một bài nhìn màn với lỗi giả lập.
+# Chiều đỏ của bài nhìn màn: đã đo đỏ trên 5d55d0cc (bảng trong opportunity.md). Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong today/viec/gop-viec.test.ts ca «nguồn bộ nhóm theo vai» có mặt và ok, bảng viết trước năm dòng, đếm 5: không vai Đầu chủ + chưa đọc + chưa lưu → khong-ap; không vai Đầu chủ + đã lưu → khong-ap; Đầu chủ + đọc được → moi; Đầu chủ + đọc hỏng + đã lưu → luu; Đầu chủ + đọc hỏng + chưa lưu → mac-dinh. Chiều đỏ: bỏ nhánh vai thì dòng 1 đỏ với mac-dinh."
+    paths: ["apps/web/src/app/(app)/today/viec/gop-viec.ts", "apps/web/src/app/(app)/today/viec/gop-viec.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E1b
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Lần lượt vai truong-nhom, telesales, dau-khach mở /today, chờ tải xong: đọc chữ thân màn"
+      - "Vai dau-chu với /api/v1/company/settings/queue trả 500 mọi lần: đọc chữ"
+    expected: "Ba vai đầu không có chuỗi «bộ mặc định» hay «bộ nhóm». Vai dau-chu có câu «Hàng đợi chia theo bộ nhóm lưu lúc …» hay «Đang dùng bộ mặc định». Đỏ trên 5d55d0cc: ba vai đều có câu."
+    paths: ["apps/web/src/app/(app)/today/hom-nay.tsx", "apps/web/src/app/(app)/today/viec/gop-viec.ts"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong today/viec/doc-nguon.test.ts ca «đọc kết quả có thử lại» có mặt và ok, bốn dòng: lần 1 ok → items, một lời gọi; lần 1 hỏng lần 2 ok → items, hai lời gọi, chờ đúng 2000 ms; hai lần hỏng → null; lần 1 mất mạng lần 2 ok → items. Chiều đỏ: không thử lại thì dòng 2 đỏ."
+    paths: ["apps/web/src/app/(app)/today/viec/doc-nguon.ts", "apps/web/src/app/(app)/today/viec/doc-nguon.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2b
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/team"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Mọi ca của eval này: gắn MutationObserver bằng addInitScript từ lúc mở trang, đếm số lần có phần tử role=alert hay câu bắt đầu «Không tải được» / «Chưa tải được» trong suốt 9 giây, ghi mốc lần đầu nếu có"
+      - "Vai truong-nhom, /team, lead-queue trả 500 hai lời đầu rồi thật: chờ 9 giây, đọc chữ"
+      - "Vai truong-nhom, /team, listing-agents trả 500 hai lời đầu rồi thật: chờ 9 giây"
+      - "Vai truong-nhom, /today, listing-agents trả 500 hai lời đầu rồi thật: chờ 9 giây, đọc nút «Giao lại»"
+      - "Vai dau-chu, /today, company/settings/queue trả 500 hai lời đầu rồi thật: chờ 9 giây"
+      - "Đối chứng dương: vai truong-nhom, /team, lead-queue trả 500 mọi lần, ghi mốc lời gọi hỏng đầu và mốc alert đầu"
+    expected: "Bốn ca không còn câu lỗi nào của nguồn đó, không bấm gì, bộ đếm MutationObserver bằng 0 suốt 9 giây; đối chứng dương: alert đầu hiện sau mốc lời gọi hỏng đầu ít nhất 2 giây; ca 1 ô Lead quá hạn có số; ca 2 có tên thật; ca 3 nút bấm được; ca 4 không có câu «bộ nhóm». Đỏ trên 5d55d0cc: ca 1 đứng «Không tải được lead quá hạn», ca 4 đứng câu «Chưa tải được bộ nhóm mới»."
+    paths: ["apps/web/src/app/(app)/team/dashboard.tsx", "apps/web/src/app/(app)/today/hom-nay.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong today/viec/gop-viec.test.ts ca «danh sách đầu chủ lỗi» bốn dòng: hàng đợi ok có dòng + danh sách lỗi → đúng một mục lỗi nguồn dau-chu-san chữ «Chưa tải được danh sách đầu chủ»; hàng đợi lỗi + danh sách lỗi → chỉ mục hàng-đợi; hàng đợi ok rỗng + danh sách lỗi → không mục; danh sách đang đọc → dangTai không đổi. Ca «nút giao» bốn dòng trangNutGiao: dang → tắt, không câu; loi → tắt, không câu; ok rỗng → tắt, «Sàn chưa có đầu chủ nào»; ok có người → mở. Ca «nguồn cần đọc lại» sáu dòng trangNguonCanDoc, mỗi dòng đúng một nguồn lỗi (bộ nhóm, lead giao, hàng đợi, danh sách đầu chủ, lead của tôi, tin) → đúng mã nguồn cần đọc lại; không vai tương ứng → không có. Chiều đỏ: bỏ điều kiện trang thì dòng loi mang câu sai; bỏ danh sách đầu chủ thì dòng 4 đỏ."
+    paths: ["apps/web/src/app/(app)/today/viec/gop-viec.ts", "apps/web/src/app/(app)/today/viec/gop-viec.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3b
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Vai truong-nhom, listing-agents trả 500 mọi lần: chờ 9 giây, đếm câu lỗi và nút «Thử lại», đọc disabled và title của nút «Giao lại» đầu"
+      - "Bỏ chặn, bấm «Thử lại», chờ 4 giây, đọc lại nút"
+      - "listing-agents và lead-queue cùng 500: đếm câu"
+      - "listing-agents cắt mạng mọi lần, đợi câu lỗi; bỏ chặn, phát sự kiện online, không bấm, chờ 5 giây, đọc nút"
+    expected: "Bước 1: đúng một câu «Chưa tải được danh sách đầu chủ», đúng một «Thử lại», nút tắt, không title «Sàn chưa có đầu chủ nào». Bước 2: nút bấm được, câu hết. Bước 3: chỉ câu «Chưa tải được lead quá hạn». Bước 4: nút bấm được, câu hết. Đỏ trên 5d55d0cc: title sai, không câu lỗi nào."
+    paths: ["apps/web/src/app/(app)/today/hom-nay.tsx", "apps/web/src/app/(app)/today/viec/giao-lai.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong team/trang-thai.test.ts ca «một báo lỗi của Đội» bốn dòng baoLoiDoi: cả hai ok → null; hàng đợi lỗi → «Không tải được lead quá hạn»; đầu chủ lỗi → «Không tải được tên đầu chủ»; cả hai lỗi → câu hàng đợi. Ca kyHieuDauChu ba dòng: tên hai chữ → hai chữ đầu của chữ cuối viết hoa; «Chưa rõ tên» → «—»; chuỗi rỗng → «—». Chiều đỏ: chữ «TÊ» khi bỏ nhánh."
+    paths: ["apps/web/src/app/(app)/team/trang-thai.ts", "apps/web/src/app/(app)/team/trang-thai.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4b
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/team"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Vai truong-nhom, listing-agents 500 mọi lần: chờ 9 giây, đọc chữ, đọc dòng đầu của bảng, đếm role=alert và nút «Thử lại»"
+      - "lead-queue 500 mọi lần"
+      - "Cả hai 500"
+      - "Ca 3, bỏ chặn, bấm «Thử lại»"
+      - "Lặp ca 1 ở khổ 375: đọc scrollWidth so với clientWidth của tài liệu và khối alert, đo nút «Thử lại» cùng hàng với câu hay xuống hàng trong khối, chụp"
+    expected: "Ba ca lỗi mỗi ca đúng một alert, một «Thử lại»; ca 1 có «Không tải được tên đầu chủ», dòng hiện «Chưa rõ tên» và ô tròn «—», không chuỗi 8 ký tự hex; ca 4 hết lỗi, số và tên thật; ở 1440 nút «Thử lại» cùng hàng với câu; ở 375 không tràn ngang, chữ không bị nút đè. Đỏ trên 5d55d0cc: ca 1 không có báo lỗi, ô tròn «TÊ»."
+    paths: ["apps/web/src/app/(app)/team/dashboard.tsx", "apps/web/src/app/(app)/team/trang-thai.ts"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong team/trang-thai.test.ts ca «câu mất mạng» hai dòng moTaMatMang: có hàng đợi → «Số là lần đọc cuối.»; null → «Máy sẽ tự đọc lại khi có mạng.»; không dòng nào chứa «giao lại». Chiều đỏ: câu cũ chứa «giao lại»."
+    paths: ["apps/web/src/app/(app)/team/trang-thai.ts", "apps/web/src/app/(app)/team/trang-thai.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5b
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/team"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Vai truong-nhom, trước khi mở đặt navigator.onLine false bằng addInitScript và cắt mạng /api/v1/team/**: đọc chữ"
+      - "Bỏ chặn, đặt onLine true, phát sự kiện online, chờ 5 giây, đọc chữ"
+      - "onLine true, /api/v1/team/** cắt mạng mọi lần: chờ 9 giây, đếm alert, «Thử lại», tìm «Đang mất mạng»; bỏ chặn, bấm «Thử lại», chờ 4 giây"
+    expected: "Bước 1 có «Đang mất mạng» và «Máy sẽ tự đọc lại khi có mạng.», không chữ «giao lại». Bước 2 không còn «Đang mất mạng», ô Lead quá hạn có số, không tải lại trang. Bước 3: một alert, một «Thử lại», không có «Đang mất mạng»; sau khi bấm hết lỗi. Đỏ trên 5d55d0cc: bước 2 vẫn «Đang mất mạng»."
+    paths: ["apps/web/src/app/(app)/team/dashboard.tsx", "apps/web/src/app/(app)/today/viec/mang.ts"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong today/viec/kho-so.test.ts ca «cột không có số khi chưa đọc được» sáu dòng trên đầu ra mucCotHomNay và mucSoTuGop: có lỗi + tổng 0 → so null; có lỗi + tổng 15 → 15; không lỗi + tổng 0 → 0; nhóm lead mã tự đặt khi nguồn lead-giao lỗi → null; nhóm căn khi lead-giao lỗi → số thật; nhóm của vai khi nguồn của nó lỗi → null. Chiều đỏ: bỏ nhánh thì dòng 1 ra 0."
+    paths: ["apps/web/src/app/(app)/today/viec/kho-so.ts", "apps/web/src/app/(app)/today/viec/kho-so.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6b
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Vai truong-nhom, lead-queue 500 mọi lần: chờ 9 giây, đọc số cạnh «Tất cả việc» ở cột thứ hai"
+      - "Vai dau-chu, leads/assigned 500 mọi lần"
+      - "Vai truong-nhom không lỗi: đối chứng"
+    expected: "Ca 1 không có số cạnh «Tất cả việc». Ca 2 có số việc căn lớn hơn 0, «Lead mới» không số. Ca 3 có số. Đỏ trên 5d55d0cc: ca 1 ghi 0."
+    paths: ["apps/web/src/app/(app)/today/viec/kho-so.ts", "apps/web/src/app/(app)/today/hom-nay.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E7
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong today/viec/gop-viec.test.ts ca «báo chưa đọc» bốn dòng canBaoChuaDoc: mất mạng + tổng 0 + có nguồn lỗi → true; có mạng → false; tổng lớn hơn 0 → false; không nguồn lỗi → false. Chiều đỏ: bỏ điều kiện tổng thì dòng 3 đỏ."
+    paths: ["apps/web/src/app/(app)/today/viec/gop-viec.ts", "apps/web/src/app/(app)/today/viec/gop-viec.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7b
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Vai truong-nhom, addInitScript đặt navigator.onLine false, cắt mạng /api/v1/team/**, /api/v1/leads/**, /api/v1/today/**: chờ 8 giây, đọc chữ thân màn và chụp"
+      - "Bỏ chặn, đặt onLine true, phát online, chờ 5 giây, đọc chữ và đọc nút «Giao lại» đầu"
+    expected: "Bước 1: đúng một câu «Chưa đọc được việc của bạn» kèm «Máy sẽ tự đọc lại khi có mạng.», không «không còn việc», cột không số. Bước 2: câu hết, có dòng việc, nút «Giao lại» bấm được. Đỏ trên 5d55d0cc: thân trống, cột ghi 0."
+    paths: ["apps/web/src/app/(app)/today/hom-nay.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E8
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Vai truong-nhom khổ 1440, POST /api/v1/leads/*/assign trả 500: bấm «Giao lại» đầu, chọn người bấm được đầu tiên, chờ 2 giây, đọc chữ dòng và chụp"
+      - "Bỏ chặn, giao lại đúng dòng đó, chờ 3 giây"
+      - "Lặp bước 1 ở khổ 375 qua ngăn đáy"
+    expected: "Bước 1: câu «Chưa giao được — thử lại.» ở trong dòng, dòng còn. Bước 2: câu hết, dòng rời hàng đợi. Bước 3: câu ở thẻ. Đỏ trên 5d55d0cc: bước 1 không chữ nào."
+    paths: ["apps/web/src/app/(app)/today/hom-nay.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong shares/tin/dau-khach.test.ts ca «đọc tin» năm dòng docTinDauKhach với fetch giả và đồng hồ giả: 200 {items:[]} → []; 200 thân hỏng hai lần → null, không ném; 200 không có items → null; 500 rồi 200 → items, hai lời gọi; mất mạng hai lần → null. Chiều đỏ: bản cũ r.json() ném ở dòng 2."
+    paths: ["apps/web/src/app/(app)/shares/tin/dau-khach.ts", "apps/web/src/app/(app)/shares/tin/dau-khach.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E9b
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/shares/tin"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Vai dau-khach, today/buyer trả 200 thân {hong mọi lần: chờ 6 giây, đếm khung chờ, đếm nút «Thử lại»"
+      - "Bỏ chặn, bấm «Thử lại»"
+      - "today/buyer 500 hai lời đầu rồi thật: chờ 9 giây, không bấm"
+      - "today/buyer 500 mọi lần tới khi có alert; bỏ chặn, phát sự kiện online, không bấm, chờ 5 giây"
+    expected: "Bước 1: không còn khung chờ, có role=alert và đúng một «Thử lại». Bước 2 có tin. Bước 3 có tin, không lỗi. Bước 4 hết alert, có tin. Đỏ trên 5d55d0cc: bước 1 khung chờ mãi."
+    paths: ["apps/web/src/app/(app)/shares/tin/vung.tsx", "apps/web/src/app/(app)/shares/tin/dau-khach.ts"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E10
+    criterion: AC-10
+    executor: judgment
+    inputs: ["apps/web/src/components/trang-thai.tsx", "apps/web/src/app/(app)/today/hom-nay.tsx", "apps/web/src/app/(app)/team/dashboard.tsx", "apps/web/src/app/(app)/shares/tin/dong-tin.tsx", "apps/web/src/app/(app)/shares/tin/vung.tsx", "apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx", "apps/web/src/app/(app)/today/viec/giao-lai.tsx"]
+    question: "(1) trang-thai.tsx có xuất BaoLoiVung dựng trên TrangThai kind=error, nhận onThuLai và tự dựng đúng một nút «Thử lại» không? (2) Bốn màn (hom-nay.tsx, dashboard.tsx, dong-tin.tsx, lead-da-nhap.tsx) có báo lỗi đọc bằng BaoLoiVung, và không còn TrangThai kind=error kèm nút «Thử lại» tự ghép không? (3) hom-nay.tsx có đọc danh sách đầu chủ và bộ nhóm qua thử lại, dashboard.tsx có đọc cả hai nguồn qua thử lại và đọc lại khi mạng trở lại, không còn cờ mất mạng lấy từ lời gọi không? (4) vung.tsx của tin có đọc qua docTinDauKhach và lead-da-nhap.tsx có đọc lại khi mạng trở lại không?"
+    expected: "PASS khi cả bốn vế đúng trên các tệp; FAIL nêu tệp và dòng nếu còn chỗ tự ghép nút, nguồn chưa thử lại, hay cờ mất mạng lấy từ lời gọi."
+    paths: ["apps/web/src/components/trang-thai.tsx", "apps/web/src/app/(app)/today/hom-nay.tsx", "apps/web/src/app/(app)/team/dashboard.tsx", "apps/web/src/app/(app)/shares/tin/**", "apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx"]
+    evidence_required: [run_id, verdict, judges, verified_at]
+  - id: E10b
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/(app)/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E10c
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/components/trang-thai.tsx", "apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/team/**", "apps/web/src/app/(app)/shares/tin/**", "apps/web/src/app/(app)/leads/mine/**"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E10d
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Vai du-vai (đủ năm vai), lead-queue và leads/assigned 500 mọi lần: chờ 9 giây, đếm câu lỗi, «Thử lại», chụp"
+      - "Vai dau-chu mở /today?nhom=new_lead, leads/assigned 500 mọi lần: đọc chữ"
+      - "Vai telesales mở /leads/mine, GET /api/v1/leads 500 mọi lần: chờ 6 giây, đếm «Thử lại»; bỏ chặn, phát sự kiện online, chờ 4 giây"
+      - "Lặp bước 3 trước khi bỏ chặn ở khổ 375: đọc scrollWidth so với clientWidth, chụp"
+    expected: "Bước 1: hai câu lỗi, mỗi câu một «Thử lại», các nhóm khác còn hiện. Bước 2: có «Chưa tải được lead giao cho bạn», không chữ «không có việc». Bước 3: một khối lỗi một «Thử lại»; sau online tự có danh sách; ở 375 không tràn ngang."
+    paths: ["apps/web/src/app/(app)/today/hom-nay.tsx", "apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
