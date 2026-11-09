@@ -5,3 +5,4 @@ export * from "./lookup";
 export * from "./property-type";
 export * from "./lot-code";
 export * from "./lot-lookup";
+export * from "./confidence";

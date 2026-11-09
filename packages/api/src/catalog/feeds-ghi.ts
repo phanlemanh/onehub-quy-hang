@@ -1,4 +1,4 @@
-import type { CatalogFeed } from "@quy-hang/connect";
+import type { AnyCatalogFeed } from "@quy-hang/connect";
 import type { Agreement } from "@quy-hang/core";
 import type pg from "pg";
 
@@ -42,7 +42,7 @@ export const toAgreement = (r: AgreementRow): Agreement => ({
   specialTerms: r.special_terms,
 });
 
-export async function ghiGoi(tx: pg.PoolClient, feed: CatalogFeed, agreementId: string): Promise<{ created: number; updated: number }> {
+export async function ghiGoi(tx: pg.PoolClient, feed: AnyCatalogFeed, agreementId: string): Promise<{ created: number; updated: number }> {
   const khu = feed.subdivisions.map((s) => ({
     subdivision_key: s.subdivisionKey,
     subdivision_name: s.subdivisionName,
@@ -145,7 +145,7 @@ export async function ghiGoi(tx: pg.PoolClient, feed: CatalogFeed, agreementId: 
 }
 
 /** Số khu, toà, căn của một gói — thân trả về của cả hai đường. */
-export function demGoi(feed: CatalogFeed): { subdivisions: number; buildings: number; units: number } {
+export function demGoi(feed: AnyCatalogFeed): { subdivisions: number; buildings: number; units: number } {
   return {
     subdivisions: feed.subdivisions.length,
     buildings: feed.subdivisions.reduce((n, s) => n + s.buildings.length, 0),
