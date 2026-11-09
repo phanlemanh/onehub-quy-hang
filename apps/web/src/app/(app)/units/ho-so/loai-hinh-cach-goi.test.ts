@@ -116,7 +116,8 @@ function kiemBoc(ten: string, nguon: string, the: string): string[] {
 const TRANG: [string, string][] = [
   ["units/[code]/page.tsx", "HoSoToanMan"],
   ["today/page.tsx", "HomNayDauChu"],
-  ["inventory/page.tsx", "BangCoHoSo"],
+  // Cột hồ sơ cạnh bảng dựng trong khung, ngoài phần con của khung — thẻ phải bọc cả khung.
+  ["inventory/page.tsx", "KhungBangHang"],
   ["inventory/views/[id]/page.tsx", "BangHang"],
 ];
 
