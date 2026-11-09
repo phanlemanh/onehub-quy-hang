@@ -5,7 +5,7 @@ slug: hom-nay-chiu-loi-tung-phan
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: approved
+status: implemented
 design_doc: _acceptance/hom-nay-chiu-loi-tung-phan/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
