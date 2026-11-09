@@ -5,7 +5,7 @@ slug: khuon-nguon-danh-muc-v2
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-09
 design_doc: docs/superpowers/specs/2026-11-09-khuon-nguon-danh-muc-v2-design.md
@@ -71,3 +71,12 @@ Số đo là kết quả eval máy, chưa có đường chảy thật cho tới 
 
 - Câu hỏi Cổng Phạm vi: Hỏi-1 loại căn · Hỏi-2 người đăng tin · Hỏi-3 căn chỉ có gói v1 · Hỏi-4 ai đọc · Hỏi-5 v1 tới khi nào · Hỏi-6 ảnh chụp đến muộn · Hỏi-7 ba nhãn độ chắc · Hỏi-8 nhãn bắt buộc · Hỏi-9 tin rao thay theo khu · Hỏi-10 chuỗi cấm từ chối cả gói · Hỏi-11 gói tự đủ · Hỏi-12 mặt bằng (thiết kế §7).
 - Migration 042 do giám sát giữ cho hàng 94. Hợp đồng viết theo khuyến nghị của các Hỏi; AC-7 theo Hỏi-2: chọn chở người đăng thì `listAgentFullName` ra khỏi ma trận khoá.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-2: Bộ kiểm chưa chứng minh giá trị căn được lấy đúng từ gói v1 khi gói cũ đẩy lại; chưa thấy lỗi thật nào.
+  - Ngoài-3: Số tầng, số phòng quá lớn làm bên đẩy nhận lỗi máy chủ chung chung thay vì báo sai khuôn; không có dữ liệu nào bị ghi dở.
+  - Ngoài-4: Dòng tóm tắt trong tài liệu API vẫn nói chỉ nhận khuôn v1, phần mô tả bên dưới đã nói nhận cả v2.
+  - Ngoài-5: Chuỗi chứa ký tự rỗng ẩn làm cả gói bị từ chối bằng lỗi máy chủ thay vì báo sai khuôn; không có dữ liệu nào bị ghi.
+  - Ngoài-6: Bộ kiểm chỉ chứng minh gói mẫu do nhóm viết khớp bộ đọc, chưa khớp với bên đẩy thật vì Invest chưa đẩy.
+  - Ngoài-7: Bài kiểm giá trị cấm có thể không phát hiện nếu sau này có người bớt trường khỏi gói mẫu.
+  - Ngoài-8: Bài kiểm số thị trường chỉ thử luật số nguyên, số dương ở giá thấp nhất, chưa ở giá cao và trung vị.
+  - Ngoài-9: Bài kiểm không xác nhận bảng tin rao ghi đúng thoả thuận.
