@@ -1,23 +1,18 @@
-import { BoxesIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { Item, ItemMedia } from "@/components/ui/item";
+import { DauHieuOneHub } from "@/components/dau-hieu-onehub";
 
 // Khung của màn đăng nhập, chọn sàn, chưa gắn sàn — không vỏ (Tham chiếu §9). Chuyển thể khối `@reui/auth-15` (hàng 93):
 // giữ dấu hiệu trên đầu, một cột hẹp giữa trang với tiêu đề lớn, chân điều khoản ở đáy; bỏ nút Google/Apple/GitHub và
-// dải «Or continue with» (kho chỉ đăng nhập bằng mã email, ADR-0005); dấu hiệu là ô hộp của vỏ (home-rail) cạnh chữ
-// «Quỹ hàng»; chân trang chỉ còn câu điều khoản, không liên kết (kho chưa có trang điều khoản hay chính sách).
+// dải «Or continue with» (kho chỉ đăng nhập bằng mã email, ADR-0005); dấu hiệu là hình OneHub dùng chung với vỏ cạnh chữ
+// «Quỹ hàng» (hàng logo-onehub); chân trang chỉ còn câu điều khoản, không liên kết (kho chưa có trang điều khoản hay chính sách).
 // Câu chân trang theo Hỏi-1 của Cổng Phạm vi (khuyến nghị câu trung tính, không lời «đồng ý»).
 export const CHAN_DIEU_KHOAN = "Sàn của bạn dùng Quỹ hàng theo điều khoản trong hợp đồng đã ký.";
 
 function DauHieu() {
   return (
     <div className="inline-flex items-center gap-2">
-      <Item className="flex size-8 shrink-0 items-center justify-center bg-primary p-2 text-primary-foreground" aria-hidden="true">
-        <ItemMedia variant="icon" className="size-auto">
-          <BoxesIcon className="size-4" />
-        </ItemMedia>
-      </Item>
+      <DauHieuOneHub canh={32} />
       <span className="text-sm font-medium">Quỹ hàng</span>
     </div>
   );
