@@ -296,6 +296,19 @@ từ bản tóm công cụ tìm kiếm trên đúng các trang ấy, chưa đọ
 
 Không tìm được nguồn về tin khách phản ứng thành việc hay cách tự hết: khoảng trống ngành, sản phẩm tự đặt.
 
+## 13. Cách máy bên ngoài gọi vào
+
+Quỹ hàng: máy bên kia gọi bằng token tĩnh dạng Bearer gắn đúng một thoả thuận, tối đa hai token còn sống, không có hạn riêng
+(hàng 96, ADR-0015 sửa đổi 09/11). Tra ngày 09/11.
+
+| Năng lực | RESO | MLS Grid | Spark (FBS) | Bridge | Bright, Trestle | Quỹ hàng |
+| --- | --- | --- | --- | --- | --- | --- |
+| Cách gọi máy-máy | Web API Core: OAuth2 Bearer Token hoặc Client Credentials ([RCP-37](https://transport.reso.org/proposals/web-api-core.html)) | Bearer, không endpoint đổi token ([bên thứ ba](https://apis.io/security/mls-grid/mls-grid-authentication/)) | Access token không hết hạn ([chính chủ](https://www.sparkplatform.com/docs/authentication/access_token)) | Server token, Client Credentials là đường phụ ([bên thứ ba](https://glama.ai/mcp/servers/@GumpperGroup/unlock-reso-mcp-remote/blob/fff3ad30ea1e2f1b7073952ea3e42f3b292a7fd7/docs/authentication.md)) | Client Credentials ([Bright](https://developer.brightmls.com/brightreso/default/authentication)) | Bearer tĩnh |
+| Đổi token | Chưa kiểm | Cấp lại thì token cũ chết ([bên thứ ba](https://apis.io/security/mls-grid/mls-grid-authentication/)) | Chưa kiểm | Chưa kiểm | Chưa kiểm | Hai token còn sống để đổi không gián đoạn |
+| Hạn của token | OAuth2 để bên cấp định | Chưa kiểm | Không hết hạn | Chưa kiểm | Access token ngắn hạn | Theo hạn của thoả thuận |
+
+Chỗ ta viết cứng: số token còn sống tối đa mỗi thoả thuận — điều khoá K34 (quyền và an toàn).
+
 ## Sản phẩm Việt Nam
 
 Tra bằng tiếng Việt ngày 01/11. Trang chính thức chỉ liệt kê tính năng ở mức tiếp thị. Không sản phẩm nào công bố gọi theo

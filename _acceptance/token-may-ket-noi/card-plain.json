@@ -1,0 +1,34 @@
+{
+  "feature_plain": "Máy của bên kia (trước hết là Invest) đẩy được danh mục vào sàn bằng một khoá máy gắn đúng thoả thuận, không cần ai đăng nhập; tắt thoả thuận hay thu hồi khoá thì lời gọi kế bị từ chối.",
+  "will_do": [
+    { "id": "AC-1", "p": "Sẽ cho quản trị sàn cấp khoá máy; khoá chỉ hiện đúng một lần, sau đó hệ thống chỉ giữ dạng băm và một mã nhận diện ngắn." },
+    { "id": "AC-2", "p": "Sẽ chỉ cho quản trị đúng sàn cấp, xem, thu hồi khoá; thu hồi làm được cả khi thoả thuận đang tắt." },
+    { "id": "AC-3", "p": "Sẽ nhận gói danh mục từ máy bên kia khi có khoá hợp lệ, ghi đúng theo thoả thuận gắn với khoá; cách gửi bằng tài khoản quản trị vẫn như cũ." },
+    { "id": "AC-4", "p": "Sẽ giới hạn khoá trong đúng một loại kết nối và một chiều; khoá không mở thêm được chức năng nào khác của hệ thống." },
+    { "id": "AC-6", "p": "Sẽ từ chối ngay lời gọi kế khi khoá bị thu hồi, thoả thuận tắt, hết hạn, hay sàn ra khỏi danh sách được tin." },
+    { "id": "AC-7", "p": "Sẽ ghi một dòng nhật ký cho mỗi lời gọi mang khoá nhận ra được, kể cả lời gọi bị từ chối." },
+    { "id": "AC-8", "p": "Sẽ không cho sửa khoá, huỷ thu hồi, hay sửa xoá nhật ký, chặn ngay ở cơ sở dữ liệu; khoá không xuất hiện trong nhật ký máy chủ." }
+  ],
+  "wont_do": [
+    { "id": "AC-5", "p": "Chặn mọi đường để sàn này đọc, ghi hay dùng khoá và nhật ký của sàn khác." },
+    { "id": "OOS-1", "p": "KHÔNG làm chỗ để máy Invest kéo sự kiện xác nhận; đó là hàng 97." },
+    { "id": "OOS-2", "p": "KHÔNG làm màn bật, tắt thoả thuận và đọc nhật ký; đó là hàng 98." },
+    { "id": "OOS-3", "p": "KHÔNG giới hạn số lời gọi và chưa dọn nhật ký cũ (câu hỏi 8)." },
+    { "id": "OOS-4", "p": "KHÔNG làm cơ chế đổi khoá ngắn hạn và KHÔNG đặt hạn riêng cho khoá (câu hỏi 1 và 5)." }
+  ],
+  "scope_plain": "Những việc dưới đây cố ý để ngoài hàng này.",
+  "coverage_plain": [
+    { "i": 0, "p": "Đã xét từng kiểu người và máy gọi: chưa đăng nhập, thành viên, quản trị đúng sàn, quản trị sàn khác, và máy có khoá (AC-1, AC-2, AC-3)." },
+    { "i": 1, "p": "Đã xét bốn trạng thái của khoá: đúng, lạ, sai dạng, đã thu hồi (AC-3, AC-6)." },
+    { "i": 2, "p": "Đã xét mọi trạng thái của thoả thuận, kể cả sai loại, sai chiều và sàn ngoài danh sách được tin (AC-4, AC-6)." },
+    { "i": 3, "p": "Đã đo chặn ở đủ các tầng, không chỉ ở lớp giao tiếp, tới tận cơ sở dữ liệu (AC-5, AC-8)." },
+    { "i": 4, "p": "Đã đo cả lúc khoá hay thoả thuận đổi ngay giữa một lần gửi đang chạy (AC-6)." }
+  ],
+  "gap_probe_plain": [
+    { "i": 0, "p": "Chưa rõ khoá chết hẳn hay chỉ bị chặn khi thoả thuận tắt: đã thành câu hỏi 6 cho anh, và bài kiểm ghim từng ca mở lại." },
+    { "i": 1, "p": "Ba lựa chọn máy tự quyết không có căn cứ đủ chắc: mã lỗi và giới hạn gọi đã thành câu hỏi 7, 8; lựa chọn còn lại đã nêu rõ lối bị loại." },
+    { "i": 2, "p": "Thiếu bài đo ba đường khoá còn sống sau thu hồi: đã chốt cách xử lý và thêm các ca kiểm." },
+    { "i": 3, "p": "Vài ngưỡng chưa đo trọn (chiều khác, lỗi giữa chừng, không đụng sàn của cookie): đã thêm ca kiểm và một kết cục nhật ký cho lỗi giữa chừng." },
+    { "i": 4, "p": "Chưa đo việc áp thay đổi cơ sở dữ liệu theo hai thứ tự như bản thật: đã thêm tiêu chí và một bài kiểm." }
+  ]
+}
