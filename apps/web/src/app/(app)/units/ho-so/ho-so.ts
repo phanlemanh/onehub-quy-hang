@@ -121,10 +121,16 @@ export function dungLenhGanMa(hang: ListingView, chu: string): { lenh: LenhGanMa
 
 // ——— Thuộc tính căn ———
 
-/** Tiêu đề dòng loại hình của mục thuộc tính: tên trường riêng của sàn, vắng thì «Loại hình». */
-export const tieuDeLoaiHinh = (tv?: TuVung | null) => nhanTruong(tv, "propertySubType", "Loại hình");
+/**
+ * Tiêu đề dòng loại hình của mục thuộc tính: tên trường riêng của sàn, vắng thì «Loại hình». Tên riêng trùng tiêu đề một dòng khác
+ * của mục thì về «Loại hình»: tiêu đề là khoá của dòng trên màn và ở «Báo sai thông tin căn».
+ */
+const tieuDeLoaiHinh = (tv: TuVung | null | undefined, daCo: readonly string[]) => {
+  const t = nhanTruong(tv, "propertySubType", "Loại hình");
+  return daCo.includes(t) ? "Loại hình" : t;
+};
 
-export type ThuocTinh = { kind: "co"; khu: string; truong: [string, string][] } | { kind: "ngoai-danh-muc" };
+export type ThuocTinh = { kind: "co"; khu: string; truong: [string, string][]; /** Tên loại hình đang hiện; vắng khi nguồn chưa có. */ loaiHinh: string | null } | { kind: "ngoai-danh-muc" };
 export const coBaoSai = (t: ThuocTinh) => t.kind === "co";
 
 const so = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 2 });
@@ -137,20 +143,18 @@ export function thuocTinh(dm: CatalogData | null, toa: string, ma: string, tv?: 
       if (chuan(b.buildingName) === chuan(toa)) for (const u of b.units) if (chuan(u.unitNumber) === chuan(ma)) gap = { khu, u, toa: b.buildingName };
   if (!gap) return { kind: "ngoai-danh-muc" };
   const { khu, u } = gap;
-  return {
-    kind: "co",
-    khu: khu.subdivisionName,
-    truong: [
+  const loaiHinh = u.propertySubType ? tenLoaiHinh(tv, u.propertySubType) : null;
+  const truong: [string, string][] = [
       ["Loại căn", nhanLoaiCan(u.bedroomsTotal)],
       ["Diện tích", u.livingArea === null ? "—" : `${so.format(u.livingArea)} m²`],
       ["Tầng", u.floor === null ? "—" : String(u.floor)],
       ["Hướng", u.directionFaces ?? "—"],
       ["Toà", gap.toa],
       ["Khu", khu.subdivisionName],
-      // Danh mục máy khách đọc (`GET /api/v1/catalog`) có thể chưa mang loại hình — khi vắng thì «—», không đoán.
-      [tieuDeLoaiHinh(tv), u.propertySubType ? tenLoaiHinh(tv, u.propertySubType) : "—"],
-    ],
-  };
+  ];
+  // Danh mục máy khách đọc (`GET /api/v1/catalog`) có thể chưa mang loại hình — khi vắng thì «—», không đoán.
+  truong.push([tieuDeLoaiHinh(tv, truong.map(([k]) => k)), loaiHinh ?? "—"]);
+  return { kind: "co", khu: khu.subdivisionName, truong, loaiHinh };
 }
 
 /** Trường thuộc tính theo loại hình, đúng thứ tự hiện (hàng 79): nhãn · cột của bảng loại hình · định dạng. */
@@ -182,14 +186,9 @@ export function thuocTinhKhongToa(idx: ChiMucDanhMuc, h: ListingView, tv?: TuVun
     unitType: t.unitType && t.unitType !== "Chưa rõ" ? t.unitType : null,
     directionFaces: t.directionFaces,
   };
-  return {
-    kind: "co",
-    khu: h.subdivisionName ?? "",
-    truong: [
-      [tieuDeLoaiHinh(tv), tenLoaiHinh(tv, sub)],
-      ...TRUONG_LOAI_HINH.filter(([, cot]) => loaiDungCot(sub, cot)).map(([nhan, cot, f]): [string, string] => [nhan, gt[cot] === null || gt[cot] === undefined ? "—" : f(gt[cot]!)]),
-    ],
-  };
+  const dong = TRUONG_LOAI_HINH.filter(([, cot]) => loaiDungCot(sub, cot)).map(([nhan, cot, f]): [string, string] => [nhan, gt[cot] === null || gt[cot] === undefined ? "—" : f(gt[cot]!)]);
+  const loaiHinh = tenLoaiHinh(tv, sub);
+  return { kind: "co", khu: h.subdivisionName ?? "", truong: [[tieuDeLoaiHinh(tv, dong.map(([k]) => k)), loaiHinh], ...dong], loaiHinh };
 }
 
 // ——— Lần rao ———

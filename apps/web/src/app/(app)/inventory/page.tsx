@@ -18,15 +18,19 @@ export default async function Page() {
   // Cách gọi riêng của sàn (hàng 45): đọc ở máy chủ mỗi lần mở trang; đọc hỏng thì chữ dựng sẵn, bảng vẫn mở.
   const tuVung = await docTuVung(cookie);
   return (
-    // Từ vựng bọc cả khung: cột hồ sơ cạnh bảng dựng trong khung, ngoài phần con của nó.
-    <TuVungProvider tuVung={tuVung}>
-      <KhungBangHang
-        title="Bảng hàng"
-        hoSo={{ nguoi: me.user.id, san: me.activeCompany.id }}
-        dienThoai={<BangTheDienThoai nguoi={me.user.id} san={me.activeCompany.id} />}
-      >
+    <KhungBangHang
+      title="Bảng hàng"
+      hoSo={{ nguoi: me.user.id, san: me.activeCompany.id }}
+      tuVung={tuVung}
+      dienThoai={
+        <TuVungProvider tuVung={tuVung}>
+          <BangTheDienThoai nguoi={me.user.id} san={me.activeCompany.id} />
+        </TuVungProvider>
+      }
+    >
+      <TuVungProvider tuVung={tuVung}>
         <BangCoHoSo nguoi={me.user.id} san={me.activeCompany.id} vai={me.activeCompany.roles} tenSan={me.activeCompany.name} />
-      </KhungBangHang>
-    </TuVungProvider>
+      </TuVungProvider>
+    </KhungBangHang>
   );
 }

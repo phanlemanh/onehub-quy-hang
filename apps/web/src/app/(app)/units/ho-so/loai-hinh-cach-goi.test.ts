@@ -81,6 +81,28 @@ test("hồ sơ theo tên riêng loại hình: ba dạng hiện tên riêng, tiê
   }
 });
 
+test("hồ sơ theo tên riêng loại hình: tên trường trùng tiêu đề dòng khác không làm sai đầu cột, không trùng khoá", () => {
+  // Bảng viết trước: [dạng trong CA, tên trường trùng một tiêu đề của mục ấy].
+  const BANG: [number, string][] = [
+    [0, "Loại căn"],
+    [0, "Khu"],
+    [0, "Diện tích"],
+    [0, "Toà"],
+    [1, "Mặt tiền"],
+    [2, "Lộ giới"],
+  ];
+  for (const [i, ten] of BANG) {
+    const [dang, v, rieng] = CA[i]!;
+    const m = co({ ...v(), tv: { ...TV, truong: { propertySubType: ten } } });
+    assert.equal(dongLH(m, "Loại hình"), rieng, `${dang} · ${ten}`);
+    assert.ok(m.dauCot.includes(rieng), `${dang} · ${ten}: đầu cột «${m.dauCot}»`);
+    const tieuDe = m.tt?.kind === "co" ? m.tt.truong.map(([k]) => k) : [];
+    assert.equal(new Set(tieuDe).size, tieuDe.length, `${dang} · ${ten}: trùng tiêu đề ${tieuDe.join(", ")}`);
+  }
+  // Đối chứng trên cùng dữ liệu: tên không trùng thì dòng mang tên riêng.
+  assert.equal(dongLH(co({ ...CA[0]![1](), tv: TV }), "Dòng sản phẩm"), "Căn cao tầng");
+});
+
 test("hồ sơ theo tên riêng loại hình: từ vựng đọc hỏng về tên mặc định, không ném lỗi", () => {
   const hong = boTuVung([{ key: "labels.value.propertySubType", value: { Shophouse: "Shop" } }]).tuVung;
   for (const [ten, v, , macDinh] of CA) assert.equal(dongLH(co({ ...v(), tv: hong }), "Loại hình"), macDinh, ten);
@@ -116,8 +138,7 @@ function kiemBoc(ten: string, nguon: string, the: string): string[] {
 const TRANG: [string, string][] = [
   ["units/[code]/page.tsx", "HoSoToanMan"],
   ["today/page.tsx", "HomNayDauChu"],
-  // Cột hồ sơ cạnh bảng dựng trong khung, ngoài phần con của khung — thẻ phải bọc cả khung.
-  ["inventory/page.tsx", "KhungBangHang"],
+  ["inventory/page.tsx", "BangCoHoSo"],
   ["inventory/views/[id]/page.tsx", "BangHang"],
 ];
 
@@ -127,6 +148,11 @@ test("hồ sơ: bốn đường dựng đều nằm trong từ vựng", () => {
   // Chiều đỏ: bản sao nguồn bỏ thẻ bọc.
   const hong = doc("units/[code]/page.tsx").replace(/<\/?TuVungProvider[^>]*>/g, "");
   assert.deepEqual(kiemBoc("units/[code]/page.tsx", hong, "HoSoToanMan"), ["units/[code]/page.tsx: <HoSoToanMan nằm ngoài TuVungProvider"]);
+  // Cột hồ sơ cạnh bảng dựng trong khung, ngoài phần con mà trang bọc: trang trao từ vựng, khung bọc cột.
+  const coCotCanhBang = (trang: string, khung: string) => /<KhungBangHang[^>]*\btuVung=\{tuVung\}/s.test(trang) && /<TuVungProvider tuVung=\{tuVung[^}]*\}>\{cot\.cotPhu\}<\/TuVungProvider>/.test(khung);
+  const khung = doc("inventory/khung.tsx");
+  assert.equal(coCotCanhBang(doc("inventory/page.tsx"), khung), true, "cột hồ sơ cạnh bảng phải nằm trong từ vựng");
+  assert.equal(coCotCanhBang(doc("inventory/page.tsx"), khung.replace(/<\/?TuVungProvider[^>]*>/g, "")), false, "chiều đỏ: khung không bọc cột");
   // Cột hồ sơ truyền từ vựng của ngữ cảnh vào mô hình.
   const cot = doc("units/ho-so/cot-ho-so.tsx");
   assert.ok(/const tv = useTuVung\(\)/.test(cot) && /moHinhHoSo\(\{[^}]*\btv\b/.test(cot), "cột hồ sơ phải truyền từ vựng vào mô hình");

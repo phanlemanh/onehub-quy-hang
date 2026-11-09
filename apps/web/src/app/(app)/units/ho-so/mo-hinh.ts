@@ -22,7 +22,6 @@ import {
   phanLanRao,
   thuocTinh,
   thuocTinhKhongToa,
-  tieuDeLoaiHinh,
   timCan,
   trangThaiLichSu,
   type ChonCan,
@@ -208,7 +207,7 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
   const dauChu = can.listAgentKey ?? null;
   const co = lopPhuHoSo({ userId: v.nguoi, roles: v.vai }, dauChu);
   const tuoi = can.freshness as { confirmed?: boolean; ageDays?: number } | undefined;
-  const loaiHinh = tt?.kind === "co" ? tt.truong.find(([k]) => k === tieuDeLoaiHinh(v.tv))?.[1] : null;
+  const loaiHinh = tt?.kind === "co" ? tt.loaiHinh : null;
   const matMang = v.ngoaiTuyen || ngan.lastAttempt === "mang";
 
   return {
@@ -226,7 +225,7 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
     tt,
     coBaoSai: tt !== null && !khongToa && coBaoSai(tt),
     thongSo: chuaMa ? null : thongSoChinh(v.danhMuc, toa, chon.ma),
-    dauCot: [tt?.kind === "co" ? tt.khu : null, toa, loaiHinh === "—" ? null : loaiHinh].filter(Boolean).join(" · "),
+    dauCot: [tt?.kind === "co" ? tt.khu : null, toa, loaiHinh].filter(Boolean).join(" · "),
     xacNhan: tuoi?.confirmed ? (tuoi.ageDays === 0 ? "Xác nhận hôm nay" : `Xác nhận ${tuoi.ageDays} ngày trước`) : "Chưa xác nhận với chủ nhà",
     gia: dichThieu.includes("gia") ? "Chưa có giá về tay" : p.gia,
     phi: p.phi,
