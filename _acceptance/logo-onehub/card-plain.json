@@ -1,0 +1,29 @@
+{
+  "feature_plain": "Quỹ hàng mang logo OneHub giống OneHub CRM ở cột bên trái, trang đăng nhập, thẻ trình duyệt và màn hình chính điện thoại.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ hiện hình sáu lục giác OneHub ở đầu cột bên trái trên máy tính, đúng cỡ ô hộp cũ, rõ ở nền sáng và tối."},
+    {"id": "AC-2", "p": "Sẽ hiện hình OneHub cạnh chữ «Quỹ hàng» ở đầu trang đăng nhập, rõ ở máy tính và điện thoại, nền sáng và tối (theo câu Hỏi-1)."},
+    {"id": "AC-3", "p": "Sẽ dùng đúng năm tệp hình của CRM, trùng từng byte; tên khi cài vẫn là «Quỹ hàng»."},
+    {"id": "AC-4", "p": "Sẽ tải được biểu tượng cả khi chưa đăng nhập, để thẻ trình duyệt và màn hình chính có hình."},
+    {"id": "AC-5", "p": "Sẽ để cột bên trái và đăng nhập dùng chung một nguồn hình, đổi một chỗ là đổi hết."},
+    {"id": "AC-7", "p": "Sẽ hiện biểu tượng OneHub trên thẻ trình duyệt của trang gửi khách (theo câu Hỏi-2); đầu trang vẫn là tên sàn."}
+  ],
+  "wont_do": [
+    {"id": "AC-6", "p": "Sẽ KHÔNG đưa thêm hình OneHub vào nội dung trang gửi khách; bộ kiểm chống lộ thông tin vẫn phải xanh."},
+    {"id": "OOS-1", "p": "KHÔNG thêm logo vào thanh trên khi dùng app trên điện thoại (theo câu Hỏi-3)."},
+    {"id": "OOS-2", "p": "KHÔNG thêm logo vào đầu trang gửi khách."},
+    {"id": "OOS-3", "p": "KHÔNG đổi tên sản phẩm, và không dùng bản có chữ «OneHub» (theo câu Hỏi-1)."},
+    {"id": "OOS-4", "p": "KHÔNG đổi màu nút và màu giao diện."},
+    {"id": "OOS-5", "p": "KHÔNG sửa biểu tượng nhỏ trên thanh trạng thái Android khi có thông báo."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Đã kê tay sáu chỗ có thể hiện logo, nhân hai nền, nhân hai khổ màn hình. Thanh trên điện thoại và đầu trang khách hôm nay không có logo nên để ngoài; biểu tượng thẻ trang khách có tiêu chí riêng."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Khách của sàn sẽ thấy hình OneHub trên thẻ trình duyệt, việc này máy không nên tự quyết. Đã chuyển thành câu Hỏi-2 và thêm phép đo."},
+    {"i": 1, "p": "CRM dùng bản có chữ «OneHub» ở đăng nhập, nên chọn hình không chữ là việc của chủ kho. Đã chuyển thành câu Hỏi-1 và Hỏi-3, kèm ảnh hai phương án."},
+    {"i": 2, "p": "Lời hứa trùng với CRM chưa từng so với chính CRM. Đã thêm bảng đối chiếu năm tệp và một phép so trực tiếp."},
+    {"i": 3, "p": "Cỡ hình và nền tối chưa được đo thật. Đã ghi cỡ đúng ô hộp cũ và đo màu nền thật ở ca tối."},
+    {"i": 4, "p": "Biểu tượng trên nền tối và máy đã cài sẵn chưa được nói tới. Đã ghi rõ máy đã cài cập nhật thế nào và chụp biểu tượng trên hai nền."}
+  ]
+}
