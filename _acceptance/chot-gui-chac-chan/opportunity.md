@@ -3,10 +3,10 @@ schema_version: 1
 slug: chot-gui-chac-chan
 feature: "Đầu khách bấm Gửi và luôn biết chắc đã đi cái gì: bảng chia sẻ của điện thoại mở với đủ ảnh đã chuẩn bị sẵn, thiếu ảnh thì màn nói rõ trước khi mở, kết quả hiện ngay trong khung nhìn, bấm lại không sinh link thứ hai; Gửi căn, Hỏi đầu chủ và Báo sai đi chung một lối chia sẻ, người vẫn tự bấm gửi"
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided                # discovery | decided | archived
+decision: park   # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-09T09:53:04Z     # ISO UTC — chủ kho gõ ở phiên Q: «park»
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
