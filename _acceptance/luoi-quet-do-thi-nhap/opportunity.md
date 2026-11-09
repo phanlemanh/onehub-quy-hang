@@ -3,10 +3,10 @@ schema_version: 1
 slug: luoi-quet-do-thi-nhap
 feature: Bài quét khuôn giao diện đọc cả đồ thị nhập của màn chứ không chỉ page.tsx, và cấm Toaster ngoài vỏ; sáu chỗ đang có ghi ngoại lệ có hạn ở bản đồ khuôn theo ADR-0024 quyết định 9, mức nợ giữ trần 0.
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided              # discovery | decided | archived
+decision: park   # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-09T09:52:24Z   # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
@@ -28,3 +28,7 @@ Vì sao: Việc 1, mục 5 của docs/plan/tang-dieu-khien-ui.md (PR #233); tác
 - Kết quả nào là SỐNG: [đề xuất] Một màn đặt khung thừa ở tệp thân ngoài page.tsx thì bài quét đỏ; thêm một Toaster ngoài vỏ thì lint đỏ; sáu chỗ cũ có ngoại lệ có hạn, mức nợ vẫn 0
 - Kết quả nào là CHẾT: [đề xuất] chưa đạt «Một màn đặt khung thừa ở tệp thân ngoài page.tsx thì bài quét đỏ; thêm một Toaster ngoài vỏ thì lint đỏ; sáu chỗ cũ có ngoại lệ có hạn, mức nợ vẫn 0» khi hết timebox
 - Timebox: …
+
+## Cổng 0
+
+- **decision = park.** Căn cứ: chủ kho gõ «park» ở phiên dãy X, 09/11. Lý do chưa nêu.
