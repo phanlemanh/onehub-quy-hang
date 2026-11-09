@@ -1,0 +1,16 @@
+[buoc2] 200 GET http://localhost:3462/api/v1/leads
+[buoc2] 200 GET http://localhost:3462/api/v1/listings
+[buoc2] 200 GET http://localhost:3462/api/v1/leads
+[buoc3] 200 GET http://localhost:3462/api/v1/leads
+[buoc3] 200 GET http://localhost:3462/api/v1/leads
+[buoc3] 200 GET http://localhost:3462/api/v1/listings
+[buoc4] 500 GET http://localhost:3462/api/v1/leads
+[buoc4] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[buoc4] 500 GET http://localhost:3462/api/v1/leads
+[buoc4] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[buoc4] 200 GET http://localhost:3462/api/v1/listings
+[buoc5] FAILED GET http://localhost:3462/api/v1/leads net::ERR_FAILED
+[buoc5] console.error: Failed to load resource: net::ERR_FAILED
+[buoc5] FAILED GET http://localhost:3462/api/v1/leads net::ERR_FAILED
+[buoc5] console.error: Failed to load resource: net::ERR_FAILED
+[buoc5] 200 GET http://localhost:3462/api/v1/listings

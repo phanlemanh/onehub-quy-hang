@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>29 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>141 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>142 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -157,6 +157,7 @@ flowchart TD
 - Hàng vá va-ho-so-lien-he: ma trận vai phủ cả ba đường đọc liên hệ chủ nhà và đếm đủ ô (Ngoài-22 hàng 103); «Xem thêm» không trộn trang của bộ lọc cũ (AC-2 thấp hàng 103) (`va-ho-so-lien-he`)
 - Số điện thoại dính dấu tách trong khoá toà hay UPI bị hàm dựng và khuôn Xác nhận danh mục từ chối; khoá dạng thật của Invest vẫn qua. (`va-khuon-doan-sdt-ranh-gioi`)
 - Sự kiện báo sai của Xác nhận danh mục chỉ dựng được khi mã căn đúng dạng UPI như khuôn; phép quét rò rỉ của sự kiện đỏ được khi hàm dựng làm rò (đối chứng dương trên chính đường dựng); và phép quét cả lớp chuỗi đo được khuôn có chặn chữ tự do và dãy số dáng điện thoại, không chỉ «có khuôn». (`va-khuon-xac-nhan-bao-sai-quet-ro-ri`)
+- Lead đã nhập báo lỗi có nút Thử lại khi máy chủ trả nội dung hỏng, không treo mãi ở khung chờ (`va-lead-da-nhap-than-hong`)
 - Khi đọc danh sách căn ngoài khu bị lỗi mà máy chưa có bản giữ, Bảng hàng báo lỗi và có nút Thử lại, không âm thầm hiện các căn ngoài khu là «Chưa rõ». (`va-loi-doc-can-ngoai-khu`)
 - Vá mốc gọi đầu: lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ, mốc không đổi; lead đang giữ vẫn ghi gọi đầu như cũ (`va-moc-goi-dau-lead-tra-lai`)
 - Nút «Ghim lại hồ sơ cần bản thật» chạy được làn ghim lại trên máy chủ GitHub không cài kit: bước «Ghim lại» trỏ làn vào kit lấy theo tag; một phép đo chạy nguyên dòng lệnh của bước ấy như máy chủ GitHub để lỗi này không lọt lần nữa. (`va-nut-ci-ag-root`)
