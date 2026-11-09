@@ -52,14 +52,14 @@ evals:
     executor: script
     layer: backend-effect
     cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
-    expected: "exit 0; dòng ca sua-hong: dat true; hopMo, coCauLoi, dongNhuCu true, dongNhuCu đọc sau khi tải lại trang và đếm sổ trong cơ sở dữ liệu; đối chứng dương boChanLuuDuoc: bỏ chặn, cùng bản sửa ghi giá trị mới xuống cơ sở dữ liệu. Đo hồi quy: đường sửa đã có báo lỗi, mã trước sửa cũng đạt; chiều đỏ của phép đo là boChanLuuDuoc false khi bản sửa không tới máy chủ."
+    expected: "exit 0; dòng ca sua-hong: dat true; hopMo, coCauLoi, dongNhuCu true, dongNhuCu đọc sau khi tải lại trang và đếm sổ trong cơ sở dữ liệu; đối chứng dương boChanLuuDuoc: bỏ chặn, cùng bản sửa ghi xuống cơ sở dữ liệu đúng hai cặp đã gõ. Đo hồi quy: đường sửa đã có báo lỗi, mã trước sửa cũng đạt; chiều đỏ của phép đo là boChanLuuDuoc false khi bản sửa không tới máy chủ."
     paths: ["apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E7
     criterion: AC-7
     executor: script
     cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
-    expected: "exit 0; dòng ca kho-375: dat true; khungKhongTran, nutTrongMan, docDuocGhepVaoNguon (từng dòng: phần tử dòng phụ có kích thước, nằm trong hàng của nó, chứa đúng Ghép vào và Nguồn đọc ở khổ rộng), docDuocQuyDoi, hopXoaTrongMan, hopSuaTrongMan true; hai đối chứng dương: dongChungDuong (thước tràn bắt được khối rộng cài vào), dongPhuChungDuong (ẩn dòng phụ thì khoá đọc thành false). Chiều đỏ: truoc-sua.log có dòng ca này dat false."
+    expected: "exit 0; dòng ca kho-375: dat true; khungKhongTran, nutTrongMan, docDuocGhepVaoNguon (từng dòng, mỗi dòng một đích và một ngày nguồn riêng: phần tử dòng phụ có kích thước, nằm trong hàng của nó, chứa đúng Ghép vào, Quy đổi, Nguồn của chính dòng đó đọc ở khổ rộng; dòng không quy đổi không mang chữ «giá trị»), docDuocQuyDoi (dòng một khoá «1 giá trị», dòng hai khoá «2 giá trị»), hopXoaTrongMan, hopSuaTrongMan true; hai đối chứng dương: dongChungDuong (thước tràn bắt được khối rộng cài vào), dongPhuChungDuong (ẩn dòng phụ thì khoá đọc thành false). Chiều đỏ: truoc-sua.log có dòng ca này dat false."
     paths: ["apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E8
@@ -81,11 +81,11 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "Chạy node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --dung-man, đặt hạn lệnh 10 phút vì lệnh chờ tới lượt nếu lệnh đo máy đang chạy. Lệnh dựng chỗ thử dãy D, nạp nhãn và mẫu nhập, chụp năm ảnh vào _acceptance/va-cai-dat-mat-viec/evidence/ và để nguyên dữ liệu; in đường các ảnh."
+      - "Chạy node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --dung-man, đặt hạn lệnh 10 phút vì lệnh chờ tới lượt nếu lệnh đo máy đang chạy. Lệnh dựng chỗ thử dãy D, nạp nhãn và mẫu nhập, chụp năm ảnh vào _acceptance/va-cai-dat-mat-viec/evidence/, xong tự dọn dữ liệu thử và tắt máy dev; in đường các ảnh. Chỉ xem ảnh, không mở màn sống, không gọi lệnh tắt máy dev."
       - "Xem giu-nhan.png (Trạng thái sau «Giữ nhãn», 1440x900): đủ vỏ, nhãn sau còn, Lưu không khoá."
       - "Xem xoa-loi.png (hộp xoá có câu lỗi, 1440x900): hộp còn mở, câu lỗi đọc được, không đè nút."
       - "Xem mau-375.png và mau-375-hop.png (375x812): bảng không cuộn ngang, Sửa, Xoá trong màn, chữ dài ngắt dòng không đè cột nút; hộp nằm trong màn."
-      - "Xem mau-1440.png (1440x900): năm cột, đủ vỏ. Xong chạy node _acceptance/luat-chia-lead/thu/dung-d.mjs --tat."
+      - "Xem mau-1440.png (1440x900): năm cột, đủ vỏ."
     expected: "Năm ảnh đúng mô tả từng bước; không chữ đè nhau, không thành phần tràn màn."
     paths: ["apps/web/src/app/(app)/settings/statuses/**", "apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]

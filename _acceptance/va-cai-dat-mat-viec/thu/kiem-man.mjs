@@ -3,7 +3,7 @@
 //   node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs              # đo, xong tắt máy dev
 //   node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --giu-may    # đo, để máy dev chạy
 //   node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --ca a,b     # chỉ đo các ca nêu tên (khi gỡ lỗi; lượt chấm chạy cả tám)
-//   node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --dung-man   # dựng dữ liệu, chụp năm ảnh cho bài nhìn E10, để máy dev chạy
+//   node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --dung-man   # dựng dữ liệu, chụp năm ảnh cho bài nhìn E10, xong dọn dữ liệu và tắt máy dev
 // Dữ liệu thử nhãn mẫu, không tên người thật; mỗi ca dựng lại nhãn và mẫu nhập của sàn mẫu rồi trả lại.
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -19,7 +19,7 @@ const DUNG = path.join(GOC, "_acceptance/luat-chia-lead/thu/dung-d.mjs");
 const AXE = path.join(GOC, "node_modules/axe-core/axe.min.js");
 const ANH = path.join(GOC, "_acceptance/va-cai-dat-mat-viec/evidence");
 const DUNG_MAN = process.argv.includes("--dung-man");
-const GIU_MAY = process.argv.includes("--giu-may") || DUNG_MAN;
+const GIU_MAY = process.argv.includes("--giu-may");
 const iCa = process.argv.indexOf("--ca");
 const CHON = iCa > 0 ? process.argv[iCa + 1].split(",") : null;
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -52,6 +52,9 @@ if (!existsSync(AXE)) {
   console.error("thiếu axe-core");
   process.exit(2);
 }
+// Máy dev bật lại trên .next/dev cũ thì trang tự nạp lại liên tục.
+const songSan = await fetch(`${URL_GOC}/api/v1/health`).then((r) => r.status === 200).catch(() => false);
+if (!songSan) rmSync(path.join(GOC, "apps/web/.next/dev"), { recursive: true, force: true });
 const dung = spawnSync(process.execPath, [DUNG], { cwd: GOC, stdio: ["ignore", 2, 2] });
 if (dung.status !== 0) {
   console.error(`dựng chỗ thử hỏng (dung-d.mjs thoát ${dung.status})`);
@@ -84,7 +87,8 @@ const KHOA_QD = "Cột có quy đổi";
 const KHOA_XOA = "Cột sẽ xoá";
 const KHOA_BON = "Cột thử bốn";
 const KHOA_NAM = "Cột thử năm";
-const KHOA_MAU = [KHOA_DAI, KHOA_QD, KHOA_XOA, KHOA_BON, KHOA_NAM, "Cột thử sáu"];
+const KHOA_SAU = "Cột thử sáu";
+const KHOA_MAU = [KHOA_DAI, KHOA_QD, KHOA_XOA, KHOA_BON, KHOA_NAM, KHOA_SAU];
 
 async function donNhan() {
   await db.query("delete from listings where company_id = $1 and unit_number like $2", [SAN, `${MA_THU}%`]);
@@ -124,10 +128,12 @@ async function napNhan(n) {
 }
 async function napMau() {
   await donMau();
-  for (const k of KHOA_MAU) {
+  // Mỗi dòng một đích, một ngày nguồn, và hai dòng số quy đổi khác nhau, để phép đo theo từng dòng phân biệt được các dòng.
+  const DICH = { [KHOA_DAI]: ["directionFaces", { Dong: "Đông", Tay: "Tây" }], [KHOA_QD]: ["buildingName", { A: "[Mẫu] Toà A" }], [KHOA_XOA]: ["keep_as_note", null], [KHOA_BON]: ["subdivisionName", null], [KHOA_NAM]: ["feeInclusion", null], [KHOA_SAU]: ["standardStatus", null] };
+  for (const [i, k] of KHOA_MAU.entries()) {
     await db.query(
-      "insert into import_templates (company_id, header_key, action, target, value_map, edited_by) values ($1, $2, 'set', $3, $4, $5)",
-      [SAN, k, k === KHOA_QD || k === KHOA_DAI ? "buildingName" : "keep_as_note", k === KHOA_QD ? { A: "[Mẫu] Toà A" } : null, phien.nguoi.qt],
+      "insert into import_templates (company_id, header_key, action, target, value_map, edited_by, edited_at) values ($1, $2, 'set', $3, $4, $5, now() - make_interval(days => $6))",
+      [SAN, k, DICH[k][0], DICH[k][1], phien.nguoi.qt, i],
     );
   }
 }
@@ -338,22 +344,23 @@ const CA = {
     await t2.gui("Input.insertText", { text: "\nB → [Mẫu] Toà B" });
     await bamBieuThuc(t2, nutTrong(HOP_THUONG, "Lưu"), "Lưu trong hộp sửa");
     await t2.cho(`!${HOP_THUONG}`, 15000).catch(() => {});
-    const boChanLuuDuoc = Object.keys((await dongSoMau(KHOA_QD))?.value_map ?? {}).length === 2;
+    const moi = (await dongSoMau(KHOA_QD))?.value_map ?? {};
+    const boChanLuuDuoc = coi(Object.entries(moi).sort()) === coi([["A", "[Mẫu] Toà A"], ["B", "[Mẫu] Toà B"]]);
     await dong(t2);
     return { hopMo, coCauLoi, dongNhuCu, boChanLuuDuoc, dat: hopMo && coCauLoi && dongNhuCu && boChanLuuDuoc };
   },
   async "kho-375"() {
     await napMau();
     const rong = await manMau();
-    const docRong = await rong.tinh(`Object.fromEntries([...document.querySelectorAll("tbody tr")].map((r) => [r.cells[0].textContent.trim().slice(0, 40), [r.cells[1].innerText.trim(), r.cells[3].innerText.trim()]]))`);
+    const docRong = await rong.tinh(`Object.fromEntries([...document.querySelectorAll("tbody tr")].map((r) => [r.cells[0].firstChild.textContent.trim(), [r.cells[1].innerText.trim(), r.cells[2].innerText.trim(), r.cells[3].innerText.trim()]]))`);
     await dong(rong);
     const t = await manMau(375, 812);
     const khung = await khungKhongTran(t);
     const nutTrongManDat = await t.tinh(`(() => { const nut = [...document.querySelectorAll("tbody tr button")]; return nut.length >= 12 && nut.every((b) => { const x = b.getBoundingClientRect(); const c = ${BANG}.getBoundingClientRect(); return x.left >= c.left - 0.5 && x.right <= Math.min(c.right, innerWidth) + 0.5; }); })()`);
-    const doDongPhu = `(() => { const rong = ${coi(docRong)}; const dong = [...document.querySelectorAll("tbody tr")]; return dong.length >= 6 && dong.every((r) => { const k = Object.keys(rong).find((x) => r.cells[0].textContent.trim().startsWith(x)); const p = r.querySelector("[data-dong-phu]"); if (!k || !p) return false; const b = p.getBoundingClientRect(); const h = r.getBoundingClientRect(); return b.width > 0 && b.height > 0 && b.top >= h.top - 0.5 && b.bottom <= h.bottom + 0.5 && rong[k].every((chu) => p.innerText.includes(chu)); }); })()`;
+    const doDongPhu = `(() => { const rong = ${coi(docRong)}; const dong = [...document.querySelectorAll("tbody tr")]; return dong.length >= 6 && dong.every((r) => { const giaTri = rong[r.cells[0].firstChild.textContent.trim()]; const p = r.querySelector("[data-dong-phu]"); if (!giaTri || !p) return false; const b = p.getBoundingClientRect(); const h = r.getBoundingClientRect(); const [truong, quyDoi, nguon] = giaTri; const chu = p.innerText; return b.width > 0 && b.height > 0 && b.top >= h.top - 0.5 && b.bottom <= h.bottom + 0.5 && chu.includes("Ghép vào " + truong) && chu.includes(nguon) && (quyDoi === "—" ? !chu.includes("giá trị") : chu.includes(quyDoi)); }); })()`;
     const docDuocGhepVaoNguon = await t.tinh(doDongPhu);
     const dongPhuChungDuong = await t.tinh(`(() => { const ds = [...document.querySelectorAll("[data-dong-phu]")]; ds.forEach((p) => { p.style.display = "none"; }); const kq = ${doDongPhu}; ds.forEach((p) => { p.style.display = ""; }); return ds.length >= 6 && kq === false; })()`);
-    const docDuocQuyDoi = await t.tinh(`!!${dongMau(KHOA_QD)}.querySelector("[data-dong-phu]")?.innerText.includes("1 giá trị")`);
+    const docDuocQuyDoi = await t.tinh(`!!${dongMau(KHOA_QD)}.querySelector("[data-dong-phu]")?.innerText.includes("1 giá trị") && !!${dongMau(KHOA_DAI)}.querySelector("[data-dong-phu]")?.innerText.includes("2 giá trị")`);
     await bamBieuThuc(t, nutDong(KHOA_DAI, "Xoá"), "Xoá của dòng dài");
     const hopXoaTrongMan = await hopTrongMan(t, HOP_TRANG);
     await bamBieuThuc(t, nutTrong(HOP_TRANG, "Huỷ"), "Huỷ hộp xoá");
