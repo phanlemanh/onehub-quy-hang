@@ -8,11 +8,11 @@
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
   GD --> B["Sắp mở vòng<br/>3 việc"]
-  GD --> XL["Xếp lại sau<br/>chưa có"]
+  GD --> XL["Xếp lại sau<br/>2 việc"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>28 việc"]
+  GB --> DG["Đã giao<br/>29 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>137 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
@@ -186,6 +186,7 @@ flowchart TD
 - Vá nạp mẫu bản thật — căn mẫu Đang bán nhận một ảnh thật vẽ bằng mã trước khi lên Đang bán, để nút «Nạp dữ liệu mẫu» chạy trọn trên sàn mới sau luật ảnh thật của hàng 23 (`nap-mau-co-anh`)
 - Phiên đăng nhập giữ 30 ngày thay vì 7, vẫn trượt theo ngày dùng (`phien-dang-nhap-30-ngay`)
 - Đầu chủ tải ảnh điện thoại tới 10 MB lên hồ sơ căn trên bản thật mà không bị chặn ở giới hạn máy chủ, mở lại hồ sơ không thấy ảnh vỡ, và thấy lời báo khi sửa hay xoá ảnh không thành (`va-anh-ban-that`)
+- Bài kiểm sổ chi phí AI của ô lạ không còn đỏ ngẫu nhiên vì mã máy và giờ ghi, mà vẫn đỏ khi số điện thoại lọt vào sổ dưới bất kỳ dạng nào. (`va-bai-o-la-do-ngau-nhien`)
 - Mở Bảng hàng (máy tính và điện thoại) không còn lỗi hydration trên console: lượt dựng đầu trên máy khách giống lượt dựng trên máy chủ, dữ liệu trên máy hiện ngay lượt sau; giao diện và hành vi không đổi. (`va-bang-hang-hydration`)
 - Vá Che vùng ảnh — trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ (`va-che-vung-anh`)
 - Job secrets của CI chỉ quét đúng lịch sử của commit đang xét, vẫn phủ toàn bộ lịch sử main và nhánh PR; giá trị trên một nhánh khác không còn làm đỏ main và PR khác. (`va-ci-secrets-quet-dung-lich-su`)
@@ -202,3 +203,8 @@ flowchart TD
 - Vá Sẵn sàng bán — chuyển căn hay điền xong thì «Còn thiếu» và «Chưa có» làm mới đúng căn đang xem; nút chỉ báo đã gửi khi lệnh vào hàng đợi, không vào thì báo lỗi và giữ nút bấm lại được (`va-san-sang-ban`)
 - Vá sửa trên ô: dòng «Hiểu là» đọc lại đúng số máy ghi, không làm tròn; nút Hoàn tác trên thông báo hoàn tác đúng lần sửa của chính nó và không ghi đè lần sửa sau (`va-sua-tren-o`)
 - Vá Thông báo lead — chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo (`va-thong-bao-lead`)
+
+## Xếp lại sau
+
+- Đầu khách bấm Gửi và luôn biết chắc đã đi cái gì: bảng chia sẻ của điện thoại mở với đủ ảnh đã chuẩn bị sẵn, thiếu ảnh thì màn nói rõ trước khi mở, kết quả hiện ngay trong khung nhìn, bấm lại không sinh link thứ hai; Gửi căn, Hỏi đầu chủ và Báo sai đi chung một lối chia sẻ, người vẫn tự bấm gửi (`chot-gui-chac-chan`)
+- Bài quét khuôn giao diện đọc cả đồ thị nhập của màn chứ không chỉ page.tsx, và cấm Toaster ngoài vỏ; sáu chỗ đang có ghi ngoại lệ có hạn ở bản đồ khuôn theo ADR-0024 quyết định 9, mức nợ giữ trần 0. (`luoi-quet-do-thi-nhap`)
