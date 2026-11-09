@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { after, test } from "node:test";
-import { appPool, capToken, choQuaHan, doiTrangThai, donDep, goi, NGAY, sanMoi, thanhVien, themThoaThuan, thuHoi, tokensCua } from "./chung";
+import { appPool, capToken, choQuaHan, demNhatKy, doiTrangThai, donDep, FEED, goi, goiMau, NGAY, sanMoi, thanhVien, themThoaThuan, thuHoi, tin, tokensCua } from "./chung";
 
 after(donDep);
 
@@ -51,6 +51,11 @@ test("cấp token: hiện một lần, lưu băm", async () => {
   assert.deepEqual(Object.keys(dong[0]!).sort(), ["createdAt", "displayPrefix", "id", "revokedAt"]);
   assert.ok(!than.includes(cap.token), "danh sách lộ token rõ");
   assert.ok(!than.includes(bam), "danh sách lộ băm");
+
+  // Một lời gọi nhận thật, để bảng nhật ký cũng có dòng khi quét.
+  await tin(s.companyId);
+  assert.equal((await goi("POST", FEED, { bearer: cap.token, body: goiMau("e1") })).status, 200);
+  assert.equal(await demNhatKy(cap.id), 1);
 
   const quet = await quetCot(s.companyId, cap.token);
   assert.deepEqual(quet.thay, [], "có cột chứa token rõ");
