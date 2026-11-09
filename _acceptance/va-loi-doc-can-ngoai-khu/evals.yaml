@@ -1,0 +1,73 @@
+schema_version: 1
+feature_slug: va-loi-doc-can-ngoai-khu
+# Lệnh máy: executors.test.web, executors.script.typecheck, executors.design.*. ui-check trên chỗ thử dãy X: thu/dung.mjs dựng trên
+# chỗ thử hàng 79 (Postgres 5576, máy dev 3496); Chrome không đầu. Hai câu báo viết trước ở AC-1 và AC-5 của hợp đồng; bài kiểm đọc
+# nguyên văn từ contract.md, không so với hằng do mã tự đặt.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**", "_acceptance/va-loi-doc-can-ngoai-khu/contract.md"]
+    expected: "exit 0; apps/web/src/app/(app)/inventory/loi-doc-can-ngoai-khu.test.ts ca «đọc lỗi» — bảng viết trước mười ca, assert số ca chạy = 10: fetch ném lỗi; 401; 404; 500; 503; 200 thân không phải JSON (trang HTML); 200 thân không có units; 200 units không phải mảng; 200 units có phần tử null; 200 units có phần tử thiếu unparsedAddress. Mỗi ca qua docCanNgoaiKhu không ném lỗi và ra đúng { kind: loi }. Đối chứng hai chiều cùng dữ liệu: 200 units hợp lệ ra { kind: xong } với danh sách viết trước, và bản nuốt lỗi như lối cũ cho ca 500 ra khác loi. Ca «chữ báo»: cauBaoLoiDoc ra đúng câu của AC-1, đọc nguyên văn từ contract.md của hồ sơ."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; cùng tệp ca «đọc được thì ghép đúng» — kq xong đi qua capNhatBanGiuNgoaiKhu rồi chiMuc và ghepDanhMuc thật: dòng ngoài khu có propertySubType và buildingName bằng địa chỉ đã gõ viết trước, bản giữ đọc lại qua docBanGiuNgoaiKhu bằng danh sách; đối chứng cùng hàng khi chưa đọc được ra loại «Chưa rõ»; canBaoNgoaiKhu chuyển từ true sang false."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; cùng tệp ca «bản giữ» — bảng viết trước năm ca, assert số ca = 5, kho chữ nạp chuỗi thật rồi đi qua capNhatBanGiuNgoaiKhu(kho, san, null) và canBaoNgoaiKhu với đọc lỗi: vắng → báo; chuỗi hỏng (JSON cắt cụt) → báo, không ném lỗi; rỗng → không báo; thiếu một căn → không báo; đủ → không báo và ghepDanhMuc ra đúng loại hình, địa chỉ viết trước."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; cùng tệp ca «không có hàng ngoài khu» — bảng hai ca (bảng chỉ căn hộ, bảng rỗng), đọc lỗi, không bản giữ: canBaoNgoaiKhu false, cauBaoLoiDoc null; đối chứng cùng dữ liệu thêm một hàng ngoài khu thì ra câu báo của AC-1."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**", "_acceptance/va-loi-doc-can-ngoai-khu/contract.md"]
+    expected: "exit 0; cùng tệp ca «một vùng một báo» — ma trận viết trước bốn tổ hợp (danh bạ lỗi có/không × báo ngoài khu có/không), assert số ca = 4: cả hai ra đúng câu của AC-5 đọc từ contract.md; chỉ danh bạ ra đúng chữ «Chưa đọc được danh bạ thành viên — cột Đầu chủ có thể thiếu tên»; chỉ ngoài khu ra đúng câu của AC-1; không lỗi ra null."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/va-loi-doc-can-ngoai-khu/thu/dung.mjs rồi node _acceptance/va-loi-doc-can-ngoai-khu/thu/chay-ui.mjs --ra _acceptance/va-loi-doc-can-ngoai-khu/evidence"
+      - "Đối chiếu dòng JSON. ca1 (ngắt mạng danh sách căn ngoài khu bằng Network.setBlockedURLs, bản giữ đã xoá): dau.bao đúng câu AC-1, trongKhung true, nutThuLai 1, chuaRo ≥ 1, soDong ≥ 1; cho.soLanDocThem = 0 sau 8 giây; vanChan: soLanDoc tăng đúng 1 (đối chứng bộ đếm), bao còn; giuaChung (phản hồi làm chậm): bao còn; sau: soLanDoc tăng đúng 1, trạng thái máy chủ 200 đọc từ performance, bao null, chuaRo = 0, dong chứa đúng loại hình và địa chỉ đã gõ, banGiu true. taiLai (ngắt lại, nạp lại trang): bao null, chuaRo = 0, dong đúng. ca500 (máy chủ trả 500, bản giữ đã xoá): bao đúng câu AC-1. ca2 (ngắt thêm danh bạ, bản giữ đã xoá): soBao = 1, nutThuLai = 1, chữ đúng câu AC-5; bỏ ngắt và bấm: soBao = 0, cả hai bộ đếm tăng đúng 1."
+    target: "http://localhost:3496/inventory"
+    expected: "Ảnh E6-bao.png, E6-sau.png, E6-ca-hai.png khớp từng ca; dòng JSON khớp."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E7
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.typecheck
+    paths: ["apps/web/src/**"]
+    expected: "exit 0; kiểm kiểu mọi gói xanh."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E8
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "apps/web/src/app/(app)/inventory/page.tsx", "apps/web/src/app/(app)/inventory/views/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E9
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/ho-so/**"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
