@@ -5,7 +5,7 @@ slug: va-khuon-v2-moc-tuong-lai
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: approved
+status: implemented
 approved_by: Manh Phan
 approved_at: 2026-11-10
 design_doc: docs/superpowers/specs/2026-11-09-va-khuon-v2-moc-tuong-lai-design.md
