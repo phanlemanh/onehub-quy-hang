@@ -1,0 +1,24 @@
+{
+  "man": "Hôm nay của mọi vai — một danh sách việc hay bốn vùng",
+  "khuyen": {
+    "loi": "trong-kho",
+    "ly_do": "Trả lời đúng câu của nhà Hôm nay «giờ làm gì?», đúng cách Keller Williams, Follow Up Boss và HubSpot làm (một trang việc, vai chỉ đổi phạm vi nhìn), và dùng lại dòng việc đầu chủ chủ kho đã duyệt ở quyết định 14A nên không thêm ngữ pháp mới."
+  },
+  "loi": {
+    "trong-kho": {
+      "nhan": "Một danh sách việc, cùng một kiểu dòng — dòng solution-agents-2 đang chạy ở Hôm nay đầu chủ",
+      "dong_co": "Một câu trả lời cho «giờ làm gì?»: người đủ vai và người một vai đọc cùng một thứ, số việc đếm được, cột thứ hai có số.",
+      "danh_doi": "Bảng theo đầu chủ, Lead đã nhập, tin 7 ngày rời Hôm nay sang nhà của chúng; việc đầu khách chưa có nút xong nên phải tự hết sau một khoảng giờ."
+    },
+    "reui": {
+      "nhan": "Thẻ theo vai bằng tabs của ReUI, mỗi thẻ giữ khối đang có",
+      "dong_co": "Đổi ít nhất: hết xếp chồng, các khối đã ký giữ nguyên, người một vai không thấy thẻ.",
+      "danh_doi": "Vẫn bốn màn với bốn kiểu dòng; người đủ vai phải bấm qua từng thẻ mới biết tổng số việc, và cột thứ hai vẫn không biết đếm gì."
+    },
+    "ve-moi": {
+      "nhan": "Hai cột ghép từ Frame — danh sách việc bên trái, «Nhìn nhanh» số đội và khách bên phải",
+      "dong_co": "Giữ được cái nhìn tổng cạnh việc phải làm, không ai phải sang nhà khác để liếc số.",
+      "danh_doi": "Cột việc hẹp đi còn khoảng hai phần ba nên khổ 1440 cắt mất tiêu đề cột hành động; cột phải là một khối tự ghép, không theo bố cục nào đã có."
+    }
+  }
+}

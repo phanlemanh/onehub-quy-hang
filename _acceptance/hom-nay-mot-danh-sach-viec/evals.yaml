@@ -1,0 +1,201 @@
+schema_version: 1
+feature_slug: hom-nay-mot-danh-sach-viec
+# Lệnh máy: executors.test.web, executors.test.api_db (cần DATABASE_URL tới Postgres riêng), executors.design.khuon.
+# ui-check mở máy dev với sàn mẫu; người chấm đối chiếu tên ca trong `expected` với dòng reporter của node --test: có mặt, ok, không SKIP.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Đăng nhập tài khoản mẫu đủ năm vai; đo ở khổ 1440 và 1912"
+      - "Đếm main, h1; đo x và right của danh sách so với vùng data-vung=than; chụp E1-1440.png, E1-1912.png"
+    expected: "main = 1, h1 = 1, đường dẫn ở đầu màn; không có [aria-label='Hôm nay của trưởng nhóm'], bảng Lead đã nhập, Timeline; lệch mép danh sách so với vùng nội dung = 0 px ở cả hai khổ. Chiều đỏ: dựng lại trên main cũ cho lệch 164 px."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E1b
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Mỗi vai mẫu ở trạng thái không còn việc: ghi đích của nút đi tiếp"
+      - "Quản trị mẫu chỉ giữ vai Quản trị gõ /today"
+    expected: "Mỗi vai đúng một câu và một nút đi tiếp có đích khác trang tạm; quản trị về /settings, trang không có chữ «mục 22»; telesales hết việc vẫn có dòng Lead đã nhập."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «gộp việc: năm nguồn, nhóm quá hạn trước» và «gộp việc: số đầu màn bằng số dòng» có mặt và ok; ca «gộp việc: bộ nhóm sàn có nhóm không hạn đứng trước giữ thứ tự» có mặt và ok; ma trận viết trước năm vai × tám loại việc, ô vai không có loại ấy ghi tường minh «không có dòng», ô còn lại đúng một nút chính; đối chứng: bản cố ý bỏ một nguồn thì ca đỏ với thông điệp nêu tên nguồn."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2b
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Điều kiện trước: sàn thử có đủ tám loại việc, mỗi loại ít nhất một dòng, thiếu thì đỏ. Người đủ vai ở khổ 1440: đo scrollWidth và clientWidth mọi nút chính trên dòng; chụp E2b-1440.png"
+    expected: "Không nút nào scrollWidth > clientWidth; mỗi dòng đúng một nút chính và một ⋯; số ở đầu màn bằng số dòng việc đếm trên trang, dòng «Lead đã nhập (N)» không được tính."
+    paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/components/khoi/solution-agents-2/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Trưởng nhóm mẫu, hai lead quá hạn; bấm Giao lại trên một dòng, chọn đầu chủ B; chụp trước và sau"
+      - "Đọc GET /api/v1/team/lead-queue và /api/v1/leads/assigned bằng phiên của đầu chủ B"
+      - "Lặp với một lead ở nhóm Chưa chia được"
+    expected: "Dòng rời danh sách, số giảm một, không tải lại trang; lead vừa giao không còn ở hàng đợi và có trong /leads/assigned của đúng đầu chủ B; lead còn lại vẫn ở hàng đợi; ca Chưa chia được cho cùng kết quả."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.api_db
+    expected: "exit 0; ca «hàng đợi trưởng nhóm: giao lại rời hàng đợi» có mặt và ok: sau POST /leads/{id}/assign lead không còn ở GET /team/lead-queue, đầu chủ nhận thấy ở /leads/assigned; đối chứng: lead không giao vẫn còn; vai khác nhận 403."
+    paths: ["packages/api/src/team/**", "packages/api/test-db/hom-nay-truong-nhom.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «gộp việc: chỉ lead bị trả lại thành việc của telesales» có mặt và ok, ma trận viết trước tám nấc lead, chỉ `returned` thành việc; đối chứng dương trên chính nấc ấy."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4b
+    criterion: AC-4
+    executor: ui-check
+    layer: backend-effect
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Telesales mẫu có một lead bị trả lại; bấm Sửa số, nhập 0900 000 0xx, gửi; đọc GET /api/v1/leads trước và sau"
+    expected: "Lead gốc chuyển resubmitted ở máy chủ và rời danh sách; có dòng «Lead đã nhập (N)», N bằng độ dài GET /api/v1/leads."
+    paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/leads/mine/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «gộp việc: tin đầu khách tự hết sau 48 giờ» có mặt và ok ở mốc 47:59 và 48:01 với đồng hồ truyền vào; ca «dòng đầu khách không có khoá lớp nguồn» so tập khoá với danh sách viết trước."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5b
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Đầu khách mẫu có đủ ba loại tin, dữ liệu đi qua API thật (gửi link, khách mở, căn đổi giá, căn mới khớp), không fixture tay"
+      - "Bấm từng dòng, so URL đích với bảng viết trước: phản ứng và vừa đổi về /shares?lan=, căn mới về /shares/new?can="
+      - "Quét văn bản mọi dòng ở cả bốn vai bằng mồi số khách 0900 000 0xx và mồi trường lớp nguồn"
+    expected: "Ba loại đủ dòng, đích đúng bảng; mồi không xuất hiện ở dòng của vai không được xem; đối chứng: mồi có mặt ở dữ liệu nguồn."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E6
+    criterion: AC-6
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/team"
+    steps:
+      - "Trưởng nhóm mẫu mở /team, đối chiếu ba ô số với GET /team/lead-queue; đầu khách mở /team"
+    expected: "Ba ô số và bảng theo đầu chủ hiện đúng số; có đường dẫn ở đầu màn; không còn «Màn này đang dựng»; đầu khách không vào được."
+    paths: ["apps/web/src/app/(app)/team/**", "apps/web/src/components/khoi/dashboard-6/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E7
+    criterion: AC-7
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/shares/tin"
+    steps:
+      - "Đầu khách mẫu có một link đã mở; mở Tin của khách ở khổ 1440, đo bề rộng cột tin"
+    expected: "Tin hiện đủ, cột rộng 768 px căn giữa."
+    paths: ["apps/web/src/app/(app)/shares/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «cột hai: nhóm theo vai, nhãn theo sàn, số theo nhóm, một mục sáng» có mặt và ok, ma trận viết trước sáu tổ hợp vai; đối chứng: nguồn lỗi thì mục không có số; ca «sổ điểm biến thiên có dòng điều khoá của nhóm và mốc 48 giờ» đọc đúng tệp sổ."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Người đủ vai, sàn đổi tên một nhóm của Trưởng nhóm; so số từng mục cột hai với số dòng nhóm trên cùng trang, lặp khi một nguồn trả 500"
+      - "Mở /today, /today?nhom=<hợp lệ>, /today?nhom=la; đếm aria-current"
+    expected: "Nhãn mới ở cả cột và thân; số khớp từng mục, mục của nguồn lỗi không có số; ba địa chỉ đều đúng một aria-current."
+    paths: ["apps/web/src/components/shell/**", "apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E9
+    criterion: AC-9
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; ca «gộp việc: nguồn lỗi không thành rỗng», «đọc lại: 500 rồi 200 tự hồi», «đọc lại: 500 hai lần báo một dòng», «đọc lại: có mạng trở lại đọc đúng nguồn lỗi» có mặt và ok với fetch giả; ghim chữ báo nêu tên nguồn; đối chứng: nguồn ok rỗng thì được báo hết việc."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9b
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Người đủ vai; chặn GET /api/v1/team/lead-queue trả 500 hai lần trong trình duyệt; chụp E9b-1440.png; bỏ chặn, bấm Thử lại"
+      - "Ngắt mạng trình duyệt: đếm dải ngoại tuyến và dòng báo theo nguồn; bật lại mạng, không bấm gì"
+    expected: "Đúng một dòng «Chưa tải được lead quá hạn» và một «Thử lại»; không câu «không có việc» nào cho nguồn ấy; sau khi bỏ chặn nhóm hiện lại; mất mạng đúng một dải, 0 dòng báo theo nguồn; có mạng lại thì nhóm tự hiện."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/today"
+    steps:
+      - "Khổ 375 ở bốn vai; đo tên căn có bị cắt không; trưởng nhóm bấm Giao lại, chọn đầu chủ trong ngăn đáy, đọc lại GET /api/v1/team/lead-queue; chụp E10-*.png"
+    expected: "Không tên căn nào bị nút ép cắt; giao lại mở ngăn đáy và lead rời hàng đợi ở máy chủ; không còn «mở trên máy tính»."
+    paths: ["apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+
+  - id: E11
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    expected: "exit 0; 0 lệch mới ở nhóm hom-nay-dau-chu; các khai ngoai_le của hom-nay-truong-nhom và lead-cua-toi cho /today đã gỡ."
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

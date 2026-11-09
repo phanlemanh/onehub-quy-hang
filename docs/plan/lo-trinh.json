@@ -3054,6 +3054,12 @@
         "packages/db/migrations/053_*.sql",
         "_acceptance/tao-can-tay/**"
       ]
+    },
+    {
+      "ma": "hom-nay-mot-danh-sach-viec",
+      "cau_giao": "Mở Hôm nay, mỗi người thấy một danh sách việc của mình, cùng một kiểu dòng cho mọi vai, chia nhóm theo bộ nhóm của sàn; phần theo dõi về đúng nhà: bảng theo đầu chủ về Đội, Lead đã nhập về trang Lead đã nhập, tin phản ứng của khách về Đã gửi",
+      "slug": "hom-nay-mot-danh-sach-viec",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-09"
     }
   ],
   "chan_troi": [
