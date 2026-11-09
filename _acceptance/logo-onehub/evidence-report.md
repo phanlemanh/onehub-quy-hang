@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 417a496f1f8f7910056669c7bb8edf29ea3c6c88
+verified_commit: 41975a51a71b8752366c69a3c338524473b9abca
 human_signoff:
 ---
 
@@ -208,3 +208,7 @@ none — every multi-run eval is uniform
 ## Iterations
 
 Round 1: tất cả eval đạt, không eval nào hỏng; chờ người ký ở Cổng 2.
+
+### Re-pin lần 1 — 2026-11-09, do gop-main-9-11
+run_id: repin-20261109T052520Z-15458
+sha: 41975a51a71b8752366c69a3c338524473b9abca · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng · ngoài làn máy: E5, E6, E7, E10, E9 · AC không có chốt máy: AC-1, AC-2, AC-4, AC-7 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
