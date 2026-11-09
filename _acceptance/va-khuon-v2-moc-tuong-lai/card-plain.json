@@ -1,0 +1,84 @@
+{
+  "feature_plain": "Vá ba lỗ của khuôn danh mục v2: gói có mốc đo ở tương lai không còn làm đứng yên số thị trường của một khu, tên miền đuôi lạ như zalo.me bị chặn, và mốc đo sai múi giờ báo đúng lỗi khuôn thay vì lỗi máy chủ.",
+  "will_do": [
+    {
+      "id": "AC-1",
+      "p": "Sẽ từ chối gói có mốc đo vượt giờ hiện tại quá dung sai, ở cả bốn vị trí có mốc đo."
+    },
+    {
+      "id": "AC-2",
+      "p": "Sẽ giữ nguyên số của khu khi gói bị từ chối, và gói đúng sau đó vẫn thay được."
+    },
+    {
+      "id": "AC-3",
+      "p": "Sẽ từ chối gói có tên miền đuôi lạ như zalo.me, t.me, nhadat.land ở mọi trường chữ."
+    },
+    {
+      "id": "AC-4",
+      "p": "Sẽ vẫn nhận tên có dấu chấm như A.2305, Tp.HCM, H.Me Linh và khoá do máy cấp."
+    },
+    {
+      "id": "AC-5",
+      "p": "Sẽ báo đúng lỗi khuôn cho mốc đo cơ sở dữ liệu không nhận, thay vì lỗi máy chủ."
+    }
+  ],
+  "wont_do": [
+    {
+      "id": "AC-6",
+      "p": "Sẽ KHÔNG đổi hình khuôn: gói đúng trước đây vẫn được nhận."
+    },
+    {
+      "id": "OOS-1",
+      "p": "KHÔNG sửa số nguyên vượt trần và ký tự rỗng; đã ghi hạn chế ở hàng trước."
+    },
+    {
+      "id": "OOS-2",
+      "p": "KHÔNG làm việc gỡ ảnh chụp đã đóng băng; chưa có gói thật nào."
+    },
+    {
+      "id": "OOS-3",
+      "p": "KHÔNG áp lưới tên miền cho khuôn phiên bản 1."
+    }
+  ],
+  "scope_plain": "Những việc dưới đây cố ý để ngoài hàng này.",
+  "coverage_plain": [
+    {
+      "i": 0,
+      "p": "Đã xét đủ ba lỗ: mốc tương lai, tên miền, mốc đo cơ sở dữ liệu không nhận (AC-1 đến AC-5)."
+    },
+    {
+      "i": 1,
+      "p": "Đã xét mọi vị trí có mốc đo và mọi trường chữ do người gõ (AC-1, AC-3, AC-4, AC-5)."
+    },
+    {
+      "i": 2,
+      "p": "Đã xét giá trị vượt, đúng biên và trong khoảng (AC-1, AC-5)."
+    },
+    {
+      "i": 3,
+      "p": "Đã xét cả tài khoản quản trị và khoá máy (AC-2, AC-5)."
+    }
+  ],
+  "gap_probe_plain": [
+    {
+      "i": 0,
+      "p": "Lưới tên miền mới có thể chặn nhầm khoá do máy cấp: đã miễn cho khoá máy và thêm ca kiểm."
+    },
+    {
+      "i": 1,
+      "p": "Lối khuyến nghị bắt nhầm vài địa danh viết tắt mà câu hỏi chưa nói: đã bỏ các đuôi ngắn dễ nhầm và nêu rõ giá ở câu hỏi 2."
+    },
+    {
+      "i": 2,
+      "p": "Phép đo mốc đo lạ thiếu vị trí và một đường vào: đã đo đủ bốn vị trí và hai đường."
+    },
+    {
+      "i": 3,
+      "p": "Điều kiện «ảnh chụp của khu không đổi» chỉ đo cho một trong ba lỗ: đã đo cả ba, trên khu đã có ảnh chụp."
+    },
+    {
+      "i": 4,
+      "p": "Chỗ đặt phép kiểm mốc tương lai máy tự quyết chưa đủ căn cứ: đã thành câu hỏi 3."
+    }
+  ]
+}

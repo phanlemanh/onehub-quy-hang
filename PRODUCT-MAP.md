@@ -11,7 +11,7 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>2 việc"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>29 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>142 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
@@ -25,6 +25,10 @@ flowchart TD
 ## Sắp mở vòng
 
 - Người trong sàn thấy chữ trên mọi màn theo ba lớp đã chốt: «Lead» chỉ còn là dấu trên một liên hệ chưa nói chuyện hai chiều, còn việc với một người (bán, cho thuê, mua, thuê) hiện là «Cơ hội» với nhãn pha đã chốt ở Cổng Phạm vi hàng 103 — đổi một lượt cho cả bàn làm việc, nút «+ Lead» và «Gửi lead» giữ nguyên. (`doi-chu-lead-co-hoi`)
+
+## Đang làm
+
+- Gói danh mục có mốc đo ở tương lai bị từ chối thay vì đóng băng ảnh chụp của khu với mọi sàn; bộ chặn tên miền nhận đuôi bất kỳ (zalo.me, t.me, .land); mốc đo có phút múi giờ từ 60 trở lên báo sai khuôn thay vì lỗi máy chủ. (`va-khuon-v2-moc-tuong-lai`)
 
 ## Đã giao — chờ phiên nghiệm thu
 

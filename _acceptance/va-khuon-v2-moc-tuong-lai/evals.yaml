@@ -1,0 +1,55 @@
+schema_version: 1
+feature_slug: va-khuon-v2-moc-tuong-lai
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi output có tên ca và ok; ma trận viết trước, số lần so đếm bằng biến tăng trong vòng lặp và so với độ dài ma trận viết trước.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «mốc tương lai: ma trận» ok trong packages/connect/src/catalog-feed-va.test.ts — bốn vị trí viết trước, now cố định truyền vào parseCatalogFeed, mốc vượt dung sai một giây mỗi ô đúng một lỗi đúng đường khoá, thông điệp nêu tương lai; số lần so bằng 4. Đối chứng: đúng biên dung sai và quá khứ ở cùng bốn vị trí được nhận. Chiều đỏ: gọi với now lùi một năm thì gói mẫu đỏ đúng các đường mốc."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_db
+    expected: "exit 0; ca «từ chối: khu không đổi» ok trong packages/api/test-db/khuon-v2/va-moc.test.ts — ma trận viết trước ba lỗi (mốc năm 2099, tên miền zalo.me ở tên toà, phút múi giờ +07:60) × hai đường vào; khu có ảnh chụp từ gói đúng (đối chứng); gói lỗi 422 invalid-feed, so toàn nội dung measured_at, segments, listings, agreement_id, field_confidence trước và sau bằng nhau; đường token thêm đúng một dòng invalid_payload; rồi gói mốc mới hơn đúng 200 và segments đổi đúng; số ô bằng 6."
+    paths: [packages/connect/src/catalog-feed*, packages/api/src/catalog/feeds*, packages/api/test-db/khuon-v2/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «tên miền: đuôi bất kỳ» ok — tám chuỗi viết trước × sáu đường viết trước (provider, subdivisionName, complexName, buildingName, unitNumber, directionFaces), mỗi ô lỗi đúng đường khoá và thông điệp «dáng tên miền», số lần so bằng 48; ca «tên miền: địa danh viết thường là giá đã duyệt» ok — tp.hcm ở tên khu bị từ chối; đối chứng dương gói lành. Chiều đỏ: tắt lưới trong bản sao hàm đọc thì mọi ô đỏ và nêu đường."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «tên miền: chuỗi sạch có dấu chấm» ok — mười chuỗi viết trước × sáu đường của E3, mỗi ô được nhận, số lần so bằng 60; đối chứng: chuỗi tên miền ở cùng đường bị từ chối; ca «tên miền: khoá máy cấp có dấu chấm» ok — khu-a.toa-b ở khoá khu, khoá toà, UPI được nhận, số ô bằng 3."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «mốc đo cơ sở dữ liệu không nhận: phút và phần lẻ» ok — sáu dáng viết trước × bốn vị trí viết trước (đầu gói v1, đầu gói v2, marketStats, publicListings), mỗi ô đúng một lỗi đúng đường khoá thông điệp «Mốc đo», số lần so bằng 24; đối chứng biên: +15:59, phút 59, phần lẻ 9 chữ số được nhận."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_db
+    expected: "exit 0; ca «mốc đo lạ: 422 không phải 500» ok trong va-moc.test.ts — sáu dáng viết trước ở marketStats.measuredAt × hai đường vào, mỗi ô 422 invalid-feed, số dòng ba bảng theo khu bằng 0, số lần so bằng 12; ca «mốc đo biên ghi được» ok — +15:59 và phần lẻ 9 chữ số 200, measured_at đọc lại đúng thời điểm."
+    paths: [packages/connect/src/catalog-feed*, packages/api/src/catalog/feeds*, packages/api/test-db/khuon-v2/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; toàn bộ ca của catalog-feed.test.ts và catalog-feed-v2.test.ts xanh, gồm «gói mẫu: sinh từ khuôn, khớp tệp» đúng byte."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
