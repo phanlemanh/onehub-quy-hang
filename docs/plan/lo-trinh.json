@@ -3177,12 +3177,13 @@
       "cau_giao": "Máy giữ tầng Mẫu hành vi: lint cấm Toaster ngoài vỏ, Table ngoài danh sách dòng, công tắc trong form có thanh lưu; chỗ cũ ghi ngoại lệ có hạn ở bản đồ khuôn, mức nợ giữ trần 0; bài quét đọc cả tệp thân của màn; trang mẫu sống có mục Mẫu hành vi.",
       "slug": "luoi-mau-hanh-vi",
       "vai": "Toàn kho",
-      "vi_sao": "Bước 3 của đề xuất thống nhất (docs/plan/thong-nhat-ia-khuon-ux.md §3.4); chủ kho duyệt phương án 09/11 «Duyệt theo khuyến nghị». Dãy D.",
+      "vi_sao": "Bước 3 của đề xuất thống nhất (docs/plan/thong-nhat-ia-khuon-ux.md §3.4); chủ kho duyệt phương án 09/11 «Duyệt theo khuyến nghị». Dãy D. Gồm thêm bộ kịch bản hành vi dùng chung cho ui-check (lưu thành công, lưu hỏng, hai thao tác liên tiếp, rời trang chưa lưu, mất mạng, chờ chậm) theo docs/plan/tang-dieu-khien-ui.md §5.",
       "hang": "T2",
       "bat_khi": "Thêm một Toaster ngoài vỏ, một Table trần, một công tắc trong form có thanh lưu thì lint đỏ từng cái; mức nợ vẫn 0; trang mẫu sống hiện thanh lưu ở các trạng thái",
       "sau": [
         "cai-dat-tai-nhanh",
-        "hom-nay-chiu-loi-tung-phan"
+        "hom-nay-chiu-loi-tung-phan",
+        "luoi-quet-do-thi-nhap"
       ],
       "vung": [
         "packages/ui-lint/**",
@@ -3203,6 +3204,94 @@
       "cau_giao": "Mở Hôm nay, mỗi người thấy một danh sách việc của mình, cùng một kiểu dòng cho mọi vai, chia nhóm theo bộ nhóm của sàn; phần theo dõi về đúng nhà: bảng theo đầu chủ về Đội, Lead đã nhập về trang Lead đã nhập, tin phản ứng của khách về Đã gửi",
       "slug": "hom-nay-mot-danh-sach-viec",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-09"
+    },
+    {
+      "ma": "chot-gui-chac-chan",
+      "cau_giao": "Đầu khách bấm Gửi và luôn biết chắc đã đi cái gì: bảng chia sẻ của điện thoại mở với đủ ảnh đã chuẩn bị sẵn, thiếu ảnh thì màn nói rõ trước khi mở, kết quả hiện ngay trong khung nhìn, bấm lại không sinh link thứ hai; Gửi căn, Hỏi đầu chủ và Báo sai đi chung một lối chia sẻ, người vẫn tự bấm gửi",
+      "slug": "chot-gui-chac-chan",
+      "vai": "Đầu khách",
+      "vi_sao": "Chủ kho 09/11 báo «khi chia sẻ (Gửi căn) hiện không chia sẻ được ảnh», rồi «Báo giám sát sắp xếp và điều phối». Đo trên bản chạy: Safari iPhone giả lập chờ 4 giây vẫn mở bảng, 6 giây bị từ chối và màn rơi sang chép tin; danh sách ảnh lỗi thì căn bị coi như không ảnh mà không báo; bấm 2 lần ra 2 link; kết quả nằm khuất dưới màn; nút chính cao 28 px. Tính năng mới, Cổng Đáng trình chủ kho. Việc ghi Lần gửi khi huỷ bảng chia sẻ để chủ kho quyết ở Cổng Phạm vi.",
+      "hang": "T2",
+      "bat_khi": "Giữ mỗi lời gọi tạo link chậm 3 giây trên Safari iPhone: bấm Gửi vẫn mở bảng chia sẻ có đủ ảnh bìa; một ảnh lỗi thì màn nêu số ảnh thiếu; đóng bảng xong kết quả nằm trong khung nhìn ở 375 và thấy được cả khi bấm trong ngăn Xem trước; bấm lại cùng bộ căn và người nhận không tạo Lần gửi thứ hai; tên tệp đúng loại ảnh thật; tin và link còn đủ trong gói chia sẻ của cả ba việc; nút Gửi, Xem trước, Bỏ căn, chọn người nhận cao từ 44 px ở 375; N căn hỏi danh sách ảnh đúng N lượt",
+      "vung": [
+        "apps/web/src/app/(app)/shares/new/**",
+        "apps/web/src/app/(app)/units/ho-so/hoi-dau-chu.ts",
+        "apps/web/src/app/(app)/units/ho-so/nut-hoi-dau-chu.tsx",
+        "apps/web/src/app/(app)/units/ho-so/bao-sai.ts",
+        "apps/web/src/app/(app)/units/ho-so/nut-bao-sai.tsx",
+        "apps/web/src/lib/chia-se/**",
+        "_acceptance/chot-gui-chac-chan/**"
+      ]
+    },
+    {
+      "ma": "he-hanh-dong",
+      "cau_giao": "Người trong sàn mở một căn ở thẻ, lưới, Hôm nay hay hồ sơ, trên điện thoại hay máy tính, và thấy đúng bộ việc của vai mình với cùng tên và cùng thứ bậc: một việc chính, tối đa hai việc phụ, còn lại trong «⋯»; hồ sơ căn có lối Gửi cho người được gửi và lối Gọi cho người giữ căn; mọi màn đọc từ một sổ hành động chung",
+      "slug": "he-hanh-dong",
+      "vai": "Đầu chủ · Đầu khách · Trưởng nhóm",
+      "vi_sao": "Chủ kho 09/11: «đây là cách thiết kế ux/ui cần một sự đồng bộ và nhất quán, tránh nhìn từ mỗi màn dẫn đến sẽ mất đồng bộ. Kiểm kê lại các tầng để nhìn một cái toàn cảnh», rồi «Báo giám sát sắp xếp và điều phối». Kiểm kê: năm chỗ tự quyết nút, ba cách chia sẻ, bốn cách gọi; hồ sơ căn không có Gửi hay Gọi; cùng căn và cùng vai, hồ sơ máy tính thiếu việc mà điện thoại có. Tính năng mới, Cổng Đáng trình chủ kho. Bộ nút hồ sơ căn mới là bản nháp, chủ kho quyết ở Cổng Phạm vi.",
+      "hang": "T2",
+      "bat_khi": "Có ADR hệ hành động và sổ hành động của Căn ở lõi; bài kiểm so sổ với các tầng của căn đỏ khi màn có nút ngoài sổ; hồ sơ ở 375 và 1440 cùng bộ việc theo từng vai trong bộ nút đã duyệt; Đầu khách vẫn không thấy số chủ nhà; Gọi từ hồ sơ của người giữ căn mở được số; việc gọi chỉ còn các tên đã chốt trong từ vựng; nút chính ở 375 cao từ 44 px",
+      "vung": [
+        "packages/core/src/access/**",
+        "packages/ui-lint/**",
+        "apps/web/src/components/hanh-dong/**",
+        "apps/web/src/app/(app)/units/ho-so/**",
+        "apps/web/src/app/(app)/inventory/cards/**",
+        "_acceptance/he-hanh-dong/**"
+      ]
+    },
+    {
+      "ma": "gui-tren-may-tinh",
+      "cau_giao": "Đầu khách ngồi máy tính hay iPad chọn căn trên lưới Bảng hàng, hoặc mở hồ sơ căn, bấm Gửi và đi tiếp luồng Gửi; máy không có bảng chia sẻ thì kết thúc bằng tin có link đã chép",
+      "slug": "gui-tren-may-tinh",
+      "vai": "Đầu khách",
+      "vi_sao": "Chủ kho 09/11: «Báo giám sát sắp xếp và điều phối». Đo ở khổ 768 và 1440: chọn dòng trên lưới chỉ có Đổi trạng thái, Đánh dấu đã gọi, Bỏ chọn; nút Gửi căn ở Đã gửi đưa về chính lưới đó. Hàng 34 đã để phần này ra ngoài với lý do đi qua bảng thẻ, nhưng bảng thẻ chỉ có dưới 768. Tính năng mới, Cổng Đáng trình chủ kho.",
+      "hang": "T2",
+      "bat_khi": "Ở 768 và 1440, Đầu khách chọn hai căn Đang bán trên lưới, bấm Gửi và tới màn Gửi đúng hai căn theo thứ tự chọn; căn không còn bán không chọn gửi được; vai không có quyền gửi không thấy nút; đi trọn được bằng bàn phím",
+      "sau": [
+        "he-hanh-dong"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/inventory/bulk/**",
+        "apps/web/src/app/(app)/inventory/bang-hang.tsx",
+        "apps/web/src/app/(app)/units/ho-so/than-cot.tsx",
+        "_acceptance/gui-tren-may-tinh/**"
+      ]
+    },
+    {
+      "ma": "xem-truoc-dung-nguoi-nhan",
+      "cau_giao": "Người gửi mở Xem trước và thấy đúng giao diện người nhận sẽ mở: khách riêng thấy trang khách, nhóm môi giới thấy bảng có Tải Excel và Tải ảnh; tab Gửi luôn có nút gửi mới, chi tiết một link chép lại được link và mở được trang khách",
+      "slug": "xem-truoc-dung-nguoi-nhan",
+      "vai": "Đầu khách",
+      "vi_sao": "Chủ kho 09/11: «Báo giám sát sắp xếp và điều phối». Đo: nhóm môi giới thật nhận bảng nhưng Xem trước hiện thẻ ảnh; khách riêng thật thấy lưới 2 cột có Quan tâm, Xem trước là 1 cột không có nút; từ vựng ghi tab Gửi gồm cả nút gửi mới nhưng nút chỉ hiện khi danh sách rỗng; chi tiết link đang chạy chỉ có Tắt link. Tính năng mới, Cổng Đáng trình chủ kho.",
+      "hang": "T2",
+      "bat_khi": "Với cùng bộ căn, Xem trước và trang thật khớp bố cục và nội dung ở 375 và 1440 cho cả hai loại người nhận; bài rò rỉ của Xem trước vẫn xanh; Đã gửi có nút gửi mới cả khi đã có link; chi tiết link có Chép link và Mở trang khách, nút Tắt link vẫn hỏi lại",
+      "sau": [
+        "he-hanh-dong",
+        "chot-gui-chac-chan"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/shares/new/trang-khach.tsx",
+        "apps/web/src/app/(app)/shares/chi-tiet.tsx",
+        "apps/web/src/app/(app)/shares/danh-sach.tsx",
+        "apps/web/src/app/(app)/shares/khung.tsx",
+        "_acceptance/xem-truoc-dung-nguoi-nhan/**"
+      ]
+    },
+    {
+      "ma": "luoi-quet-do-thi-nhap",
+      "slug": "luoi-quet-do-thi-nhap",
+      "vai": "Toàn kho",
+      "hang": "T2",
+      "cau_giao": "Bài quét khuôn giao diện đọc cả đồ thị nhập của màn chứ không chỉ page.tsx, và cấm Toaster ngoài vỏ; sáu chỗ đang có ghi ngoại lệ có hạn ở bản đồ khuôn theo ADR-0024 quyết định 9, mức nợ giữ trần 0.",
+      "vi_sao": "Việc 1, mục 5 của docs/plan/tang-dieu-khien-ui.md (PR #233); tách phần không phụ thuộc của luoi-mau-hanh-vi để chặn lỗi tái phát trong lúc các hàng Cài đặt đang làm. Chủ kho 09/11 «Mở PR, chuyển giám sát». Dãy X.",
+      "bat_khi": "Một màn đặt khung thừa ở tệp thân ngoài page.tsx thì bài quét đỏ; thêm một Toaster ngoài vỏ thì lint đỏ; sáu chỗ cũ có ngoại lệ có hạn, mức nợ vẫn 0",
+      "vung": [
+        "packages/ui-lint/**",
+        "apps/web/src/components/ui/sonner*",
+        "design/ban-do-khuon*",
+        "_acceptance/luoi-quet-do-thi-nhap/**"
+      ]
     },
     {
       "ma": "va-bai-o-la-do-ngau-nhien",
