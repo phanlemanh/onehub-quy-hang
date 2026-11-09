@@ -74,7 +74,7 @@ export async function nhanBangToken(c: Context, token: string, { appPool }: ApiD
     }
   };
 
-  let t: TokenDaTra | null;
+  let t: TokenDaTra | null = null;
   try {
     t = await traToken(appPool, token);
     if (!t) return tokenHong();
@@ -88,6 +88,8 @@ export async function nhanBangToken(c: Context, token: string, { appPool }: ApiD
       return tokenHong();
     }
   } catch (e) {
+    // Đã nhận ra token thì lỗi giữa chừng cũng có một dòng; chưa nhận ra thì không biết của sàn nào.
+    if (t) await ghiRieng(t, API_ERRORS.internalError.status, "server_error");
     return baoLoi(e);
   }
   const daTra = t;

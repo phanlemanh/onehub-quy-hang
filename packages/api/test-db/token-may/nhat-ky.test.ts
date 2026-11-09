@@ -60,6 +60,17 @@ test("nhật ký: một lời gọi một dòng", async () => {
   assert.equal((await tongDong()) - truoc, maTran.length, "số dòng tăng phải bằng số lời gọi");
 });
 
+test("lỗi ngay sau bước tra token cũng có một dòng", async () => {
+  const s = await sanCoToken("e7-sau-tra");
+  const a = coMoc({ sauKhiTraToken: loiThu });
+  const feed = goiMau("e7-sau-tra");
+  const res = await imConsole(async () => goi("POST", FEED, { bearer: s.token, body: feed, a }));
+  assert.equal(res.status, 500);
+  assert.deepEqual(await res.json(), { error: "internal-error" });
+  assert.deepEqual((await dongNhatKy(s.tokenId)).map((r) => [r.outcome, r.http_status]), [["server_error", 500]]);
+  assert.equal(await demCan(feed.provider), 0);
+});
+
 test("token lạ không sinh dòng", async () => {
   const truoc = await tongDong();
   const res = await goi("POST", FEED, { bearer: "qhm_" + "c".repeat(43), body: goiMau("e7-la") });

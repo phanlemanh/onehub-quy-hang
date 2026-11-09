@@ -32,54 +32,113 @@ test("đổi chiều sau khi cấp", async () => {
   assert.equal(await demCan(feed.provider), 0);
 });
 
-type Route = { method: string; path: string };
+type Schema = { $ref?: string; type?: string | string[]; enum?: unknown[]; format?: string; properties?: Record<string, Schema>; required?: string[]; items?: Schema; minItems?: number; minLength?: number; minimum?: number; pattern?: string; anyOf?: Schema[]; oneOf?: Schema[]; allOf?: Schema[]; default?: unknown };
+type Doc = { paths: Record<string, Record<string, { requestBody?: { content?: Record<string, { schema?: Schema }> } }>>; components?: { schemas?: Record<string, Schema> } };
+type Route = { method: string; path: string; than?: unknown };
 type Goi = { request: (u: string, i?: RequestInit) => Response | Promise<Response> };
 
-/** Route nào trả mã khác nhau giữa có Bearer và không header. */
-async function quetRoute(a: Goi, routes: Route[], token: string): Promise<string[]> {
-  const lech: string[] = [];
+/** Một giá trị đúng khuôn theo schema của tài liệu, để lời gọi qua được bộ kiểm thân và chạm tới lớp danh tính. */
+function giaTriMau(s: Schema | undefined, doc: Doc): unknown {
+  if (!s) return {};
+  if (s.$ref) return giaTriMau(doc.components?.schemas?.[s.$ref.split("/").pop()!], doc);
+  if (s.enum?.length) return s.enum[0];
+  if (s.default !== undefined) return s.default;
+  const nhanh = s.anyOf?.[0] ?? s.oneOf?.[0];
+  if (nhanh) return giaTriMau(nhanh, doc);
+  if (s.allOf) return Object.assign({}, ...s.allOf.map((x) => giaTriMau(x, doc)));
+  const kieu = Array.isArray(s.type) ? s.type.find((t) => t !== "null") : s.type;
+  switch (kieu) {
+    case "object":
+      return Object.fromEntries((s.required ?? []).map((k) => [k, giaTriMau(s.properties?.[k], doc)]));
+    case "array":
+      return Array.from({ length: s.minItems ?? 0 }, () => giaTriMau(s.items, doc));
+    case "integer":
+    case "number":
+      return s.minimum ?? 1;
+    case "boolean":
+      return true;
+    case "string":
+      if (s.pattern === "^[0-9a-f]{64}$") return "a".repeat(64);
+      if (s.format === "uuid") return ID_MAU;
+      if (s.format === "date-time") return "2026-11-09T00:00:00.000Z";
+      if (s.format === "email") return "t@example.test";
+      if (s.format === "uri" || s.format === "url") return "https://example.test/mau";
+      return "x".repeat(Math.max(s.minLength ?? 1, 1));
+    default:
+      return {};
+  }
+}
+
+type KetQuaRoute = { ten: string; khong: number; voi: number };
+/** Mã của từng route khi không header và khi có Bearer. */
+async function quetRoute(a: Goi, routes: Route[], token: string): Promise<KetQuaRoute[]> {
+  const kq: KetQuaRoute[] = [];
   for (const r of routes) {
     const path = r.path.replace(/\{[^}]+\}/g, ID_MAU);
-    const co = r.method === "GET" || r.method === "HEAD" ? {} : { body: "{}" };
+    const co = r.method === "GET" || r.method === "HEAD" ? {} : { body: JSON.stringify(r.than ?? {}) };
     const khong = await a.request(`${BASE_URL}${path}`, { method: r.method, headers: { "content-type": "application/json" }, ...co });
     const voi = await a.request(`${BASE_URL}${path}`, { method: r.method, headers: { "content-type": "application/json", authorization: `Bearer ${token}` }, ...co });
-    if (khong.status !== voi.status) lech.push(`${r.method} ${r.path}: ${khong.status} ≠ ${voi.status}`);
+    kq.push({ ten: `${r.method} ${r.path}`, khong: khong.status, voi: voi.status });
   }
-  return lech;
+  return kq;
 }
+const lech = (kq: KetQuaRoute[]) => kq.filter((x) => x.khong !== x.voi).map((x) => `${x.ten}: ${x.khong} ≠ ${x.voi}`);
+
+// Khuôn có điều kiện schema không tả được (địa chỉ phải thuộc dịch vụ đẩy đã biết): thân viết tay.
+const DIA_CHI_DAY = "https://fcm.googleapis.com/fcm/send/mau";
+const THAN_RIENG: Record<string, unknown> = {
+  "POST /api/v1/me/push-subscriptions": { endpoint: DIA_CHI_DAY, keys: { p256dh: "a".repeat(87), auth: "a".repeat(22) } },
+  "DELETE /api/v1/me/push-subscriptions": { endpoint: DIA_CHI_DAY },
+};
+
+// Route trả mã khác 401 khi không header, viết trước: phần còn lại phải dừng ở lớp danh tính, nếu không phép so không đo gì.
+const KHONG_DUNG_O_DANH_TINH: Record<string, number> = {
+  "GET /api/v1/health": 200,
+  // Lớp khoá riêng của việc nền, ở đây chưa đặt khoá: Bearer lạ và không header cùng dừng ở đó.
+  "POST /api/v1/jobs/lead-tick": 503,
+  // Sự kiện của trang khách: đường công khai theo mã, không có lớp danh tính; mã mẫu sai dạng.
+  "POST /api/v1/public/shares/{code}/events": 400,
+};
 
 test("token không mở route nào khác", async () => {
   const s = await sanCoToken("e4-route");
-  const doc = (await (await app.request(`${BASE_URL}/api/v1/openapi.json`)).json()) as { paths: Record<string, Record<string, unknown>> };
+  const doc = (await (await app.request(`${BASE_URL}/api/v1/openapi.json`)).json()) as Doc;
   const routes: Route[] = Object.entries(doc.paths).flatMap(([path, cac]) =>
-    Object.keys(cac)
-      .filter((m) => ["get", "post", "put", "patch", "delete"].includes(m))
-      .map((m) => ({ method: m.toUpperCase(), path })),
+    Object.entries(cac)
+      .filter(([m]) => ["get", "post", "put", "patch", "delete"].includes(m))
+      .map(([m, op]) => ({ method: m.toUpperCase(), path, than: THAN_RIENG[`${m.toUpperCase()} ${path}`] ?? giaTriMau(op.requestBody?.content?.["application/json"]?.schema, doc) })),
   );
   const khac = routes.filter((r) => !(r.method === "POST" && r.path === FEED));
   assert.equal(khac.length, routes.length - 1);
   assert.ok(khac.length >= 100, `chỉ có ${khac.length} route`);
+  const kqKhac = await quetRoute(app, khac, s.token);
+  assert.equal(kqKhac.length, khac.length, "số route đã so phải bằng số đếm từ tài liệu");
+  assert.deepEqual(lech(kqKhac), [], "token mở thêm route");
+  // Không header thì mọi route phải dừng ở lớp danh tính, kể cả route có bộ kiểm thân: đo xem lời gọi có thật chạm tới đó không.
+  assert.deepEqual(
+    kqKhac.filter((x) => x.khong !== (KHONG_DUNG_O_DANH_TINH[x.ten] ?? 401)).map((x) => `${x.ten}: ${x.khong}`),
+    [],
+    "route không dừng ở lớp danh tính",
+  );
+
   // Ba đường danh tính ngoài tài liệu OpenAPI.
   const danhTinh: Route[] = [
     { method: "GET", path: "/api/v1/auth/get-session" },
     { method: "GET", path: "/api/v1/auth/list-sessions" },
     { method: "POST", path: "/api/v1/auth/sign-out" },
   ];
-  let soRoute = 0;
-  for (const nhom of [khac, danhTinh]) {
-    assert.deepEqual(await quetRoute(app, nhom, s.token), [], "token mở thêm route");
-    soRoute += nhom.length;
-  }
-  assert.equal(soRoute, routes.length - 1 + danhTinh.length);
+  const kqDanhTinh = await quetRoute(app, danhTinh, s.token);
+  assert.equal(kqDanhTinh.length, danhTinh.length);
+  assert.deepEqual(lech(kqDanhTinh), [], "token mở đường danh tính");
 
   // Đối chứng dương: chính cửa nhận thì hai mã khác nhau.
-  assert.equal((await quetRoute(app, [{ method: "POST", path: FEED }], s.token)).length, 1);
+  assert.equal(lech(await quetRoute(app, [{ method: "POST", path: FEED }], s.token)).length, 1);
   // Chiều đỏ: một bản viewer đọc Bearer làm người thì phép quét đỏ và nêu tên route.
   const gia = new OpenAPIHono();
   gia.get("/api/v1/me-gia", (c) => (c.req.header("authorization") ? c.json({ ok: true }, 200) : c.json({ error: "unauthenticated" }, 401)));
-  const lech = await quetRoute(gia, [{ method: "GET", path: "/api/v1/me-gia" }], s.token);
-  assert.equal(lech.length, 1);
-  assert.match(lech[0]!, /me-gia/);
+  const doGia = lech(await quetRoute(gia, [{ method: "GET", path: "/api/v1/me-gia" }], s.token));
+  assert.equal(doGia.length, 1);
+  assert.match(doGia[0]!, /me-gia/);
 });
 
 test("cookie sàn khác kèm token", async () => {

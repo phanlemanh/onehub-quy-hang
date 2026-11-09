@@ -108,17 +108,31 @@ test("thu hồi một chiều", { skip }, async () => {
       ["company_id", SAN_B],
       ["created_by", "[Tên khác]"],
     ];
+    // Quyền cột là lớp chặn của ô này (không phải luật theo dòng): ghim thông điệp, và thử cả câu sửa cột khoá cùng lúc
+    // đặt revoked_at, vốn qua được `with check` nên chỉ quyền cột chặn được.
+    const chiQuyenCot = (e) => e.code === "42501" && /permission denied for table machine_tokens/.test(e.message);
     let soLan = 0;
     for (const [cot, gt] of cotKhoa) {
-      await duKienLoi(c, `update machine_tokens set ${cot} = $1 where id = $2`, [gt, song], hoiLoi("42501"));
-      soLan += 1;
+      await duKienLoi(c, `update machine_tokens set ${cot} = $1 where id = $2`, [gt, song], chiQuyenCot);
+      await duKienLoi(c, `update machine_tokens set ${cot} = $1, revoked_at = now(), revoked_by = '[Tên]' where id = $2`, [gt, song], chiQuyenCot);
+      soLan += 2;
     }
-    assert.equal(soLan, 4);
+    assert.equal(soLan, cotKhoa.length * 2);
+    // Chiều đỏ trên cùng dòng: nới quyền thành sửa cả bảng thì câu cột khoá cùng lúc thu hồi lọt qua, nên hai ô trên đang đo
+    // đúng lớp quyền cột.
+    await c.query("savepoint noi_quyen");
+    await c.query("reset role");
+    await c.query("grant update on machine_tokens to quy_hang_app");
+    await vaiApi(c, SAN_A);
+    const lot = await c.query("update machine_tokens set created_by = '[Tên khác]', revoked_at = now(), revoked_by = '[Tên]' where id = $1", [song]);
+    assert.equal(lot.rowCount, 1, "nới quyền mà câu vẫn bị chặn: ô quyền cột không đo gì");
+    await c.query("rollback to savepoint noi_quyen");
+    await vaiApi(c, SAN_A);
     // Token đã thu hồi không sống lại và không bị thu hồi lần nữa.
     assert.equal((await c.query("update machine_tokens set revoked_at = null where id = $1", [daThuHoi])).rowCount, 0, "huỷ thu hồi");
     assert.equal((await c.query("update machine_tokens set revoked_at = now(), revoked_by = 'x' where id = $1", [daThuHoi])).rowCount, 0, "thu hồi lại");
     // Token còn sống: «thu hồi» mà để revoked_at trống là vi phạm luật.
-    await duKienLoi(c, "update machine_tokens set revoked_by = 'x' where id = $1", [song], hoiLoi("42501"));
+    await duKienLoi(c, "update machine_tokens set revoked_by = 'x' where id = $1", [song], (e) => e.code === "42501" && /row-level security/.test(e.message));
     // Đối chứng dương.
     assert.equal((await c.query("update machine_tokens set revoked_at = now(), revoked_by = '[Tên]' where id = $1", [song])).rowCount, 1, "thu hồi token còn sống");
   });
