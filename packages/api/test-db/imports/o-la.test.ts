@@ -182,6 +182,36 @@ test("phép kiểm sổ: mọi cột của dòng thật", async () => {
   assert.equal(dem, CA.length, "số assert bằng số phần tử ma trận");
 });
 
+test("phép kiểm sổ: số trong dữ liệu lồng", async () => {
+  const s = await sanMoi("E2e");
+  const dong = JSON.parse(await ghiDongSo(s, { blocked_kinds: ["phone"] })) as Record<string, unknown>;
+  const CA: [string, unknown, "day-du" | "mot-phan"][] = [
+    ["đối tượng, số đầy đủ", { ghi_chu: "0900 000 011" }, "day-du"],
+    ["đối tượng trong đối tượng", { a: { b: { c: "0900000011" } } }, "day-du"],
+    ["mảng chứa đối tượng", [{ so: "+84 900 000 011" }], "day-du"],
+    ["đối tượng chứa mảng", { ds: ["không", "0900.000.011"] }, "day-du"],
+    ["số nằm ở khoá", { "0900000011": true }, "day-du"],
+    ["số dạng số trong đối tượng", { n: 900000011 }, "day-du"],
+    ["số tách ở hai giá trị", { dau: "0900", duoi: "000 011" }, "day-du"],
+    ["đầu số trong mảng đối tượng", { a: [{ b: "đầu 0900" }] }, "mot-phan"],
+    ["đuôi trong đối tượng", { a: { b: "đuôi 011" } }, "mot-phan"],
+    ["đuôi viết rời trong mảng đối tượng", [{ a: "đuôi 0 1 1" }], "mot-phan"],
+    ["mã máy sai dạng", { ma: "id-011" }, "mot-phan"],
+  ];
+  assert.equal(CA.length, 11, "bảng ca viết trước có đúng 11 phần tử");
+  for (const cot of ["cot_moi", "model"]) {
+    for (const [ten, giaTri, dang] of CA) {
+      const vet = vetSoTrongSo(JSON.stringify({ ...dong, [cot]: giaTri }), SO_MAU, s.dauChuId);
+      assert.deepEqual(vet, { truong: cot, dang }, `không bắt được ở dữ liệu lồng: ${ten} (${cot})`);
+    }
+  }
+  const ma = "00000000-0000-4000-8000-000000000011";
+  const gio = "2026-11-09T09:00:00.011+00:00";
+  const sach = JSON.stringify({ ...dong, cot_moi: { ma, gio, lop: [{ ma, gio }], dem: 1011, tien: 0.011, ok: true, rong: null } });
+  assert.ok(phepCuBaoDo(sach), "mẫu âm phải làm phép kiểm cũ báo đỏ — thiếu thì ca này vô nghĩa");
+  assert.equal(vetSoTrongSo(sach, SO_MAU, s.dauChuId), null, "bắt nhầm mã máy trong dữ liệu lồng");
+});
+
 test("phép kiểm sổ không đỏ trên mã máy ngẫu nhiên", async () => {
   const s = await sanMoi("E2d");
   // Postgres tự sinh `id` và in giờ ghi theo dạng thật: cắt số 0 cuối phần lẻ, có dòng không phần lẻ.
@@ -201,6 +231,13 @@ test("phép kiểm sổ không đỏ trên mã máy ngẫu nhiên", async () => 
   assert.ok(rows.filter((r) => phepCuBaoDo(r.t)).length > 0, "phép kiểm cũ phải đỏ ít nhất một dòng — thiếu thì ca này vô nghĩa");
   const nham = rows.filter((r) => vetSoTrongSo(r.t, SO_MAU, s.dauChuId) !== null);
   assert.equal(nham.length, 0, `bắt nhầm dòng ngẫu nhiên: ${nham[0]?.t}`);
+  // Cùng mã và giờ do Postgres sinh, đặt vào dữ liệu lồng của một cột chưa có.
+  const nhamLong = rows.filter((r) => {
+    const d = JSON.parse(r.t) as Record<string, unknown>;
+    const cot_moi = { ma: d.id, gio: d.created_at, lop: [{ ma: d.company_id, gio: d.created_at }] };
+    return vetSoTrongSo(JSON.stringify({ ...d, cot_moi }), SO_MAU, s.dauChuId) !== null;
+  });
+  assert.equal(nhamLong.length, 0, `bắt nhầm dòng ngẫu nhiên lồng: ${nhamLong[0]?.t}`);
 });
 
 test("ô lạ không ghi gì", async () => {

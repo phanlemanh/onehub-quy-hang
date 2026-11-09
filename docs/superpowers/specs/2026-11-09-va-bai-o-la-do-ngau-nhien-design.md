@@ -46,6 +46,9 @@ Danh sách trường được bỏ qua là danh sách ngắn, không phải danh
 Mã dòng, mã sàn và giờ ghi do cơ sở dữ liệu sinh; câu ghi sổ không truyền ba cột này, nên một giá trị đúng dạng ở đó không
 thể mang dữ liệu người dùng. Phép kiểm không dò số bên trong chúng.
 
+Dữ liệu lồng trong một cột (đối tượng, mảng chứa đối tượng, cả khoá) được đi đệ quy và so như trường chữ. Ở đó không có tên
+cột để dựa, nên mã và giờ đúng dạng được nhận theo dạng rồi bỏ qua, để cột lồng sau này không đưa đỏ ngẫu nhiên trở lại.
+
 ## Bộ đo
 
 Một ca đối chứng trên cơ sở dữ liệu thật chèn dòng sổ đã biết trước, đọc lại đúng biểu thức của bài kiểm: dòng có `011` ở

@@ -54,7 +54,7 @@ evals:
     executor: script
     cmd: config:executors.script.o_la_pha_thu
     paths: ["packages/api/test-db/imports/**", "_acceptance/va-bai-o-la-do-ngau-nhien/thu/**"]
-    expected: "exit 0; in «ĐẠT luon-sach», «ĐẠT khong-loai-ma-may», «ĐẠT user-id-mo», «ĐẠT bo-mot-phan», «ĐẠT chi-quet-ba-cot», «ĐẠT bo-qua-ma-may»: mỗi bản phá làm ca đỏ và nhật ký có đúng thông điệp ghim của kiểu phá đó. Chiều đỏ: bản phá không làm ca đỏ, hoặc đỏ với thông điệp khác, thì in «HỎNG <kiểu>» và KẾT: HỎNG, exit 1."
+    expected: "exit 0; in «ĐẠT luon-sach», «ĐẠT khong-loai-ma-may», «ĐẠT user-id-mo», «ĐẠT bo-mot-phan», «ĐẠT chi-quet-ba-cot», «ĐẠT bo-qua-ma-may», «ĐẠT khong-de-quy», «ĐẠT bo-khoa-long», «ĐẠT khong-bo-ma-long»: mỗi bản phá làm ca đỏ và nhật ký có đúng thông điệp ghim của kiểu phá đó. Chiều đỏ: bản phá không làm ca đỏ, hoặc đỏ với thông điệp khác, thì in «HỎNG <kiểu>» và KẾT: HỎNG, exit 1."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
   - id: E8
@@ -79,4 +79,12 @@ evals:
     cmd: config:executors.test.o_la_db
     paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
     expected: "exit 0; ca «phép kiểm sổ: mọi cột của dòng thật» đạt: ma trận sinh từ khoá của dòng sổ thật cộng cột giả, số assert bằng số phần tử bảng (ca tự ghim số phần tử), mỗi phần tử gọi đúng tên cột. Chiều đỏ: kiểu phá chi-quet-ba-cot ở E7 đỏ với «không bắt được ở ma trận cột: input_tokens», kiểu phá bo-qua-ma-may đỏ với «không bắt được ở ma trận cột: id»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.o_la_db
+    paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
+    expected: "exit 0; ca «phép kiểm sổ: số trong dữ liệu lồng» đạt: 11 dạng lồng ở hai cột đều báo đúng tên cột và đúng loại, mẫu âm có 011 ở mã, giờ và số đo lồng không báo; ca hai vạn dòng không đỏ dòng nào khi đặt mã và giờ vào dữ liệu lồng. Chiều đỏ: kiểu phá khong-de-quy ở E7 đỏ với «không bắt được ở dữ liệu lồng: đối tượng, số đầy đủ», bo-khoa-long đỏ với «không bắt được ở dữ liệu lồng: số nằm ở khoá», khong-bo-ma-long đỏ với «bắt nhầm mã máy trong dữ liệu lồng» và «bắt nhầm dòng ngẫu nhiên lồng»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]

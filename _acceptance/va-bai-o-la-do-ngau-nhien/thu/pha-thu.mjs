@@ -19,7 +19,10 @@ const KIEU = [
   ["luon-sach", TEP_VET, ["  const chuSo = soMau", "  if (soMau) return null;\n  const chuSo = soMau"], ["không bắt được: có khoảng trắng"]],
   ["khong-loai-ma-may", TEP_VET, ["    if (typeof giaTri === \"string\" && TRUONG_MA[truong]?.test(giaTri)) continue;\n", ""], ["bắt nhầm mã máy hay giờ ghi", "bắt nhầm dòng ngẫu nhiên"]],
   ["user-id-mo", TEP_VET, ['truong === "user_id" && giaTri === nguoiGhi', 'truong === "user_id"'], ["không bắt được: mã người là số"]],
-  ["bo-mot-phan", TEP_VET, ['if (typeof giaTri !== "number" && ngan.some((m) => chi.includes(m))) return { truong, dang: "mot-phan" };', ""], ["không bắt được: chỉ đuôi"]],
+  ["bo-mot-phan", TEP_VET, ['if (ngan.some((m) => chiChu.includes(m))) return { truong, dang: "mot-phan" };', ""], ["không bắt được: chỉ đuôi"]],
+  ["khong-de-quy", TEP_VET, ['typeof giaTri === "object" && giaTri !== null ? manhLong(giaTri) :', 'Array.isArray(giaTri) ? giaTri.map(String) :'], ["không bắt được ở dữ liệu lồng: đối tượng, số đầy đủ"]],
+  ["bo-khoa-long", TEP_VET, ["[...manhLong(khoa), ...manhLong(con)]", "manhLong(con)"], ["không bắt được ở dữ liệu lồng: số nằm ở khoá"]],
+  ["khong-bo-ma-long", TEP_VET, ['  if (typeof giaTri === "string" && (UUID.test(giaTri) || GIO_GHI.test(giaTri))) return [];\n', ""], ["bắt nhầm mã máy trong dữ liệu lồng", "bắt nhầm dòng ngẫu nhiên lồng"]],
   ["chi-quet-ba-cot", TEP_VET, ['    if (typeof giaTri === "string" && TRUONG_MA[truong]?.test(giaTri)) continue;\n', '    if (!["model", "user_id", "duration_ms"].includes(truong)) continue;\n    if (typeof giaTri === "string" && TRUONG_MA[truong]?.test(giaTri)) continue;\n'], ["không bắt được ở ma trận cột: input_tokens"]],
   ["bo-qua-ma-may", TEP_VET, ['if (typeof giaTri === "string" && TRUONG_MA[truong]?.test(giaTri)) continue;', "if (TRUONG_MA[truong]) continue;"], ["không bắt được ở ma trận cột: id"]],
 ];

@@ -5,7 +5,7 @@ slug: va-bai-o-la-do-ngau-nhien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [test]
-status: machine-cleared
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-09-va-bai-o-la-do-ngau-nhien-design.md
 approved_by:
 approved_at:
@@ -50,13 +50,17 @@ Source input: hàng `va-bai-o-la-do-ngau-nhien` (`docs/plan/lo-trinh.json`) · g
   hay phần đuôi ở dạng chuỗi, hay mang số mẫu trong mảng, hay (với cột số) mang số mẫu ở dạng số, Then phép kiểm báo đỏ gọi
   đúng tên cột, kể cả `id`, `company_id`, `created_at` khi sai dạng và `user_id` khi không phải người đang đăng nhập. Số
   phần tử ma trận bằng số assert.
+- **AC-11** — Given số mẫu hay phần số nằm trong dữ liệu lồng của một cột (đối tượng, đối tượng trong đối tượng, mảng chứa
+  đối tượng, đối tượng chứa mảng, khoá của đối tượng, số tách ở hai giá trị), When phép kiểm đọc dòng đó, Then báo đỏ gọi đúng
+  tên cột và đúng loại số đầy đủ hay một phần; còn mã máy, giờ ghi đúng dạng và số đo ngắn trong dữ liệu lồng thì không báo,
+  kể cả với hai vạn dòng mã và giờ do Postgres sinh đặt vào dữ liệu lồng.
 
 ## Coverage
 
 Trục: dạng số (đầy đủ có dấu phân cách · liền · đầu quốc gia · đầu số · đuôi · đuôi viết rời) × loại trường (trường chữ tự
-do · trường máy đúng dạng · trường máy sai dạng · mã người sai chủ · trường số · mảng · cột chưa có) × chiều (đỏ · xanh). AC-2
-và AC-3 phủ dạng số trên trường chữ, AC-4 phủ mã người sai chủ và trường số, AC-10 phủ mọi cột thật, trường máy sai dạng,
-mảng và cột chưa có, AC-1 phủ trường máy đúng dạng ở chiều xanh, AC-5 phủ giá trị ngẫu nhiên do Postgres sinh. Không gian nhỏ và
+do · trường máy đúng dạng · trường máy sai dạng · mã người sai chủ · trường số · mảng · dữ liệu lồng · cột chưa có) × chiều
+(đỏ · xanh). AC-2 và AC-3 phủ dạng số trên trường chữ, AC-4 phủ mã người sai chủ và trường số, AC-10 phủ mọi cột thật, trường
+máy sai dạng, mảng và cột chưa có, AC-11 phủ dữ liệu lồng cả hai chiều, AC-1 phủ trường máy đúng dạng ở chiều xanh, AC-5 phủ giá trị ngẫu nhiên do Postgres sinh. Không gian nhỏ và
 đóng nên không chạy quét hình thái — xem dòng sổ «bỏ coverage-scan».
 
 ## Out of scope
@@ -75,10 +79,7 @@ tất định ngay khi đổi mô hình, không phải đỏ ngẫu nhiên.
 
 Lệnh đo dùng Postgres thử riêng ở cổng 5588, cổng ghim trong `_acceptance/config.yaml` theo nếp các hồ sơ khác.
 - Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nhánh chưa cập nhật hai tệp bản đồ sản phẩm và lộ trình, nên bước kiểm cuối của kho sẽ báo đỏ và chưa gộp được cho tới khi vẽ lại. — `docs/plan/lo-trinh.json`
-- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu sau này sổ chi phí AI thêm một cột chứa dữ liệu lồng nhau, số điện thoại lọt vào đó có thể không bị bài kiểm bắt và bài vẫn xanh. — `packages/api/test-db/imports/vet-so-trong-so.ts`
-- Ngoài-4 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Số điện thoại nằm trong dữ liệu lồng nhau của một cột tương lai có thể lọt qua bài kiểm mà không báo đỏ. — `packages/api/test-db/imports/vet-so-trong-so.ts`
 - Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Hai tệp bản đồ sản phẩm và lộ trình đang lệch với hồ sơ mới, nên kiểm tra cuối của kho sẽ đỏ và chưa gộp được. — `docs/plan/lo-trinh.json`
-- Ngoài-6 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bộ ca thử của bài kiểm không có trường hợp số điện thoại nằm trong dữ liệu lồng, nên nếu có cột như vậy sau này bài vẫn xanh dù số đã vào sổ. — `packages/api/test-db/imports/o-la.test.ts`
 - Ngoài-7 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Phép đếm kiểm tra bộ ca đủ số lượng tự khớp với chính nó, nên nếu bộ ca bị hụt một cột thì phép đếm không báo. — `packages/api/test-db/imports/o-la.test.ts`
 - Ngoài-8 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm không tự xác nhận có dòng giờ ghi đủ sáu chữ số lẻ, nên nếu bộ sinh đổi và mất dạng này thì bài vẫn xanh. — `packages/api/test-db/imports/o-la.test.ts`
 - Ngoài-9 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu tên ca kiểm bị đổi, bộ đo 300 lần có thể chạy rỗng mà vẫn báo đạt, làm kết quả đo kém tin cậy. — `_acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs`
