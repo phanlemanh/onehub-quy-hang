@@ -1,0 +1,37 @@
+schema_version: 1
+feature_slug: va-ho-so-lan-rao-hang-lo-ngoai-khu
+# Lệnh máy: executors.test.web, executors.script.typecheck. ui-check trên chỗ thử dãy X: thu/dung.mjs dựng trên chỗ thử hàng 79
+# (Postgres 5576, máy dev 3496), thêm một hàng lô qua API; Chrome không đầu.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    expected: "exit 0; apps/web/src/app/(app)/units/ho-so/lan-rao-khong-toa.test.ts: bảng viết trước 2 dạng (lô, ngoài khu) × 2 đường đóng (có tham số, không tham số) = 4 ca; đường đóng dựng bằng chính dongCot của màn (không viết tay), mỗi ca đọc lại link bằng docCot ra đúng {hang: mã hàng}, không có unit, toa, và giữ tham số khác. Chiều đỏ ghim trên cùng dữ liệu: link dựng theo toà + mã thì ca báo «link lần rao của hàng không toà phải mở theo hàng»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/units/ho-so/**"]
+    expected: "exit 0; căn hộ hai lần rao: link của mỗi lần rao bằng đúng duong({ ma, toa, lan }) — đối chứng dương cùng tệp E1."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/va-ho-so-lan-rao-hang-lo-ngoai-khu/thu/dung.mjs rồi node _acceptance/va-ho-so-lan-rao-hang-lo-ngoai-khu/thu/chay-ui.mjs --ra _acceptance/va-ho-so-lan-rao-hang-lo-ngoai-khu/evidence"
+      - "Đối chiếu dòng e3 ở mỗi dạng (lo, ngoaiKhu): truocBam và sauBam cùng tiêu đề hồ sơ; sauBam.thay = true (mục Thuộc tính căn còn trên màn); hang= trong url sau bấm bằng đúng mã hàng đã mở, không có unit="
+    target: "http://localhost:3496/inventory"
+    expected: "Ảnh E3-lo.png, E3-ngoai-khu.png: sau khi bấm lần rao hồ sơ vẫn mở đúng căn, không có lời báo không thấy căn; dòng e3 khớp."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E4
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.typecheck
+    paths: ["apps/web/src/**"]
+    expected: "exit 0; kiểm kiểu mọi gói xanh"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

@@ -15,6 +15,7 @@ import { registerImportRoutes } from "./imports/routes";
 import { registerAiRoutes } from "./imports/ai/routes";
 import type { KhachAi, KhachOLa } from "./imports/ai/claude";
 import { registerFeedRoutes } from "./catalog/feeds";
+import { taoNguonDanhMuc, type NguonDanhMuc } from "./catalog/nguon";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
 import { registerContactRoutes } from "./contacts/routes";
@@ -68,6 +69,8 @@ export type ApiDeps = {
   khoAnh?: KhoAnh | KhoAnhVang;
   /** Bộ gửi thông báo lead (ADR-0025); vắng thì gửi bằng `web-push` — test truyền bộ gửi giả ghi lại. */
   pushSender?: PushSender;
+  /** Nguồn danh mục của bốn nơi đọc (hàng 99); vắng thì `createApi` tạo một nguồn đọc vùng dùng chung. */
+  nguonDanhMuc?: NguonDanhMuc;
   /** Nguồn dữ liệu của route công khai trang khách; vắng thì đọc cơ sở dữ liệu — bài rò rỉ của rào route truyền nguồn mồi. */
   nguonCongKhai?: NguonCongKhai;
   /** Khách gọi Claude cho «Xử lý bằng AI» (hàng 68); vắng thì theo môi trường (`ANTHROPIC_API_KEY`), `null` = không có khoá. */
@@ -98,7 +101,9 @@ const Me = z
 const ApiError = z.object({ error: z.string() }).openapi("ApiError");
 const err = (description: string) => ({ description, content: { "application/json": { schema: ApiError } } });
 
-export function createApi(deps: ApiDeps) {
+export function createApi(depsVao: ApiDeps) {
+  // Một nguồn danh mục cho cả API: bốn nơi đọc dùng chung một bản giữ.
+  const deps: ApiDeps = { ...depsVao, nguonDanhMuc: depsVao.nguonDanhMuc ?? taoNguonDanhMuc(depsVao.appPool) };
   const { appPool, auth } = deps;
   const api = new OpenAPIHono();
 
