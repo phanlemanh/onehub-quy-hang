@@ -4015,3 +4015,60 @@ test("off_compound_units: cách ly sàn, chỉ Bảng hàng, một khoá một c
     assert.equal((await c.query("select 1 from off_compound_units where company_id = $1", [COMPANY_A])).rowCount, 0, "sàn B đọc căn của sàn A");
   });
 });
+
+// ---- Token máy của kết nối (041, hàng 96) ----
+const MT_A = "00000000-0000-4000-8000-0000000096a1";
+const hamBam = (n) => n.repeat(64).slice(0, 64);
+
+/** Chủ bảng thêm một token cho thoả thuận `catalog_source` của sàn A, rồi trả về vai API ở sàn đang xét. */
+async function themTokenSanA(c, sanXet) {
+  await c.query("reset role");
+  const agr = (await c.query("select id from agreements where company_id = $1 and kind = 'catalog_source'", [COMPANY_A])).rows[0].id;
+  await c.query(
+    `insert into machine_tokens (id, company_id, agreement_id, token_hash, display_prefix, created_by)
+     values ($1, $2, $3, $4, 'abcd1234', '[Tên]')`,
+    [MT_A, COMPANY_A, agr, hamBam("a")],
+  );
+  await c.query("set local role quy_hang_app");
+  await c.query("select set_config('app.company_id', $1, true)", [sanXet]);
+  return agr;
+}
+const bi42501 = (e) => e.code === "42501";
+
+test("machine_tokens", { skip }, async () => {
+  await asCompany(COMPANY_B, async (c) => {
+    const { rows } = await c.query("select relrowsecurity r, relforcerowsecurity f from pg_class where relname = 'machine_tokens'");
+    assert.deepEqual(rows, [{ r: true, f: true }]);
+    const agr = await themTokenSanA(c, COMPANY_B);
+    assert.equal((await c.query("select 1 from machine_tokens")).rowCount, 0, "sàn B đọc thấy token của sàn A");
+    await expectError(
+      c,
+      `insert into machine_tokens (company_id, agreement_id, token_hash, display_prefix, created_by)
+       values ($1, $2, $3, 'abcd1234', '[Tên]')`,
+      [COMPANY_A, agr, hamBam("b")],
+      bi42501,
+    );
+    assert.equal((await c.query("update machine_tokens set revoked_at = now() where id = $1", [MT_A])).rowCount, 0, "sàn B thu hồi được token của sàn A");
+    // Đối chứng: chính sàn A thấy đúng dòng, và dòng chưa bị đổi.
+    await c.query("select set_config('app.company_id', $1, true)", [COMPANY_A]);
+    assert.deepEqual((await c.query("select id, revoked_at from machine_tokens")).rows, [{ id: MT_A, revoked_at: null }]);
+  });
+});
+
+test("machine_token_calls", { skip }, async () => {
+  await asCompany(COMPANY_B, async (c) => {
+    const { rows } = await c.query("select relrowsecurity r, relforcerowsecurity f from pg_class where relname = 'machine_token_calls'");
+    assert.deepEqual(rows, [{ r: true, f: true }]);
+    const agr = await themTokenSanA(c, COMPANY_A);
+    const chen = `insert into machine_token_calls (company_id, token_id, agreement_id, method, route, http_status, outcome)
+                  values ($1, $2, $3, 'POST', '/api/v1/catalog/feeds', 200, 'accepted') returning id`;
+    const dong = (await c.query(chen, [COMPANY_A, MT_A, agr])).rows[0].id;
+    await c.query("select set_config('app.company_id', $1, true)", [COMPANY_B]);
+    assert.equal((await c.query("select 1 from machine_token_calls")).rowCount, 0, "sàn B đọc thấy nhật ký của sàn A");
+    await expectError(c, chen, [COMPANY_A, MT_A, agr], bi42501);
+    await expectError(c, "update machine_token_calls set http_status = 500 where id = $1", [dong], bi42501);
+    // Đối chứng: chính sàn A thấy đúng dòng.
+    await c.query("select set_config('app.company_id', $1, true)", [COMPANY_A]);
+    assert.deepEqual((await c.query("select id, http_status from machine_token_calls")).rows, [{ id: dong, http_status: 200 }]);
+  });
+});

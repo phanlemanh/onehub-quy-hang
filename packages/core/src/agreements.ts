@@ -33,6 +33,24 @@ export const KIND_LIMITS: Readonly<
 /** `inbound`: dữ liệu vào công ty · `outbound`: dữ liệu rời công ty. */
 export type Direction = "inbound" | "outbound";
 
+/**
+ * Loại kết nối được cấp token máy (hàng 96, ADR-0015 sửa đổi 09/11): máy của bên kia gọi API bằng token gắn một thoả
+ * thuận. `catalog_source` chiều vào là Invest đẩy danh mục; `catalog_confirmation` chiều ra là máy thu Invest kéo xác nhận
+ * (hàng 97). Loại và chiều khác không có máy bên kia gọi vào nên không cấp.
+ */
+export const MACHINE_TOKEN_KINDS: readonly { kind: ConnectionKind; direction: Direction }[] = [
+  { kind: "catalog_source", direction: "inbound" },
+  { kind: "catalog_confirmation", direction: "outbound" },
+];
+
+/** Số token còn sống tối đa mỗi thoả thuận: đủ để cấp cái mới, đổi bên kia, rồi thu hồi cái cũ không mất lần đẩy nào. */
+export const MACHINE_TOKEN_LIMIT = 2;
+
+/** Thoả thuận loại và chiều này có được cấp token máy không. */
+export function machineTokenAllowed(kind: ConnectionKind, direction: Direction): boolean {
+  return MACHINE_TOKEN_KINDS.some((m) => m.kind === kind && m.direction === direction);
+}
+
 export type AgreementStatus = "active" | "paused" | "ended";
 
 export interface Agreement {

@@ -1,0 +1,91 @@
+schema_version: 1
+feature_slug: token-may-ket-noi
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi output có tên ca, «ok», không SKIP/TODO; ma trận viết trước, số lần so đếm bằng biến và so với độ dài ma trận. Token luôn lấy từ chính API cấp (round-trip), không tự dựng chuỗi đúng khuôn; dòng trong bảng thoả thuận do chủ bảng chèn như bộ nhan-goi.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_db
+    expected: "exit 0; ca «cấp token: hiện một lần, lưu băm» có mặt và ok — phản hồi 201 đúng /^qhm_[A-Za-z0-9_-]{43}$/, header no-store; GET danh sách chỉ có đúng tập khoá cho phép viết trước, toàn thân phản hồi không chứa giá trị token rõ hay giá trị băm; băm trong bảng bằng sha256 của chính token API trả; sau một lượt cấp và một lời gọi nhận, quét mọi cột (lấy danh sách cột từ information_schema, không viết tay) của hai bảng ép về text không chứa token rõ, đếm số cột quét bằng số cột information_schema báo và ≥ 18. Đối chứng dương trên cùng dòng: quét tìm display_prefix phải thấy. Chiều đỏ: bản sao hàm cấp lưu token rõ thì phép quét đỏ và nêu tên cột."
+    paths: [packages/api/src/auth/token-may*, packages/db/migrations/041_*, packages/api/test-db/token-may/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_db
+    expected: "exit 0; ca «quyền quản lý token: ma trận ba người ba lệnh» ok — ma trận viết trước 9 ô với 401, 403 admin-required, 404, số lần so bằng 9, đối chứng quản trị đúng sàn thành công ở cả ba lệnh; ca «cấp token: loại kết nối không cấp được» ok — bảy tổ hợp viết trước (sáu loại ngoài MACHINE_TOKEN_KINDS và catalog_source chiều ra; catalog_confirmation chiều vào cơ sở dữ liệu vốn chặn) mỗi tổ hợp 400 token-kind-not-supported, số so bằng 7, hai tổ hợp đúng 201; ca «cấp token: thoả thuận không hiệu lực» ok — paused, ended, chưa tới hạn, quá hạn mỗi ca 403 agreement-inactive; ca «trần token còn sống» ok — token vượt trần 409 token-limit-reached, thu hồi một cái thì cấp lại được; ca «hai lời cấp song song» ok — khi còn một chỗ, kết quả Promise.all đúng một 201 và một 409, số token còn sống trong bảng bằng trần; ca «thu hồi ở mọi trạng thái» ok — paused, ended, quá hạn mỗi ca 204 và revoked_at có giá trị; ca «tokenId khác thoả thuận» ok — 404, revoked_at của cả hai token không đổi; ca «thu hồi lại» ok — 204, revoked_at và revoked_by không đổi."
+    paths: [packages/api/src/auth/token-may*, packages/core/src/agreements*, packages/db/migrations/041_*, packages/api/test-db/token-may/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_db
+    expected: "exit 0; ca «đẩy gói bằng token: không phiên, không Origin» ok — 200, số khu, toà, căn khớp gói, catalog_units.agreement_id bằng đúng thoả thuận gắn token khi sàn có thoả thuận hợp lệ tạo TRƯỚC (đối chứng: đường phiên cùng sàn chọn thoả thuận tạo trước, hai agreement_id khác nhau); ca «đẩy lại không nhân đôi» ok — lần hai created 0, số dòng không đổi; ca «gói sai khuôn» ok — 422 invalid-feed, số dòng không đổi; bộ packages/api/test-db/catalog/nhan-goi.test.ts chạy cùng lệnh vẫn xanh."
+    paths: [packages/api/src/catalog/feeds*, packages/api/src/auth/token-may*, packages/api/test-db/token-may/**, packages/api/test-db/catalog/nhan-goi.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_db
+    expected: "exit 0; ca «token ngoài loại kết nối» ok — token của thoả thuận catalog_confirmation vào cửa nhận 403 token-scope, số dòng catalog không đổi; ca «đổi chiều sau khi cấp» ok — chủ bảng đổi thoả thuận sang chiều ra, 403 token-scope; ca «token không mở route nào khác» ok — duyệt mọi path và method của tài liệu OpenAPI thật của createApi (trừ POST cửa nhận), so mã trả khi có Bearer hợp lệ với khi không header, đúng từng route; số route so bằng số đếm từ tài liệu và ≥ 100; thêm mẫu ba đường danh tính ngoài OpenAPI. Đối chứng dương: route cửa nhận thì hai mã KHÁC nhau; và bản sao viewer đọc Bearer làm người thì phép quét đỏ, nêu tên route. Ca «cookie sàn khác kèm token» ok — dòng ghi mang thoả thuận sàn của token, số dòng gắn thoả thuận của sàn cookie không đổi, đối chứng: số dòng của sàn token tăng."
+    paths: [packages/api/src/auth/**, packages/api/src/catalog/feeds*, packages/api/src/app.ts, packages/api/test-db/token-may/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_cach_ly
+    expected: "exit 0; trong packages/db/tests/isolation.test.mjs có ca «machine_tokens» và «machine_token_calls» ok — hai bảng relrowsecurity và relforcerowsecurity đúng; sàn B bằng vai quy_hang_app đọc 0 dòng của sàn A, chèn mang company_id sàn A bị 42501, sửa 0 dòng; đối chứng: sàn A đọc thấy đúng dòng. Trong packages/db/tests/token-may.test.mjs ca «khoá ngoại ghép» ok — chèn token với company_id sàn B và agreement_id sàn A bị 23503 hay 42501; ca «tra theo băm» ok — ma trận viết trước: băm đúng 1 dòng; băm đúng của token đã thu hồi 1 dòng revoked true; 64 hex khác 0 dòng; sai dạng (rỗng, 63 hex, chữ hoa, có dấu) 0 dòng; số lần so bằng độ dài ma trận."
+    paths: [packages/db/migrations/041_*, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-6
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_db
+    expected: "exit 0; ca «từ chối lời gọi kế» ok — ma trận viết trước: thu hồi 401 invalid-machine-token; paused, ended, quá valid_until, sàn rời catalog_trusted_companies mỗi ca 403 agreement-inactive; token lạ đúng dạng và ba chuỗi sai dạng 401; ca «Bearer hỏng kèm cookie quản trị» ok — ba ô thu hồi, lạ, sai dạng mỗi ô kèm cookie quản trị còn sống ra 401 và catalog không đổi, đối chứng cùng cookie không Bearer ra 200, scheme viết thường đi đường token; mỗi ô so mã, thông điệp và số dòng catalog không đổi, số ô bằng độ dài ma trận; mỗi ô token thật có đối chứng dương ngay trước (200 cùng token cùng gói khác provider). Ca «mở lại thoả thuận» ok — ma trận viết trước ba ô: paused rồi active 200, quá hạn rồi gia hạn 200, ended rồi active 401; số ô bằng độ dài ma trận. Ca «tắt giữa lúc kiểm và ghi» ok — móc truocKhiGhi đổi thoả thuận sang paused, 403 agreement-inactive, gói không vào, một dòng nhật ký agreement_inactive. Ca «thu hồi sau bước tra» ok — móc sauKhiTraToken thu hồi và commit, 401 invalid-machine-token, catalog không đổi, một dòng token_revoked. Ca «thu hồi giữa lúc ghi» ok — thu hồi trong móc truocKhiGhi chờ lần ghi xong (thứ tự được ghi lại), lần đang chạy 200, lời kế 401."
+    paths: [packages/api/src/auth/token-may*, packages/api/src/catalog/feeds*, packages/db/migrations/041_*, packages/api/test-db/token-may/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_db
+    expected: "exit 0; ca «nhật ký: một lời gọi một dòng» ok — ma trận viết trước sáu kết cục (server_error do móc thử làm câu ghi gói lỗi), mỗi kết cục đúng một dòng mới với outcome, http_status, token_id, agreement_id, company_id, method, route khớp; số dòng tăng bằng số lời gọi; dòng của lời gọi bị từ chối còn lại sau rollback; ca «token lạ không sinh dòng» ok — tổng số dòng không đổi, đối chứng: token thật sinh một dòng; ca «ghi nhật ký lỗi thì gói không vào» ok — móc thử làm câu ghi nhật ký lỗi ở lần hợp lệ, phản hồi 5xx, số dòng catalog không đổi."
+    paths: [packages/api/src/auth/token-may*, packages/api/src/catalog/feeds*, packages/db/migrations/041_*, packages/api/test-db/token-may/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E8
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_cach_ly
+    expected: "exit 0; packages/db/tests/token-may.test.mjs ca «thu hồi một chiều» ok — bằng vai quy_hang_app đúng sàn: sửa token_hash, agreement_id, company_id, created_by mỗi cột bị 42501; đưa revoked_at về null 42501 hay 0 dòng; update token đã thu hồi 0 dòng; đối chứng dương: thu hồi token còn sống 1 dòng; ca «nhật ký chỉ thêm» ok — update, delete đều 42501, insert đúng sàn thành công; ca «trạng thái đích» ok — outcome ngoài tập đóng bị 23514."
+    paths: [packages/db/migrations/041_*, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E9
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_db
+    expected: "exit 0; ca «token không vào console» ok — chặn console.log, info, warn, error trong lượt cấp, nhận, từ chối 401, 403, 422 và lỗi 5xx do móc thử; không chuỗi ghi lại nào chứa token rõ hay băm; đối chứng dương: phép quét thấy chuỗi khi cố tình log token ở bản thử; ca «OpenAPI khai đường token» ok — tài liệu OpenAPI có security scheme bearer và POST cửa nhận tham chiếu nó, có mã 401 và 403."
+    paths: [packages/api/src/auth/token-may*, packages/api/src/catalog/feeds*, packages/api/test-db/token-may/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E11
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.token_may_cach_ly
+    expected: "exit 0; packages/db/tests/token-may-thu-tu.test.mjs ca «hai thứ tự áp migration» ok — dựng hai cơ sở dữ liệu tạm từ chính các tệp migration: (1) tới 041 rồi 042–052; (2) tới 040, 042–052 rồi 041; đọc pg_policies, quyền bảng và cột, ràng buộc, trigger của hai bảng mới ở mỗi bản, hai danh sách bằng nhau và khác rỗng; áp lại 041 lần hai không lỗi và danh sách không đổi. Đối chứng dương: bản sao 041 bỏ một luật thì phép so đỏ và nêu tên luật."
+    paths: [packages/db/migrations/041_*, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E10
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «cấp token theo loại kết nối» có mặt và ok trong packages/core/src/agreements.test.ts — duyệt toàn bộ CONNECTION_KINDS (số so bằng CONNECTION_KINDS.length), đúng catalog_source chiều vào và catalog_confirmation chiều ra cho phép, sáu loại còn lại và chiều ngược từ chối; MACHINE_TOKEN_LIMIT là số nguyên dương."
+    paths: [packages/core/src/agreements*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
