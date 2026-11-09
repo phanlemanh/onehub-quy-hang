@@ -6,7 +6,7 @@ import type pg from "pg";
 import type { ApiDeps } from "../app";
 import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
-import { SAMPLE_CATALOG } from "../catalog/sample";
+import { LOI_DOC_DANH_MUC, nguonCua, tenToa } from "../catalog/nguon";
 import { withCompany } from "../db";
 import { khoaSoChu } from "../owners/khoa";
 import { guiSauKhiGhi } from "../push/routes";
@@ -44,9 +44,6 @@ const loi = {
 };
 const Lead = z.object({ id: z.string(), outcome: z.string() }).passthrough();
 
-/** Tên toà của danh mục mẫu (hàng 5) — chọn «chỉ biết toà». Danh mục thật thay ở hàng 10. */
-const TOA = [...new Set(SAMPLE_CATALOG.subdivisions.flatMap((p) => p.buildings.map((b) => b.buildingName)))].sort();
-
 async function tenNguoi(identityPool: pg.Pool, userId: string | null): Promise<string | null> {
   if (!userId) return null;
   const { rows } = await identityPool.query<{ name: string }>('select name from identity."user" where id = $1', [userId]);
@@ -55,6 +52,7 @@ async function tenNguoi(identityPool: pg.Pool, userId: string | null): Promise<s
 
 export function registerLeadRoutes(api: OpenAPIHono, deps: ApiDeps) {
   const { appPool, identityPool, auth } = deps;
+  const nguon = nguonCua(deps);
   async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {
     const user = (await auth.api.getSession({ headers: c.req.raw.headers }))?.user;
     if (!user) return API_ERRORS.unauthenticated;
@@ -77,7 +75,9 @@ export function registerLeadRoutes(api: OpenAPIHono, deps: ApiDeps) {
     async (c) => {
       const ctx = await vao(c);
       if ("code" in ctx) return tra(c, ctx);
-      return c.json(TOA, 200);
+      const ban = await nguon.doc().catch(() => null);
+      if (!ban) return c.json({ error: LOI_DOC_DANH_MUC.code }, LOI_DOC_DANH_MUC.status) as never;
+      return c.json(tenToa(ban.catalog), 200);
     },
   );
 
