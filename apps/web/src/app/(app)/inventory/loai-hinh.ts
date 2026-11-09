@@ -67,7 +67,16 @@ export function cotHienTheoLoaiHinh<T extends string>(
   dongDaLoc: readonly { propertySubType?: string | null }[],
   dongTatCa: readonly { propertySubType?: string | null }[],
 ): T[] {
-  const an = cotAnTheoLoaiHinh(dongDaLoc) as Set<string>;
+  return cotHienTuBoCot(cot, boCotCua(dongDaLoc), dongTatCa);
+}
+
+/** Phần bộ cột đi theo dòng đang xem: cột loại hình bị ẩn và tiêu đề cột vị trí. Giữ cột ẩn, nên bật tắt cột vẫn có tác dụng. */
+export type BoCot = { an: readonly CotLoaiHinh[]; viTri: string };
+
+export const boCotCua = (dong: readonly { propertySubType?: string | null }[]): BoCot => ({ an: [...cotAnTheoLoaiHinh(dong)], viTri: tieuDeViTri(dong) });
+
+export function cotHienTuBoCot<T extends string>(cot: readonly T[], boCot: BoCot, dongTatCa: readonly { propertySubType?: string | null }[]): T[] {
+  const an = new Set<string>(boCot.an);
   const coLoai = coLoaiKhacCanHo(dongTatCa);
   return cot.filter((id) => !an.has(id) && (id !== "propertySubType" || coLoai));
 }

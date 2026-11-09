@@ -1,0 +1,24 @@
+{"feature_plain":"Ở hồ sơ căn, dòng «Tính theo định nghĩa ngày …» không còn đứng ở số cũ khi giá vừa sửa lúc mạng yếu: giá lên máy chủ là dòng đổi theo, không cần tải lại trang.",
+"will_do":[
+{"id":"AC-2","p":"Sẽ đổi dòng sang định nghĩa mới ngay khi giá lên máy chủ, không tải lại trang, kể cả khi sàn vừa đổi tỉ lệ trong lúc chờ."},
+{"id":"AC-3","p":"Sẽ tự đọc lại dòng ở lần đồng bộ thành công kế khi lần đọc trước hỏng, không đọc dồn."},
+{"id":"AC-7","p":"Sẽ giữ nguyên chữ và kiểu của dòng định nghĩa, đúng khuôn hồ sơ căn."}],
+"wont_do":[
+{"id":"AC-1","p":"Sẽ KHÔNG hiện dòng và không hỏi máy chủ trong lúc giá còn chờ gửi (theo khuyến nghị của Hỏi-1)."},
+{"id":"AC-4","p":"Sẽ KHÔNG làm mất dòng khi đang chờ gửi một sửa đổi khác giá, hay sửa giá của căn khác."},
+{"id":"AC-5","p":"Sẽ KHÔNG giữ số theo giá vừa bị từ chối: căn về «Cần xem» thì dòng theo giá máy chủ."},
+{"id":"AC-6","p":"Sẽ KHÔNG đổi gì với căn giá không bao phí hay chưa có giá: vẫn không có dòng."},
+{"id":"OOS-1","p":"KHÔNG đưa dòng này vào màn điện thoại của hồ sơ căn ở vòng này; màn điện thoại hiện chưa có dòng."},
+{"id":"OOS-2","p":"KHÔNG thêm chữ «đang chờ gửi» cho dòng, trừ khi bạn chọn cách đó ở Hỏi-1."},
+{"id":"OOS-3","p":"KHÔNG đổi máy chủ, cơ sở dữ liệu hay cách đóng dấu định nghĩa."},
+{"id":"OOS-4","p":"KHÔNG đưa dòng định nghĩa sang Bảng hàng hay màn cuộc gọi."}],
+"coverage_plain":[
+{"i":0,"p":"Đã phủ ba loại việc đang chờ gửi của căn: không có gì, đổi giá, sửa khác giá (AC-1, AC-4 — mọi loại sự kiện đều được thử)."},
+{"i":1,"p":"Đã phủ năm tình huống của lần đọc: chưa đọc, đang đọc dở, có định nghĩa, không có định nghĩa, đọc hỏng (AC-2, AC-3)."},
+{"i":2,"p":"Đã phủ ba kết cục của lần gửi: máy chủ nhận, từ chối, còn kẹt (AC-1, AC-2, AC-5)."}],
+"gap_probe_plain":[
+{"i":0,"p":"Việc lúc chờ gửi hiện gì là lựa chọn của người dùng thấy, máy không được tự chốt: đã đưa thành Hỏi-1 cho bạn."},
+{"i":1,"p":"Hai lý do máy loại phương án khác chưa chắc: đã viết lại đủ lý do, và nêu độ trễ xấu nhất của việc đọc lại là 30 giây."},
+{"i":2,"p":"Chưa có bài đo ca đổi giá đi rồi đổi về, hay phản hồi về muộn: đã chuyển phần đó thành một bộ đọc chạy kiểm được và bổ sung bài đo."},
+{"i":3,"p":"Hai tiêu chí đi qua máy chủ chỉ có máy chủ giả: đã thêm bài trên máy chủ thật cho đọc hỏng và giá bị từ chối."},
+{"i":4,"p":"Bài đo sửa đổi khác giá chỉ thử một loại: đã đổi thành thử mọi loại sự kiện."}]}

@@ -5,7 +5,7 @@
 import { parseNumberExpression, type ExpressionResult } from "./bieu-thuc-so";
 import type { TuVung } from "@quy-hang/core/labels";
 import { COT, COT_THEO_ID, STATUS_LABEL, chuCuaO, giaTriChon, type CotId, type DongBang } from "./cot";
-import { laKhongDung } from "./loai-hinh";
+import { boCotCua, laKhongDung, type BoCot } from "./loai-hinh";
 import { laCotRieng } from "./truong-rieng";
 
 export type BoLocCot = Partial<Record<CotId, string>>;
@@ -67,6 +67,18 @@ function dieuKien(loc: BoLocCot): ((d: DongBang) => boolean)[] {
 export function locDong(dong: readonly DongBang[], loc: BoLocCot): DongBang[] {
   const dk = dieuKien(loc);
   return dk.length ? dong.filter((d) => dk.every((f) => f(d))) : [...dong];
+}
+
+/**
+ * Bộ cột của màn (va-bang-hang-cot-thap-tang-khi-loc-rong): có dòng thì theo dòng và ghi nhớ; lọc ra rỗng thì giữ bộ cột của lần gần
+ * nhất còn dòng, để cột và ô đang gõ ở nguyên; chưa có lần nào (mở góc nhìn đã rỗng) thì theo các dòng chỉ lọc Loại hình.
+ */
+export function tinhBoCot(giu: BoCot | null, dong: readonly DongBang[], daLoc: readonly DongBang[], loc: BoLocCot): { boCot: BoCot; giu: BoCot | null } {
+  if (daLoc.length > 0) {
+    const boCot = boCotCua(daLoc);
+    return { boCot, giu: boCot };
+  }
+  return { boCot: giu ?? boCotCua(locDong(dong, loc.propertySubType ? { propertySubType: loc.propertySubType } : {})), giu };
 }
 
 const collator = new Intl.Collator("vi", { numeric: true, sensitivity: "base" });
