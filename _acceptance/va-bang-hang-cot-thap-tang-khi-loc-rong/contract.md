@@ -5,7 +5,7 @@ slug: va-bang-hang-cot-thap-tang-khi-loc-rong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-09-va-bang-hang-cot-thap-tang-khi-loc-rong-design.md
 approved_by:
 approved_at:
@@ -67,3 +67,9 @@ Ngoài-4 của hàng 79 (`_acceptance/bang-hang-theo-loai-hinh/`), chủ kho ch�
 - Khối báo lọc rỗng: giữ nguyên chữ và vị trí.
 
 ## Notes
+
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Tài liệu sản phẩm vẫn ghi cột không dùng thì không hiện, trong khi màn nay giữ cột lúc lọc ra rỗng. Người đọc tài liệu có thể hiểu sai cách bảng hoạt động. — `apps/web/src/app/(app)/inventory/bang-hang.tsx`
+- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm có thể vẫn báo đạt dù sau này việc bỏ bộ cột cũ khi mở góc nhìn bị hỏng. Khi đó người dùng có thể thấy bảng mở ra với bộ cột sai. — `apps/web/src/app/(app)/inventory/cot-khi-loc-rong.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu phần ghi nhớ bộ cột của màn bị mất, bài kiểm vẫn xanh và cột có thể biến mất khi lọc ra rỗng. Người dùng sẽ lại gặp lỗi cũ là ô lọc đang gõ biến mất. — `apps/web/src/app/(app)/inventory/cot-khi-loc-rong.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Khi người dùng gõ từng ký tự, có bước giữa chừng cột Tầng biến mất rồi mới rỗng, nhưng bài kiểm không thử các bước đó. Có thể có nháy cột thoáng qua lúc gõ mà chưa ai kiểm. — `_acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/evals.yaml`
+- Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài nhìn màn có thể vô tình chụp một bản chạy cũ từ nơi khác, làm kết quả nghiệm thu trông đúng dù bản đang chấm chưa được nhìn. Người dùng cuối không bị ảnh hưởng. — `_acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/thu/dung.mjs`
