@@ -3298,6 +3298,21 @@
       "cau_giao": "Sửa phép kiểm sổ chi phí AI của bài ô lạ để không đỏ ngẫu nhiên vì mã máy và giờ ghi, vẫn chứng minh số điện thoại không vào sổ dưới mọi dạng, kèm ca đối chứng dương.",
       "slug": "va-bai-o-la-do-ngau-nhien",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-09"
+    },
+    {
+      "ma": "va-lead-da-nhap-than-hong",
+      "cau_giao": "Khi danh sách Lead đã nhập nhận được phản hồi thành công nhưng nội dung hỏng, màn báo lỗi và có nút Thử lại, không treo mãi ở khung chờ.",
+      "slug": "va-lead-da-nhap-than-hong",
+      "vi_sao": "Ngoài của hom-nay-chiu-loi-tung-phan (#238): chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 09/11 (Ngoài-3). Dãy L.",
+      "hang": "T2",
+      "bat_khi": "Giả API trả 200 với nội dung không đọc được: màn hiện câu báo và nút Thử lại; bấm khi API về đúng thì danh sách hiện",
+      "sau": [
+        "hom-nay-chiu-loi-tung-phan"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/leads/mine/nguon-that.tsx",
+        "_acceptance/va-lead-da-nhap-than-hong/**"
+      ]
     }
   ],
   "chan_troi": [
