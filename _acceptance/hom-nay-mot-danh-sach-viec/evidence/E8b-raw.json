@@ -1,0 +1,947 @@
+{
+ "binhThuong": {
+  "cot": [
+   {
+    "href": "/today",
+    "text": "",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Tất cả việc 29",
+    "cur": "page"
+   },
+   {
+    "href": "/today?nhom=lead_overdue",
+    "text": "Lead trễ giờ nhận 2",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_unrouted",
+    "text": "Chưa chia được 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=new_lead",
+    "text": "Lead mới 7",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=price_adjustment",
+    "text": "Nên gọi điều chỉnh giá 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=call_back",
+    "text": "Cần gọi lại 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=missing_info",
+    "text": "Thiếu thông tin 15",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=add_photos",
+    "text": "Bổ sung ảnh 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=recent_change",
+    "text": "Mới đổi 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_returned",
+    "text": "Lead bị trả lại 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_reaction",
+    "text": "Khách phản ứng 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_changed",
+    "text": "Vừa đổi 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_new_match",
+    "text": "Căn mới khớp 1",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Hôm nay",
+    "cur": "page"
+   }
+  ],
+  "hang": [
+   {
+    "id": "nhom:lead_overdue",
+    "text": "Lead trễ giờ nhận 2"
+   },
+   {
+    "id": "nhom:lead_unrouted",
+    "text": "Chưa chia được 1"
+   },
+   {
+    "id": "nhom:new_lead",
+    "text": "Lead mới 7"
+   },
+   {
+    "id": "nhom:missing_info",
+    "text": "Thiếu thông tin 15"
+   },
+   {
+    "id": "nhom:lead_returned",
+    "text": "Lead bị trả lại 1"
+   },
+   {
+    "id": "nhom:buyer_reaction",
+    "text": "Khách phản ứng 1"
+   },
+   {
+    "id": "nhom:buyer_changed",
+    "text": "Vừa đổi 1"
+   },
+   {
+    "id": "nhom:buyer_new_match",
+    "text": "Căn mới khớp 1"
+   }
+  ],
+  "curAll": 3,
+  "curList": [
+   "A:page:/today:Tất cả việc 29",
+   "SPAN:page::Hôm nay",
+   "A:page:/today:Hôm nay"
+  ],
+  "net": [
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/listings",
+    200
+   ]
+  ]
+ },
+ "loi500": {
+  "cot": [
+   {
+    "href": "/today",
+    "text": "",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Tất cả việc 26",
+    "cur": "page"
+   },
+   {
+    "href": "/today?nhom=lead_overdue",
+    "text": "Lead trễ giờ nhận 2",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_unrouted",
+    "text": "Chưa chia được 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=new_lead",
+    "text": "Lead mới 7",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=price_adjustment",
+    "text": "Nên gọi điều chỉnh giá 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=call_back",
+    "text": "Cần gọi lại 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=missing_info",
+    "text": "Thiếu thông tin 15",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=add_photos",
+    "text": "Bổ sung ảnh 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=recent_change",
+    "text": "Mới đổi 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_returned",
+    "text": "Lead bị trả lại 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_reaction",
+    "text": "Khách phản ứng",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_changed",
+    "text": "Vừa đổi",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_new_match",
+    "text": "Căn mới khớp",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Hôm nay",
+    "cur": "page"
+   }
+  ],
+  "hang": [
+   {
+    "id": "nhom:lead_overdue",
+    "text": "Lead trễ giờ nhận 2"
+   },
+   {
+    "id": "nhom:lead_unrouted",
+    "text": "Chưa chia được 1"
+   },
+   {
+    "id": "nhom:new_lead",
+    "text": "Lead mới 7"
+   },
+   {
+    "id": "nhom:missing_info",
+    "text": "Thiếu thông tin 15"
+   },
+   {
+    "id": "nhom:lead_returned",
+    "text": "Lead bị trả lại 1"
+   }
+  ],
+  "curAll": 3,
+  "curList": [
+   "A:page:/today:Tất cả việc 26",
+   "SPAN:page::Hôm nay",
+   "A:page:/today:Hôm nay"
+  ],
+  "net": [
+   [
+    "/api/v1/listings",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    500,
+    "forced"
+   ],
+   [
+    "/api/v1/today/buyer",
+    500,
+    "forced"
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    500,
+    "forced"
+   ],
+   [
+    "/api/v1/today/buyer",
+    500,
+    "forced"
+   ]
+  ]
+ },
+ "tatCa": {
+  "cot": [
+   {
+    "href": "/today",
+    "text": "",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Tất cả việc 29",
+    "cur": "page"
+   },
+   {
+    "href": "/today?nhom=lead_overdue",
+    "text": "Lead trễ giờ nhận 2",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_unrouted",
+    "text": "Chưa chia được 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=new_lead",
+    "text": "Lead mới 7",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=price_adjustment",
+    "text": "Nên gọi điều chỉnh giá 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=call_back",
+    "text": "Cần gọi lại 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=missing_info",
+    "text": "Thiếu thông tin 15",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=add_photos",
+    "text": "Bổ sung ảnh 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=recent_change",
+    "text": "Mới đổi 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_returned",
+    "text": "Lead bị trả lại 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_reaction",
+    "text": "Khách phản ứng 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_changed",
+    "text": "Vừa đổi 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_new_match",
+    "text": "Căn mới khớp 1",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Hôm nay",
+    "cur": "page"
+   }
+  ],
+  "hang": [
+   {
+    "id": "nhom:lead_overdue",
+    "text": "Lead trễ giờ nhận 2"
+   },
+   {
+    "id": "nhom:lead_unrouted",
+    "text": "Chưa chia được 1"
+   },
+   {
+    "id": "nhom:new_lead",
+    "text": "Lead mới 7"
+   },
+   {
+    "id": "nhom:missing_info",
+    "text": "Thiếu thông tin 15"
+   },
+   {
+    "id": "nhom:lead_returned",
+    "text": "Lead bị trả lại 1"
+   },
+   {
+    "id": "nhom:buyer_reaction",
+    "text": "Khách phản ứng 1"
+   },
+   {
+    "id": "nhom:buyer_changed",
+    "text": "Vừa đổi 1"
+   },
+   {
+    "id": "nhom:buyer_new_match",
+    "text": "Căn mới khớp 1"
+   }
+  ],
+  "curAll": 3,
+  "curList": [
+   "A:page:/today:Tất cả việc 29",
+   "SPAN:page::Hôm nay",
+   "A:page:/today:Hôm nay"
+  ],
+  "net": [
+   [
+    "/api/v1/listings",
+    200
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    200
+   ]
+  ]
+ },
+ "hopLe": {
+  "cot": [
+   {
+    "href": "/today",
+    "text": "",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Tất cả việc 29",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_overdue",
+    "text": "Lead trễ giờ nhận 2",
+    "cur": "page"
+   },
+   {
+    "href": "/today?nhom=lead_unrouted",
+    "text": "Chưa chia được 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=new_lead",
+    "text": "Lead mới 7",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=price_adjustment",
+    "text": "Nên gọi điều chỉnh giá 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=call_back",
+    "text": "Cần gọi lại 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=missing_info",
+    "text": "Thiếu thông tin 15",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=add_photos",
+    "text": "Bổ sung ảnh 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=recent_change",
+    "text": "Mới đổi 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_returned",
+    "text": "Lead bị trả lại 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_reaction",
+    "text": "Khách phản ứng 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_changed",
+    "text": "Vừa đổi 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_new_match",
+    "text": "Căn mới khớp 1",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Hôm nay",
+    "cur": "page"
+   }
+  ],
+  "hang": [
+   {
+    "id": "nhom:lead_overdue",
+    "text": "Lead trễ giờ nhận 2"
+   },
+   {
+    "id": "nhom:lead_unrouted",
+    "text": "Chưa chia được 1"
+   },
+   {
+    "id": "nhom:new_lead",
+    "text": "Lead mới 7"
+   },
+   {
+    "id": "nhom:missing_info",
+    "text": "Thiếu thông tin 15"
+   },
+   {
+    "id": "nhom:lead_returned",
+    "text": "Lead bị trả lại 1"
+   },
+   {
+    "id": "nhom:buyer_reaction",
+    "text": "Khách phản ứng 1"
+   },
+   {
+    "id": "nhom:buyer_changed",
+    "text": "Vừa đổi 1"
+   },
+   {
+    "id": "nhom:buyer_new_match",
+    "text": "Căn mới khớp 1"
+   }
+  ],
+  "curAll": 3,
+  "curList": [
+   "A:page:/today?nhom=lead_overdue:Lead trễ giờ nhận 2",
+   "SPAN:page::Hôm nay",
+   "A:page:/today:Hôm nay"
+  ],
+  "net": [
+   [
+    "/api/v1/listings",
+    200
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    200
+   ]
+  ]
+ },
+ "la": {
+  "cot": [
+   {
+    "href": "/today",
+    "text": "",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Tất cả việc 29",
+    "cur": "page"
+   },
+   {
+    "href": "/today?nhom=lead_overdue",
+    "text": "Lead trễ giờ nhận 2",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_unrouted",
+    "text": "Chưa chia được 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=new_lead",
+    "text": "Lead mới 7",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=price_adjustment",
+    "text": "Nên gọi điều chỉnh giá 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=call_back",
+    "text": "Cần gọi lại 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=missing_info",
+    "text": "Thiếu thông tin 15",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=add_photos",
+    "text": "Bổ sung ảnh 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=recent_change",
+    "text": "Mới đổi 0",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=lead_returned",
+    "text": "Lead bị trả lại 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_reaction",
+    "text": "Khách phản ứng 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_changed",
+    "text": "Vừa đổi 1",
+    "cur": null
+   },
+   {
+    "href": "/today?nhom=buyer_new_match",
+    "text": "Căn mới khớp 1",
+    "cur": null
+   },
+   {
+    "href": "/today",
+    "text": "Hôm nay",
+    "cur": "page"
+   }
+  ],
+  "hang": [
+   {
+    "id": "nhom:lead_overdue",
+    "text": "Lead trễ giờ nhận 2"
+   },
+   {
+    "id": "nhom:lead_unrouted",
+    "text": "Chưa chia được 1"
+   },
+   {
+    "id": "nhom:new_lead",
+    "text": "Lead mới 7"
+   },
+   {
+    "id": "nhom:missing_info",
+    "text": "Thiếu thông tin 15"
+   },
+   {
+    "id": "nhom:lead_returned",
+    "text": "Lead bị trả lại 1"
+   },
+   {
+    "id": "nhom:buyer_reaction",
+    "text": "Khách phản ứng 1"
+   },
+   {
+    "id": "nhom:buyer_changed",
+    "text": "Vừa đổi 1"
+   },
+   {
+    "id": "nhom:buyer_new_match",
+    "text": "Căn mới khớp 1"
+   }
+  ],
+  "curAll": 3,
+  "curList": [
+   "A:page:/today:Tất cả việc 29",
+   "SPAN:page::Hôm nay",
+   "A:page:/today:Hôm nay"
+  ],
+  "net": [
+   [
+    "/api/v1/listings",
+    200
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/company/settings/queue",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    200
+   ],
+   [
+    "/api/v1/leads/assigned",
+    200
+   ],
+   [
+    "/api/v1/team/lead-queue",
+    200
+   ],
+   [
+    "/api/v1/team/listing-agents",
+    200
+   ],
+   [
+    "/api/v1/leads",
+    200
+   ],
+   [
+    "/api/v1/catalog",
+    200
+   ],
+   [
+    "/api/v1/today/buyer",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ],
+   [
+    "/api/v1/push/public-key",
+    200
+   ]
+  ]
+ }
+}

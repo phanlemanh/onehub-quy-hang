@@ -1,30 +1,21 @@
 "use client";
 
-// Dòng phụ dưới giá bao phí (hàng 49): đọc dấu định nghĩa của giá hiện hành từ máy chủ khi có mạng; mất mạng hay đọc
-// hỏng thì không có dòng — giá vẫn hiện như cũ. Chữ dựng ở `./dinh-nghia`.
-import { useEffect, useState } from "react";
+// Dòng phụ dưới giá bao phí (hàng 49): đọc dấu định nghĩa của giá hiện hành từ máy chủ khi có mạng; mất mạng, đọc
+// hỏng hay giá còn chờ gửi thì không có dòng — giá vẫn hiện như cũ. Thứ tự đọc ở `./doc-dau`, chữ dựng ở `./dinh-nghia`.
+import { useEffect, useState, useSyncExternalStore } from "react";
 
-import type { DauPhi } from "@quy-hang/core/pricing";
+import { goiFetch } from "@/lib/sync/goi-fetch";
 
-import { dongDinhNghia } from "./dinh-nghia";
+import { docDau, taoBoDocDau, type VaoDong } from "./doc-dau";
 
-export function DongDinhNghia({ listingId, gia, phi }: { listingId: string; gia: number | null; phi: string | null }) {
-  const [dau, setDau] = useState<{ khoa: string; dau: DauPhi | null } | null>(null);
-  const khoa = `${listingId}:${gia ?? ""}:${phi ?? ""}`;
+export function DongDinhNghia({ v }: { v: VaoDong }) {
+  const [bo] = useState(() => taoBoDocDau((id) => docDau(goiFetch, id)));
+  useSyncExternalStore(bo.dangKy, bo.phienBan, () => 0);
+  const { listingId, gia, phi, giaChoGui, keoLuc } = v;
   useEffect(() => {
-    if (phi !== "included" || gia === null) return;
-    let huy = false;
-    fetch(`/api/v1/listings/${encodeURIComponent(listingId)}/fee-basis`, { credentials: "same-origin" })
-      .then((r) => (r.ok ? (r.json() as Promise<DauPhi | null>) : null))
-      .then((d) => {
-        if (!huy) setDau({ khoa, dau: d });
-      })
-      .catch(() => {});
-    return () => {
-      huy = true;
-    };
-  }, [khoa, listingId, gia, phi]);
-  const chu = phi === "included" && dau?.khoa === khoa ? dongDinhNghia(gia, dau.dau) : null;
+    bo.vao({ listingId, gia, phi, giaChoGui, keoLuc });
+  }, [bo, listingId, gia, phi, giaChoGui, keoLuc]);
+  const chu = bo.chu(v);
   return chu ? (
     <p className="text-xs text-muted-foreground" data-dinh-nghia>
       {chu}

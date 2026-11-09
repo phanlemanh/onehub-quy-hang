@@ -1,0 +1,10 @@
+74163c9169c2afc44701f4fc0c80d3a1a61f8abd5164a10dca16039e88b48732  /Users/manhphan/dev/crm/apps/app/public/favicon.svg
+74163c9169c2afc44701f4fc0c80d3a1a61f8abd5164a10dca16039e88b48732  apps/web/public/icons/onehub-mark.svg
+401e90c6536b9106dd96298a4594888e9cc20ea9c4875a60cee3655277b8de0c  /Users/manhphan/dev/crm/apps/app/app/favicon.ico
+401e90c6536b9106dd96298a4594888e9cc20ea9c4875a60cee3655277b8de0c  apps/web/src/app/favicon.ico
+bee8be6f9e8710776a52103666509c98297b95a3246df2c522b6323edb51c458  /Users/manhphan/dev/crm/apps/app/public/apple-touch-icon.png
+bee8be6f9e8710776a52103666509c98297b95a3246df2c522b6323edb51c458  apps/web/public/icons/apple-touch-icon.png
+6e5dad7b70657b71f07bfddfd4f9435f3a108fe1c2e98774158b1779273c43e5  /Users/manhphan/dev/crm/apps/app/public/web-app-manifest-192x192.png
+6e5dad7b70657b71f07bfddfd4f9435f3a108fe1c2e98774158b1779273c43e5  apps/web/public/icons/icon-192.png
+6922530c0ac977abc5cf44abd7a29ab6dfe2c88979d2713edfb43de73d9ec5c4  /Users/manhphan/dev/crm/apps/app/public/web-app-manifest-512x512.png
+6922530c0ac977abc5cf44abd7a29ab6dfe2c88979d2713edfb43de73d9ec5c4  apps/web/public/icons/icon-512.png

@@ -53,3 +53,10 @@ Không đổi hình khuôn v1, chỉ thêm giá trị bị từ chối. **Hai lu
 dư đã chọn: số nhúng liền chữ trong một đoạn khoá (`x0900000071`) vẫn qua khuôn; hàm dựng vẫn đòi khoá có trong danh mục.
 **Căn UPI lạ:** khuôn chiều vào giữ nguyên, sàn gặp căn như vậy không báo sai được và thấy lý do «UPI ngoài dạng»; chỉ
 Invest sửa được nguồn.
+
+## Sửa đổi 09/11 lần 2 (hàng va-khuon-doan-sdt-ranh-gioi)
+
+Thay luật khoá máy cấp ở sửa đổi trên. `buildingKey` và `upi` bị chặn khi có một dãy 9–11 chữ số, giữa các chữ số có thể có dấu
+tách mà khoá cho phép (`.`, `-`, `_`, `:`, kể cả lặp), và: hai đầu dãy không dính chữ hay số, hoặc trong dãy có dấu tách dù hai
+đầu dính chữ. Phần dư còn đúng một dạng: số liền không dấu tách dính chữ (`x0900000071`). Dãy có một đoạn đứng riêng đủ 9–11 chữ
+số thì bị chặn dù cả dãy dài hơn (`12-0900000071`).

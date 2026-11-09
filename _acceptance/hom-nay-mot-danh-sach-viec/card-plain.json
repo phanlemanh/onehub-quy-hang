@@ -1,0 +1,36 @@
+{
+  "feature_plain": "Mỗi người mở Hôm nay thấy một danh sách việc của mình, cùng một kiểu dòng cho mọi vai; phần theo dõi về đúng nhà của nó.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ chỉ còn một danh sách việc trên Hôm nay, có đường dẫn ở đầu màn, các mép thẳng hàng; hết việc thì một câu và một nút đi tiếp; người chỉ quản trị về Cài đặt sàn."},
+    {"id": "AC-2", "p": "Sẽ dùng một kiểu dòng cho mọi việc: tên việc, vì sao hôm nay, chi tiết, một nút chính; việc đã quá hạn đứng trước; số việc đầu màn đúng bằng số dòng."},
+    {"id": "AC-3", "p": "Sẽ cho trưởng nhóm giao lại lead quá hạn hay chưa chia được ngay trên dòng; giao xong dòng biến mất."},
+    {"id": "AC-4", "p": "Sẽ đưa lead bị trả lại thành việc «Sửa số» của telesales, kèm một dòng dẫn tới Lead đã nhập."},
+    {"id": "AC-5", "p": "Sẽ biến tin khách phản ứng, căn vừa đổi, căn mới khớp thành việc của đầu khách, tự hết sau 48 giờ, không lộ số khách."},
+    {"id": "AC-6", "p": "Sẽ dời ba ô số và bảng theo đầu chủ sang nhà Đội, số giữ nguyên."},
+    {"id": "AC-7", "p": "Sẽ dời tin 7 ngày sang mục «Tin của khách» ở Đã gửi, đúng bề rộng đọc."},
+    {"id": "AC-8", "p": "Sẽ cho cột thứ hai chỉ hiện nhóm của vai người xem, theo tên của sàn, có số việc, luôn có một mục sáng."},
+    {"id": "AC-9", "p": "Sẽ báo đúng một dòng khi một nguồn đọc lỗi, tự thử lại trước khi báo, không bao giờ nói «không có việc» khi chưa đọc được."},
+    {"id": "AC-10", "p": "Sẽ hiện mọi việc dạng thẻ trên điện thoại, tên căn đọc đủ, trưởng nhóm giao lại ở ngăn đáy."}
+  ],
+  "wont_do": [
+    {"id": "OOS-1", "p": "Sẽ KHÔNG cho sàn ẩn hay đổi thứ tự nhóm của vai khác đầu chủ, và chưa có nút «Xong» cho việc đầu khách."},
+    {"id": "OOS-2", "p": "Sẽ KHÔNG gộp các lần đọc dữ liệu lúc mở app ở vòng này."},
+    {"id": "OOS-3", "p": "Sẽ KHÔNG làm bấm cả dòng để mở chi tiết."},
+    {"id": "OOS-4", "p": "Sẽ KHÔNG đổi luật xếp nhóm căn, luật chia lead hay luật ẩn."},
+    {"id": "OOS-5", "p": "Sẽ KHÔNG đổi chữ «Lead» ở vòng này; việc đó thuộc hàng riêng."}
+  ],
+  "scope_plain": "Những phần dưới để vòng sau, không chặn việc này.",
+  "coverage_plain": [
+    {"i": 0, "p": "Đã phủ sáu kiểu người dùng: bốn vai đơn, người đủ năm vai, người chỉ quản trị — đo theo bảng vai của sản phẩm (AC-1 đến AC-5)."},
+    {"i": 1, "p": "Đã phủ tám loại việc từ năm nguồn đọc đang có; mỗi loại phải có dòng thật khi chấm (AC-2)."},
+    {"i": 2, "p": "Đã phủ năm tình trạng đọc: có việc, hết việc, lỗi một lần, lỗi kéo dài, mất mạng (AC-1, AC-9)."},
+    {"i": 3, "p": "Đã phủ ba khổ màn: điện thoại, máy tính thường, màn rộng (AC-1, AC-10)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Chưa có bài nào đi trọn từ nút «Giao lại» tới máy chủ, và ca chưa chia được chưa được đo. Đã sửa: bài chấm đọc lại máy chủ, có lead đối chứng; thêm câu hỏi về giao lại trên điện thoại."},
+    {"i": 1, "p": "Việc đầu khách chỉ được đo bằng dữ liệu viết tay, chưa đo đích bấm và chưa quét số khách theo giá trị. Đã sửa: thêm bài trên bản chạy thật, quét mồi ở cả bốn vai."},
+    {"i": 2, "p": "Dòng «Lead đã nhập» mâu thuẫn với luật mọi dòng là việc, và thứ tự nhóm của sàn chưa được giữ. Đã sửa: ghi rõ dòng ấy không đếm, giữ thứ tự của sàn, bài chấm đỏ khi thiếu dữ liệu."},
+    {"i": 3, "p": "Mất mạng, có mạng lại, hết việc và người chỉ quản trị chưa có tiêu chí. Đã sửa: thêm vế vào tiêu chí và thêm bài chấm trên màn."},
+    {"i": 4, "p": "Khuyên cho đổi tên nhóm nhưng phần bỏ ngoài lại loại hẳn, số ở cột hai chưa so với thân trên màn thật. Đã sửa: tách việc đổi tên ra, thêm bài so số trên màn thật."}
+  ]
+}

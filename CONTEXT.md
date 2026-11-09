@@ -55,6 +55,8 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Phiên bản (của hàng) | `version` | Số sự kiện đã ghi của hàng; lệnh mang phiên bản cũ bị báo «đã có người sửa trước» | — |
 | Nhà | `Home` (`packages/core` navigation) | Một chỗ làm việc trả lời một câu (Tham chiếu §9); cột biểu tượng trên máy tính, tab dưới trên điện thoại | — |
 | Hôm nay | `today` | Nhà mở đầu: giờ làm gì | — |
+| Việc | `DongViec`, `gopViec` | Một dòng ở Hôm nay cần một người làm một hành động; tự rời danh sách khi xong hay hết hạn | — |
+| Tin của khách | `/shares/tin` | Phản ứng của khách và thay đổi trên link đã gửi trong 7 ngày | — |
 | Đã gửi · Gửi | `shares` | Link đã gửi và lịch xem; trên điện thoại là tab Gửi, gồm cả nút gửi mới | — |
 | Đội | `team` | Nhà của trưởng nhóm: đội đang chạy thế nào | — |
 | Cài đặt sàn | `settings` | Nhà của quản trị sàn: sàn gọi tên và chạy theo luật nào | — |

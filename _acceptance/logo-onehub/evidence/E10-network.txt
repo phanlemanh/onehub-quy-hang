@@ -1,0 +1,1 @@
+driver playwright; non-static app requests: none; console errors 0, warnings 0; icon href both routes /favicon.ico?favicon...ico

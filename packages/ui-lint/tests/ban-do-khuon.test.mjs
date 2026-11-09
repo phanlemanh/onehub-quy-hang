@@ -44,7 +44,6 @@ const TRANG_TAM = [
   "imports/new",
   "me",
   "shares",
-  "team",
   "today",
   "viewings",
 ].map((p) => `${W}/app/(app)/${p}/page.tsx`);
@@ -57,7 +56,7 @@ const BANG = {
   },
   "o-nhan-lead": { theoKhuon: [`${W}/app/(app)/leads/new/page.tsx`], ngoaiLe: [] },
   // Lead của tôi (hàng 27): ba trang ba lối của ADR-0019, nhóm màn mới.
-  "lead-cua-toi": { theoKhuon: [`${W}/app/(app)/leads/mine/page.tsx`], ngoaiLe: [`${W}/app/(app)/today/page.tsx`] },
+  "lead-cua-toi": { theoKhuon: [`${W}/app/(app)/leads/mine/page.tsx`], ngoaiLe: [] },
   "trang-tam": {
     // Hàng 91: Cài đặt sàn vào vỏ — mục chưa dựng là trang tạm; trang chuyển hướng và Người dùng là ngoại lệ.
     // Hàng 38: Tôi rời trang tạm sang nhóm toi.
@@ -94,6 +93,8 @@ const BANG = {
       `${W}/app/(app)/settings/users/page.tsx`,
       `${W}/app/(app)/shares/new/page.tsx`,
       `${W}/app/(app)/shares/page.tsx`,
+      `${W}/app/(app)/shares/tin/page.tsx`,
+      `${W}/app/(app)/team/page.tsx`,
       `${W}/app/(app)/today/page.tsx`,
       `${W}/app/(app)/units/[code]/page.tsx`,
       `${W}/app/(app)/units/call/dial/page.tsx`,
@@ -107,14 +108,14 @@ const BANG = {
   // Hàng 22: Hôm nay của đầu chủ, nhóm màn mới — /today theo vai và trang ba lối của nó.
   "hom-nay-dau-chu": { theoKhuon: [`${W}/app/(app)/today/page.tsx`], ngoaiLe: [] },
   // Hàng 42: Hôm nay của trưởng nhóm, nhóm màn mới — vùng dựng KhungTruongNhom; /today thuộc nhóm hom-nay-dau-chu.
-  "hom-nay-truong-nhom": { theoKhuon: [`${W}/app/(app)/today/truong-nhom.tsx`], ngoaiLe: [`${W}/app/(app)/today/page.tsx`] },
+  "hom-nay-truong-nhom": { theoKhuon: [`${W}/app/(app)/team/page.tsx`], ngoaiLe: [] },
   // Hàng 28: Chế độ cuộc gọi, nhóm màn mới — trang ba lối và màn thật /units/call.
   "cuoc-goi": { theoKhuon: [`${W}/app/(app)/units/call/dial/page.tsx`, `${W}/app/(app)/units/call/page.tsx`], ngoaiLe: [] },
   // Hàng 34: Gửi, nhóm màn mới — màn thật /shares/new (trang ba lối đã gỡ).
   // Hàng 36: Đã gửi, nhóm màn mới — màn thật /shares (trang ba lối đã gỡ).
   "da-gui": { theoKhuon: [`${W}/app/(app)/shares/page.tsx`], ngoaiLe: [] },
   // Hàng 37: Hôm nay của đầu khách, nhóm màn mới — vùng dựng KhungHomNayDauKhach (nối vào /today sau hàng 92).
-  "hom-nay-dau-khach": { theoKhuon: [`${W}/app/(app)/today/buyer/vung.tsx`], ngoaiLe: [] },
+  "hom-nay-dau-khach": { theoKhuon: [`${W}/app/(app)/shares/tin/page.tsx`], ngoaiLe: [] },
   // Hàng 103: Màn Liên hệ, nhóm màn mới — vùng dựng KhungLienHe.
   "lien-he": { theoKhuon: [`${W}/app/(app)/contacts/vung.tsx`], ngoaiLe: [] },
   gui: { theoKhuon: [`${W}/app/(app)/shares/new/page.tsx`], ngoaiLe: [] },
@@ -166,11 +167,12 @@ const NHAN_DIEN_TRANG_THAI = [
   // Chế độ cuộc gọi (hàng 28): trang ba lối và màn thật.
   ...["cuoc-goi.tsx", "dial/nut-quay-so.tsx", "dial/page.tsx", "dial/trang-quay-so.tsx", "khoi.tsx", "khung.tsx", "page.tsx", "push/ep-gia.tsx"].map((p) => `${W}/app/(app)/units/call/${p}`),
   // Hôm nay của đầu khách (hàng 37): dòng tin, khuôn, vùng.
-  ...["buyer/dong-tin.tsx", "buyer/khung.tsx", "buyer/vung.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
+  ...["dong-tin.tsx", "khung.tsx", "page.tsx", "vung.tsx"].map((p) => `${W}/app/(app)/shares/tin/${p}`),
   // Màn Liên hệ (hàng 103): danh sách, hồ sơ, khuôn, trang, mục trên Tôi, vùng.
   ...["danh-sach.tsx", "ho-so.tsx", "khung.tsx", "muc-truong-rieng.tsx", "page.tsx", "tren-toi.tsx", "vung.tsx"].map((p) => `${W}/app/(app)/contacts/${p}`),
   // Thông báo lead (hàng 26): dải bật thông báo ở đầu /today; Hôm nay của trưởng nhóm (hàng 42).
-  ...["dai-bat.tsx", "hom-nay-dau-chu.tsx", "khung.tsx", "truong-nhom.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
+  ...["dai-bat.tsx", "dau-man.tsx", "hom-nay.tsx", "khung.tsx", "viec/giao-lai.tsx", "viec/sua-so.tsx"].map((p) => `${W}/app/(app)/today/${p}`),
+  ...["dashboard.tsx", "khung.tsx", "page.tsx"].map((p) => `${W}/app/(app)/team/${p}`),
   // Tôi (hàng 38): màn, khuôn, khối dựng, nguồn thật; khối báo máy bị báo ở đăng nhập.
   ...["hop-mat-khau.tsx", "khung.tsx", "man-toi.tsx", "toi-that.tsx"].map((p) => `${W}/app/(app)/me/${p}`),
   // Nhập Excel (hàng man-nhap-excel): khuôn, màn và bảng của nó.
@@ -271,22 +273,23 @@ const CHO_TRANG_THAI = [
   // Màn Đã gửi (hàng 36): vai không xem ở trang.
   `${W}/app/(app)/shares/page.tsx`,
   // Hôm nay của đầu khách (hàng 37): lỗi tải, trống của vùng.
-  ...Array(2).fill(`${W}/app/(app)/today/buyer/dong-tin.tsx`),
+  ...Array(2).fill(`${W}/app/(app)/shares/tin/dong-tin.tsx`),
+  // Tin của khách: vai khác Đầu khách.
+  `${W}/app/(app)/shares/tin/page.tsx`,
+  // Đội: lỗi tải, trống của bảng theo đầu chủ.
+  ...Array(2).fill(`${W}/app/(app)/team/dashboard.tsx`),
   // Thông báo lead (hàng 26): dải bật — hướng dẫn cài iPhone, chưa cấu hình, không hỗ trợ, bật / lỗi bật.
   ...Array(4).fill(`${W}/app/(app)/today/dai-bat.tsx`),
-  ...Array(3).fill(`${W}/app/(app)/today/hom-nay-dau-chu.tsx`),
+  ...Array(3).fill(`${W}/app/(app)/today/hom-nay.tsx`),
   // Thông báo lead (hàng 26): lead từ thông báo không còn ở Hôm nay.
-  `${W}/app/(app)/today/hom-nay-dau-chu.tsx`,
+  `${W}/app/(app)/today/hom-nay.tsx`,
   // Mở hàng đợi từ cột thứ hai (va-he-bo-cuc): nhóm không có chỗ ở Hôm nay của đầu chủ; người không có vai Đầu chủ.
-  `${W}/app/(app)/today/hom-nay-dau-chu.tsx`,
+  `${W}/app/(app)/today/hom-nay.tsx`,
   // Hôm nay của trưởng nhóm (hàng 42): dòng «mở trên máy tính» của khuôn; mất mạng, lỗi tải hàng đợi.
-  `${W}/app/(app)/today/khung.tsx`,
   // Hôm nay đầu chủ trên điện thoại (hàng 39): danh sách thẻ — lỗi tải qua TrangThai.
   `${W}/app/(app)/today/mobile/danh-sach.tsx`,
   // Trống của Hôm nay đầu chủ (máy tính và điện thoại) dời sang tệp riêng (hàng 39).
   `${W}/app/(app)/today/mobile/het-viec.tsx`,
-  `${W}/app/(app)/today/page.tsx`,
-  ...Array(2).fill(`${W}/app/(app)/today/truong-nhom.tsx`),
   // Chế độ cuộc gọi (hàng 28): không thấy lead, lỗi tải lead.
   ...Array(2).fill(`${W}/app/(app)/units/call/cuoc-goi.tsx`),
   // Trang quay số (hàng 30): không thấy lead, lỗi tải lead.
@@ -500,16 +503,16 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "ho-so-can: 3 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-dau-chu: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "hom-nay-dau-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "hom-nay-truong-nhom: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
-      "lead-cua-toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
+      "hom-nay-truong-nhom: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
+      "lead-cua-toi: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "lien-he: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "nhap-excel: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "o-nhan-lead: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "toi: 1 tệp theo khuôn · 1 ngoại lệ · 0 lệch",
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
-      "trang-tam: 2 tệp theo khuôn · 25 ngoại lệ · 0 lệch",
-      "trang-thai: 176 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-tam: 1 tệp theo khuôn · 27 ngoại lệ · 0 lệch",
+      "trang-thai: 175 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

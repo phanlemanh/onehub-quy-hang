@@ -2,11 +2,11 @@
 nhom: lead-cua-toi
 doi_tuong: [lead]
 khuon: { ten: KhungLeadCuaToi, nhap: "@/app/(app)/leads/mine/khung" }
-nhan_dien: ["apps/web/src/app/(app)/leads/mine/page.tsx", "apps/web/src/app/(app)/today/page.tsx"]
+nhan_dien: ["apps/web/src/app/(app)/leads/mine/page.tsx"]
 mau_dang_chay: { tep: "apps/web/src/app/(app)/leads/mine/page.tsx", duong: "/leads/mine", trang_thai: [mac-dinh, trong, dang-tai, loi, tra-lai, da-gui-lai, tin-bo-sung] }
 khe_bat_buoc: [children]
 cam_ngoai_khuon: [Card]
-ngoai_le: [{ tep: "apps/web/src/app/(app)/today/page.tsx", ly_do: "Hôm nay theo vai — trang thuộc nhóm hom-nay-dau-chu (khuôn KhungHomNay): vùng đầu chủ là Hôm nay của đầu chủ, vùng telesales dựng qua KhungLeadCuaToi đặt trong KhungHomNay, sau vùng đầu chủ." }]
+ngoai_le: []
 luat: [KH-lct-mot-khung, KH-lct-khong-hang, KH-lct-ba-trang-thai]
 bo_cuc: danh-sach-chi-tiet
 ---
@@ -16,7 +16,7 @@ Vùng «Lead đã nhập» của telesales (hàng 27, L1 cột phải, L5): lead
 Đã nhận → Đã gọi → Lên bảng; lead bị trả lại có ô sửa số và gửi lại; lead căn trùng là tin bổ sung, không theo bốn nấc.
 Lối ReUI (`list-11`) được duyệt ở Cổng Phạm vi qua trang ba lối (ADR-0019); khuôn thật `KhungLeadCuaToi` là Frame
 stacked của khối ấy, màn mẫu là `/leads/mine` (bố cục Danh sách – chi tiết qua `<KhungLeadCuaToi trang>`, hàng 51). Hôm nay
-của telesales hiện cùng vùng (ngoại lệ có lý do: trang theo vai); tab Lead trên điện thoại đặt vùng trong phần «Lead đã nhập».
+của telesales dẫn tới đây bằng một dòng; tab Lead trên điện thoại đặt vùng trong phần «Lead đã nhập».
 
 **Dùng khi** màn liệt kê lead của chính người nhập và nấc đầu chủ đã tới. **Không dùng** cho Ô nhận lead (nhóm
 `o-nhan-lead`) hay Hôm nay của đầu chủ, trưởng nhóm (bảng việc theo nhóm, hàng 22, 42).
