@@ -109,7 +109,7 @@ export const DAU_NOI_SDT: readonly string[] = [
   "090.000-0071",
 ];
 /** Đối chứng ghép cặp theo chỉ số với `DAU_NOI_SDT`: cùng hình, cùng dấu nối, 8 chữ số. */
-export const DAU_NOI_DOI_CHUNG: readonly string[] = ["09000071", "090.000.71", "0900-071", "090_000_71", "090:000:71", "090--000--71", "090.000-71"];
+export const DAU_NOI_DOI_CHUNG: readonly string[] = ["09000071", "090.000.71", "09-000-071", "090_000_71", "090:000:71", "090--000--71", "090.000-71"];
 export const TRUOC_KHOA: readonly string[] = ["", "bld-", "bld.", "bld_", "bld:"];
 export const SAU_KHOA: readonly string[] = ["", "-A", ".A", "_A", ":A"];
 

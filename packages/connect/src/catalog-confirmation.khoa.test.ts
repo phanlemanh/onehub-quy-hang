@@ -184,24 +184,29 @@ test("khoá máy cấp: có dấu tách dính chữ bị chặn", () => {
     const dc = doiChung[i] ?? "";
     const u = bocUpi(k);
     const uDc = bocUpi(dc);
-    soChan += 7;
-    soQua += 7;
     if (!biChanDung(docToa(k), "buildingKey")) lot.push(`khuôn toà ← ${k}`);
+    soChan++;
     if (!biChanDung(docUpi(u), "upi")) lot.push(`khuôn upi ← ${u}`);
+    soChan++;
     if (!docToa(dc).ok) oan.push(`khuôn toà ← ${dc}`);
+    soQua++;
     if (!docUpi(uDc).ok) oan.push(`khuôn upi ← ${uDc}`);
+    soQua++;
     for (const d of DUONG_DUNG_TOA) {
       chamDuong(d.ten, d.dung(k) as never, "buildingKey", k);
+      soChan++;
       if (!d.dung(dc).ok) oan.push(`${d.ten} ← ${dc}`);
+      soQua++;
     }
     for (const d of DUONG_DUNG_UPI) {
       chamDuong(d.ten, d.dung(u) as never, "upi", u);
+      soChan++;
       if (!d.dung(uDc).ok) oan.push(`${d.ten} ← ${uDc}`);
+      soQua++;
     }
   }
   assert.deepEqual(lot, []);
   assert.deepEqual(oan, []);
-  assert.equal(soChan, sdt.length * 7);
   assert.equal(soChan, 84);
   assert.equal(soQua, 84);
 });

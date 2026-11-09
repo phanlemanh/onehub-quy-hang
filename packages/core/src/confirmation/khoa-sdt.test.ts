@@ -8,6 +8,15 @@ const loiCua = (kq: KetQua<unknown>) => (kq.ok ? [] : kq.loi);
 test("khoá máy cấp: ma trận số điện thoại bị hàm dựng chặn", () => {
   const sdt = maTranKhoa(DAU_NOI_SDT);
   const doiChung = maTranKhoa(DAU_NOI_DOI_CHUNG);
+  const dem = (s: string) => s.replace(/\D/g, "").length;
+  const dau = (s: string) => s.replace(/\d/g, "");
+  assert.equal(DAU_NOI_DOI_CHUNG.length, DAU_NOI_SDT.length);
+  for (const [i, s] of DAU_NOI_SDT.entries()) {
+    const dc = DAU_NOI_DOI_CHUNG[i] ?? "";
+    assert.equal(dem(s), 10, `dấu nối số điện thoại ${s}: phải đủ 10 chữ số`);
+    assert.equal(dem(dc), 8, `đối chứng ${dc}: phải đúng 8 chữ số`);
+    assert.equal(dau(dc), dau(s), `đối chứng ${dc}: phải cùng dấu tách với ${s}`);
+  }
   assert.equal(sdt.length, 175);
   assert.equal(doiChung.length, sdt.length);
   const nhom = [
