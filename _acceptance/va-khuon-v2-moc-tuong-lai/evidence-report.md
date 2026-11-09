@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: ff8be8d8f4412669f9770ab34072aa65673a8106
+verified_commit: 6839a6b2ee42dfedb5d361376063acae15261ef5
 human_signoff:
 ---
 
@@ -26,113 +26,106 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-khuon-v2-moc-tuong-lai-E1-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-E1-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.connect
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
   output: |
-    npm test -w @quy-hang/connect
-    ca «mốc tương lai: ma trận» ok
-    ℹ duration_ms 257.902542
-
-- eval: E2
-  run_id: minted-va-khuon-v2-moc-tuong-lai-E2-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.khuon_v2_db
-  verified_at: 2026-11-09T22:38:11Z
-  output: |
-    db:migrate rồi chạy test-db/khuon-v2/*.test.ts và test-db/catalog/nhan-goi.test.ts
-    ca «từ chối: khu không đổi» ok
-    ℹ duration_ms 7120.356125
+    cmd: npm test -w @quy-hang/connect
+    ℹ duration_ms 237.789666
 
 - eval: E3
-  run_id: minted-va-khuon-v2-moc-tuong-lai-E3-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-E3-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.connect
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
   output: |
-    npm test -w @quy-hang/connect
-    ca «tên miền: đuôi bất kỳ» ok
-    ℹ duration_ms 257.902542
+    cmd: npm test -w @quy-hang/connect
+    ℹ duration_ms 237.789666
 
 - eval: E4
-  run_id: minted-va-khuon-v2-moc-tuong-lai-E4-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-E4-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.connect
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
   output: |
-    npm test -w @quy-hang/connect
-    ca «tên miền: chuỗi sạch có dấu chấm» ok
-    ℹ duration_ms 257.902542
+    cmd: npm test -w @quy-hang/connect
+    ℹ duration_ms 237.789666
 
 - eval: E5
-  run_id: minted-va-khuon-v2-moc-tuong-lai-E5-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-E5-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.connect
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
   output: |
-    npm test -w @quy-hang/connect
-    ca «mốc đo cơ sở dữ liệu không nhận: phút và phần lẻ» ok
-    ℹ duration_ms 257.902542
-
-- eval: E6
-  run_id: minted-va-khuon-v2-moc-tuong-lai-E6-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.khuon_v2_db
-  verified_at: 2026-11-09T22:38:11Z
-  output: |
-    db:migrate rồi chạy test-db/khuon-v2/*.test.ts và test-db/catalog/nhan-goi.test.ts
-    ca «mốc đo lạ: 422 không phải 500» ok
-    ℹ duration_ms 7120.356125
+    cmd: npm test -w @quy-hang/connect
+    ℹ duration_ms 237.789666
 
 - eval: E7
-  run_id: minted-va-khuon-v2-moc-tuong-lai-E7-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-E7-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.connect
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
   output: |
-    npm test -w @quy-hang/connect
-    catalog-feed.test.ts và catalog-feed-v2.test.ts xanh, gồm «gói mẫu: sinh từ khuôn, khớp tệp»
-    ℹ duration_ms 257.902542
+    cmd: npm test -w @quy-hang/connect
+    ℹ duration_ms 237.789666
+
+- eval: E2
+  run_id: minted-va-khuon-v2-moc-tuong-lai-E2-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.khuon_v2_db
+  verified_at: 2026-11-09T22:44:48Z
+  output: |
+    cmd: db:migrate rồi test-db/khuon-v2/*.test.ts và test-db/catalog/nhan-goi.test.ts (concurrency 1)
+    ℹ duration_ms 6510.560083
+
+- eval: E6
+  run_id: minted-va-khuon-v2-moc-tuong-lai-E6-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.khuon_v2_db
+  verified_at: 2026-11-09T22:44:48Z
+  output: |
+    cmd: db:migrate rồi test-db/khuon-v2/*.test.ts và test-db/catalog/nhan-goi.test.ts (concurrency 1)
+    ℹ duration_ms 6510.560083
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-test_hooks-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-typecheck-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
 
 - cmd: npm run lint
-  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-lint-r1
+  run_id: minted-va-khuon-v2-moc-tuong-lai-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T22:38:11Z
+  verified_at: 2026-11-09T22:44:48Z
 
 ## Known limits
 
@@ -140,11 +133,13 @@ human_signoff:
 
 ## Analyst
 
-Baseline không đo: không có.
+carried tu round 1 — baseline khong do lai round nay
 
-Eval không phân biệt (xanh ở cả HEAD lẫn baseline diffBase; chứng minh harness chứ chưa chứng minh tính năng — nên viết lại để assert hành vi mới, hoặc xác nhận là regression-guard có chủ ý):
-- E1, E3, E4, E5, E7 (lệnh npm test -w @quy-hang/connect)
-- E2, E6 (lệnh db:migrate rồi test-db/khuon-v2 và test-db/catalog/nhan-goi)
+Baseline khong do: evals.yaml khong doi tu lan baseline cuoi (round 1), nen moi eval may ghi baseline n-a.
+
+Eval khong-phan-biet (green ca HEAD lan baseline, theo danh sach carried):
+- npm test -w @quy-hang/connect — E1, E3, E4, E5, E7
+- db:migrate rồi test-db/khuon-v2/*.test.ts và test-db/catalog/nhan-goi.test.ts — E2, E6
 
 ## Variance
 
@@ -152,5 +147,6 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: E1-E7 đều xanh, không eval nào hỏng; không có mục judgment nào chờ người.
+Round 1: đo vòng lượt chấm 1, phản biện nêu các điểm ghi ở review-findings.md.
+Round 2: mọi eval và mọi lệnh suite xanh, verdict PASS; phát hiện còn lại nằm ở review-findings.md để người quyết.
 

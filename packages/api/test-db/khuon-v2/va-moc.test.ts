@@ -2,7 +2,7 @@
 import type { CatalogFeedV2 } from "@quy-hang/connect";
 import assert from "node:assert/strict";
 import { after, test } from "node:test";
-import { appPool, chup, dongNhatKy, donDepV2, FEED, goi, goiV2, khuCua, sanCoToken, soDong } from "./chung";
+import { appPool, chup, dongNhatKy, donDepV2, FEED, goi, goiMau, goiV2, khuCua, sanCoToken, soDong } from "./chung";
 
 after(donDepV2);
 
@@ -15,10 +15,10 @@ const DUONG: Duong[] = [
 ];
 const soLoiKhuon = async (s: San) => (await dongNhatKy(s.tokenId)).filter((d) => d.outcome === "invalid_payload").length;
 
-/** Ảnh chụp ba bảng kèm mọi cột của bảng căn, để phép so nhìn thấy cả tên toà, mã căn, hướng. */
+/** Mọi cột của ba bảng theo khu, để phép so nhìn thấy cả tên toà, nguồn, giờ ghi. */
 async function chupDu(khu: string[]) {
-  const can = await appPool.query<Record<string, unknown>>("select * from catalog_units where subdivision_key = any ($1) order by upi", [khu]);
-  return { ...(await chup(khu)), canDu: can.rows };
+  const doc = async (bang: string, sapXep: string) => (await appPool.query<Record<string, unknown>>(`select * from ${bang} where subdivision_key = any ($1) order by ${sapXep}`, [khu])).rows;
+  return { can: await doc("catalog_units", "upi"), thiTruong: await doc("catalog_market_snapshots", "subdivision_key"), tin: await doc("catalog_public_listing_snapshots", "subdivision_key") };
 }
 
 const TOA_DOI = "[Mẫu] Toà đổi tên";
@@ -26,7 +26,7 @@ const TOA_DOI = "[Mẫu] Toà đổi tên";
 function goiMoiHon(g: CatalogFeedV2): CatalogFeedV2 {
   const s = structuredClone(g);
   s.marketStats = s.marketStats.map((m) => ({ ...m, measuredAt: "2026-11-09T10:00:00+07:00", segments: m.segments.map((d) => ({ ...d, listingCount: d.listingCount + 1 })) }));
-  s.publicListings = s.publicListings.map((m) => ({ ...m, measuredAt: "2026-11-09T10:00:00+07:00" }));
+  s.publicListings = s.publicListings.map((m) => ({ ...m, measuredAt: "2026-11-09T10:00:00+07:00", listings: m.listings.map((t) => ({ ...t, listPrice: t.listPrice + 1 })) }));
   s.subdivisions[0]!.buildings[0]!.buildingName = TOA_DOI;
   return s;
 }
@@ -64,10 +64,13 @@ test("từ chối: khu không đổi", async () => {
       const dongMoi = sau.thiTruong.find((r) => r.subdivision_key === dung.marketStats[0]!.subdivisionKey)!;
       assert.deepEqual(dongMoi.segments, dung.marketStats[0]!.segments, `${o.ten}/${d.ten}: đoạn đã thay`);
       assert.notDeepEqual(dongMoi.segments, g.marketStats[0]!.segments, `${o.ten}/${d.ten}: đoạn phải khác gói đầu`);
+      const tinMoi = sau.tin.find((r) => r.subdivision_key === dung.publicListings[0]!.subdivisionKey)!;
+      assert.deepEqual(tinMoi.listings, dung.publicListings[0]!.listings, `${o.ten}/${d.ten}: tin rao đã thay`);
+      assert.notDeepEqual(tinMoi.listings, g.publicListings[0]!.listings, `${o.ten}/${d.ten}: tin rao phải khác gói đầu`);
       // Đối chứng dương cho bảng căn: phép so mọi cột thấy được gói đúng đã đổi tên toà.
-      assert.notDeepEqual(sau.canDu, truoc.canDu, `${o.ten}/${d.ten}: bảng căn phải đổi sau gói đúng`);
-      assert.ok(sau.canDu.some((r) => r.building_name === TOA_DOI), `${o.ten}/${d.ten}: tên toà mới đã ghi`);
-      assert.ok(!truoc.canDu.some((r) => r.building_name === TOA_DOI), `${o.ten}/${d.ten}: đối chứng: trước đó chưa có tên toà mới`);
+      assert.notDeepEqual(sau.can, truoc.can, `${o.ten}/${d.ten}: bảng căn phải đổi sau gói đúng`);
+      assert.ok(sau.can.some((r) => r.building_name === TOA_DOI), `${o.ten}/${d.ten}: tên toà mới đã ghi`);
+      assert.ok(!truoc.can.some((r) => r.building_name === TOA_DOI), `${o.ten}/${d.ten}: đối chứng: trước đó chưa có tên toà mới`);
       soO += 1;
     }
   }
@@ -114,4 +117,72 @@ test("mốc đo biên ghi được", async () => {
     }
   }
   assert.equal(soLan, 4);
+});
+
+// Ba vị trí mốc còn lại đi đường ghi khác số thị trường: đầu gói vào bảng căn, tin rao vào bảng ảnh chụp tin.
+type GoiThu = { khu: string[]; than: unknown };
+const VI_TRI_KHAC: { ten: string; tao: (tag: string, moc: string) => GoiThu; doc: (khu: string[]) => Promise<unknown[]> }[] = [
+  {
+    ten: "đầu gói v1",
+    tao: (tag, moc) => {
+      const g = { ...goiMau(tag), measuredAt: moc };
+      return { khu: g.subdivisions.map((x) => x.subdivisionKey), than: g };
+    },
+    doc: async (khu) => (await chupDu(khu)).can.map((r) => r.measured_at),
+  },
+  {
+    ten: "đầu gói v2",
+    tao: (tag, moc) => {
+      const g = goiV2(tag);
+      g.measuredAt = moc;
+      return { khu: khuCua(g), than: g };
+    },
+    doc: async (khu) => (await chupDu(khu)).can.map((r) => r.measured_at),
+  },
+  {
+    ten: "tin rao",
+    tao: (tag, moc) => {
+      const g = goiV2(tag);
+      g.publicListings = g.publicListings.map((m) => ({ ...m, measuredAt: moc }));
+      return { khu: khuCua(g), than: g };
+    },
+    doc: async (khu) => (await chupDu(khu)).tin.map((r) => r.measured_at),
+  },
+];
+
+test("mốc đo lạ: đủ các vị trí qua cửa nhận", async () => {
+  const s = await sanCoToken("la-du");
+  let soLan = 0;
+  for (const [v, c] of VI_TRI_KHAC.entries()) {
+    for (const [i, m] of DANG_LA.entries()) {
+      for (const d of DUONG) {
+        const { khu, than } = c.tao(`lv-${v}-${i}-${d.ten === "token" ? "t" : "p"}`, m);
+        const res = await goi("POST", FEED, { ...d.than(s), body: than });
+        assert.equal(res.status, 422, `${c.ten}/${m.slice(0, 40)}/${d.ten}: phải là lỗi khuôn`);
+        assert.equal(await docLoi(res), "invalid-feed");
+        assert.equal(soDong(await chup(khu)), 0, `${c.ten}/${m.slice(0, 40)}/${d.ten}: không ghi dòng nào`);
+        soLan += 1;
+      }
+    }
+  }
+  assert.equal(soLan, VI_TRI_KHAC.length * DANG_LA.length * DUONG.length);
+  assert.equal(soLan, 36);
+});
+
+test("mốc đo biên ghi được: đủ các vị trí", async () => {
+  const s = await sanCoToken("bien-du");
+  let soLan = 0;
+  for (const [v, c] of VI_TRI_KHAC.entries()) {
+    for (const [i, m] of ["2026-11-09T08:00:00+15:59", "2026-11-09T08:00:00.123456789+07:00"].entries()) {
+      for (const d of DUONG) {
+        const { khu, than } = c.tao(`bv-${v}-${i}-${d.ten === "token" ? "t" : "p"}`, m);
+        assert.equal((await goi("POST", FEED, { ...d.than(s), body: than })).status, 200, `${c.ten}/${m}/${d.ten}`);
+        const giaTri = await c.doc(khu);
+        assert.ok(giaTri.length > 0, `${c.ten}/${m}/${d.ten}: đối chứng: có dòng để đọc`);
+        for (const t of giaTri) assert.equal((t as Date).getTime(), new Date(m).getTime(), `${c.ten}/${m}/${d.ten}: đọc lại đúng thời điểm`);
+        soLan += 1;
+      }
+    }
+  }
+  assert.equal(soLan, 12);
 });

@@ -1,33 +1,42 @@
+# Review findings: va-khuon-v2-moc-tuong-lai (round 2)
+
 ## Trong hợp đồng
 
-- **Hình dạng 4, assertion âm-tính-một-mình: «toàn nội dung không đổi» không thể đỏ ở bảng căn**
-  file: `packages/api/test-db/khuon-v2/va-moc.test.ts:49`
+- **Hình 5, tuyên quét LỚP nhưng chỉ có điểm-case: AC-5 hứa bốn vị trí mốc qua cửa nhận, phép đo tầng ghi chỉ chạm marketStats**
+  file: `packages/api/test-db/khuon-v2/va-moc.test.ts:92`
   severity: medium
+  AC: AC-5
+  source: measurement
+  detail: AC-5 hứa ma trận ở bốn vị trí mốc, «422 không phải 500 qua cả hai đường vào», và biên «được nhận và ghi được» (cross-layer). card-plain.json gap_probe_plain[2] ghi «đã đo đủ bốn vị trí và hai đường». Ở tầng cửa nhận, cả «mốc đo lạ: 422 không phải 500» (dòng 92) lẫn «mốc đo biên ghi được» (dòng 109) chỉ gán `g.marketStats[0].measuredAt`; số ô là 6×2 = 12 (dòng 100), và E6 cũng chốt «ở marketStats.measuredAt». Bốn vị trí chỉ có ở tầng khuôn (E5). Ba vị trí còn lại đi đường ghi khác: mốc đầu gói vào catalog_subdivisions và catalog_units (feeds-ghi.ts dòng 135, 173), mốc tin rao vào bảng ảnh chụp tin (dòng 80). Vì vậy «ghi được» ở biên +15:59 và 9 chữ số lẻ chưa được đo cho các đường này, gồm cả gói v1 qua cửa nhận.
+
+- **Hình 5, tuyên ba bảng nhưng chỉ đo hai: «gói đúng vẫn thay được ảnh chụp» không có assert nào trên bảng tin rao**
+  file: `packages/api/test-db/khuon-v2/va-moc.test.ts:29`
+  severity: low
   AC: AC-2
   source: measurement
-  detail: Dòng 49 `assert.deepEqual(await chup(khu), truoc, ...: toàn nội dung không đổi)` là assert âm tính duy nhất cho bảng catalog_units. `chup` (packages/api/test-db/khuon-v2/chung.ts:28) chỉ đọc 4 cột của bảng này: upi, living_area, field_confidence, agreement_id. Gói lỗi `sai` dựng từ `goiMoiHon(g)`, hàm này chỉ đổi marketStats và publicListings. Khác biệt duy nhất của `sai` chạm vào phần căn là ca dòng 29, sửa buildingName thành «zalo.me/mau», và ca đó ghi vào cột building_name (feeds-ghi.ts:103, 156). Cột building_name không được chụp, nên kể cả khi gói bị từ chối vẫn ghi lọt vào catalog_units thì `chup` trả y như trước và assert vẫn xanh. Không có đối chứng dương cho phần căn: bước «gói đúng sau đó» chỉ kiểm segments của thiTruong, không chứng minh phép chụp nhìn thấy được một thay đổi ở bảng căn. AC-2 của contract hứa «toàn nội dung ba bảng của khu không đổi» và comment của `chup` cũng ghi «Toàn nội dung ba bảng», nhưng phép đo chỉ có sức phân biệt ở hai bảng ảnh chụp. Các cột unit_number, stack, direction_faces, measured_at của catalog_units cũng nằm ngoài phần chụp.
+  detail: Chú thích goiMoiHon (dòng 25) nói «nội dung khác ở cả ba bảng», nhưng dòng 29 chỉ đổi `measuredAt` của publicListings, `listings` giữ nguyên. Sau gói đúng (dòng 61-70), test chỉ assert segments và bảng căn; `sau.tin` không được đọc. `.tin` chỉ xuất hiện ở đối chứng trước khi đẩy (dòng 49). AC-2 hứa khu không bị đóng băng, và catalog_public_listing_snapshots dùng cùng luật thay theo mốc đo (ghiAnhChup, feeds-ghi.ts dòng 65, 80). Nếu bảng tin rao không thay được thì ca này vẫn xanh. Riêng bảng này, «không đổi» ở dòng 57 cũng thiếu đối chứng dương rằng phép so thấy được thay đổi.
+
+- **Hình 5, tuyên «toàn nội dung» nhưng chỉ so một tập cột: hai bảng ảnh chụp bỏ provider và updated_at**
+  file: `packages/api/test-db/khuon-v2/va-moc.test.ts:57`
+  severity: low
+  AC: AC-2
+  source: measurement
+  detail: Dòng 57 assert với thông điệp «toàn nội dung không đổi», và AC-2 hứa «toàn nội dung ba bảng». chupDu (dòng 19-22) chỉ `select *` cho catalog_units. Hai bảng ảnh chụp lấy từ `chup` (chung.ts dòng 29-30), chỉ gồm subdivision_key, measured_at, segments hoặc listings, agreement_id. Trong khi đó câu ghi có `set provider = $2 ... updated_at = now()` (feeds-ghi.ts dòng 64), nên một lần ghi vào hai cột này nằm ngoài phép so. Commit bee6ff9e đã sửa đúng lỗ này cho bảng căn nhưng chưa sửa cho hai bảng còn lại.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Bỏ đuôi .io/.co khỏi mẫu không phân biệt hoa thường làm lọt tên miền trước đây đã chặn**
-  Người dùng thấy gì: Một tên miền đuôi .io hoặc .co viết hoa chữ đầu, như Nhadat.io, vẫn lọt vào danh mục dù trước đây bị chặn. Bản viết thường vẫn bị chặn.
-  Căn cứ: Hậu quả nhẹ: chỉ vài dạng tên miền hiếm lọt vào tên toà hay tên khu, không mất dữ liệu, và sửa hay gỡ sau đều rẻ.
+- **Bỏ .io và .co khỏi mẫu không phân biệt hoa thường làm lọt tên miền có chữ hoa mà bản trước đã chặn**
+  Người dùng thấy gì: Một vài tên miền viết hoa như Nhadat.IO vẫn lọt vào tên khu hay tên toà, trong khi trước đây bị chặn. Tên miền quảng cáo có thể xuất hiện trên danh mục dùng chung.
+  Căn cứ: Hậu quả nhẹ: chỉ vài dạng viết hoa hiếm, không lộ dữ liệu chủ nhà, và sàn có thể sửa tay chữ này sau; sửa sau vẫn rẻ.
   file: `packages/connect/src/catalog-feed.ts`
   severity: medium
   Đề xuất: known-limits
 
-- **Bỏ .io và .co khỏi danh sách không phân biệt hoa thường làm tên miền có chữ hoa lọt vào gói v2, trước đây bị chặn**
-  Người dùng thấy gì: Gói danh mục có tên miền đuôi .io hoặc .co viết hoa chữ đầu vẫn được nhận và ghi vào danh mục, dù tài liệu nói tên miền không được vào.
-  Căn cứ: Hậu quả nhẹ và hiếm gặp, dữ liệu không bị mất hay lộ, người vận hành dọn được sau và sửa lưới sau này không tốn kém.
-  file: `packages/connect/src/catalog-feed.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Hình dạng 5, tuyên quét LỚP nhưng ma trận thiếu phần tử: «mọi trường chữ do người gõ» chỉ đo 6/7, sót stack**
-  Người dùng thấy gì: Trường tên dãy căn chưa được kiểm riêng, nên nếu sau này nó vô tình thoát khỏi lưới chặn tên miền thì bộ kiểm không báo.
-  Căn cứ: Hậu quả nhẹ: hiện lưới vẫn áp cho trường này, chỉ thiếu bài kiểm giữ cho tương lai, và thêm một ô kiểm sau rất rẻ.
+- **Hình 5, tuyên quét LỚP nhưng ma trận thiếu phần tử: lớp «mọi trường chữ do người gõ» có 7 trường, ma trận chỉ có 6, thiếu stack**
+  Người dùng thấy gì: Một trường chữ phụ (tầng) chưa được bài kiểm thử tên miền bao phủ, nên nếu lưới bỏ sót nó thì không ai phát hiện.
+  Căn cứ: Rủi ro thấp: chỉ là khoảng trống trong bài kiểm, chưa có lỗi thật, và thêm ca kiểm sau này rẻ.
   file: `packages/connect/src/catalog-feed-va.test.ts`
   severity: medium
   Đề xuất: known-limits
