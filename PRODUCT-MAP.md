@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>29 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>136 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>137 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -143,6 +143,7 @@ flowchart TD
 - Bài «AC-9 nạp và xoá một lần» của bộ dữ liệu mẫu thấp tầng chỉ đếm những dòng do chính bài nạp, nên chạy được trên cơ sở dữ liệu đã có sàn mẫu khác (như trên bản thật); bước triển khai trên nhánh chính xanh lại. (`va-ac9-mau-co-san`)
 - Khi bộ lọc ở cột của hàng thấp tầng làm Bảng hàng ra rỗng, cột và ô lọc đang gõ vẫn ở nguyên để người dùng sửa; xoá ký tự trong ô thì hàng hiện lại. (`va-bang-hang-cot-thap-tang-khi-loc-rong`)
 - "Bảng hàng của sàn có 5.000 căn mở và cuộn được tới «/ 5000 căn» mà không sập (React (`va-bang-hang-cuon-so-lon`)
+- Quản trị sàn sửa nhãn, mẫu nhập, thuế phí mà không mất việc: «Giữ nhãn» luôn giữ nhãn; xoá hay sửa cột mẫu nhập hỏng thì màn nói rõ và dòng còn; bảng Mẫu nhập trên điện thoại không phải cuộn ngang; ô tỉ lệ môi giới có nhãn cho máy đọc màn (`va-cai-dat-mat-viec`)
 - Công cụ chụp màn dùng chung của các lượt chấm (cdp.mjs) luôn tắt Chrome do chính nó mở, kể cả khi tác tử chấm hết giờ hay bị ngắt: ghi PID, bắt tín hiệu thoát, dọn hồ sơ tạm; không còn Chrome chạy ẩn mồ côi sau lượt chấm. (`va-cdp-tat-chrome`)
 - Bước triển khai trên nhánh chính không còn chạy bộ kiểm cách ly trên cơ sở dữ liệu bản thật: bộ kiểm chạy trên cơ sở dữ liệu tạm dựng từ migration của đúng lần gộp; bản thật chỉ cập nhật cấu trúc dữ liệu rồi kiểm nhanh chỉ đọc rằng mọi bảng công ty bật và ép luật theo dòng và vai của API không là chủ bảng; không quá hai kết nối bản thật (`va-deploy-csdl-tam`)
 - Dòng «Tính theo định nghĩa ngày …» ở hồ sơ căn không hiện dấu cũ khi giá còn chờ gửi và đổi sang dấu mới ngay khi giá lên máy chủ, không cần tải lại trang. (`va-dinh-nghia-doc-lai`)
