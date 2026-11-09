@@ -129,7 +129,7 @@ function vao(vai: Vai, cho: Cho, sua: Omit<Partial<VaoHoSo>, "ngan"> & { ngan?: 
   return {
     ...NGUOI[vai],
     ds: [HANG, CHUA_MA],
-    ngan: { listings: [HANG, CHUA_MA], history: { "hang-1": LICH_SU }, lastAttempt: "ok" as LanThu, lastPullAt: "2026-11-05T02:12:00Z", ...ngan },
+    ngan: { listings: [HANG, CHUA_MA], history: { "hang-1": LICH_SU }, queue: [], lastAttempt: "ok" as LanThu, lastPullAt: "2026-11-05T02:12:00Z", ...ngan },
     danhMuc: DANH_MUC,
     chon: { ma: MA, toa: TOA, lan: null },
     daKeo: { "hang-1": true },

@@ -26,6 +26,7 @@ import { NEO_MUC_ANH } from "../ready/nut-san-sang";
 import { luc, type MoHinhHoSo } from "./mo-hinh";
 import { NutBaoSai } from "./nut-bao-sai";
 import { NutHoiDauChu } from "./nut-hoi-dau-chu";
+import { vaoCua } from "./doc-dau";
 import { DongDinhNghia } from "./dong-dinh-nghia";
 import { CapGiaTri, doiUrl, Muc, ngay } from "./than-chung";
 
@@ -155,7 +156,7 @@ export function ThanCot({ m, khe, hd }: { m: MoHinhHoSo; khe: KheHoSo; hd: HanhD
           <span className="text-2xl font-semibold">{m.gia}</span>
           {m.phi ? <Badge variant="outline">{m.phi}</Badge> : null}
         </div>
-        <DongDinhNghia listingId={m.can.id} gia={m.can.listPrice} phi={m.can.feeInclusion} />
+        <DongDinhNghia v={vaoCua(m)} />
         <Progress value={(m.mucDu.co / m.mucDu.tren) * 100} aria-label="Mức đủ thông tin" />
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>{m.mucDu.chu}</span>
