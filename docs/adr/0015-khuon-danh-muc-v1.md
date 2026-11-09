@@ -63,3 +63,11 @@ Manh Phan duyệt Cổng Phạm vi hồ sơ `khuon-nguon-danh-muc-v2` ngày 09/1
 - **Không vào được**: đường dẫn, tên nguồn, tên miền, ảnh, người đăng. Chuỗi có dáng URL, tên miền, số điện thoại làm cả gói 422. Khu, toà, căn được trỏ tới phải có trong chính gói.
 - **Ảnh chụp**: migration 042, mỗi khu một dòng cho số thị trường và một dòng cho tin rao, gói sau ghi đè cả dòng; mốc đo cũ hơn thì giữ số mới, gói vẫn 200 và đếm số ảnh bỏ qua. Vai API chưa đọc được nội dung, hàng 102 mở kèm luật vai.
 - **v1 vẫn nhận**, không đặt hạn; bỏ bằng một hàng riêng khi Invest báo đã chuyển. Mặt bằng theo trục chưa chở.
+
+## Sửa đổi 10/11: vá khuôn v2 (hàng `va-khuon-v2-moc-tuong-lai`)
+
+Manh Phan duyệt Cổng Phạm vi ngày 10/11, Hỏi-1..3 theo khuyến nghị. Không đổi hình khuôn, không migration.
+
+- **Mốc đo tương lai**: mốc vượt giờ nhận gói quá 1 giờ bị từ chối, ở đầu gói (v1, v2), số thị trường và tin rao. Kiểm trong `parseCatalogFeed(raw, { now })`, giờ là tham số nên bên đẩy tự kiểm được trước khi gửi.
+- **Tên miền (v2)**: bắt đuôi không thể nhầm, liên kết rút gọn `zalo.me`, `fb.me`, `m.me`, `t.me`, và đuôi bất kỳ khi cả nhãn lẫn đuôi đều chữ thường ASCII ở chữ do người gõ. Giá: địa danh viết toàn chữ thường như `tp.hcm` làm cả gói bị từ chối, viết `Tp.HCM` thì qua. Khoá máy cấp được có dấu chấm chữ thường.
+- **Mốc đo**: phút múi giờ dưới 60, phần lẻ giây tối đa 9 chữ số; ngoài khoảng đó là lỗi khuôn, không còn lỗi máy chủ.
