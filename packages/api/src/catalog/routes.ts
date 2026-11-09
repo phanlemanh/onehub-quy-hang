@@ -1,10 +1,10 @@
 import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
-import { buildCatalogIndex, lookupUnit, type CatalogData } from "@quy-hang/core";
+import { lookupUnit, type CatalogData } from "@quy-hang/core";
 import type { ApiDeps } from "../app";
 import { API_ERRORS } from "../errors";
 import { taoCuaVao } from "./cua-vao";
 import { registerLotRoutes } from "./lots";
-import { SAMPLE_CATALOG } from "./sample";
+import { LOI_DOC_DANH_MUC, nguonCua, type NguonDanhMuc } from "./nguon";
 
 /**
  * Gõ mã căn ra thuộc tính căn (hàng 9). Chỉ đọc. Mọi thành viên của sàn đang làm tra được, ở mọi vai — danh mục là dữ
@@ -40,9 +40,10 @@ const Lookup = z
   ])
   .openapi("CatalogLookup");
 
-/** Danh mục là tham số: hàng 10 thay gói mẫu bằng danh mục dùng chung mà không đổi đường. */
-export function registerCatalogRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps, catalog: CatalogData = SAMPLE_CATALOG) {
-  const index = buildCatalogIndex(catalog);
+/** Mặc định đọc nguồn chung (hàng 99); bài kiểm truyền được danh mục hay nguồn riêng. */
+export function registerCatalogRoutes(api: OpenAPIHono, deps: ApiDeps, catalog?: CatalogData | NguonDanhMuc) {
+  const { appPool, auth } = deps;
+  const nguon = nguonCua(deps, catalog);
 
   const { vao, tra } = taoCuaVao({ appPool, auth });
   // Đường tra mã lô thấp tầng (hàng 74) đi cùng đường tra căn, cùng cửa vào.
@@ -64,6 +65,7 @@ export function registerCatalogRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
         403: err("Chưa gắn sàn"),
         404: err("Dự án hoặc toà không có trong danh mục"),
         409: err("Thuộc nhiều sàn, chưa chọn"),
+        500: err("Không đọc được danh mục"),
       },
     }),
     async (c) => {
@@ -71,7 +73,9 @@ export function registerCatalogRoutes(api: OpenAPIHono, { appPool, auth }: ApiDe
       if (loi) return tra(c, loi);
       const { code } = c.req.valid("param");
       const { subdivision, building } = c.req.valid("query");
-      const kq = lookupUnit(index, code, subdivision, building);
+      const ban = await nguon.doc().catch(() => null);
+      if (!ban) return c.json({ error: LOI_DOC_DANH_MUC.code }, LOI_DOC_DANH_MUC.status);
+      const kq = lookupUnit(ban.index, code, subdivision, building);
       if (kq.status === "unknown_subdivision" || kq.status === "unknown_building") return tra(c, API_ERRORS.notFound);
       return c.json(kq, 200);
     },
