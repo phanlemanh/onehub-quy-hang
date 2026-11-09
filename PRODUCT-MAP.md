@@ -12,7 +12,7 @@ flowchart TD
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>28 việc"]
+  GB --> DG["Đã giao<br/>29 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>136 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
@@ -173,6 +173,7 @@ flowchart TD
 - Bài kiểm chuyển dữ liệu cũ của hàng 85 không kẹt khoá với các bài kiểm gỡ ràng buộc chạy song song (`chuyen-khong-ket-khoa`)
 - Đầu chủ điền mã căn cho hàng tạo từ lead chỉ biết toà — mở hồ sơ căn của hàng chưa có mã, gắn mã một lần, máy chặn trùng hàng đang mở cùng căn; hàng có mã thì thôi báo thiếu mã căn và xét ảnh như thường (`dien-ma-can-cho-hang`)
 - Đổi đường API, mã lỗi và đường màn đăng nhập sang tiếng Anh, giữ nguyên hành vi và chữ trên màn (`doi-ten-api-tieng-anh`)
+- Mở Hôm nay, mỗi người thấy một danh sách việc của mình, cùng một kiểu dòng cho mọi vai; phần theo dõi về đúng nhà (`hom-nay-mot-danh-sach-viec`)
 - Quỹ hàng dùng logo OneHub đang chạy ở OneHub CRM: cột nhà, đăng nhập, thẻ trình duyệt, màn hình chính; rõ ở sáng và tối, khổ 1440 và 375. (`logo-onehub`) — đã giao — máy thông, bằng chứng xanh-sạch
 - Đầu chủ được giao lead mở số chủ nhà của lead ấy ở Hôm nay để gọi; mỗi lần mở là một vết (`mo-so-lead`)
 - Môi trường chạy thật — Supabase dự án riêng và Vercel vùng Singapore, migration áp qua CI trước khi deploy, mã đăng nhập gửi qua Resend (`moi-truong-that`)
