@@ -1,0 +1,5 @@
+E10 network localhost:3462 truong-nhom 375px
+GET 200 /today, /api/v1/catalog, /api/v1/team/lead-queue, /api/v1/team/listing-agents, /api/v1/push/public-key, /api/v1/listings
+POST 200 /api/v1/leads/3a5817ec-336c-44a3-8780-3bf032f76fc4/assign
+GET 200 /api/v1/team/lead-queue after: 3 items, lead 3a5817ec absent
+No failed requests.

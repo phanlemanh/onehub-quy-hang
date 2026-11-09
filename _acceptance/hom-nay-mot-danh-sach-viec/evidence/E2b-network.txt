@@ -1,0 +1,4 @@
+E2b network (playwright, http://localhost:3462/today, du-vai, 1440)
+console errors: 0, warnings: 0
+app requests all 200: /api/v1/catalog, company/settings/queue, team/lead-queue, leads/assigned, team/listing-agents, leads, today/buyer, push/public-key, listings; fonts 200
+failed: none

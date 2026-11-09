@@ -3199,6 +3199,12 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-09"
     },
     {
+      "ma": "hom-nay-mot-danh-sach-viec",
+      "cau_giao": "Mở Hôm nay, mỗi người thấy một danh sách việc của mình, cùng một kiểu dòng cho mọi vai, chia nhóm theo bộ nhóm của sàn; phần theo dõi về đúng nhà: bảng theo đầu chủ về Đội, Lead đã nhập về trang Lead đã nhập, tin phản ứng của khách về Đã gửi",
+      "slug": "hom-nay-mot-danh-sach-viec",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-09"
+    },
+    {
       "ma": "va-bai-o-la-do-ngau-nhien",
       "cau_giao": "Sửa phép kiểm sổ chi phí AI của bài ô lạ để không đỏ ngẫu nhiên vì mã máy và giờ ghi, vẫn chứng minh số điện thoại không vào sổ dưới mọi dạng, kèm ca đối chứng dương.",
       "slug": "va-bai-o-la-do-ngau-nhien",

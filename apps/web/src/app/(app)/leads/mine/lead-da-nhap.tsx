@@ -85,7 +85,7 @@ function kiemSoMoi(raw: string): string | null {
 }
 
 /** Ô sửa số của lead bị trả lại: telesales gõ số mới rồi gửi lại. Không hiện số cũ. */
-function OGuiLai({ id, guiLai }: { id: string; guiLai: (id: string, so: string) => Promise<string | null> }) {
+export function OGuiLai({ id, guiLai }: { id: string; guiLai: (id: string, so: string) => Promise<string | null> }) {
   const [so, setSo] = useState("");
   const [loi, setLoi] = useState<string | null>(null);
   const [dangGui, setDangGui] = useState(false);
