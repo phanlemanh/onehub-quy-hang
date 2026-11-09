@@ -1,0 +1,1 @@
+Driver la script CDP rieng (chay-ui.mjs); khong co read_network_requests. Mang bi ngat co chu y (Network.setBlockedURLs). networkObserved=n-a (driver)
