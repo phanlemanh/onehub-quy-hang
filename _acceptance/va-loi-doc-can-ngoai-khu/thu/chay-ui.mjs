@@ -40,7 +40,14 @@ const LOP_FETCH = `(() => {
     if (s.includes("/api/v1/company/member-names")) window.__dem.danhBa++;
     if (nk && window.__tre) await new Promise((r) => setTimeout(r, window.__tre));
     if (nk && sessionStorage.getItem("__tra500")) return new Response("{}", { status: 500 });
-    return goc.apply(this, arguments);
+    try {
+      const r = await goc.apply(this, arguments);
+      if (nk) window.__cuoi = r.status;
+      return r;
+    } catch (e) {
+      if (nk) window.__cuoi = "loi";
+      throw e;
+    }
   };
 })();`;
 
@@ -92,7 +99,8 @@ async function quetHang(t) {
   const dongCua = CAN.map((c) => ds.find((x) => x.includes(c.unparsedAddress)) ?? null);
   return {
     soDong: ds.length,
-    chuaRo: ds.filter((x) => x.includes("Chưa rõ")).length,
+    // Hàng ngoài khu chưa tra được: vị trí rơi về chữ chỗ «Căn ngoài khu», loại căn «Chưa rõ» — đo đúng tập hàng ấy.
+    hangNgoaiKhuChuaRo: ds.filter((x) => x.includes("Căn ngoài khu") && x.includes("Chưa rõ")).length,
     coDiaChi: dongCua.filter(Boolean).length,
     dong: CAN.map((c, i) => ({ dia_chi: c.unparsedAddress, loai: NHAN[c.propertySubType], thay: !!dongCua[i], dung_loai: !!dongCua[i]?.includes(NHAN[c.propertySubType]) })),
   };
@@ -131,7 +139,7 @@ const ra = { so_can: CAN.length };
   await ngu(1500);
   await t.cho(LUOI, 180000);
   await ngu(2500);
-  const taiLai = { ...(await bao(t)), ...(await quetHang(t)) };
+  const taiLai = { ...(await bao(t)), ...(await quetHang(t)), lanDoc: (await dem(t)).ngoaiKhu, cuoi: await t.tinh(`window.__cuoi ?? null`) };
   ra.ca1 = { dau, cho: { soLanDocThem: d1.ngoaiKhu - d0.ngoaiKhu }, vanChan, giuaChung, sau, taiLai };
 }
 // Ca 500: máy chủ trả 500, tab mới nên bản giữ đã xoá.

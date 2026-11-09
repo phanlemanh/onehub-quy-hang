@@ -35,7 +35,7 @@ const khoTu = (ban: Record<string, string> = {}): KhoChu => {
 };
 const SAN = "san-1";
 
-test("đọc lỗi: mười ca đều ra loi và không ném", async () => {
+test("đọc lỗi: mười ba ca đều ra loi và không ném", async () => {
   const CA: [string, typeof fetch][] = [
     ["fetch ném lỗi", (async () => { throw new TypeError("failed"); }) as unknown as typeof fetch],
     ["401", tra(401, { error: "x" })],
@@ -47,13 +47,16 @@ test("đọc lỗi: mười ca đều ra loi và không ném", async () => {
     ["200 units không phải mảng", tra(200, { units: "x" })],
     ["200 units có phần tử null", tra(200, { units: [NK[0], null] })],
     ["200 phần tử thiếu unparsedAddress", tra(200, { units: [{ id: "a", propertySubType: "Townhouse" }] })],
+    ["200 phần tử thiếu id", tra(200, { units: [{ propertySubType: "Townhouse", unparsedAddress: "x" }] })],
+    ["200 phần tử thiếu propertySubType", tra(200, { units: [{ id: "a", unparsedAddress: "x" }] })],
+    ["200 unparsedAddress sai kiểu", tra(200, { units: [{ id: "a", propertySubType: "Townhouse", unparsedAddress: 12 }] })],
   ];
   let chay = 0;
   for (const [ten, goi] of CA) {
     assert.deepEqual(await docCanNgoaiKhu(goi), { kind: "loi" }, ten);
     chay++;
   }
-  assert.equal(chay, 10);
+  assert.equal(chay, 13);
 });
 
 test("đọc lỗi: đối chứng hai chiều cùng dữ liệu", async () => {
