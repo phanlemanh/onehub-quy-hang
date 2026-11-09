@@ -5,7 +5,7 @@ slug: va-bai-o-la-do-ngau-nhien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [test]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-09-va-bai-o-la-do-ngau-nhien-design.md
 approved_by:
 approved_at:
@@ -74,3 +74,11 @@ Phép kiểm ghép chữ số của một trường trước khi so, nên một 
 tất định ngay khi đổi mô hình, không phải đỏ ngẫu nhiên.
 
 Lệnh đo dùng Postgres thử riêng ở cổng 5588, cổng ghim trong `_acceptance/config.yaml` theo nếp các hồ sơ khác.
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nhánh chưa cập nhật hai tệp bản đồ sản phẩm và lộ trình, nên bước kiểm cuối của kho sẽ báo đỏ và chưa gộp được cho tới khi vẽ lại. — `docs/plan/lo-trinh.json`
+- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu sau này sổ chi phí AI thêm một cột chứa dữ liệu lồng nhau, số điện thoại lọt vào đó có thể không bị bài kiểm bắt và bài vẫn xanh. — `packages/api/test-db/imports/vet-so-trong-so.ts`
+- Ngoài-4 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Số điện thoại nằm trong dữ liệu lồng nhau của một cột tương lai có thể lọt qua bài kiểm mà không báo đỏ. — `packages/api/test-db/imports/vet-so-trong-so.ts`
+- Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Hai tệp bản đồ sản phẩm và lộ trình đang lệch với hồ sơ mới, nên kiểm tra cuối của kho sẽ đỏ và chưa gộp được. — `docs/plan/lo-trinh.json`
+- Ngoài-6 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bộ ca thử của bài kiểm không có trường hợp số điện thoại nằm trong dữ liệu lồng, nên nếu có cột như vậy sau này bài vẫn xanh dù số đã vào sổ. — `packages/api/test-db/imports/o-la.test.ts`
+- Ngoài-7 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Phép đếm kiểm tra bộ ca đủ số lượng tự khớp với chính nó, nên nếu bộ ca bị hụt một cột thì phép đếm không báo. — `packages/api/test-db/imports/o-la.test.ts`
+- Ngoài-8 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm không tự xác nhận có dòng giờ ghi đủ sáu chữ số lẻ, nên nếu bộ sinh đổi và mất dạng này thì bài vẫn xanh. — `packages/api/test-db/imports/o-la.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu tên ca kiểm bị đổi, bộ đo 300 lần có thể chạy rỗng mà vẫn báo đạt, làm kết quả đo kém tin cậy. — `_acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs`
