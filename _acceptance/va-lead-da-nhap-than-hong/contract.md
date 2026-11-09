@@ -5,7 +5,7 @@ slug: va-lead-da-nhap-than-hong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: approved
+status: implemented
 design_doc: _acceptance/va-lead-da-nhap-than-hong/design.md
 approved_by:
 approved_at:
