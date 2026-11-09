@@ -284,7 +284,10 @@ export function BangHang({
   const [expanded, setExpanded] = useState<ExpandedState>(true);
   const [hop, setHop] = useState<CheDoHop | null>(null);
 
+  // Bộ cột của lần gần nhất còn dòng (tinhBoCot). Áp góc nhìn thì bỏ: góc nhìn đã rỗng tính theo bộ lọc của chính nó.
+  const [giuBoCot, setGiuBoCot] = useState<BoCot | null>(null);
   const apCachXem = useCallback((cx: CachXem) => {
+    setGiuBoCot(null);
     setLoc(cx.loc);
     setCot(cx.cot);
     setSap(cx.sap);
@@ -342,7 +345,6 @@ export function BangHang({
   // Hàng 79: cột hiện = cột người bật trừ cột mà không loại hình nào trong dòng đã lọc dùng; cột Loại hình chỉ khi sàn có
   // hàng khác căn hộ. `cot` giữ lựa chọn của người — cột bị loại hình ẩn hiện lại khi lọc đổi.
   // Lọc ra rỗng: bộ cột giữ như lần gần nhất còn dòng, để cột và ô đang gõ ở nguyên (tinhBoCot).
-  const [giuBoCot, setGiuBoCot] = useState<BoCot | null>(null);
   const { boCot, giu } = useMemo(() => tinhBoCot(giuBoCot, dong, daLoc, loc), [giuBoCot, dong, daLoc, loc]);
   if (JSON.stringify(giu) !== JSON.stringify(giuBoCot)) setGiuBoCot(giu);
   const cotHien = useMemo(() => cotHienTuBoCot(cot, boCot, dong), [cot, boCot, dong]);

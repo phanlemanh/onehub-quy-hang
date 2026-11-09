@@ -59,6 +59,9 @@ const CA_RONG: [string, DongBang[], BoLocCot[], CotId][] = [
   ["trộn · Diện tích đất", TRON, [{}, { lotSizeArea: KHONG_KHOP }], "lotSizeArea"],
   ["trộn · Số tầng", TRON, [{}, { storiesTotal: KHONG_KHOP }], "storiesTotal"],
   ["trộn đã co theo Số tầng · thêm Diện tích đất", TRON, [{ storiesTotal: ">=1" }, { storiesTotal: ">=1", lotSizeArea: KHONG_KHOP }], "lotSizeArea"],
+  // Hai bước còn dòng liên tiếp: «giữ» phải là bước liền trước, không phải bước đầu.
+  ["trộn → Đất → Diện tích đất", TRON, [{}, LOAI_DAT, { ...LOAI_DAT, lotSizeArea: KHONG_KHOP }], "lotSizeArea"],
+  ["trộn → Số tầng → Diện tích đất", TRON, [{}, { storiesTotal: ">=1" }, { storiesTotal: ">=1", lotSizeArea: KHONG_KHOP }], "lotSizeArea"],
 ];
 
 test("lọc rỗng ở cột thấp tầng: bộ cột còn nguyên", () => {
@@ -74,7 +77,7 @@ test("lọc rỗng ở cột thấp tầng: bộ cột còn nguyên", () => {
     assert.ok(rong.cot.includes(cot), `${ten}: cột đang lọc ${cot} phải còn`);
     chayDu++;
   }
-  assert.equal(chayDu, 6);
+  assert.equal(chayDu, 8);
   // Đối chứng dương: tính thẳng từ dòng rỗng (đường cũ) thì cột đang lọc mất.
   assert.ok(!cotHienTheoLoaiHinh(COT_MAC_DINH as readonly string[], [], TRON).includes("lotSizeArea"), "đường cũ phải mất cột lotSizeArea");
 });
@@ -118,7 +121,27 @@ test("mở bảng đã rỗng, bật tắt cột lúc rỗng", () => {
   const tat = cotHienTuBoCot((COT_MAC_DINH as readonly string[]).filter((c) => c !== "lotSizeArea"), rong.boCot, [DAT, NHA_PHO]);
   assert.ok(!tat.includes("lotSizeArea"), "cột vừa tắt phải biến mất");
   assert.ok(tat.includes("frontageLength"));
-  const bat = cotHienTuBoCot([...(COT_MAC_DINH as readonly string[]), "closePrice"], rong.boCot, [DAT, NHA_PHO]);
-  assert.ok(bat.includes("closePrice"), "cột vừa bật phải hiện");
-  assert.equal(rong.viTri, "Vị trí");
+  // Bật lại cột của loại hình đang hiện thì có; cột loại hình đang ẩn thì bật vẫn không hiện.
+  const bat = cotHienTuBoCot(COT_MAC_DINH as readonly string[], rong.boCot, [DAT, NHA_PHO]);
+  assert.ok(bat.includes("lotSizeArea"), "cột loại hình vừa bật phải hiện");
+  assert.ok(!bat.includes("floor"), "cột căn hộ vẫn bị ẩn khi đang xem đất");
+  // Bật tắt cột không đổi tiêu đề vị trí: cùng bộ cột giữ trước đó.
+  const buoc = chay([DAT, NHA_PHO], [LOAI_DAT, { ...LOAI_DAT, lotSizeArea: KHONG_KHOP }]);
+  assert.equal(buoc[1]!.viTri, buoc[0]!.viTri);
+});
+
+test("áp góc nhìn: bỏ bộ cột đang giữ", () => {
+  // Trình tự của màn: lượt đầu chưa áp lọc nên có dòng và ghi nhớ; áp góc nhìn thì bỏ nhớ rồi tính theo bộ lọc của góc nhìn.
+  const dong = TRON;
+  const dau = tinhBoCot(null, dong, locDong(dong, {}), {});
+  const locGocNhin: BoLocCot = { ...LOAI_DAT, lotSizeArea: KHONG_KHOP };
+  const sauAp = tinhBoCot(null, dong, locDong(dong, locGocNhin), locGocNhin);
+  assert.deepEqual(cotHienTuBoCot(COT_MAC_DINH as readonly string[], sauAp.boCot, dong), COT_DAT);
+  // Đối chứng: không bỏ nhớ thì ra bộ cột của toàn bảng.
+  const khongBo = tinhBoCot(dau.giu, dong, locDong(dong, locGocNhin), locGocNhin);
+  assert.deepEqual(cotHienTuBoCot(COT_MAC_DINH as readonly string[], khongBo.boCot, dong), COT_TRON);
+  // Màn thật bỏ nhớ trong đúng hàm áp góc nhìn.
+  const nguon = readFileSync(fileURLToPath(new URL("./bang-hang.tsx", import.meta.url)), "utf8");
+  const than = nguon.slice(nguon.indexOf("const apCachXem"), nguon.indexOf("// Mở một góc nhìn đã lưu"));
+  assert.ok(than.includes("setGiuBoCot(null)"), "apCachXem phải bỏ bộ cột đang giữ");
 });
