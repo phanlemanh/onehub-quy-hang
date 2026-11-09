@@ -4,14 +4,10 @@
  * của trường dùng mà chưa có số; cột của trường mà không loại hình nào trong dòng đã lọc dùng thì không hiện. Thuần.
  */
 import { PROPERTY_SUBTYPE_FIELDS } from "@quy-hang/core";
+import { nhanGiaTri, TAP_DONG, type TuVung } from "@quy-hang/core/labels";
 
 /** Loại hình RESO → nhãn mặc định (Tham chiếu §4: căn hộ, nhà phố, biệt thự, đất). */
-export const LOAI_HINH: Readonly<Record<string, string>> = {
-  Condominium: "Căn hộ",
-  Townhouse: "Nhà phố",
-  "Single Family Residence": "Biệt thự",
-  "Unimproved Land": "Đất",
-};
+export const LOAI_HINH: Readonly<Record<string, string>> = TAP_DONG.propertySubType;
 
 /** Dòng chưa biết loại hình (không thấy nguồn) đọc bộ cột như căn hộ — sàn chỉ căn hộ không đổi. */
 export const LOAI_MAC_DINH = "Condominium";
@@ -78,3 +74,6 @@ export function cotHienTheoLoaiHinh<T extends string>(
 
 /** Nhãn mặc định của một loại hình; giá trị lạ giữ nguyên chữ RESO. */
 export const nhanLoaiHinh = (sub: string) => LOAI_HINH[sub] ?? sub;
+
+/** Chữ hiện của một loại hình: tên riêng của sàn, vắng thì nhãn mặc định (hàng loai-hinh-trong-cach-goi). */
+export const tenLoaiHinh = (tv: TuVung | null | undefined, sub: string) => nhanGiaTri(tv, "propertySubType", sub, nhanLoaiHinh(sub));
