@@ -5,7 +5,7 @@ slug: va-cai-dat-mat-viec
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-09-va-cai-dat-mat-viec-design.md
 approved_by:
 approved_at:
@@ -95,3 +95,10 @@ Trục: màn (Trạng thái · Mẫu nhập · Thuế phí) × lối ra (thành 
 - Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Người chấm mở màn thật sau lệnh chụp sẽ thấy dữ liệu thử đã bị dọn, khác với mô tả. Màn của người dùng không đổi. — `_acceptance/va-cai-dat-mat-viec/evals.yaml`
 - Ngoài-7 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Sau lệnh chụp màn, dữ liệu thử bị dọn nên người chấm đối chiếu màn thật sẽ thấy khác ảnh. Người dùng cuối không bị ảnh hưởng. — `_acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs`
 - Ngoài-8 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bằng chứng cho thấy bài đo từng đỏ trước khi sửa chưa chỉ rõ đỏ đúng vì lỗi nào. Màn người dùng thấy không đổi. — `_acceptance/va-cai-dat-mat-viec/evidence/truoc-sua.log`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Người ký ở Cổng 2 có thể không thấy đủ chuỗi năm ảnh chụp màn hình trên trang bằng chứng, chỉ thấy ảnh được khai riêng. Màn hình thật của người dùng không bị ảnh hưởng.
+  - Ngoài-3: Bài kiểm tra chưa chứng minh chắc rằng hộp hỏi mới không chọn sẵn lựa chọn nào nếu giao diện đổi sau này. Hiện tại người dùng vẫn thấy hộp hỏi đúng, chưa chọn sẵn.
+  - Ngoài-4: Khi hai bên cùng chấm, máy thử có thể bị tắt giữa chừng và vài ca đo báo trượt oan dù màn đúng. Người dùng cuối không bị ảnh hưởng.
+  - Ngoài-5: Người chấm mở màn thật sau lệnh chụp sẽ thấy dữ liệu thử đã bị dọn, khác với mô tả. Màn của người dùng không đổi.
+  - Ngoài-7: Sau lệnh chụp màn, dữ liệu thử bị dọn nên người chấm đối chiếu màn thật sẽ thấy khác ảnh. Người dùng cuối không bị ảnh hưởng.
+  - Ngoài-8: Bằng chứng cho thấy bài đo từng đỏ trước khi sửa chưa chỉ rõ đỏ đúng vì lỗi nào. Màn người dùng thấy không đổi.
