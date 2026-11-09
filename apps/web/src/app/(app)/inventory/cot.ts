@@ -6,7 +6,7 @@ import { nhanGiaTri, nhanTruong, type TuVung } from "@quy-hang/core/labels";
 import type { StandardStatus } from "@quy-hang/core/listing";
 import { NHAN_TRANG_THAI_MAC_DINH, nhanCuaCan } from "@quy-hang/core/statuses";
 import { MAU_TRANG_THAI, type MauTrangThai } from "@/lib/mau-trang-thai";
-import { laKhongDung, nhanLoaiHinh } from "./loai-hinh";
+import { laKhongDung, tenLoaiHinh } from "./loai-hinh";
 import { chuOTruongRieng, cotTruongRieng, laCotRieng, type CotRiengId } from "./truong-rieng";
 
 /** Một dòng của bảng. Không trường nguồn nào: hàng đến từ API không chở lớp `source`. */
@@ -182,7 +182,7 @@ export function chuCuaO(d: DongBang, id: CotId, tv?: TuVung | null): string {
   // Trường loại hình của dòng không dùng: «không có», ô để trống — khác «—» của trường dùng mà chưa có số (hàng 79).
   if (laKhongDung(d, id)) return "";
   // Loại hình: tên riêng của sàn qua bộ từ vựng (khi lõi mở tập đóng cho loại hình), vắng thì nhãn mặc định.
-  if (id === "propertySubType") return d.propertySubType ? nhanGiaTri(tv, "propertySubType", d.propertySubType, nhanLoaiHinh(d.propertySubType)) : CHUA_RO;
+  if (id === "propertySubType") return d.propertySubType ? tenLoaiHinh(tv, d.propertySubType) : CHUA_RO;
   const v = d[id];
   if (v === null || v === undefined || v === "") return "—";
   switch (id) {

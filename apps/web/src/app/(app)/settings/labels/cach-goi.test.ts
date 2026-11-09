@@ -6,7 +6,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { bangNhan, dungDongNhan, TU_VUNG_RONG } from "@quy-hang/core/labels";
 
-import { coTheLuu, loiCuaO, oBanDau, oGiaTri, oTruong, thanLuu, traVeMacDinh } from "./cach-goi-thuan";
+import { coTheLuu, idO, loiCuaO, oBanDau, oGiaTri, oTruong, tenTruong, thanLuu, traVeMacDinh } from "./cach-goi-thuan";
 
 const DAY = dirname(fileURLToPath(import.meta.url));
 
@@ -112,4 +112,29 @@ test("màn cách gọi: màn và máy chủ cùng luật trùng tên", () => {
   }
   assert.equal(dem, BANG.length);
   assert.deepEqual(BANG.map(([, t]) => coTheLuu(bo, { ...o0, ...t })), [false, false, false, false, true, true, true]);
+});
+
+// ---- Loại hình (hàng loai-hinh-trong-cach-goi: E1b, E3b) ----
+test("màn cách gọi: mục loại hình", () => {
+  const bo = bangNhan(null);
+  assert.equal(tenTruong(bo, "propertySubType"), "Loại hình");
+  const neo = ["Condominium", "Townhouse", "Single Family Residence", "Unimproved Land"];
+  const khoa = neo.map((v) => oGiaTri("propertySubType", v));
+  assert.equal(new Set(khoa).size, 4);
+  for (const k of khoa) assert.ok(Object.hasOwn(oBanDau(bo), k), k);
+  assert.equal(idO(oGiaTri("propertySubType", "Single Family Residence")), "v:propertySubType:Single_Family_Residence");
+  assert.equal(new Set(khoa.map(idO)).size, 4);
+  assert.ok(khoa.map(idO).every((id) => !/\s/.test(id)));
+});
+
+test("màn cách gọi: trùng tên loại hình khoá Lưu", () => {
+  const bo = bangNhan(null);
+  const k = oGiaTri("propertySubType", "Single Family Residence");
+  const trung = { ...oBanDau(bo), [k]: "nhà  PHỐ" };
+  assert.equal(loiCuaO(bo, trung, k), "Trùng tên của «Nhà phố»");
+  assert.equal(coTheLuu(bo, trung), false);
+  const lanh = { ...oBanDau(bo), [k]: "Biệt thự đơn lập" };
+  assert.equal(loiCuaO(bo, lanh, k), null);
+  assert.equal(coTheLuu(bo, lanh), true);
+  assert.deepEqual(thanLuu(bo, lanh).values, [{ field: "propertySubType", value: "Single Family Residence", label: "Biệt thự đơn lập" }]);
 });
