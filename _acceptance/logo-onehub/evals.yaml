@@ -81,6 +81,14 @@ evals:
     paths: ["apps/web/src/components/**", "apps/web/src/app/(auth)/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
+  - id: E11
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
   - id: E10
     criterion: AC-7
     executor: ui-check
