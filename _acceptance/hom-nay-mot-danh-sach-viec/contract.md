@@ -5,7 +5,7 @@ slug: hom-nay-mot-danh-sach-viec
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core, api, ui]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-09-hom-nay-mot-danh-sach-viec-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -100,3 +100,4 @@ trên màn này — việc suy từ trạng thái.
 - Ngoài-21 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm việc nguồn lỗi thì không hiện số chỉ kiểm dữ liệu tự viết, nên nếu khâu ghi số thật sai thì bài kiểm vẫn xanh. — `apps/web/src/app/(app)/today/viec/kho-so.test.ts`
 - Ngoài-22 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm việc tự đọc lại khi lỗi chưa chạy qua chuỗi tải thật, nên một lỗi nối giữa các bước có thể không bị bắt. — `apps/web/src/app/(app)/today/viec/doc-nguon.test.ts`
 - Ngoài-23 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm việc giao lại chưa chứng minh các lead khác không bị rơi khỏi hàng đợi và đầu chủ có thấy lead được giao, nên lỗi kiểu đó có thể lọt. — `packages/api/test-db/hom-nay-truong-nhom.test.ts`
+- Cổng Bằng chứng 2026-11-09: chủ kho giữ nguyên các giới hạn máy đã ghi ở trên và tách Ngoài-3, Ngoài-4, Ngoài-11, Ngoài-14, Ngoài-15 (hai lỗi: «Giao lại» hỏng không báo trên máy tính; danh sách đầu chủ không tải được mà báo sai) thành việc riêng. Ngoài-12 là chỗ lượt chấm 2 xếp vào tiêu chí số của cột thứ hai (AC-8): ship với giới hạn này có chủ ý. Ngoài-18 đến Ngoài-23 đã có bài kiểm sau lượt chấm 1, lượt chấm 2 không chấm lại các mục này.
