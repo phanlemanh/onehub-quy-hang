@@ -5,7 +5,7 @@ slug: hom-nay-chiu-loi-tung-phan
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: signed-off
 design_doc: _acceptance/hom-nay-chiu-loi-tung-phan/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -67,6 +67,11 @@ Quét độ phủ làm ngay trong hợp đồng, ba trục:
 
 ## Notes
 
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Khối báo lỗi của Lead đã nhập chưa có bài chấm chính thức ở khổ điện thoại hẹp.
+  - Ngoài-2: Hôm nay trên điện thoại còn một đoạn báo lỗi thừa người dùng không gặp; có thể bị chép lại về sau.
+  - Ngoài-4: Chưa có bài kiểm giữ cho mọi nhóm việc đều không hiện số khi nguồn của nhóm đọc hỏng.
+  - Ngoài-5: Bài kiểm tự động có thể không bắt được câu báo bộ nhóm nháy lên trong lúc máy đang thử lại.
 - Bất biến chạm: không lối đọc mới, không chạm trang khách, chủ nhà không liên quan.
 - AC-1 và AC-8 ngoài chín vấn đề của audit: chủ kho quyết ở Cổng Phạm vi có gộp vào hàng này không (sổ quyết định, câu chỉ người có). Bản nháp theo khuyến nghị gộp; tách thì gỡ hai tiêu chí, ca 1 và ca 7 của ngưỡng, phần còn lại không phụ thuộc chúng.
 - Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Khối báo lỗi của Lead đã nhập chưa được đo trên màn điện thoại hẹp, nên nếu nó bị tràn ngang thì lượt chấm có thể không phát hiện ra. Người dùng điện thoại có thể thấy khối lỗi bị lệch hay cắt chữ ở danh sách Lead đã nhập. — `_acceptance/hom-nay-chiu-loi-tung-phan/evals.yaml`
