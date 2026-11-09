@@ -35,3 +35,21 @@ Danh mục căn là thứ duy nhất dùng chung giữa các sàn. Invest đẩy
 - Đổi khuôn sau này là lên v2, giữ v1 một thời gian.
 - Để sau: khoá máy cho Invest tự đẩy; gói cũ hơn gói đã nhận; xoá căn vắng khỏi gói; ô Gõ mã căn đọc vùng dùng chung
   (Hỏi-3, hàng kế); số thị trường và tin rao trong khuôn.
+
+## Sửa đổi 09/11: khoá máy (hàng 96)
+
+Điều «Để sau: khoá máy cho Invest tự đẩy» đã làm. Manh Phan duyệt Cổng Phạm vi hồ sơ `token-may-ket-noi` ngày 09/11, Hỏi-1..8
+theo khuyến nghị.
+
+- **Cách gọi.** Máy bên kia gọi `POST /api/v1/catalog/feeds` với `Authorization: Bearer qhm_…`, không phiên. Sàn và thoả
+  thuận lấy từ token, cookie đi kèm bị bỏ qua; có Bearer thì không rơi về phiên. Đường phiên của quản trị sàn giữ nguyên.
+- **Token.** Gắn đúng một thoả thuận loại `catalog_source` chiều vào hoặc `catalog_confirmation` chiều ra, tối đa 2 token còn
+  sống mỗi thoả thuận, không có hạn riêng. Quản trị sàn cấp, đọc, thu hồi ở `/api/v1/agreements/{agreementId}/machine-tokens`;
+  chuỗi rõ chỉ hiện ở phản hồi cấp, cơ sở dữ liệu giữ băm SHA-256 và tám ký tự nhận diện (migration 041).
+- **Tắt.** `paused` và quá hạn chỉ chặn tạm. `ended` thu hồi hẳn: mở lại vẫn phải cấp token mới.
+- **Mã lỗi.** Token sai, lạ, đã thu hồi chung 401 `invalid-machine-token`. Thoả thuận tắt hay sàn ngoài danh sách tin 403
+  `agreement-inactive`, kể cả khi token bị thu hồi vì thoả thuận đang `ended`. Sai loại hay chiều 403 `token-scope`. Gói sai
+  khuôn 422 `invalid-feed`. Lỗi máy chủ 500 `internal-error`.
+- **Nhật ký.** Mỗi lời gọi mang token nhận ra được một dòng ở `machine_token_calls`, chỉ thêm; token lạ không ghi dòng. Lần
+  nhận ghi trong cùng giao dịch với gói.
+- Chưa làm: giới hạn tần suất, hạn giữ nhật ký (Hỏi-8); màn bật tắt và đọc nhật ký (hàng 98); API kéo sự kiện (hàng 97).

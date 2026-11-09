@@ -28,6 +28,8 @@ executors:
     chu_san_goi_vai: "node --import tsx --test packages/core/src/access/goi-vai.test.ts"   # chu-san-du-vai E1: bảng vai kéo theo vai
     chu_san_vai_trong_hop: "node --import tsx --test \"apps/web/src/app/(app)/settings/users/vai-trong-hop.test.ts\""   # chu-san-du-vai E3b: chuỗi thao tác của hộp vai
     chu_san_nguoi_du_vai: "node --import tsx --test packages/core/src/access/nguoi-du-vai.test.ts"   # chu-san-du-vai E5: nhà và nút của người đủ vai
+    token_may_db: "export DATABASE_URL=${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres} && npm run db:migrate && cd packages/api && node --env-file-if-exists=../../.env.local --import tsx --test --test-concurrency=1 --test-reporter=spec \"test-db/token-may/*.test.ts\" \"test-db/catalog/nhan-goi.test.ts\""   # token-may-ket-noi E1-E4, E6, E7, E9: cửa token trên Postgres dãy G
+    token_may_cach_ly: "export DATABASE_URL=${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres} && npm run db:migrate && npm run test:isolation -w @quy-hang/db"   # token-may-ket-noi E5, E8, E11: chỉ bộ kiểm packages/db — không chạy test-db của API, vì nó đụng vùng danh mục dùng chung với token_may_db khi hai lệnh song song
     o_la_db: "export DATABASE_URL=postgres://postgres:quyhang@localhost:5588/postgres && npm run db:migrate && cd packages/api && node --import tsx --test --test-concurrency=1 test-db/imports/o-la.test.ts"   # va-bai-o-la-do-ngau-nhien E1–E5: bài ô lạ trên Postgres thử riêng (5588, ghim cứng)
   script:
     hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
