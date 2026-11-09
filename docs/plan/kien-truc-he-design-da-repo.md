@@ -8,11 +8,13 @@ hơn remote. Vài thuật ngữ chỉ đọc được bản tóm tắt hoặc l�
 
 ## Trả lời ngắn
 
-Mục tiêu là **mỗi quyết định thiết kế chỉ được đưa ra một lần, ở đúng tầng, rồi máy giữ nó ở mọi repo**. Muốn vậy cần ba thứ:
+Mục tiêu là **mỗi quyết định thiết kế chỉ được đưa ra một lần, ở đúng tầng, rồi máy giữ nó ở mọi repo**. Muốn vậy cần bốn thứ:
 
 1. **Một kiến trúc nhiều tầng** với tên chuẩn của ngành, để biết mỗi quyết định thuộc về đâu.
 2. **Một thang độ chắc**, để đẩy từng quyết định từ chỗ «viết trong tài liệu» lên chỗ «không thể làm sai».
 3. **Một đường nâng hạng**, để cái sinh ra ở một sản phẩm được lên thành của chung khi có bằng chứng.
+4. **Màn mẫu chuẩn và bộ mẫu bài kiểm**, vì đo thực tế cho thấy AI chép màn gần nhất, và phần lớn việc làm lại nằm ở bài kiểm chứ không ở giao diện
+   ([ma trận kiểm kê](ma-tran-kiem-ke-design-claude-code.md)).
 
 ```
                                            AI ĐỔI      ĐỘ MỞ
@@ -31,7 +33,7 @@ Mục tiêu là **mỗi quyết định thiết kế chỉ được đưa ra m�
 │ FOUNDATIONS  Design tokens             │ cấu trúc chung,         │
 │                                        │ giá trị theo theme      │
 └──────────────────────────────────────────────────────────────────┘
-  Cắt ngang mọi tầng:  Source of truth · Distribution · Governance
+  Cắt ngang mọi tầng:  Source of truth · Distribution · Governance · Verification kit
 ```
 
 Khuyến nghị: **chung một đặc tả và một bộ kiểm cho mọi repo; chung linh kiện chỉ giữa các repo cùng nền; recipes và giá trị theme để
@@ -44,7 +46,16 @@ Quỹ hàng là ca đo rõ nhất. Máy báo bản đồ khuôn 19 nhóm, 0 lệ
 từng màn.
 
 Nguồn bất định không phải do thiếu tài liệu. Nó đến từ **những câu hỏi còn để ngỏ mỗi lần dựng**: dòng cao bao nhiêu, số canh về đâu,
-lọc rỗng nói gì. Người hay AI nào dựng cũng phải tự trả lời, và mỗi lần trả lời một kiểu.
+lọc rỗng nói gì.
+
+Đo 09/11 với ba tác tử độc lập cùng lập phương án cho một màn danh sách cho thấy câu hỏi để ngỏ được trả lời theo hai cách:
+
+- **Có màn mẫu gần:** máy chép theo, rất đồng nhất. 16 trên 21 quyết định giống nhau, nhưng 6 trong số đó là chép luôn lỗi của màn mẫu.
+- **Màn mẫu mâu thuẫn hoặc không có:** máy tự đoán và lệch nhau. 5 trên 21 quyết định lệch, và mỗi tác tử phải tự đoán 17–22 mục.
+
+Vì vậy tất định không chỉ là thêm luật. Màn mẫu cũng là một nguồn sự thật, dù có ai khai nó như vậy hay không.
+
+Mới đo một màn giả định, ở mức lập phương án; số liệu ở [ma trận kiểm kê](ma-tran-kiem-ke-design-claude-code.md).
 
 **Tất định ở đây nghĩa là:** cùng một loại việc thì ra cùng hình và cùng hành vi, bất kể ai dựng, repo nào, lúc nào.
 
@@ -76,6 +87,8 @@ truy được nguồn.
 | **Governance, contribution model** | Ai được đổi, xét thế nào, theo dõi áp dụng ra sao | Cổng nghiệm thu | Tóm tắt |
 | **Adoption metric, detached variants** | Tỉ lệ dùng thành phần của hệ, số bản tách riêng | Mức nợ, ngoại lệ | Tóm tắt |
 | **Design lint, visual regression** | Máy soi mã, so ảnh | `ui-lint`, ảnh chuẩn | Thông lệ |
+| **Reference implementation** | Bản dựng thật được chọn làm mẫu để sao theo | Màn mẫu khai trong khuôn | Thông lệ |
+| **Verification kit** | Bộ dụng cụ kiểm dùng chung: mẫu bài kiểm, chỗ chờ, bài phá thử. Tên dùng trong bản này, không phải từ chuẩn cố định | Chưa có, mỗi hồ sơ tự viết | Tự đặt |
 | **Team model: federated** | Mô hình **đội**: các đội sản phẩm cùng góp vào hệ. Không dùng để chỉ cách chia mã | Chưa dùng | Thông lệ |
 
 Chuẩn Design Tokens 2025.10 là báo cáo cuối của nhóm cộng đồng W3C, không phải chuẩn W3C. Nó chuẩn hoá **định dạng trao đổi**, không quy định
@@ -116,7 +129,7 @@ Câu hỏi đổi từ «bảng này nên trông thế nào?» thành «bảng n
 
 Mẫu trên chỉ minh hoạ hình dạng API, chưa dựng thử. Tên `Luoi` và các prop là ví dụ.
 
-## 4. Ba lớp cắt ngang
+## 4. Bốn lớp cắt ngang
 
 ### Source of truth — machine-readable
 
@@ -132,6 +145,9 @@ design/
 
 Sổ lệch lọt và sổ ngoại lệ giữ như hiện nay. Mọi tệp dẫn xuất phải có bước kiểm `--check` để không thành nguồn thứ hai.
 
+**Reference implementation cũng là một nguồn sự thật.** Trong phép đo, đó là thứ máy bám vào để ra cấu hình. Mỗi kiểu màn khai một màn mẫu chuẩn, sạch lỗi đã biết.
+Sổ đăng ký template đã có chỗ khai màn mẫu; cần thêm cam kết rằng màn mẫu đạt đủ ma trận trạng thái. Ở những chỗ chưa có thành phần đóng, sửa màn mẫu là cách lan nhanh nhất.
+
 ### Distribution
 
 - **Mã giao diện** đi qua registry riêng, kiểu shadcn: mỗi repo giữ bản mã của mình. Điểm yếu là các bản dễ trôi khỏi nguồn, nên phải có bài so
@@ -146,6 +162,18 @@ Sổ lệch lọt và sổ ngoại lệ giữ như hiện nay. Mọi tệp dẫn
 - **Đo áp dụng:** tỉ lệ dùng thành phần của hệ, số snowflake, số ngoại lệ quá hạn, theo từng repo.
 - **Vòng phản hồi:** mỗi lỗi audit tìm ra phải trả lời «tầng nào đáng lẽ chặn được?» và sinh luật hoặc hàng việc. Hiện sổ lệch lọt của Quỹ
   hàng 0 dòng dù đã có nhiều audit, nghĩa là vòng này đang đứt.
+
+### Verification kit
+
+Trong 199 lần làm lại đã ghi nhận ở Quỹ hàng từ 02/11, 55 % nằm ở bài kiểm, môi trường, ghim và gộp, và khoảng 45 % số đó là bài kiểm do AI viết mà không thể đỏ
+hoặc đo sai thứ. 13 % commit cùng kỳ chỉ để ghim lại hoặc vẽ lại bản đồ. Khối giao diện đóng sẵn không chữa được phần này, nên cần lớp riêng:
+
+- **Mẫu chờ màn sẵn sàng**, để bài kiểm không phụ thuộc thời gian tải.
+- **Bài phá thử bắt buộc:** mỗi bài kiểm giao diện phải chứng minh được là đỏ khi phá đúng chỗ nó đo.
+- **Môi trường kiểm cách ly** để lỗi nhiễu không bị tính thành lỗi sản phẩm.
+- **Giảm điểm ghim và tệp sinh** phải làm lại sau mỗi lần gộp.
+
+Phân loại trên do một tác tử làm từ văn bản hồ sơ, tỉ lệ chỉ để định hướng.
 
 ## 5. Thang độ chắc
 
@@ -191,6 +219,7 @@ Bảng đích, lấy các lỗi đã gặp ở Quỹ hàng:
 | Danh mục interaction patterns | Bộ dựng trạng thái | Từ vựng nghiệp vụ |
 | Ma trận trạng thái | Bộ định dạng số, ngày | Khuôn nhóm màn |
 | Bộ kiểm, luật lint không gắn nền | Luật lint gắn nền | Mức nợ, ngoại lệ |
+| Verification kit | Mẫu bài kiểm theo thành phần | Màn mẫu chuẩn của từng kiểu màn |
 
 Bộ đọc bản đồ khuôn đã nằm ở kit. Trong 14 luật lint của Quỹ hàng, 10 luật không nhắc gì tới kho này nên có thể là ứng viên chuyển sang kit;
 4 luật còn lại cần đọc kỹ. Con số này đếm bằng tìm chữ, chưa thử chạy ở repo khác.
@@ -243,8 +272,9 @@ Theo Frost, recipe có thể lên core hoặc ở lại sản phẩm, cả hai �
 
 Các repo gắn kit phát triển qua vòng nghiệm thu có AI viết mã, nên kiến trúc phải viết cho cả người đọc là máy:
 
+- **Thừa nhận AI chép màn gần nhất.** Khi không có câu trả lời đóng, máy lấy cấu hình từ màn giống nhất. Mỗi kiểu màn cần trỏ rõ tới một màn mẫu chuẩn, để máy không tự chọn nhầm màn còn lỗi.
 - **Đổi thứ tự của thang dùng lại.** Hiện mỗi ô của màn chọn khối hợp nhất cho riêng nó, đó là gốc của việc hai màn có hai bảng. Thang mới:
-  recipe của repo → core → rồi mới tới kho khối ReUI. Kho khối là nguyên liệu, không phải đích đến.
+  màn mẫu chuẩn và recipe của repo → core → rồi mới tới kho khối ReUI. Kho khối là nguyên liệu, không phải đích đến.
 - **AI đọc manifest** để biết có gì và được chọn gì, thay vì đoán.
 - **Lint báo ngay lúc viết**, thay vì chờ tới lúc chấm.
 - **Tách luật đúng sai khỏi phán đoán.** Luật đúng sai vào bộ kiểm. Phán đoán thì để AI đề xuất và người duyệt ở cổng.
@@ -256,18 +286,21 @@ Hai ca này mới đọc qua tóm tắt.
 
 | Chặng | Việc | Xong khi |
 |---|---|---|
-| **0. Thử ở một nơi** | Dựng lưới có API đóng cho Bảng hàng và Liên hệ, thêm nhóm phần tử «Lưới» vào bản đồ | Hai bảng trùng công thức dòng, không còn cấu hình riêng trong màn, 2 màn dùng API đóng mà không thêm prop kiểu dáng |
-| **1. Đo trước khi rút** | Nối hai lưới còn lại của kit ở chế độ chỉ báo trên ba màn | Biết máy bắt được bao nhiêu phần trăm lỗi audit, và độ nhiễu |
-| **2. Rút vào kit** | Đưa lược đồ `design/`, danh mục pattern, ma trận trạng thái, các luật lint không gắn kho vào kit | Một repo khác cài kit và chạy được mà không chép tay |
-| **3. Repo thứ hai** | Đưa lưới sang onehub-invest hoặc radar, chạy đường nâng hạng lần đầu | Lưới thành core thật, repo đầu dùng lại từ nguồn chung |
-| **4. Mở rộng theo mức** | Áp L1–L3 cho nhóm A rồi nhóm B | Có bảng độ phủ theo repo |
+| **0. Màn mẫu chuẩn** | Làm sạch Liên hệ (hàng `hai-bang-mot-nep`, cộng tiêu đề cấp một và câu lỗi), khai làm mẫu của kiểu màn danh sách | Chạy lại phép đo ba tác tử, không còn mang sáu lỗi đã thấy |
+| **1. Verification kit** | Mẫu chờ màn sẵn sàng, bài phá thử bắt buộc, giảm điểm ghim | Tỉ lệ làm lại do bài kiểm và hạ tầng giảm rõ so với mức 55 % |
+| **2. Thử ở một nơi** | Dựng lưới có API đóng cho Bảng hàng và Liên hệ, thêm nhóm phần tử «Lưới», mẫu hồ sơ cạnh bảng và chia trang | Hai bảng trùng công thức dòng, không còn cấu hình riêng trong màn, 2 màn dùng API đóng mà không thêm prop kiểu dáng; số mục tự đoán giảm khi đo lại |
+| **3. Đo trước khi rút** | Nối hai lưới còn lại của kit ở chế độ chỉ báo trên ba màn | Biết máy bắt được bao nhiêu phần trăm lỗi audit, và độ nhiễu |
+| **4. Rút vào kit** | Đưa lược đồ `design/`, danh mục pattern, ma trận trạng thái, các luật lint không gắn kho vào kit | Một repo khác cài kit và chạy được mà không chép tay |
+| **5. Repo thứ hai** | Đưa lưới sang onehub-invest hoặc radar, chạy đường nâng hạng lần đầu | Lưới thành core thật, repo đầu dùng lại từ nguồn chung |
+| **6. Mở rộng theo mức** | Áp L1–L3 cho nhóm A rồi nhóm B | Có bảng độ phủ theo repo |
 
-Chặng 0 và 1 làm được ngay, mỗi chặng là một hàng riêng của Quỹ hàng. Từ chặng 2 phải qua kit, thuộc phạm vi phát hành của kit.
+Chặng 0, 2 và 3 làm được ngay ở Quỹ hàng, mỗi chặng là một hàng riêng. Chặng 1 và từ chặng 4 trở đi thuộc phạm vi phát hành của kit.
 
 ## 11. Rủi ro và điều không làm
 
 | Rủi ro | Cách giữ |
 |---|---|
+| Màn mẫu mang lỗi, mọi màn sau chép theo | Màn mẫu phải đạt đủ ma trận trạng thái, sửa lỗi ở màn mẫu trước |
 | Core phình thành một cục ôm mọi thứ | Core giữ cấu hình, kiểu và trạng thái. Cuộn ảo, sửa trên ô gắn từ ngoài |
 | Tệp token thành nguồn thứ hai | Sinh tự động và có bước kiểm. onehub-invest đã có mẫu làm việc này |
 | Bản mã giữa các repo trôi khỏi nhau | Bài so với nguồn trong bộ kiểm |
