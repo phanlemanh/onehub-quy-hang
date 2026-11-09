@@ -9,6 +9,7 @@ import { MO_HINH_O_LA } from "../../src/imports/ai/claude";
 import { tinhTien } from "../../src/imports/ai/gia";
 import { LY_DO } from "../../src/imports/ai/routes";
 import { appPool, BASE_URL, cleanup, cookieOf, createLoneUser, identityPool, mail, makeAuth, openCompany, RUN } from "../helpers";
+import { TRUONG_MA, vetSoTrongSo } from "./vet-so-trong-so";
 
 after(async () => {
   await appPool.query("delete from agreements where company_id in (select id from companies where name like $1)", [`%${RUN}%`]);
@@ -16,6 +17,7 @@ after(async () => {
 });
 
 const { auth, sent } = makeAuth();
+const SO_MAU = "0900 000 011";
 const PHEP_TY = { name: "price", params: { unit: "ty" } };
 const GOI: GoiOLa = {
   o: [
@@ -67,6 +69,7 @@ async function sanMoi(ten: string) {
   await appPool.query("insert into company_members (company_id, user_id, roles) values ($1, $2, $3)", [s.companyId, userId, ["listing_agent"]]);
   return {
     companyId: s.companyId as string,
+    dauChuId: userId,
     quanTri: `${await login(mail(`${k}-qt`))}; qh_san=${s.companyId}`,
     dauChu: `${await login(email)}; qh_san=${s.companyId}`,
   };
@@ -104,10 +107,137 @@ test("ô lạ: cửa máy chủ trước khi gửi", async () => {
   const d = await dongAi(s.companyId);
   assert.deepEqual(d.map((x) => x.result), ["blocked_pii"]);
   assert.ok(d[0]!.blocked_kinds?.includes("phone"), "blocked_kinds có phone");
-  assert.ok(!d[0]!.t.includes("0900") && !d[0]!.t.includes("011"), "sổ chứa chuỗi số");
+  const vet = vetSoTrongSo(d[0]!.t, SO_MAU, s.dauChuId);
+  assert.equal(vet, null, `sổ chứa chuỗi số ở trường ${vet?.truong}`);
 
   assert.equal((await oLa(app, GOI, s.dauChu)).body?.cheDo, "ai");
   assert.equal(dem.n, 1, "gói sạch gọi đúng một lần");
+});
+
+// Phép kiểm cũ: tìm chuỗi trên toàn văn dòng. Giữ ở đây để chứng minh mẫu âm thật sự kích được lỗi đỏ ngẫu nhiên.
+const phepCuBaoDo = (t: string) => t.includes("0900") || t.includes("011");
+const ghiDongSo = async (s: San, cot: Record<string, unknown>) => {
+  const tron: Record<string, unknown> = { company_id: s.companyId, user_id: s.dauChuId, model: MO_HINH_O_LA, result: "blocked_pii", ...cot };
+  const ten = Object.keys(tron);
+  const r = await appPool.query<{ t: string }>(
+    `insert into ai_usage as a (${ten.join(", ")}) values (${ten.map((_, i) => `$${i + 1}`).join(", ")}) returning row_to_json(a)::text t`,
+    Object.values(tron),
+  );
+  return r.rows[0]!.t;
+};
+
+test("phép kiểm sổ: đỏ khi số lọt vào, không bắt nhầm mã máy", async () => {
+  const s = await sanMoi("E2b");
+  const sach = await ghiDongSo(s, {
+    id: "00000000-0000-4000-8000-000000000011",
+    created_at: "2026-11-09T09:00:00.011+00:00",
+    cost_usd: 0.011,
+    duration_ms: 1011,
+    input_tokens: 3011,
+  });
+  assert.ok(phepCuBaoDo(sach), "mẫu âm phải làm phép kiểm cũ báo đỏ — thiếu thì ca này vô nghĩa");
+  assert.equal(vetSoTrongSo(sach, SO_MAU, s.dauChuId), null, "bắt nhầm mã máy hay giờ ghi");
+
+  const LOT = (ten: string, cot: Record<string, unknown>, truong: string, dang: string) => [ten, cot, truong, dang] as const;
+  const CA = [
+    LOT("có khoảng trắng", { model: "0900 000 011" }, "model", "day-du"),
+    LOT("liền", { model: "0900000011" }, "model", "day-du"),
+    LOT("dấu chấm", { model: "0900.000.011" }, "model", "day-du"),
+    LOT("gạch nối", { model: "0900-000-011" }, "model", "day-du"),
+    LOT("đầu +84", { model: "+84 900 000 011" }, "model", "day-du"),
+    LOT("đầu 84", { model: "84900000011" }, "model", "day-du"),
+    LOT("chỉ đuôi", { model: "đuôi 011" }, "model", "mot-phan"),
+    LOT("đuôi viết rời", { model: "đuôi 0 1 1" }, "model", "mot-phan"),
+    LOT("chỉ đầu số", { model: "đầu 0900" }, "model", "mot-phan"),
+    LOT("mã người là số", { user_id: "0900000011" }, "user_id", "day-du"),
+    LOT("mã người mang đuôi", { user_id: "u-011" }, "user_id", "mot-phan"),
+    LOT("trường số đủ số", { duration_ms: 900000011 }, "duration_ms", "day-du"),
+  ];
+  assert.equal(CA.length, 12, "bảng ca viết trước có đúng 12 phần tử");
+  for (const [ten, cot, truong, dang] of CA) {
+    assert.deepEqual(vetSoTrongSo(await ghiDongSo(s, cot), SO_MAU, s.dauChuId), { truong, dang }, `không bắt được: ${ten}`);
+  }
+});
+
+test("phép kiểm sổ: mọi cột của dòng thật", async () => {
+  const s = await sanMoi("E2c");
+  const dong = JSON.parse(await ghiDongSo(s, { blocked_kinds: ["phone"] })) as Record<string, unknown>;
+  const cotMa = Object.keys(TRUONG_MA);
+  // Cột thường trước, cột máy sau, để mỗi kiểu phá dừng ở đúng loại cột của nó. `cot_moi` đại diện cho cột thêm vào sổ sau này.
+  const COT = [...Object.keys(dong).filter((k) => !cotMa.includes(k)), "cot_moi", ...cotMa];
+  assert.ok(COT.includes("model") && COT.includes("blocked_kinds"), "ma trận phải rút từ dòng sổ thật");
+  const CA: [string, unknown, "day-du" | "mot-phan"][] = [];
+  for (const cot of COT) {
+    CA.push([cot, "0900 000 011", "day-du"], [cot, "đuôi 011", "mot-phan"], [cot, ["0900 000 011"], "day-du"]);
+    if (typeof dong[cot] === "number") CA.push([cot, 900000011, "day-du"]);
+  }
+  const soCotSo = COT.filter((c) => typeof dong[c] === "number").length;
+  assert.equal(CA.length, COT.length * 3 + soCotSo, "số phần tử ma trận");
+  let dem = 0;
+  for (const [cot, giaTri, dang] of CA) {
+    const vet = vetSoTrongSo(JSON.stringify({ ...dong, [cot]: giaTri }), SO_MAU, s.dauChuId);
+    assert.deepEqual(vet, { truong: cot, dang }, `không bắt được ở ma trận cột: ${cot} — ${JSON.stringify(giaTri)}`);
+    dem++;
+  }
+  assert.equal(dem, CA.length, "số assert bằng số phần tử ma trận");
+});
+
+test("phép kiểm sổ: số trong dữ liệu lồng", async () => {
+  const s = await sanMoi("E2e");
+  const dong = JSON.parse(await ghiDongSo(s, { blocked_kinds: ["phone"] })) as Record<string, unknown>;
+  const CA: [string, unknown, "day-du" | "mot-phan"][] = [
+    ["đối tượng, số đầy đủ", { ghi_chu: "0900 000 011" }, "day-du"],
+    ["đối tượng trong đối tượng", { a: { b: { c: "0900000011" } } }, "day-du"],
+    ["mảng chứa đối tượng", [{ so: "+84 900 000 011" }], "day-du"],
+    ["đối tượng chứa mảng", { ds: ["không", "0900.000.011"] }, "day-du"],
+    ["số nằm ở khoá", { "0900000011": true }, "day-du"],
+    ["số dạng số trong đối tượng", { n: 900000011 }, "day-du"],
+    ["số tách ở hai giá trị", { dau: "0900", duoi: "000 011" }, "day-du"],
+    ["đầu số trong mảng đối tượng", { a: [{ b: "đầu 0900" }] }, "mot-phan"],
+    ["đuôi trong đối tượng", { a: { b: "đuôi 011" } }, "mot-phan"],
+    ["đuôi viết rời trong mảng đối tượng", [{ a: "đuôi 0 1 1" }], "mot-phan"],
+    ["mã máy sai dạng", { ma: "id-011" }, "mot-phan"],
+  ];
+  assert.equal(CA.length, 11, "bảng ca viết trước có đúng 11 phần tử");
+  for (const cot of ["cot_moi", "model"]) {
+    for (const [ten, giaTri, dang] of CA) {
+      const vet = vetSoTrongSo(JSON.stringify({ ...dong, [cot]: giaTri }), SO_MAU, s.dauChuId);
+      assert.deepEqual(vet, { truong: cot, dang }, `không bắt được ở dữ liệu lồng: ${ten} (${cot})`);
+    }
+  }
+  const ma = "00000000-0000-4000-8000-000000000011";
+  const gio = "2026-11-09T09:00:00.011+00:00";
+  const sach = JSON.stringify({ ...dong, cot_moi: { ma, gio, lop: [{ ma, gio }], dem: 1011, tien: 0.011, ok: true, rong: null } });
+  assert.ok(phepCuBaoDo(sach), "mẫu âm phải làm phép kiểm cũ báo đỏ — thiếu thì ca này vô nghĩa");
+  assert.equal(vetSoTrongSo(sach, SO_MAU, s.dauChuId), null, "bắt nhầm mã máy trong dữ liệu lồng");
+});
+
+test("phép kiểm sổ không đỏ trên mã máy ngẫu nhiên", async () => {
+  const s = await sanMoi("E2d");
+  // Postgres tự sinh `id` và in giờ ghi theo dạng thật: cắt số 0 cuối phần lẻ, có dòng không phần lẻ.
+  const { rows } = await appPool.query<{ t: string }>(
+    `insert into ai_usage as a (company_id, user_id, model, result, blocked_kinds, cost_usd, duration_ms, created_at)
+     select $1::uuid, $2::text, $3::text, 'blocked_pii', '{phone}', round(random()::numeric, 6), (random() * 5000)::int,
+            timestamptz '2026-01-01' + (random() * 26000000)::int * interval '1 second' +
+            case i % 4 when 0 then interval '0' when 1 then (random() * 999)::int * interval '1 millisecond'
+                 when 2 then (random() * 99)::int * interval '10 millisecond' else random() * interval '1 second' end
+     from generate_series(1, 20000) i
+     returning row_to_json(a)::text t`,
+    [s.companyId, s.dauChuId, MO_HINH_O_LA],
+  );
+  assert.equal(rows.length, 20000, "đủ hai vạn dòng");
+  assert.ok(rows.some((r) => /T\d{2}:\d{2}:\d{2}\+/.test(r.t)), "có dòng giờ ghi không phần lẻ");
+  assert.ok(rows.some((r) => /\.\d{1,5}\+/.test(r.t)), "có dòng giờ ghi ít hơn sáu chữ số lẻ");
+  assert.ok(rows.filter((r) => phepCuBaoDo(r.t)).length > 0, "phép kiểm cũ phải đỏ ít nhất một dòng — thiếu thì ca này vô nghĩa");
+  const nham = rows.filter((r) => vetSoTrongSo(r.t, SO_MAU, s.dauChuId) !== null);
+  assert.equal(nham.length, 0, `bắt nhầm dòng ngẫu nhiên: ${nham[0]?.t}`);
+  // Cùng mã và giờ do Postgres sinh, đặt vào dữ liệu lồng của một cột chưa có.
+  const nhamLong = rows.filter((r) => {
+    const d = JSON.parse(r.t) as Record<string, unknown>;
+    const cot_moi = { ma: d.id, gio: d.created_at, lop: [{ ma: d.company_id, gio: d.created_at }] };
+    return vetSoTrongSo(JSON.stringify({ ...d, cot_moi }), SO_MAU, s.dauChuId) !== null;
+  });
+  assert.equal(nhamLong.length, 0, `bắt nhầm dòng ngẫu nhiên lồng: ${nhamLong[0]?.t}`);
 });
 
 test("ô lạ không ghi gì", async () => {
