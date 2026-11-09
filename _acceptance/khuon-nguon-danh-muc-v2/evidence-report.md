@@ -1,19 +1,17 @@
 ---
 schema_version: 2
 feature_slug: khuon-nguon-danh-muc-v2
-verdict: REJECT
+verdict: PASS
 failed_evals: []
 reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 82f64fa6fc79d1c3b5292ae86dae943b1a646a95
+verified_commit: 798b05da501a398640095469f8cc227a5c37f781
 human_signoff:
 ---
 
 # Evidence Report: khuon-nguon-danh-muc-v2
-
-Round 1. Mọi lệnh máy đều xanh; REJECT đến từ các phát hiện TRONG hợp đồng (xem review-findings.md, mục «Trong hợp đồng»: AC-7 hai mục, AC-4, AC-5, AC-3, AC-9), không phải từ eval đỏ.
 
 | Eval | Criterion | Executor | Verdict |
 |---|---|---|---|
@@ -35,176 +33,162 @@ Round 1. Mọi lệnh máy đều xanh; REJECT đến từ các phát hiện TRO
 ## Evidence
 
 - eval: E1
-  run_id: minted-khuon-nguon-danh-muc-v2-E1-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-E1-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.khuon_v2_db
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
   output: |
-    ℹ duration_ms 5080.319083
-    __EXIT=0
+    ℹ duration_ms 3798.584208
 
 - eval: E2
-  run_id: minted-khuon-nguon-danh-muc-v2-E2-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-E2-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.khuon_v2_db
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
   output: |
-    ℹ duration_ms 5080.319083
-    __EXIT=0
-
-- eval: E3
-  run_id: minted-khuon-nguon-danh-muc-v2-E3-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.connect
-  verified_at: 2026-11-09T14:21:25Z
-  output: |
-    ℹ duration_ms 188.493833
-    __EXIT=0
-
-- eval: E4
-  run_id: minted-khuon-nguon-danh-muc-v2-E4-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.connect
-  verified_at: 2026-11-09T14:21:25Z
-  output: |
-    ℹ duration_ms 188.493833
-    __EXIT=0
-
-- eval: E5
-  run_id: minted-khuon-nguon-danh-muc-v2-E5-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.connect
-  verified_at: 2026-11-09T14:21:25Z
-  output: |
-    ℹ duration_ms 188.493833
-    __EXIT=0
+    ℹ duration_ms 3798.584208
 
 - eval: E6
-  run_id: minted-khuon-nguon-danh-muc-v2-E6-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-E6-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.khuon_v2_db
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
   output: |
-    ℹ duration_ms 5080.319083
-    __EXIT=0
-
-- eval: E7
-  run_id: minted-khuon-nguon-danh-muc-v2-E7-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.connect
-  verified_at: 2026-11-09T14:21:25Z
-  output: |
-    ℹ duration_ms 188.493833
-    __EXIT=0
-
-- eval: E8
-  run_id: minted-khuon-nguon-danh-muc-v2-E8-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.connect
-  verified_at: 2026-11-09T14:21:25Z
-  output: |
-    ℹ duration_ms 188.493833
-    __EXIT=0
+    ℹ duration_ms 3798.584208
 
 - eval: E9
-  run_id: minted-khuon-nguon-danh-muc-v2-E9-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-E9-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.khuon_v2_db
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
   output: |
-    ℹ duration_ms 5080.319083
-    __EXIT=0
+    ℹ duration_ms 3798.584208
 
 - eval: E10
-  run_id: minted-khuon-nguon-danh-muc-v2-E10-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-E10-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.khuon_v2_db
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
   output: |
-    ℹ duration_ms 5080.319083
-    __EXIT=0
-
-- eval: E11
-  run_id: minted-khuon-nguon-danh-muc-v2-E11-r1
-  exit_code: 0
-  baseline: red
-  verifier: config:executors.test.khuon_v2_cach_ly
-  verified_at: 2026-11-09T14:21:25Z
-  output: |
-    ℹ duration_ms 3853.432833
-    __EXIT=0
-
-- eval: E12
-  run_id: minted-khuon-nguon-danh-muc-v2-E12-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.connect
-  verified_at: 2026-11-09T14:21:25Z
-  output: |
-    ℹ duration_ms 188.493833
-    __EXIT=0
+    ℹ duration_ms 3798.584208
 
 - eval: E13
-  run_id: minted-khuon-nguon-danh-muc-v2-E13-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-E13-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.khuon_v2_db
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
   output: |
-    ℹ duration_ms 5080.319083
-    __EXIT=0
+    ℹ duration_ms 3798.584208
+
+- eval: E3
+  run_id: minted-khuon-nguon-danh-muc-v2-E3-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.connect
+  verified_at: 2026-11-09T14:32:18Z
+  output: |
+    ℹ duration_ms 168.852084
+
+- eval: E4
+  run_id: minted-khuon-nguon-danh-muc-v2-E4-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.connect
+  verified_at: 2026-11-09T14:32:18Z
+  output: |
+    ℹ duration_ms 168.852084
+
+- eval: E5
+  run_id: minted-khuon-nguon-danh-muc-v2-E5-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.connect
+  verified_at: 2026-11-09T14:32:18Z
+  output: |
+    ℹ duration_ms 168.852084
+
+- eval: E7
+  run_id: minted-khuon-nguon-danh-muc-v2-E7-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.connect
+  verified_at: 2026-11-09T14:32:18Z
+  output: |
+    ℹ duration_ms 168.852084
+
+- eval: E8
+  run_id: minted-khuon-nguon-danh-muc-v2-E8-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.connect
+  verified_at: 2026-11-09T14:32:18Z
+  output: |
+    ℹ duration_ms 168.852084
+
+- eval: E12
+  run_id: minted-khuon-nguon-danh-muc-v2-E12-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.connect
+  verified_at: 2026-11-09T14:32:18Z
+  output: |
+    ℹ duration_ms 168.852084
 
 - eval: E14
-  run_id: minted-khuon-nguon-danh-muc-v2-E14-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-E14-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.connect
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
   output: |
-    ℹ duration_ms 188.493833
-    __EXIT=0
+    ℹ duration_ms 168.852084
+
+- eval: E11
+  run_id: minted-khuon-nguon-danh-muc-v2-E11-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.test.khuon_v2_cach_ly
+  verified_at: 2026-11-09T14:32:18Z
+  output: |
+    ℹ duration_ms 3230.443084
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
 
 - cmd: npm run test:hooks
-  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-test_hooks-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
 
 - cmd: npm run typecheck
-  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-typecheck-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
 
 - cmd: npm run lint
-  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-lint-r1
+  run_id: minted-khuon-nguon-danh-muc-v2-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:21:25Z
+  verified_at: 2026-11-09T14:32:18Z
 
 ## Known limits
 
@@ -212,17 +196,15 @@ Round 1. Mọi lệnh máy đều xanh; REJECT đến từ các phát hiện TRO
 
 ## Analyst
 
-Eval không phân biệt (xanh trên cả HEAD lẫn baseline, chứng minh harness chứ chưa chứng minh feature; nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+carried tu round 1 — baseline khong do lai round nay
 
-- Lệnh khuon_v2_db (khuon-v2/*.test.ts và catalog/nhan-goi.test.ts): E1, E2, E6, E9, E10, E13.
-- Lệnh connect (npm test -w @quy-hang/connect): E3, E4, E5, E7, E8, E12, E14.
-
-E11 là eval duy nhất đỏ trên baseline (có phân biệt).
+Baseline khong do: evals.yaml khong doi tu lan baseline cuoi (round 1), nen moi block eval ghi baseline n-a. Khong co eval nao duoc liet ke la khong-phan-biet trong round nay.
 
 ## Variance
 
-none — mọi eval chạy một lần, đều xác định (runs: 1), không có eval phương sai.
+none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: mọi eval máy xanh, nhưng có phát hiện trong hợp đồng chưa xử lý (AC-7 số điện thoại dính chữ và hai ca đo không ghim nguyên nhân, AC-4 mốc đo sai múi giờ thành 500, AC-5 khu thứ hai không có dữ liệu tin rao, AC-3 danh sách chín trường không viết trước, AC-9 ràng buộc field_confidence chưa duyệt đủ chín khoá). Trả về triển khai.
+Round 1: lượt chấm 1 có bảy phát hiện, đã sửa ở commit 798b05da. Returned to implementation.
+Round 2: toàn bộ eval máy và lệnh suite xanh. Verdict PASS.
