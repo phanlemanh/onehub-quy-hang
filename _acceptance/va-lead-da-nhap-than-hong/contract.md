@@ -5,7 +5,7 @@ slug: va-lead-da-nhap-than-hong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: _acceptance/va-lead-da-nhap-than-hong/design.md
 approved_by:
 approved_at:
@@ -44,3 +44,7 @@ Quét độ phủ làm ngay trong hợp đồng, một trục vì lời đọc c
 ## Notes
 
 - Bất biến chạm: không lối đọc mới, không chạm trang khách.
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bộ kiểm tự động mới thử một kiểu lead mẫu, nên nếu sau này ai đó vô tình siết cửa kiểm quá chặt thì telesales có lead trả lại hay cho thuê có thể thấy báo lỗi thay cho cả danh sách mà bộ kiểm vẫn xanh. — `apps/web/src/app/(app)/leads/mine/nguon-that.test.ts`
+- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Dữ liệu mẫu trong bài kiểm không giống một lead thật, nên bài kiểm chứng minh yếu hơn mô tả. Người dùng không gặp lỗi nào ở màn hình. — `apps/web/src/app/(app)/leads/mine/nguon-that.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Lead mẫu trong bài kiểm thiếu nhiều trường so với lead thật, nên bài kiểm chưa chứng minh trọn một lead thật đi qua được. Người dùng không thấy lỗi. — `apps/web/src/app/(app)/leads/mine/nguon-that.test.ts`
+- Ngoài-4 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bộ kiểm chưa thử đủ các kiểu phần tử sai nên có thể bỏ sót lỗi sau này. Người dùng không thấy gì khác đi hôm nay. — `apps/web/src/app/(app)/leads/mine/nguon-that.test.ts`

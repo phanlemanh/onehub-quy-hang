@@ -1,6 +1,3 @@
-ca1 {a:1} 200 GET http://localhost:3462/api/v1/leads
-ca1 {a:1} 200 GET http://localhost:3462/api/v1/leads
-ca1 {a:1} 200 GET http://localhost:3462/api/v1/listings
-ca2 [null] 200 GET http://localhost:3462/api/v1/leads
-ca2 [null] 200 GET http://localhost:3462/api/v1/leads
-ca2 [null] 200 GET http://localhost:3462/api/v1/listings
+E2b network (playwright response/requestfailed listeners; console error + pageerror listeners)
+ca1 {"a":1}: 200 GET /api/v1/leads (mock) x2 ; 200 GET /api/v1/listings ; requestfailed: none ; console errors: none ; pageerror: none
+ca2 [null]:  200 GET /api/v1/leads (mock) x2 ; 200 GET /api/v1/listings ; requestfailed: none ; console errors: none ; pageerror: none

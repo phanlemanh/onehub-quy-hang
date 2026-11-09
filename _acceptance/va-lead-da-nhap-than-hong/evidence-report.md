@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 9e7b154692c5cb26508be5a0a1de4b3521ef6de1
+verified_commit: 96a9df414fcba9dc8d79643fe2688ca12b0b4a4a
 human_signoff:
 ---
 
@@ -28,135 +28,135 @@ human_signoff:
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-lead-da-nhap-than-hong-E1-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.web
-  verified_at: 2026-11-09T14:01:03Z
-  output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 7827.658334
-
-- eval: E1b
-  run_id: minted-va-lead-da-nhap-than-hong-E1b-r1
+  run_id: minted-va-lead-da-nhap-than-hong-E1-r2
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-09T14:01:03Z
-  screenshot: evidence/E1b-step1.png
-  observed: |
-    step2 (doi chung 1440): trang Lead da nhap, the co tieu de, vung than la cac thanh xam khung cho (skeleton) o nam cot, khong co khoi loi, khong nut. Khop expected (co khung cho). step3 (1440, than hong): khung cho bien mat; mot khoi do nhat 'Khong tai duoc lead da nhap' kem dong 'Mang hay may chu khong tra loi. Lead da gui van con nguyen.' va dung mot nut 'Thu lai' ben phai. Khop. step4 (375): khoi loi tuong tu xep doc, nut 'Thu lai' duoi chu, nam trong khung nhin, khong tran ngang (nut Next dev o goc la cong cu dev). Khop. step1 la ban sao step2.
-  network_observed: clean
+  verifier: config:executors.test.web
+  verified_at: 2026-11-09T14:12:40Z
+  output: |
+    npm test -w @quy-hang/web
+    ℹ duration_ms 11064.890583
 
 - eval: E2
-  run_id: minted-va-lead-da-nhap-than-hong-E2-r1
+  run_id: minted-va-lead-da-nhap-than-hong-E2-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.test.web
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
   output: |
     npm test -w @quy-hang/web
-    ℹ duration_ms 7827.658334
-
-- eval: E2b
-  run_id: minted-va-lead-da-nhap-than-hong-E2b-r1
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-09T14:01:03Z
-  screenshot: evidence/E2b-step2.png
-  observed: |
-    E2b-step2.png (ca {"a":1}): trang /leads/mine ve binh thuong (header «[Mau] San thu», nut «+ Lead», breadcrumb Quy hang > Lead da nhap, tieu de «Lead da nhap»); trong khung «Lead da nhap» co dung mot khoi do nhat «Khong tai duoc lead da nhap / Mang hay may chu khong tra loi. Lead da gui van con nguyen.» voi mot nut «Thu lai» ben phai; khong khung cho, khong hang lead, khong trang loi toan man (chi co nut dev N goc trai duoi). E2b-step3.png (ca [null]): giong het ca 1 — dung mot khoi bao loi, mot «Thu lai», khong khung cho, khong trang loi toan man. Khop Expected cua ca hai ca.
-  network_observed: clean
-
-- eval: E3b
-  run_id: E3b-20261109
-  exit_code: 0
-  baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-09T14:01:03Z
-  screenshot: evidence/E3b-step2.png
-  observed: |
-    E3b-step2.png: Lead da nhap page with the table populated; rows with badges "Cho chia", "Tra lai", "Da gui" (full Vietnamese diacritics on screen). No error block and no loading skeleton. Matches Expected for step 2. E3b-step3.png: identical populated table after the online event with no click. Matches step 3. E3b-step4.png: no table; a single pink error block "Khong tai duoc lead da nhap / Mang hay may chu khong tra loi. Lead da gui van con nguyen." with one "Thu lai" button at right; no loading frame. Matches step 4 (one block, one button). E3b-step5b.png: same single error block and single "Thu lai" button after the second click, no loading frame. Matches step 5. The Next dev-tools N badge is visible bottom-left in all frames (not app UI). Per-click GET delta was exactly 1 in the measured dev run.
-  network_observed: clean
+    ℹ duration_ms 11064.890583
 
 - eval: E4
-  run_id: minted-va-lead-da-nhap-than-hong-E4-r1
-  exit_code: 0
-  baseline: green
-  verifier: config:executors.test.web
-  verified_at: 2026-11-09T14:01:03Z
-  output: |
-    npm test -w @quy-hang/web
-    ℹ duration_ms 7827.658334
-
-- eval: E4b
-  run_id: minted-va-lead-da-nhap-than-hong-E4b-r1
+  run_id: minted-va-lead-da-nhap-than-hong-E4-r2
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui-check
-  verified_at: 2026-11-09T14:01:03Z
-  screenshot: evidence/E4b-step1.png
-  observed: |
-    step1 (E4b-step1.png): trang Lead đã nhập, bảng có nhiều dòng (Toà Z, Toà A A-13.04, A-07.05, Toà B…) với nhãn Chờ chia / Trả lại / Đã gửi; không khối lỗi, không khung chờ. step2 (E4b-step2.png): giống step1, bảng đầy dòng lead (đếm DOM 16 hàng) — khớp expected bước 2 (>=1 dòng). step3 (E4b-step3.png): khung Lead đã nhập chỉ có trạng thái trống, biểu tượng hộp thư và chữ «Chưa có lead nào» kèm hướng dẫn bấm «+ Lead»; không khối báo lỗi, không bảng — khớp expected bước 3. step4 (E4b-step4.png): đúng một khối nền đỏ nhạt «Không tải được lead đã nhập / Mạng hay máy chủ không trả lời. Lead đã gửi vẫn còn nguyên.» với đúng một nút «Thử lại»; không khung chờ, không bảng — khớp expected bước 4. step5 (E4b-step5.png): hình giống hệt step4, đúng một khối lỗi và một «Thử lại», không khung chờ — khớp expected bước 5.
-  network_observed: clean
+  verifier: config:executors.test.web
+  verified_at: 2026-11-09T14:12:40Z
+  output: |
+    npm test -w @quy-hang/web
+    ℹ duration_ms 11064.890583
 
 - eval: E5
-  run_id: minted-va-lead-da-nhap-than-hong-E5-r1
+  run_id: minted-va-lead-da-nhap-than-hong-E5-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.design.khuon
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
   output: |
-    design-floor-khuon --kiem --root .
+    design-floor-khuon.mjs --kiem --root .
     2 tệp giao diện ngoài bản đồ
 
 - eval: E6
-  run_id: minted-va-lead-da-nhap-than-hong-E6-r1
+  run_id: minted-va-lead-da-nhap-than-hong-E6-r2
   exit_code: 0
-  baseline: green
+  baseline: n-a
   verifier: config:executors.design.floor
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
   output: |
-    design-floor-s4 --root .
-    (không có dòng lỗi)
+    design-floor-s4.mjs --root .
+    (không có dòng lệch nào)
+
+- eval: E1b
+  run_id: minted-va-lead-da-nhap-than-hong-E1b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-09T14:12:40Z
+  screenshot: evidence/E1b-step2.png
+  observed: |
+    E1b-step2.png (1440, GET treo): tiêu đề «Lead đã nhập», khung bảng chứa các thanh xám chờ tải (skeleton) mãi, không có bảng dữ liệu, không có báo lỗi, không có nút. Khớp đối chứng dương: có khung chờ. E1b-step3.png (1440, thân hỏng): không còn skeleton; trong khung «Lead đã nhập» có đúng một khối nền hồng nhạt chữ «Không tải được lead đã nhập» kèm «Mạng hay máy chủ không trả lời. Lead đã gửi vẫn còn nguyên.» và đúng một nút «Thử lại» bên phải. Khớp Expected. E1b-step4.png (375): cùng khối lỗi một cột, chữ «Không tải được lead đã nhập», một nút «Thử lại» nằm dưới mô tả, trong khung nhìn, không tràn ngang, thanh điều hướng dưới (Hôm nay, Lead, Tôi) bình thường. Khớp Expected.
+  network_observed: clean
+
+- eval: E2b
+  run_id: minted-va-lead-da-nhap-than-hong-E2b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-09T14:12:40Z
+  screenshot: evidence/E2b-step2.png
+  observed: |
+    E2b-step2.png (ca {"a":1}, khổ 1440, sau 6 giây): trang Lead đã nhập, trong khung một khối báo lỗi nền hồng, chữ «Không tải được lead đã nhập» và «Mạng hay máy chủ không trả lời. Lead đã gửi vẫn còn nguyên.», đúng một nút «Thử lại» bên phải. Không khung chờ, không trang lỗi toàn màn, vỏ ứng dụng còn nguyên. E2b-step3.png (ca [null]): giống hệt, một khối báo lỗi, một «Thử lại», không trang lỗi toàn màn. Khớp Expected ở cả hai ca.
+  network_observed: clean
+
+- eval: E3b
+  run_id: minted-va-lead-da-nhap-than-hong-E3b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-09T14:12:40Z
+  screenshot: evidence/E3b-step1.png
+  observed: |
+    Read all 6 frames. E3b-step1.png: page "Lead đã nhập" with one red-tinted block "Không tải được lead đã nhập" and a single "Thử lại" button, no table rows, no skeleton. E3b-step2.png: after unblock and click, the table is populated (header Lead / Nắc / Giờ · đầu chủ, rows "Toà Z · chỉ biết toà" with "Chờ chia", "Toà A · A-13.04" with "Trả lại"), no error block. E3b-step3.png: identical to step2 (recovered via online event with no click). E3b-step4.png, E3b-step5.png and E3b-step5b.png: each shows exactly one error block "Không tải được lead đã nhập" with exactly one "Thử lại", no rows, no skeleton. All match Expected.
+  network_observed: clean
+
+- eval: E4b
+  run_id: minted-va-lead-da-nhap-than-hong-E4b-r2
+  exit_code: 0
+  baseline: n-a
+  verifier: config:executors.ui-check
+  verified_at: 2026-11-09T14:12:40Z
+  screenshot: evidence/E4b-step1.png
+  observed: |
+    E4b-step1.png (copy of step 2): the "Lead đã nhập" page at 1440px with a full table, columns Lead, Nấc, Giờ · đầu chủ. The rows are Toà Z / Toà A leads with status chips (Chờ chia, Trả lại), no error block and no loading frame. E4b-step3.png: the card is empty with an inbox icon, heading "Chưa có lead nào", no red error block and no "Thử lại". E4b-step4.png and E4b-step5.png: exactly one pink error block titled "Không tải được lead đã nhập" with exactly one "Thử lại" button on the right, no skeleton or loading frame. All match Expected.
+  network_observed: clean
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-lead-da-nhap-than-hong-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-va-lead-da-nhap-than-hong-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-lead-da-nhap-than-hong-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-va-lead-da-nhap-than-hong-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-lead-da-nhap-than-hong-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-va-lead-da-nhap-than-hong-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-lead-da-nhap-than-hong-SUITE-test_hooks-r1
+  run_id: minted-va-lead-da-nhap-than-hong-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-lead-da-nhap-than-hong-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-va-lead-da-nhap-than-hong-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-lead-da-nhap-than-hong-SUITE-typecheck-r1
+  run_id: minted-va-lead-da-nhap-than-hong-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
 
 - cmd: npm run lint
-  run_id: minted-va-lead-da-nhap-than-hong-SUITE-lint-r1
+  run_id: minted-va-lead-da-nhap-than-hong-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T14:01:03Z
+  verified_at: 2026-11-09T14:12:40Z
 
 ## Known limits
 
@@ -164,15 +164,14 @@ human_signoff:
 
 ## Analyst
 
-Non-discriminating evals (xanh ở cả nhánh lẫn baseline, chứng minh khung chạy chứ không chứng minh tính năng; cần viết lại để khẳng định hành vi mới hoặc xác nhận là lưới hồi quy có chủ ý):
+carried tu round 1 — baseline khong do lai round nay
 
-- E1, E2, E4 (lệnh npm test -w @quy-hang/web)
-- E5 (lệnh design-floor-khuon)
-- E6 (lệnh design-floor-s4)
+Baseline khong do: evals.yaml không đổi từ lần đo baseline cuối (round 1), nên mọi block eval ghi baseline n-a.
 
-Baseline không đo: E1b, E2b, E3b, E4b (eval ui-check chỉ chạy trên cây đang chấm, không chạy trên bản cũ).
-
-Không có judgment item nào được khai trong vòng này.
+Eval không-phân-biệt (pass trên cả HEAD lẫn baseline, theo lần đo round 1; chứng minh harness chứ không phải tính năng, cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
+- E1, E2, E4 (lệnh `npm test -w @quy-hang/web`)
+- E5 (lệnh khuôn `design-floor-khuon.mjs --kiem`)
+- E6 (lệnh `design-floor-s4.mjs`)
 
 ## Variance
 
@@ -180,4 +179,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: mọi eval đều đạt; không có eval hỏng.
+Round 1: lịch sử vòng đầu nằm ở run-log và báo cáo vòng trước; baseline cuối đo ở vòng này.
+Round 2: cả chín eval (E1, E1b, E2, E2b, E3b, E4, E4b, E5, E6) và bảy lệnh suite đều đạt trên commit 96a9df41; verdict PASS.
