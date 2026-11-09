@@ -3054,6 +3054,121 @@
         "packages/db/migrations/053_*.sql",
         "_acceptance/tao-can-tay/**"
       ]
+    },
+    {
+      "ma": "va-cai-dat-mat-viec",
+      "cau_giao": "Bấm «Giữ nhãn» luôn giữ nhãn ở mọi lần gỡ; xoá hay sửa một cột mẫu nhập hỏng thì màn nói rõ và dòng giữ nguyên; bảng Mẫu nhập trên điện thoại thấy được Sửa, Xoá không phải cuộn ngang; ô tỉ lệ môi giới có nhãn cho máy đọc màn.",
+      "slug": "va-cai-dat-mat-viec",
+      "vai": "Quản trị sàn",
+      "vi_sao": "Hàng A: Bản kiểm khu Cài đặt 09/11 (docs/plan/kiem-cai-dat.md, PR #218) và đề xuất thống nhất (docs/plan/thong-nhat-ia-khuon-ux.md, PR #219); chủ kho duyệt phương án 09/11 «Duyệt theo khuyến nghị» (nhật ký đợt, hỏi h-20261109T012003Z-18). Dãy D.",
+      "hang": "T2",
+      "bat_khi": "Gỡ hai nhãn đang dùng, chuyển nhãn đầu, «Giữ nhãn» nhãn sau: nhãn sau còn và Lưu bấm được; chặn lời gọi xoá: có báo lỗi, hộp không tự đóng; ở 375 bảng không tràn khung; axe không còn lỗi label",
+      "vung": [
+        "apps/web/src/app/(app)/settings/statuses/**",
+        "apps/web/src/app/(app)/settings/templates/vung-mau-nhap.tsx",
+        "apps/web/src/app/(app)/settings/fees/**",
+        "_acceptance/va-cai-dat-mat-viec/**"
+      ]
+    },
+    {
+      "ma": "hom-nay-chiu-loi-tung-phan",
+      "cau_giao": "Khi một phần của Hôm nay đọc lỗi, người dùng thấy đúng một câu lỗi ở đúng chỗ của phần ấy, màn tự thử lại trước khi báo, các phần còn lại giữ nguyên và không phần nào nói sai về số việc; đầu chủ luôn hiện tên người",
+      "slug": "hom-nay-chiu-loi-tung-phan",
+      "vai": "Trưởng nhóm, Đầu chủ, Đầu khách, Telesales",
+      "vi_sao": "R1 của audit màn Hôm nay 09/11 (docs/plan/audit-man-hom-nay.md, PR #217); dựng khối báo lỗi dùng chung, mẫu «Lỗi» đầu tiên của tầng Mẫu hành vi. Chủ kho duyệt phương án 09/11 «Duyệt theo khuyến nghị». Dãy L.",
+      "hang": "T2",
+      "bat_khi": "Lời gọi trả 500 một lần rồi 200 thì màn tự hồi, không cần bấm; lỗi kéo dài thì mỗi nguồn đúng một câu và một «Thử lại»; danh sách đầu chủ lỗi thì bảng không hiện «0 đầu chủ», không hiện mã thô; đầu chủ chưa đặt tên có chữ thay thế; số trên nhãn bằng số dòng của bảng; mạng trở lại thì tự đọc và mở lại «Giao lại»; mở lúc mất mạng hay lead tải lỗi thì không câu nào báo «không có việc»; nội dung hỏng ở vùng Đầu khách ra trạng thái lỗi",
+      "vung": [
+        "apps/web/src/app/(app)/today/**",
+        "apps/web/src/app/(app)/leads/mine/**",
+        "packages/api/src/team/**",
+        "apps/web/src/components/trang-thai.tsx",
+        "_acceptance/hom-nay-chiu-loi-tung-phan/**"
+      ]
+    },
+    {
+      "ma": "cai-dat-mot-cach-luu",
+      "cau_giao": "Khu Cài đặt có một vỏ chung: mục lục chia nhóm con (Đội ngũ, Dữ liệu, Vận hành, Phát hàng, Tích hợp), «Luật chia lead» đổi tên thành «Chia lead». Mọi mục có form lưu theo một cách qua thanh lưu chung: Lưu khoá khi chưa đổi, có Hoàn lại, thanh dính đáy vùng làm việc, một kiểu báo đã lưu theo đúng nền sáng tối; mỗi màn một nút Lưu; rời trang lúc chưa lưu thì hỏi; số có đơn vị; đăng nhập, sàn, vai kiểm một lần ở cấp khu.",
+      "slug": "cai-dat-mot-cach-luu",
+      "vai": "Quản trị sàn",
+      "vi_sao": "Hàng B cộng vỏ Cài đặt: Bản kiểm khu Cài đặt 09/11 (docs/plan/kiem-cai-dat.md, PR #218) và đề xuất thống nhất (docs/plan/thong-nhat-ia-khuon-ux.md, PR #219); chủ kho duyệt phương án 09/11 «Duyệt theo khuyến nghị» (nhật ký đợt, hỏi h-20261109T012003Z-18). Dãy D. Đổi Tham chiếu §9 đã được chủ kho đồng ý.",
+      "hang": "T2",
+      "bat_khi": "Bảy màn form cùng hành vi trong một bài kiểm chung; Trạng thái còn một khung và một Lưu; bấm mục khác lúc đang sửa hiện hộp hỏi; nút Lưu luôn trong khung nhìn ở 1440 và 375; cột thứ hai có đủ năm nhóm con, vẫn mười mục và địa chỉ cũ; lưới khuôn đỏ khi một mục có hơn một khung ở tệp thân",
+      "sau": [
+        "va-cai-dat-mat-viec",
+        "loai-hinh-trong-cach-goi"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/settings/**",
+        "apps/web/src/components/khoi/settings-3/**",
+        "apps/web/src/components/thanh-luu*",
+        "apps/web/src/components/shell/second-column.tsx",
+        "packages/core/src/navigation.ts",
+        "design/patterns/cai-dat-san.md",
+        "packages/ui-lint/**",
+        "docs/product/tham-chieu.md",
+        "docs/design/vo-va-ia.md",
+        "_acceptance/cai-dat-mot-cach-luu/**"
+      ]
+    },
+    {
+      "ma": "cai-dat-bang-dung-khung",
+      "cau_giao": "Mẫu và Từ điển đi đúng khung: có lề như các mục khác, bảng dùng khối danh sách dòng chung (tự thành thẻ ở điện thoại), tiêu đề không lặp, trống có một hành động; lỗi tải mọi màn có «Thử lại»; sửa sổ khuôn và khối đích cho đúng mười mục.",
+      "slug": "cai-dat-bang-dung-khung",
+      "vai": "Quản trị sàn",
+      "vi_sao": "Hàng D: Bản kiểm khu Cài đặt 09/11 (docs/plan/kiem-cai-dat.md, PR #218) và đề xuất thống nhất (docs/plan/thong-nhat-ia-khuon-ux.md, PR #219); chủ kho duyệt phương án 09/11 «Duyệt theo khuyến nghị» (nhật ký đợt, hỏi h-20261109T012003Z-18). Dãy D.",
+      "hang": "T2",
+      "bat_khi": "Ảnh Mẫu và Từ điển thẳng lề với Cách gọi ở 1440 và 375; không còn Table trần trong khu hoặc có dòng «Chỗ hở»; mỗi tiêu đề xuất hiện một lần; bản đồ khuôn kê đủ mười mục",
+      "sau": [
+        "cai-dat-mot-cach-luu"
+      ],
+      "vung": [
+        "apps/web/src/app/(app)/settings/templates/**",
+        "apps/web/src/app/(app)/settings/dictionary/**",
+        "apps/web/src/app/(app)/settings/khung.tsx",
+        "apps/web/src/components/danh-sach-dong*",
+        "design/patterns/cai-dat-san.md",
+        "docs/design/vo-va-ia.md",
+        "_acceptance/cai-dat-bang-dung-khung/**"
+      ]
+    },
+    {
+      "ma": "cai-dat-tai-nhanh",
+      "cau_giao": "Mở một mục Cài đặt chỉ đọc phiên một lần và đọc dữ liệu song song; màn AI có dữ liệu ngay từ máy chủ; cột mục lục không tải trước cả mười mục; đổi mục hiện ngay khung chờ dạng form.",
+      "slug": "cai-dat-tai-nhanh",
+      "vai": "Quản trị sàn",
+      "vi_sao": "Hàng C: Bản kiểm khu Cài đặt 09/11 (docs/plan/kiem-cai-dat.md, PR #218) và đề xuất thống nhất (docs/plan/thong-nhat-ia-khuon-ux.md, PR #219); chủ kho duyệt phương án 09/11 «Duyệt theo khuyến nghị» (nhật ký đợt, hỏi h-20261109T012003Z-18). Dãy D. Số đo của bản kiểm là giả lập tại máy; đo lại trên bản thật sau khi chế độ giao dịch ổn định.",
+      "hang": "T2",
+      "bat_khi": "Mỗi màn: số câu SQL giảm ít nhất một phần ba so với bảng ở bản kiểm; không còn lượt tải trước khi chưa trỏ chuột vào mục; giữ lời gọi máy chủ 1 s thì khung chờ hiện trong 100 ms; số đo đúng trên bản thật",
+      "sau": [
+        "cai-dat-bang-dung-khung"
+      ],
+      "vung": [
+        "apps/web/src/lib/api.ts",
+        "apps/web/src/app/(app)/settings/**",
+        "apps/web/src/components/shell/second-column.tsx",
+        "_acceptance/cai-dat-tai-nhanh/**"
+      ]
+    },
+    {
+      "ma": "luoi-mau-hanh-vi",
+      "cau_giao": "Máy giữ tầng Mẫu hành vi: lint cấm Toaster ngoài vỏ, Table ngoài danh sách dòng, công tắc trong form có thanh lưu; chỗ cũ ghi ngoại lệ có hạn ở bản đồ khuôn, mức nợ giữ trần 0; bài quét đọc cả tệp thân của màn; trang mẫu sống có mục Mẫu hành vi.",
+      "slug": "luoi-mau-hanh-vi",
+      "vai": "Toàn kho",
+      "vi_sao": "Bước 3 của đề xuất thống nhất (docs/plan/thong-nhat-ia-khuon-ux.md §3.4); chủ kho duyệt phương án 09/11 «Duyệt theo khuyến nghị». Dãy D.",
+      "hang": "T2",
+      "bat_khi": "Thêm một Toaster ngoài vỏ, một Table trần, một công tắc trong form có thanh lưu thì lint đỏ từng cái; mức nợ vẫn 0; trang mẫu sống hiện thanh lưu ở các trạng thái",
+      "sau": [
+        "cai-dat-tai-nhanh",
+        "hom-nay-chiu-loi-tung-phan"
+      ],
+      "vung": [
+        "packages/ui-lint/**",
+        "apps/web/src/app/mau/**",
+        "design/patterns/**",
+        "docs/design/vo-va-ia.md",
+        "_acceptance/luoi-mau-hanh-vi/**"
+      ]
     }
   ],
   "chan_troi": [
