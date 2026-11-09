@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 784bc00c51ade4cb5b9e65539517d108b4e3206f
+verified_commit: 7317fd038234bf2f0187db181f5d50f93d8079a4
 human_signoff:
 ---
 
@@ -203,3 +203,7 @@ none — every multi-run eval is uniform
 
 Round 1: lượt đầu đỏ do tắt máy dev chung; lệnh đo và bài nhìn được sửa cho chạy lần lượt, đo từng dòng theo giá trị riêng.
 Round 2: E1-E4, E5b, E6-E10 chạy lại và đạt; E5, E11, E12 giữ nguyên từ round 1 (delta không chạm paths của chúng); các lệnh suite đều đạt.
+
+### Re-pin lần 1 — 2026-11-09, do gộp main sau lượt chấm 2
+run_id: repin-20261109T061315Z-92018
+sha: 7317fd038234bf2f0187db181f5d50f93d8079a4 · suites: 7 lệnh exit 0 · evals: 12/12 eval máy đạt kỳ vọng · ngoài làn máy: E10 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
