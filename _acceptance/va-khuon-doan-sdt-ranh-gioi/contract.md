@@ -5,7 +5,7 @@ slug: va-khuon-doan-sdt-ranh-gioi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-09-va-khuon-doan-sdt-ranh-gioi-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09T02:16:23Z
