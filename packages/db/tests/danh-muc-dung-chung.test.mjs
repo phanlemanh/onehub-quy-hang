@@ -226,7 +226,7 @@ test("danh mục dùng chung: mỗi sàn chỉ thấy dòng tin của mình, kh�
     const DOC_KHU = ["subdivision_key", "subdivision_name", "complex_name", "provider", "measured_at", "updated_at"];
     const DOC_CAN = ["upi", "subdivision_key", "building_key", "building_name", "unit_number", "stack", "floor", "living_area",
       "bedrooms_total", "direction_faces", "property_type", "property_sub_type", "lot_size_area", "stories_total",
-      "frontage_length", "access_road_width", "provider", "measured_at", "updated_at"];
+      "frontage_length", "access_road_width", "provider", "measured_at", "updated_at", "field_confidence"];
     await datSan(c, TRUSTED);
     const khu = await c.query(`select ${DOC_KHU.join(", ")} from catalog_subdivisions where subdivision_key = $1`, [khuB]);
     assert.equal(khu.rowCount, 1);
@@ -285,7 +285,7 @@ const COT_DU_KIEN = {
     "updated_at"],
   catalog_units: ["upi", "subdivision_key", "building_key", "building_name", "unit_number", "stack", "floor", "living_area",
     "bedrooms_total", "direction_faces", "property_type", "property_sub_type", "lot_size_area", "stories_total",
-    "frontage_length", "access_road_width", "provider", "measured_at", "agreement_id", "updated_at"],
+    "frontage_length", "access_road_width", "provider", "measured_at", "agreement_id", "updated_at", "field_confidence"],
   catalog_trusted_companies: ["company_id"],
 };
 
