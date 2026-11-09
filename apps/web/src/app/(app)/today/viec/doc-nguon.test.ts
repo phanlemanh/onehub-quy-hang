@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { docCoThuLai, docMang, nguonCanDocLai } from "./doc-nguon";
+import { CHO_THU_LAI_MS, docCoThuLai, docKetQuaCoThuLai, docMang, nguonCanDocLai } from "./doc-nguon";
 import { gopViec, type Nguon } from "./gop-viec";
 import type { DongLeadTruongNhom } from "../nguon";
 
@@ -16,7 +16,7 @@ function fetchGia(...ma: number[]) {
 async function gopSauDoc(f: ReturnType<typeof fetchGia>) {
   const ds = await docCoThuLai(() => docMang<DongLeadTruongNhom>("/api/v1/team/lead-queue", undefined, f.goi), khongCho);
   const hangDoi: Nguon<DongLeadTruongNhom> = ds === null ? { trang: "loi", ds: [] } : { trang: "ok", ds };
-  return { ds, gop: gopViec<string>({ vai: ["team_lead"], bayGio: "2026-11-09T10:00:00.000Z", tv: null, dauChu: [], leadGiao: { trang: "ok" }, hangDoi, leadCuaToi: { trang: "ok", ds: [] }, tin: { trang: "ok", ds: [] } }) };
+  return { ds, gop: gopViec<string>({ vai: ["team_lead"], bayGio: "2026-11-09T10:00:00.000Z", tv: null, dauChu: [], leadGiao: { trang: "ok" }, hangDoi, dauChuSan: { trang: "ok" }, leadCuaToi: { trang: "ok", ds: [] }, tin: { trang: "ok", ds: [] } }) };
 }
 
 describe("đọc nguồn của Hôm nay", () => {
@@ -52,6 +52,33 @@ describe("đọc nguồn của Hôm nay", () => {
     const f200 = (async () => new Response("[]", { status: 200 })) as typeof fetch;
     assert.equal(await docMang("/x", undefined, f500), null);
     assert.deepEqual(await docMang("/x", undefined, f200), []);
+  });
+  it("đọc kết quả có thử lại", async () => {
+    type Kq = { ok: true; items: string[] } | { ok: false; mang: boolean };
+    const HONG: Kq = { ok: false, mang: false };
+    const MAT_MANG: Kq = { ok: false, mang: true };
+    const DUOC: Kq = { ok: true, items: ["a"] };
+    const BANG: [Kq[], string[] | null, number, number[]][] = [
+      [[DUOC], ["a"], 1, []],
+      [[HONG, DUOC], ["a"], 2, [CHO_THU_LAI_MS]],
+      [[HONG, HONG], null, 2, [CHO_THU_LAI_MS]],
+      [[MAT_MANG, DUOC], ["a"], 2, [CHO_THU_LAI_MS]],
+    ];
+    assert.equal(CHO_THU_LAI_MS, 2000);
+    let dem = 0;
+    for (const [lanLuot, mong, soGoi, cho] of BANG) {
+      let lan = 0;
+      const daCho: number[] = [];
+      const ra = await docKetQuaCoThuLai(
+        async () => lanLuot[lan++]!,
+        async (ms) => void daCho.push(ms),
+      );
+      assert.deepEqual(ra, mong);
+      assert.equal(lan, soGoi);
+      assert.deepEqual(daCho, cho);
+      dem++;
+    }
+    assert.equal(dem, 4);
   });
   it("đọc lại: có mạng trở lại đọc đúng nguồn lỗi", () => {
     assert.deepEqual(nguonCanDocLai({ a: "ok", b: "loi", c: "dang", d: "loi" }), ["b", "d"]);

@@ -3,37 +3,22 @@
 // Đội (hồ sơ hom-nay-mot-danh-sach-viec; khối dashboard-6 của hàng 42 dời từ Hôm nay): dải ba ô số và bảng theo đầu chủ, bỏ
 // biểu đồ. Việc giao lại ở Hôm nay. Hàng đợi và đầu chủ đọc qua API (`/api/v1/team/*`); hàng cũ theo người đếm trên căn của
 // kho trên máy, chỉ căn toàn sàn.
-import { AlertTriangleIcon, ClockAlertIcon, HistoryIcon, RotateCwIcon } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { AlertTriangleIcon, ClockAlertIcon, HistoryIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ChoTai } from "@/components/bo-cuc";
 import { CoverageDashboard } from "@/components/khoi/dashboard-6/coverage-dashboard";
 import type { CrewMember, CrewStatus, MetricCard } from "@/components/khoi/dashboard-6/data";
 import { Frame, FramePanel } from "@/components/reui/frame";
-import { TrangThai } from "@/components/trang-thai";
-import { Button } from "@/components/ui/button";
+import { BaoLoiVung, TrangThai } from "@/components/trang-thai";
 import { useDanhSachHang } from "@/lib/sync/react";
 
 import { layDauChuCuaSan, layHangDoiTruongNhom, type DauChuCuaSan, type DongLeadTruongNhom } from "../today/nguon";
-import { baO, CHU_CHUA_CO_CAN, CHU_PHAM_VI, dongTheoNguoi, hangCuTrenMay, ngayVN, trangThaiTruongNhom } from "./trang-thai";
+import { docKetQuaCoThuLai } from "../today/viec/doc-nguon";
+import { useKhiCoMangLai, useNgoaiTuyen } from "../today/viec/mang";
+import { baO, baoLoiDoi, CHU_CHUA_CO_CAN, CHU_PHAM_VI, dongTheoNguoi, hangCuTrenMay, kyHieuDauChu, moTaMatMang, ngayVN, trangThaiTruongNhom } from "./trang-thai";
 
 const trangThaiTuoi = (phanTram: number): CrewStatus => (phanTram >= 80 ? "tuoi" : phanTram >= 60 ? "chu-y" : "cu");
-const chuDau = (ten: string) => ten.replace(/[[\]]/g, "").trim().split(/\s+/).pop()?.slice(0, 2).toUpperCase() || "—";
-
-function useNgoaiTuyen() {
-  return useSyncExternalStore(
-    (f) => {
-      window.addEventListener("online", f);
-      window.addEventListener("offline", f);
-      return () => {
-        window.removeEventListener("online", f);
-        window.removeEventListener("offline", f);
-      };
-    },
-    () => !navigator.onLine,
-    () => false,
-  );
-}
 
 /** Giờ hiện tại, đi lại mỗi phút — «quá hạn bao lâu» và ngày đếm hàng cũ tính lại theo. */
 function useBayGio() {
@@ -45,7 +30,12 @@ function useBayGio() {
   return bayGio;
 }
 
-type Tai = { dang: boolean; loi: boolean; mang: boolean; hangDoi: DongLeadTruongNhom[] | null };
+type Tai = { dang: boolean; loiHangDoi: boolean; loiDauChu: boolean; hangDoi: DongLeadTruongNhom[] | null; dauChu: DauChuCuaSan[] };
+
+const docCaHai = () => Promise.all([docKetQuaCoThuLai(() => layHangDoiTruongNhom()), docKetQuaCoThuLai(() => layDauChuCuaSan())]);
+
+/** Áp một lượt đọc: nguồn hỏng giữ lần đọc cuối. */
+const apLanDoc = (t: Tai, [hd, dc]: Awaited<ReturnType<typeof docCaHai>>): Tai => ({ dang: false, loiHangDoi: hd === null, loiDauChu: dc === null, hangDoi: hd ?? t.hangDoi, dauChu: dc ?? t.dauChu });
 
 export default function BangDoi() {
   const dsHang = useDanhSachHang();
@@ -53,36 +43,32 @@ export default function BangDoi() {
   const bayGio = useBayGio();
 
   // ——— Hàng đợi và đầu chủ qua API ———
-  const [tai, setTai] = useState<Tai>({ dang: true, loi: false, mang: false, hangDoi: null });
-  const [dauChu, setDauChu] = useState<DauChuCuaSan[]>([]);
-  const doc = useCallback(async () => {
-    const [hd, dc] = await Promise.all([layHangDoiTruongNhom(), layDauChuCuaSan()]);
-    if (dc.ok) setDauChu(dc.items);
-    // Lỗi đọc giữ lần đọc cuối: mất mạng thì số cũ còn hiện kèm dải.
-    setTai((t) => (hd.ok ? { dang: false, loi: false, mang: false, hangDoi: hd.items } : { dang: false, loi: !hd.mang, mang: hd.mang, hangDoi: t.hangDoi }));
-  }, []);
+  const [tai, setTai] = useState<Tai>({ dang: true, loiHangDoi: false, loiDauChu: false, hangDoi: null, dauChu: [] });
   useEffect(() => {
     let huy = false;
-    void Promise.all([layHangDoiTruongNhom(), layDauChuCuaSan()]).then(([hd, dc]) => {
-      if (huy) return;
-      if (dc.ok) setDauChu(dc.items);
-      setTai(hd.ok ? { dang: false, loi: false, mang: false, hangDoi: hd.items } : { dang: false, loi: !hd.mang, mang: hd.mang, hangDoi: null });
+    void docCaHai().then((kq) => {
+      if (!huy) setTai((t) => apLanDoc(t, kq));
     });
     return () => {
       huy = true;
     };
   }, []);
-  const thuLai = () => {
-    setTai((t) => ({ ...t, dang: true }));
-    void doc();
+  // Đang đọc lại thì không còn câu lỗi; đã có số thì giữ số, không dựng lại khung chờ.
+  const docLai = () => {
+    setTai((t) => ({ ...t, dang: t.hangDoi === null, loiHangDoi: false, loiDauChu: false }));
+    void docCaHai().then((kq) => setTai((t) => apLanDoc(t, kq)));
   };
+  // Có mạng lại luôn đọc: màn đang có số từ trước lúc mất mạng thì không có cờ lỗi nào mà số đã cũ.
+  useKhiCoMangLai(docLai);
 
-  const tt = trangThaiTruongNhom({ dangTai: tai.dang, loiTai: tai.loi, matMang: ngoaiTuyen || tai.mang, hangDoi: tai.hangDoi, loiGiao: {} });
+  // Mất mạng chỉ theo trình duyệt: lời gọi không tới mà trình duyệt còn báo có mạng là lỗi đọc, có «Thử lại».
+  const tt = trangThaiTruongNhom({ dangTai: tai.dang, loiTai: tai.loiHangDoi, matMang: ngoaiTuyen, hangDoi: tai.hangDoi, loiGiao: {} });
+  const cauLoi = ngoaiTuyen ? null : baoLoiDoi({ hangDoi: tai.loiHangDoi, dauChu: tai.loiDauChu });
 
   // ——— Hàng cũ theo người, trên máy ———
   const homNay = ngayVN(bayGio);
   const hangCu = useMemo(() => hangCuTrenMay(dsHang, homNay), [dsHang, homNay]);
-  const theoNguoi = dongTheoNguoi(hangCu.dong, dauChu);
+  const theoNguoi = dongTheoNguoi(hangCu.dong, tai.dauChu);
 
   if (tt.trangThai === "dang-tai")
     return <ChoTai kieu="bang-dieu-khien" />;
@@ -95,7 +81,7 @@ export default function BangDoi() {
       label: "Lead quá hạn",
       value: so ? String(so.leadQuaHan) : "—",
       detail: "quá hạn nhận hay gọi",
-      change: "Giao lại",
+      change: ngoaiTuyen ? "Chờ có mạng" : "Giao lại",
       variant: "destructive-light",
       icon: <ClockAlertIcon aria-hidden="true" />,
     },
@@ -124,7 +110,7 @@ export default function BangDoi() {
       id: d.userId ?? "chua-co",
       name: d.ten,
       role: d.userId === null ? "Cần chia" : d.nghi ? "Đang nghỉ" : "Đầu chủ",
-      initials: d.userId === null ? "—" : chuDau(d.ten),
+      initials: d.userId === null ? "—" : kyHieuDauChu(d.ten),
       location: String(d.mo),
       coverage: phanTram,
       reliefHours: d.canGoiLai,
@@ -133,32 +119,19 @@ export default function BangDoi() {
     };
   });
 
-  const loiTai = tt.trangThai === "loi";
   return (
     <div className="flex w-full min-w-0 flex-col gap-khung">
       {tt.trangThai === "mat-mang" ? (
         <Frame stacked className="w-full min-w-0">
           <FramePanel className="p-0!">
-            <TrangThai kind="notice" title={tt.chu} description="Số là lần đọc cuối — giao lại khi có mạng." />
+            <TrangThai kind="notice" title={tt.chu} description={moTaMatMang(tai.hangDoi)} />
           </FramePanel>
         </Frame>
       ) : null}
-      {loiTai ? (
+      {cauLoi ? (
         <Frame stacked className="w-full min-w-0">
           <FramePanel className="p-0!">
-            <TrangThai
-              kind="error"
-              title={tt.chu}
-              description={
-                <span className="flex flex-col items-start gap-2">
-                  <span>Bảng theo đầu chủ vẫn đọc từ máy.</span>
-                  <Button size="sm" variant="outline" onClick={thuLai}>
-                    <RotateCwIcon data-icon="inline-start" />
-                    Thử lại
-                  </Button>
-                </span>
-              }
-            />
+            <BaoLoiVung title={cauLoi} description={tai.loiHangDoi ? "Bảng theo đầu chủ vẫn đọc từ máy." : "Số căn trong bảng vẫn đúng."} onThuLai={docLai} />
           </FramePanel>
         </Frame>
       ) : null}

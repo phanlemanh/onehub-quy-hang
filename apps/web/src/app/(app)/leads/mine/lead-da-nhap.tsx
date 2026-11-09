@@ -1,6 +1,6 @@
 "use client";
 
-import { CornerDownRightIcon, InboxIcon, RotateCwIcon } from "lucide-react";
+import { CornerDownRightIcon, InboxIcon } from "lucide-react";
 import { Fragment, useCallback, useEffect, useState, type ReactNode } from "react";
 
 import {
@@ -15,11 +15,13 @@ import {
 import { ChoTai } from "@/components/bo-cuc";
 import { Badge } from "@/components/reui/badge";
 import { FramePanel } from "@/components/reui/frame";
-import { TrangThai } from "@/components/trang-thai";
+import { BaoLoiVung, TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+import { useKhiCoMangLai } from "../../today/viec/mang";
 
 // Vùng «Lead đã nhập» (hàng 27) — khối đích `@reui/list-11` (Top Movers) của vo-va-ia §2, chuyển thể tại chỗ dùng từ
 // lối ReUI của trang ba lối: bảng ba cột Lead · Nấc · Giờ và đầu chủ với Badge -light; khung hẹp (điện thoại) ẩn cột ba,
@@ -211,6 +213,9 @@ export function LeadDaNhap({ nguon }: { nguon: NguonLeadDaNhap }) {
       con = false;
     };
   }, [nguon]);
+  useKhiCoMangLai(() => {
+    if (leads === null) void tai();
+  });
   const guiLai = useCallback(
     async (id: string, so: string) => {
       const kq = await nguon.guiLai(id, so);
@@ -232,14 +237,8 @@ export function LeadDaNhap({ nguon }: { nguon: NguonLeadDaNhap }) {
   }
   if (leads === null) {
     return (
-      <FramePanel className="flex flex-col gap-3">
-        <TrangThai kind="error" title="Không tải được lead đã nhập" description="Mạng hay máy chủ không trả lời. Lead đã gửi vẫn còn nguyên." />
-        <div>
-          <Button variant="outline" onClick={() => void tai()}>
-            <RotateCwIcon data-icon="inline-start" />
-            Thử lại
-          </Button>
-        </div>
+      <FramePanel className="p-0!">
+        <BaoLoiVung title="Không tải được lead đã nhập" description="Mạng hay máy chủ không trả lời. Lead đã gửi vẫn còn nguyên." onThuLai={() => void tai()} />
       </FramePanel>
     );
   }

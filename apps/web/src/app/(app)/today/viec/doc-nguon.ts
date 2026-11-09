@@ -10,6 +10,14 @@ export async function docCoThuLai<T>(doc: () => Promise<T | null>, cho: (ms: num
   return doc();
 }
 
+/** Như `docCoThuLai`, cho lời đọc trả kết quả dạng `{ ok, items }`. */
+export function docKetQuaCoThuLai<T>(doc: () => Promise<{ ok: true; items: T[] } | { ok: false }>, cho?: (ms: number) => Promise<void>): Promise<T[] | null> {
+  return docCoThuLai(async () => {
+    const r = await doc();
+    return r.ok ? r.items : null;
+  }, cho);
+}
+
 /** Mảng từ một lời gọi JSON; mã lỗi, mất mạng, thân hỏng đều là `null`, không phải danh sách rỗng. */
 export async function docMang<T>(url: string, chon: (j: unknown) => unknown = (j) => j, f: typeof fetch = fetch): Promise<T[] | null> {
   const r = await f(url, { cache: "no-store", credentials: "same-origin" }).catch(() => null);

@@ -1,0 +1,7 @@
+Playwright listener on /api/v1/ (fresh page). 500 and ERR_INTERNET_DISCONNECTED on team/listing-agents and team/lead-queue are INJECTED by page.route per eval steps; real server answered 200 (catalog, push/public-key, listings, un-routed lead-queue/listing-agents). dev log has no 5xx.
+s2: listing-agents 500 x4 (injected); lead-queue 200
+s3 (after Thu lai): listing-agents 200
+s4: lead-queue+listing-agents 500 (injected)
+s5a: listing-agents FAILED ERR_INTERNET_DISCONNECTED (injected); lead-queue 200
+s5b (online event): listing-agents 200
+Console errors: 4 (see .playwright-mcp/console-2026-11-09T07-53-19-078Z.log, from the first contaminated run + injected failures)
