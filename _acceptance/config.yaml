@@ -69,6 +69,9 @@ executors:
     pooler_giao_dich: "node --import tsx --test --test-concurrency=1 \"_acceptance/pooler-che-do-giao-dich/thu/*.test.mjs\""   # pooler-che-do-giao-dich AC-2..AC-5, AC-8: bộ kiểm db trên Postgres riêng, bàn thử PgBouncer chế độ giao dịch (Docker + Homebrew), quét, phạm vi
     pooler_ban_that: "node _acceptance/pooler-che-do-giao-dich/thu/doi-ban-that.mjs --kiem --phut 30"   # pooler-che-do-giao-dich AC-6: đọc nhật ký bản thật sau khi đổi sang 6543 — cần VERCEL_LINK_DIR
     nhap_tac_tu: "DATABASE_URL=\"${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres}\" sh -c 'npm run db:migrate && npm run db:test'"   # nhap-tac-tu-ke-hoach: migrate + cách ly + test-db API trên Postgres dãy G (giám sát duyệt G-0511-2)
+    va_ci_secrets_ma_tran: "node _acceptance/va-ci-secrets-quet-dung-lich-su/thu/kiem-secrets.mjs --ma-tran"   # va-ci-secrets-quet-dung-lich-su AC-1..AC-5: mười ca trên kho tạm dựng đúng refspec của actions/checkout
+    va_ci_secrets_tinh: "node _acceptance/va-ci-secrets-quet-dung-lich-su/thu/kiem-secrets.mjs --tinh"   # AC-7: trạng thái rào, ma trận phá thử trên bản sao văn bản
+    va_ci_secrets_that: "node _acceptance/va-ci-secrets-quet-dung-lich-su/thu/kiem-secrets.mjs --that"   # AC-6: hai lần đỏ thật 08/11 trên lịch sử kho — cần lịch sử đầy đủ
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm

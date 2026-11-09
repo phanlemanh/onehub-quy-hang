@@ -12,7 +12,7 @@ flowchart TD
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>25 việc"]
+  GB --> DG["Đã giao<br/>26 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>132 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
@@ -177,6 +177,7 @@ flowchart TD
 - Đầu chủ tải ảnh điện thoại tới 10 MB lên hồ sơ căn trên bản thật mà không bị chặn ở giới hạn máy chủ, mở lại hồ sơ không thấy ảnh vỡ, và thấy lời báo khi sửa hay xoá ảnh không thành (`va-anh-ban-that`)
 - Mở Bảng hàng (máy tính và điện thoại) không còn lỗi hydration trên console: lượt dựng đầu trên máy khách giống lượt dựng trên máy chủ, dữ liệu trên máy hiện ngay lượt sau; giao diện và hành vi không đổi. (`va-bang-hang-hydration`)
 - Vá Che vùng ảnh — trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ (`va-che-vung-anh`)
+- Job secrets của CI chỉ quét đúng lịch sử của commit đang xét, vẫn phủ toàn bộ lịch sử main và nhánh PR; giá trị trên một nhánh khác không còn làm đỏ main và PR khác. (`va-ci-secrets-quet-dung-lich-su`)
 - Vá hai kẽ an toàn của mật khẩu do sàn cấp: người vào sàn khác thì phiên cũ cũng bị thu khi mật khẩu gốc sàn cấp bị vô hiệu; đổi mật khẩu ở Cá nhân đếm lần sai mật khẩu hiện tại chung bộ đếm với đăng nhập (`va-dang-nhap-mat-khau`)
 - Vá Điền mã căn — mã căn phải có ít nhất một chữ hay số; mã toàn dấu bị từ chối với lời báo rõ, không khoá hàng (`va-dien-ma-can-cho-hang`)
 - Phép nhìn khung 3 của bài E7 (màn Luật chia lead, cặp hạn hỏng) dựng lỗi bằng phản hồi do máy chủ viết thay cho câu lỗi gõ tay, nên khi chữ lỗi của máy chủ đổi thì phép nhìn đỏ theo. (`va-e7-loi-that-cap-han`) — đã giao — máy thông, bằng chứng xanh-sạch
