@@ -45,7 +45,7 @@ import { COT, chuCuaO, mauTrangThai, nhanCot, tatCaCot, type Cot, type CotId, ty
 import { cotTruongRieng, giuCotRieng, laCotRieng } from "./truong-rieng";
 import { useTuVung } from "./tu-vung";
 import { useDanhBaDauChu } from "./danh-ba";
-import { useCanNgoaiKhu, useDanhMuc } from "./danh-muc";
+import { canBaoNgoaiKhu, cauBaoLoiDoc, useCanNgoaiKhu, useDanhMuc } from "./danh-muc";
 import { chiMuc, ghepDanhMuc } from "./ghep-danh-muc";
 import { cotHienTuBoCot, type BoCot } from "./loai-hinh";
 import { CACH_XEM_MAC_DINH, daDoi, luuDe, type CachXem, type GocNhin } from "./goc-nhin";
@@ -270,7 +270,7 @@ export function BangHang({
   const { hang, daKeo, loiMang, thuLai } = useDanhSachTrenMay();
   const suaTrenO = useSuaTrenO();
   const danhMuc = useDanhMuc(san);
-  const ngoaiKhu = useCanNgoaiKhu(san);
+  const { ds: ngoaiKhu, loi: loiNgoaiKhu, thuLai: docLaiNgoaiKhu } = useCanNgoaiKhu(san);
   const { ds: gocNhins } = useGocNhinCuaToi();
   const gocNhin: GocNhin | undefined = gocNhinId ? gocNhins.find((g) => g.id === gocNhinId) : undefined;
 
@@ -314,6 +314,13 @@ export function BangHang({
   const nguoiGiu = useMemo(() => hang.map((l) => l.listAgentKey), [hang]);
   // Hàng 48 (Ngoài-10 của 105): đọc danh bạ hỏng thì báo kèm «Thử lại», không nuốt lỗi.
   const { danhBa, loi: loiDanhBa, thuLai: docLaiDanhBa } = useDanhBaDauChu(san, nguoiGiu);
+  // Đọc căn ngoài khu hỏng mà máy chưa có bản giữ thì báo, cùng một khối với danh bạ (một vùng một báo); nút đọc lại phần đang hỏng.
+  const baoNgoaiKhu = canBaoNgoaiKhu(loiNgoaiKhu, ngoaiKhu, hang);
+  const cauBaoDoc = cauBaoLoiDoc(loiDanhBa, baoNgoaiKhu);
+  const docLaiPhanHong = () => {
+    if (loiDanhBa) docLaiDanhBa();
+    if (baoNgoaiKhu) docLaiNgoaiKhu();
+  };
   const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx, danhBa)), [hang, idx, danhBa]);
   const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap, tv), [dong, loc, sap, tv]);
   const loat = useSuaHangLoat(dong, daLoc);
@@ -527,13 +534,13 @@ export function BangHang({
       <>
         {thanhCongCu}
         <Separator />
-        {loiDanhBa ? (
+        {cauBaoDoc ? (
           <div className="px-4 py-2">
             <TrangThai
               kind="error"
-              title="Chưa đọc được danh bạ thành viên — cột Đầu chủ có thể thiếu tên"
+              title={cauBaoDoc}
               hanhDong={
-                <Button variant="outline" size="sm" onClick={docLaiDanhBa}>
+                <Button variant="outline" size="sm" onClick={docLaiPhanHong}>
                   Thử lại
                 </Button>
               }
