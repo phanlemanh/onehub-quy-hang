@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 10e3aab84c0ad3eadd05fe09246ab411b94cd849
+verified_commit: 5a6af35ef972abf78fcfbbcd8b6f5708bd40399c
 human_signoff: Manh Phan 2026-11-09
 ---
 
@@ -310,3 +310,7 @@ none — every multi-run eval is uniform
 
 Round 1: chấm lần đầu; E6 và E7 đạt và được mang sang round 2 (carry-forward).
 Round 2: chấm lại phần còn lại trên commit 10e3aab8; mọi eval đạt, E11 đạt có giới hạn (khai trước, kèm E11b).
+
+### Re-pin lần 1 — 2026-11-09, do hoá cũ do gộp main sau chữ ký; phần tự sửa chỉ bọc từ vựng cho Hôm nay
+run_id: repin-20261109T060923Z-82070
+sha: 5a6af35ef972abf78fcfbbcd8b6f5708bd40399c · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · đạt-có-giới-hạn: E11=1 · ngoài làn máy: E1, E1b, E2b, E3, E4b, E5b, E6, E7, E8b, E9b, E10 · diff chạm vật đo ngoài làn máy: E1, E1b, E2b, E3, E4b, E5b, E8b, E9b, E10 — chưa chứng lại, đi vòng S4 delta · AC không có chốt máy: AC-6, AC-7, AC-10 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
