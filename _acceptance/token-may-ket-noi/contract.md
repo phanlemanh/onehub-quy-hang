@@ -5,7 +5,7 @@ slug: token-may-ket-noi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-09
 design_doc: docs/superpowers/specs/2026-11-09-token-may-ket-noi-design.md
@@ -84,3 +84,5 @@ Số đo là kết quả eval máy, chưa có đường chảy thật cho tới 
 
 - Câu hỏi Cổng Phạm vi: Hỏi-1 cách bên kia gọi · Hỏi-2 số token còn sống · Hỏi-3 nhật ký với token lạ · Hỏi-4 màn cấp token · Hỏi-5 hạn riêng · Hỏi-6 token sau khi thoả thuận tắt · Hỏi-7 mã lỗi cho máy bên kia · Hỏi-8 tần suất và hạn giữ nhật ký (thiết kế §8).
 - Không đổi khuôn danh mục v1. Migration 041 do giám sát giữ cho hàng 96.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Khi máy bên kia nhận lỗi 500 hàng loạt, người vận hành chỉ thấy mã lỗi chung nên khó truy ra nguyên nhân; khách và dữ liệu không bị ảnh hưởng.

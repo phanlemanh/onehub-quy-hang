@@ -11,9 +11,9 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>2 việc"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>29 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>137 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>138 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -26,10 +26,6 @@ flowchart TD
 
 - Người trong sàn thấy chữ trên mọi màn theo ba lớp đã chốt: «Lead» chỉ còn là dấu trên một liên hệ chưa nói chuyện hai chiều, còn việc với một người (bán, cho thuê, mua, thuê) hiện là «Cơ hội» với nhãn pha đã chốt ở Cổng Phạm vi hàng 103 — đổi một lượt cho cả bàn làm việc, nút «+ Lead» và «Gửi lead» giữ nguyên. (`doi-chu-lead-co-hoi`)
 - Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
-
-## Đang làm
-
-- Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy, đẩy gói danh mục không cần phiên của quản trị sàn, và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi. (`token-may-ket-noi`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
@@ -137,6 +133,7 @@ flowchart TD
 - Chủ sản phẩm duyệt Cổng Phạm vi của một vòng chạm ô chưa có khuôn trên trang so ba lối — Trong kho, ReUI, Vẽ mới — dựng bằng lệnh, cùng khổ 1440 và 375, mỗi lối một câu đánh đổi, lời khuyên ghim trên trang; vòng có ô chưa có khuôn mà bỏ bước phân kỳ thì bài chấm đỏ, vòng chỉ đi khuôn sẵn thì không cần trang (`the-ba-loi`)
 - Đầu chủ nhận thông báo lead trên điện thoại và máy tính, chạm vào thì mở đúng mục ở Hôm nay (`thong-bao-lead`)
 - Quản trị sàn đặt tỉ lệ thuế phí và định nghĩa «bao phí» của sàn ở mục «Thuế phí» của Cài đặt sàn; giá bao phí ghi sau lúc đổi mang định nghĩa mới, giá đã lưu giữ định nghĩa lúc tính kèm ngày; người xem giá thấy giá ấy tính theo định nghĩa ngày nào; sàn khác không bị ảnh hưởng (`thue-phi`)
+- Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy, đẩy gói danh mục không cần phiên của quản trị sàn, và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi. (`token-may-ket-noi`)
 - Khách mở link từ Zalo và thấy bộ căn mang tên sàn, giá sống kèm «giá xác nhận X ngày trước», căn đã cọc tự mờ, chạm «Quan tâm» được (`trang-khach-rieng`)
 - Hàng 44: Môi giới sàn khác mở link bảng hàng và thấy đủ mã căn, phí theo tên chuẩn kèm định nghĩa của sàn, mức chia của bộ; tải Excel hay ảnh bảng hàng được (`trang-nhom-moi-gioi`)
 - Quản trị sàn thêm nhãn trạng thái riêng neo vào một trong sáu trạng thái chuẩn; căn mang nhãn nhận luật và màu của neo ở Bảng hàng, Hôm nay và trang khách; đếm vẫn theo sáu trạng thái chuẩn (`trang-thai-rieng`)

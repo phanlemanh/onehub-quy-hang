@@ -8,7 +8,7 @@ verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
 verified_commit: b1bad7993d887a732786a2b0a61b0cb67d6ad946
-human_signoff:
+human_signoff: Manh Phan 2026-11-09
 ---
 
 # Evidence Report: token-may-ket-noi
