@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: d2edbeacfa92fee586110e190865a428b81470d5
+verified_commit: 302fd55f9b9af3808475fbb5da94cc7178c72506
 human_signoff: Manh Phan 2026-11-09
 ---
 
@@ -135,3 +135,7 @@ none — every multi-run eval is uniform
 ## Iterations
 
 Round 3: E1, E3, E4, E5, E6 chay lai va xanh; E2 carry-forward tu round 2 (delta khong cham paths cua eval); sáu lệnh suite hồi quy xanh.
+
+### Re-pin lần 1 — 2026-11-09, do hoá cũ do gộp main sau chữ ký
+run_id: repin-20261109T055125Z-31942
+sha: 302fd55f9b9af3808475fbb5da94cc7178c72506 · suites: 7 lệnh exit 0 · evals: 6/6 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
