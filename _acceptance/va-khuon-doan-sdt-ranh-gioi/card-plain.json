@@ -1,0 +1,29 @@
+{
+  "feature_plain": "Đóng nốt lỗ số điện thoại đội lốt khoá toà hay mã căn: dính dấu gạch, dấu chấm, hai chấm hay sát chữ đều bị chặn, còn khoá thật của Invest vẫn qua.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ cho mẫu gửi Invest từ chối số điện thoại trong khoá toà và mã căn, thử đủ mọi kiểu nối và mọi vị trí; khoá cùng hình nhưng ít số hơn vẫn qua."},
+    {"id": "AC-2", "p": "Sẽ cho hàm dựng ở sàn chặn y như vậy, trên cả năm đường dựng, kèm lý do rõ là dáng số điện thoại."},
+    {"id": "AC-3", "p": "Sẽ không từ chối oan khoá thật của Invest và mọi căn của bộ dữ liệu mẫu, ở cả hai tầng."},
+    {"id": "AC-4", "p": "Sẽ chặn khi trong dãy có một đoạn đứng riêng đủ 9–11 chữ số, kể cả có số khác đứng trước; không có đoạn như vậy thì qua."},
+    {"id": "AC-6", "p": "Sẽ chặn cả số có dấu tách mà sát chữ, ví dụ toa090-000-0071."}
+  ],
+  "wont_do": [
+    {"id": "AC-5", "p": "Sẽ KHÔNG chặn số liền không dấu tách sát chữ, ví dụ x0900000071 — phần dư anh đã chọn ở hàng trước."},
+    {"id": "OOS-1", "p": "Không đổi mẫu chiều Invest gửi danh mục sang, vì mẫu đó đã ghim."},
+    {"id": "OOS-2", "p": "Không chặn số liền sát chữ, như đã chọn ở hàng trước."},
+    {"id": "OOS-3", "p": "Không đổi luật mã căn do người gõ."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Đo ở cả hai tầng: mẫu gửi Invest và hàm dựng ở sàn (AC-1, AC-2)."},
+    {"i": 1, "p": "Đủ các kiểu nối dãy số mà khoá cho phép: không dấu, chấm, gạch, gạch dưới, hai chấm, dấu lặp, trộn (AC-1, AC-2)."},
+    {"i": 2, "p": "Đủ các vị trí hai đầu dãy: đầu cuối chuỗi, sau trước từng dấu tách, và sát chữ (AC-1, AC-2, AC-5, AC-6)."},
+    {"i": 3, "p": "Đủ các độ dài biên: 8, 9, 11, 12 chữ số và dãy có số khác đứng trước (AC-4)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Quy tắc xét đoạn đứng riêng thuộc khuôn Invest sẽ ghim nhưng máy định tự quyết — đã chuyển thành Hỏi-3 cho anh."},
+    {"i": 1, "p": "Quy tắc ranh giới hai đầu dãy số cũng thuộc khuôn sẽ ghim mà máy định tự quyết — đã chuyển thành Hỏi-2 cho anh."},
+    {"i": 2, "p": "Số có dấu tách sát chữ vẫn lọt và chưa ai chọn giữ — đã thành Hỏi-4, máy khuyên chặn, có thêm một phép đo."},
+    {"i": 3, "p": "Thiếu phép đo cho số có tiền tố số, và câu tiêu chí về 12 chữ số viết sai thực tế — đã sửa tiêu chí và thêm khoá thử."},
+    {"i": 4, "p": "Phép đo chưa tách được bị chặn vì số điện thoại hay vì hình khoá, và đếm thiếu đường dựng — đã thêm đối chứng ghép cặp và đếm đủ."}
+  ]
+}
