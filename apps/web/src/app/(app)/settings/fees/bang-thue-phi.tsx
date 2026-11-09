@@ -138,11 +138,10 @@ export function BangThuePhi({ tieuDe, cauHinh: dau, tenNguoi }: { tieuDe: string
                   step={0.1}
                   locale="vi-VN"
                   disabled={dangLuu}
-                  aria-label={`${d.ten} (%)`}
                 >
                   <NumberFieldGroup>
                     <NumberFieldDecrement />
-                    <NumberFieldInput aria-invalid={loi?.o === "moi_gioi" ? true : undefined} />
+                    <NumberFieldInput aria-label={`Tỉ lệ ${d.ten.toLowerCase()} (%)`} aria-invalid={loi?.o === "moi_gioi" ? true : undefined} />
                     <NumberFieldIncrement />
                   </NumberFieldGroup>
                 </NumberField>

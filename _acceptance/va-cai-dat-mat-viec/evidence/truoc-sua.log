@@ -1,0 +1,9 @@
+# Lệnh đo trên mã trước khi sửa, 05edf61e76aa733009e5a56ab3c2fbd995305503, 2026-11-09T04:22:32Z
+{"ca":"giu-nhan","nhanSauCon":false,"nhanDauVanGo":true,"luuBamDuoc":false,"dat":false}
+{"ca":"huy-nhieu-lan","sauEsc":false,"dat":false}
+{"ca":"chuyen-hai","hopDong":true,"canASangC":true,"canBVeMacDinh":true,"haiNhanMat":true,"dat":true}
+{"ca":"xoa-hong","loi500":{"hopMo":false,"coCauLoi":false,"dongCon":true},"dat":false}
+{"ca":"sua-hong","hopMo":true,"coCauLoi":true,"dongNhuCu":true,"boChanLuuDuoc":true,"dat":true}
+{"ca":"kho-375","dat":false,"loi":"không thấy Huỷ hộp sửa"}
+{"768":{"soCot":5,"khongTran":false,"dongPhuAn":true},"1440":{"soCot":5,"khongTran":false,"dongPhuAn":true},"ca":"kho-rong","dat":false}
+{"375":{"loiLabel":1,"tenO":"","dongChungDuong":true,"soHienDung":true,"luuBamDuoc":true},"1440":{"loiLabel":1,"tenO":"","dongChungDuong":true,"soHienDung":true,"luuBamDuoc":true},"ca":"nhan-ti-le","dat":false}
