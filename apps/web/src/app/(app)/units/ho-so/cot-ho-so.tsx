@@ -84,7 +84,7 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa, khongToa, cho = "t
   const ngan = bd.ngan();
   const ngoaiTuyen = useNgoaiTuyen();
   const danhMuc = useDanhMuc(san);
-  const ngoaiKhu = useCanNgoaiKhu(san);
+  const { ds: ngoaiKhu } = useCanNgoaiKhu(san);
   const than = useThan(cho);
   const tv = useTuVung();
   // Mọi lần rao của căn (để kéo lịch sử ở nền) — cùng luật tìm của mô hình.
