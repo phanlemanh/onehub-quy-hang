@@ -5,7 +5,7 @@ slug: va-bai-o-la-do-ngau-nhien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [test]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-09-va-bai-o-la-do-ngau-nhien-design.md
 approved_by:
 approved_at:
@@ -83,3 +83,11 @@ Lệnh đo dùng Postgres thử riêng ở cổng 5588, cổng ghim trong `_acce
 - Ngoài-7 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Phép đếm kiểm tra bộ ca đủ số lượng tự khớp với chính nó, nên nếu bộ ca bị hụt một cột thì phép đếm không báo. — `packages/api/test-db/imports/o-la.test.ts`
 - Ngoài-8 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm không tự xác nhận có dòng giờ ghi đủ sáu chữ số lẻ, nên nếu bộ sinh đổi và mất dạng này thì bài vẫn xanh. — `packages/api/test-db/imports/o-la.test.ts`
 - Ngoài-9 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu tên ca kiểm bị đổi, bộ đo 300 lần có thể chạy rỗng mà vẫn báo đạt, làm kết quả đo kém tin cậy. — `_acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Sổ quyết định của hồ sơ còn ghi hai giới hạn đã hết đúng, nên người đọc hồ sơ có thể hiểu nhầm.
+  - Ngoài-2: Hợp đồng còn nêu một hạn chế đã được khắc phục, nên người ký có thể đọc nhầm rằng nhánh chưa gộp được.
+  - Ngoài-3: Nếu ai đó đổi tên ca kiểm, phép đo 300 lần vẫn báo đạt dù không chạy gì.
+  - Ngoài-4: Nếu ai đó vô tình bỏ chỗ miễn trừ cho mã sàn hoặc mã người, bài kiểm vẫn xanh phần lớn các lần chạy, và lỗi đỏ ngẫu nhiên có thể quay lại.
+  - Ngoài-5: Nếu bộ ca kiểm bị hụt một cột thì phép đếm vẫn không báo.
+  - Ngoài-6: Nếu bộ sinh dữ liệu mất dạng giờ ghi đủ sáu chữ số lẻ thì bài kiểm vẫn xanh mà không báo.
+  - Ngoài-7: Phép đo 300 lần có thể báo đạt dù không chạy ca nào nếu tên ca bị đổi.
