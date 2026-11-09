@@ -45,7 +45,7 @@ evals:
     cmd: config:executors.ui-check
     steps:
       - "node _acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/thu/dung.mjs rồi node _acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/thu/chay-ui.mjs --ra _acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/evidence"
-      - "Đối chiếu dòng JSON ca1 (gõ ô Diện tích đất): truoc.cot chứa «Diện tích đất»; rong.soDong = 0, rong.cot bằng truoc.cot, rong.oLoc bằng chữ đã gõ, rong.focus đúng ô đang gõ, rong.baoRong có mặt và nằm trong khung nhìn; sau.soDong = truoc.soDong, sau.cot bằng truoc.cot. Ca2 (lọc Đất, ô Diện tích đất có giá trị khớp, gõ ô Giá không khớp): rong.soDong = 0, rong.cot bằng truoc.cot, ô Diện tích đất còn giá trị, focus ở ô Giá."
+      - "Đối chiếu dòng JSON ca1 (gõ ô Diện tích đất): truoc.cot chứa «Diện tích đất»; rong.soDong = 0, rong.cot bằng truoc.cot, rong.oLoc bằng chữ đã gõ, rong.focus đúng ô đang gõ, rong.baoRong có mặt và nằm trong khung nhìn; sau.soDong = truoc.soDong, sau.cot bằng truoc.cot. Ca2 (lọc Đất, gõ ô Giá không khớp; chỗ thử không có hàng đất mang số Diện tích đất nên ca có ô đất khớp đo ở E3): rong.soDong = 0, rong.cot bằng truoc.cot, focus ở ô Giá."
     target: "http://localhost:3496/inventory"
     expected: "Ảnh E5-rong.png, E5-sau.png, E5-cot-chung.png khớp từng ca; dòng JSON khớp."
     evidence_required: [run_id, screenshot, observed, verifier, verified_at]
