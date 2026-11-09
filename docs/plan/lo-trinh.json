@@ -3191,6 +3191,12 @@
         "docs/design/vo-va-ia.md",
         "_acceptance/luoi-mau-hanh-vi/**"
       ]
+    },
+    {
+      "ma": "logo-onehub",
+      "cau_giao": "Đổi logo của Quỹ hàng sang logo OneHub đang dùng ở OneHub CRM: thanh vỏ, trang đăng nhập, favicon và icon ứng dụng; rõ ở sáng và tối, khổ 1440 và 375.",
+      "slug": "logo-onehub",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-09"
     }
   ],
   "chan_troi": [
