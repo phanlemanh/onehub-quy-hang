@@ -1,1 +1,1 @@
-driver: node script (playwright own capture), network n-a
+driver: kiem-man.mjs capture; no browser network tool
