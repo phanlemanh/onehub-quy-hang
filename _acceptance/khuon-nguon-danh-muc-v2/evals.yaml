@@ -1,0 +1,109 @@
+schema_version: 1
+feature_slug: khuon-nguon-danh-muc-v2
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi output có tên ca và ok; ma trận viết trước, số lần so đếm bằng biến tăng trong vòng lặp và so với độ dài ma trận. Gói thử lấy từ goiMauV2() của khuôn rồi sửa từng ô (round-trip qua bên viết thật), không tự dựng gói đúng khuôn.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_db
+    expected: "exit 0; ca «v2: nhận gói mẫu bằng phiên và bằng token» ok — hai đường vào, mỗi đường 200, số khu, toà, căn, ảnh chụp khớp đếm từ chính gói; field_confidence từng căn bằng đúng fieldConfidence của gói; catalog_market_snapshots.segments và catalog_public_listing_snapshots.listings bằng đúng phần tương ứng; agreement_id bằng thoả thuận đã dùng. Ca «v2: đẩy lại không nhân đôi» ok — created 0, số dòng ba bảng không đổi, đối chứng lần đầu created khác 0. Chiều đỏ: bản sao hàm ghi bỏ cột field_confidence thì so bằng đỏ nêu upi."
+    paths: [packages/connect/src/catalog-feed*, packages/api/src/catalog/feeds*, packages/db/migrations/042_*, packages/api/test-db/khuon-v2/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_db
+    expected: "exit 0; bộ packages/api/test-db/catalog/nhan-goi.test.ts chạy cùng lệnh xanh; ca «v1: phản hồi giữ tập khoá cũ» ok — đúng năm khoá; ca «v1 ghi lại căn thì xoá nhãn» ok — trước khi gửi nhãn khác null (đối chứng), sau khi gửi null và giá trị đúng theo v1; ca «phiên bản lạ qua cửa nhận» ok — ma trận 0, 3, chuỗi, vắng mỗi ô 422 invalid-feed, không 500, đếm ba bảng theo khu của gói bằng 0, số ô bằng 4."
+    paths: [packages/connect/src/catalog-feed*, packages/api/src/catalog/feeds*, packages/api/test-db/khuon-v2/**, packages/api/test-db/catalog/nhan-goi.test.ts]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «phiên bản khuôn» ok trong packages/connect/src/catalog-feed-v2.test.ts — ma trận 0, 3, chuỗi, vắng mỗi ô bị từ chối ở đường schemaVersion; 1 và 2 đọc được; ca v1 cũ của catalog-feed.test.ts vẫn xanh."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «độ chắc: ma trận lệch luật» ok — sáu ô viết trước, mỗi ô sửa từ goiMauV2(), đúng một lỗi, đúng đường khoá, thông điệp nêu tên trường; số lần so bằng 6; đối chứng dương: gói lành nhận. Ca «độ chắc: chín trường» ok — duyệt đúng danh sách chín trường, mỗi trường có giá trị thiếu nhãn đều đỏ."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «số thị trường: ma trận lệch khuôn» ok — mười lăm ô viết trước, mỗi ô đúng một lỗi đúng đường khoá; số lần so bằng 15; đối chứng dương gói lành; đối chứng biên: thấp bằng trung vị bằng cao được nhận; bedroomsTotal null ở loại hình đất được nhận."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-5
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_db
+    expected: "exit 0; ca «ảnh chụp: gói sau thay gói trước của cùng khu» ok — ma trận viết trước mốc mới hơn, bằng, cũ hơn; mỗi ô đọc cả hai bảng bằng chủ bảng: ô mới hơn và bằng thì nội dung bằng đúng gói sau, đoạn và tin cũ không còn; ô cũ hơn thì nội dung bằng gói trước và staleSnapshotsSkipped đúng, căn của gói vẫn cập nhật; khu thứ hai trong sàn không đổi ở mọi ô (đối chứng: khu ấy có dữ liệu). Số ô bằng độ dài ma trận."
+    paths: [packages/api/src/catalog/feeds*, packages/db/migrations/042_*, packages/api/test-db/khuon-v2/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «tin rao: ma trận lệch khuôn» ok — mười ô viết trước, mỗi ô đúng một lỗi đúng đường khoá; số lần so bằng 10; đối chứng dương: feeInclusion null và listings rỗng được nhận."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E8
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «cấm: khoá lạ» ok — bảy khoá viết trước × tám cấp của gói (gốc, khu, toà, căn, phần tử số thị trường, đoạn, phần tử tin rao, tin), số lần so bằng 56, mỗi ô lỗi nêu khoá; ca «cấm: giá trị trong mọi chuỗi» ok — duyệt đệ quy mọi lá chuỗi của goiMauV2() trừ danh sách viết trước các trường tập đóng và ngày, × bốn dáng (https://, www., tên miền, số điện thoại), số lần so bằng số đường lá × 4 và đường lá ≥ 15, mỗi ô đúng đường khoá; ca «cấm: mã tin dáng số điện thoại» ok — listingKey 0900000012 bị từ chối, đối chứng mã mờ thường được nhận; ca «đối chứng: chuỗi sạch có dấu chấm» ok — A.2305, Toà 3.1, Khu B.2 được nhận. Chiều đỏ: tắt lưới giá trị trong bản sao hàm kiểm thì ca đỏ nêu đường lá."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E9
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_db
+    expected: "exit 0; ca «cấm: cả gói không vào» ok — gói có một giá trị cấm ở tin rao cuối cùng và một khoá cấm: 422 invalid-feed, đếm ba bảng theo khu của gói bằng 0; đối chứng: bỏ ô cấm thì 200 và đếm khác 0."
+    paths: [packages/api/src/catalog/feeds*, packages/api/test-db/khuon-v2/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E10
+    criterion: AC-8
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_db
+    expected: "exit 0; ca «tắt thoả thuận: dừng nhận v2» ok — ma trận viết trước paused, ended, quá hạn, sai loại, rời danh sách tin × hai đường vào; mỗi ô đối chứng dương ngay trước (200 với gói khác, nên khu đã có ảnh chụp), rồi 403 đúng mã, so toàn nội dung measured_at, segments, listings, agreement_id, field_confidence trước và sau bằng nhau; số ô bằng độ dài ma trận. Ca «tắt giữa lúc kiểm và ghi» ok — móc truocKhiGhi đổi thoả thuận, 403, đếm ba bảng không đổi, ở cả hai đường vào."
+    paths: [packages/api/src/catalog/feeds*, packages/db/migrations/042_*, packages/api/test-db/khuon-v2/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E11
+    criterion: AC-9
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_cach_ly
+    expected: "exit 0; toàn bộ packages/db/tests xanh gồm isolation.test.mjs; trong packages/db/tests/khuon-v2.test.mjs ca «ảnh chụp: quyền và luật» ok — hai bảng relrowsecurity và relforcerowsecurity đúng; vai quy_hang_app đọc segments, listings, agreement_id đều 42501 kèm thông điệp permission denied; delete 42501; đọc subdivision_key, measured_at được (đối chứng); chèn và sửa với thoả thuận không hiệu lực đều 42501 row-level security, với thoả thuận hiệu lực 1 dòng (đối chứng); thoả thuận hiệu lực khác ghi đè được dòng do thoả thuận cũ đã tắt ghi. Ca «field_confidence: ràng buộc» ok — khoá lạ, nhãn lạ, không phải object mỗi ô 23514 đúng tên ràng buộc; đúng khuôn và null được nhận; số ô bằng độ dài ma trận. Ca «hai thứ tự áp migration 042» ok — cùng khuôn token-may-thu-tu: hai danh sách bằng nhau khác rỗng, áp lại không đổi, đối chứng bản sao bỏ một luật thì phép so đỏ nêu tên luật."
+    paths: [packages/db/migrations/042_*, packages/db/tests/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E12
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «gói mẫu: sinh từ khuôn, khớp tệp» ok — goiMauV2() qua parseCatalogFeed; JSON.stringify(goiMauV2(), null, 2) cộng xuống dòng bằng đúng byte tệp catalog-feed-v2.example.json; đếm: đủ ba nhãn, ≥ 1 đoạn số thị trường, ≥ 1 tin rao; không chuỗi nào khớp dáng số điện thoại. Đối chứng: đổi một giá trị của bản sao thì phép so byte đỏ."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E13
+    criterion: AC-11
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.khuon_v2_db
+    expected: "exit 0; ca «v2 trên đường token: nhật ký» ok — v2 đúng một dòng accepted 200, v2 sai khuôn một dòng invalid_payload 422, đúng token_id, agreement_id; ca «OpenAPI khai phản hồi v2» ok — schema phản hồi 200 của POST cửa nhận có marketSnapshots, publicListingSnapshots, staleSnapshotsSkipped."
+    paths: [packages/api/src/catalog/feeds*, packages/api/test-db/khuon-v2/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E14
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «danh sách phiên bản» ok — CATALOG_FEED_VERSIONS bằng đúng [1, 2]."
+    paths: [packages/connect/src/catalog-feed*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
