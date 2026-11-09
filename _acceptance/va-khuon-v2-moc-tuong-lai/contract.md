@@ -5,7 +5,7 @@ slug: va-khuon-v2-moc-tuong-lai
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 approved_by: Manh Phan
 approved_at: 2026-11-10
 design_doc: docs/superpowers/specs/2026-11-09-va-khuon-v2-moc-tuong-lai-design.md
@@ -56,3 +56,8 @@ Số đo là kết quả eval máy, chưa có đường chảy thật cho tới 
 ## Notes
 
 - Câu hỏi Cổng Phạm vi: Hỏi-1 dung sai mốc tương lai · Hỏi-2 bắt tên miền tới đâu · Hỏi-3 kiểm mốc tương lai ở đâu (thiết kế §4).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-10:
+  - Ngoài-1: Một vài địa danh viết tắt có dấu chấm như «T.Me Linh» bị nhận nhầm là tên miền, cả gói bị từ chối, bên đẩy phải đổi cách viết rồi đẩy lại.
+  - Ngoài-2: Tên miền đuôi .io, .co viết hoa chữ đầu như «Nhadat.io» lọt qua lưới và có thể vào các trường tên, trong khi bản trước chặn được.
+  - Ngoài-3: Bài kiểm chưa phân biệt được gói sai múi giờ bị từ chối vì lý do nào; sản phẩm hiện báo đúng, chỉ thiếu lưới giữ cho lần sửa sau.
+  - Ngoài-4: Trường dãy của căn chưa có bài kiểm tên miền riêng; lưới hiện vẫn áp cho trường này.
