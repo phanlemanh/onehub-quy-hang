@@ -21,7 +21,7 @@ const KIEU = [
   ["user-id-mo", TEP_VET, ['truong === "user_id" && giaTri === nguoiGhi', 'truong === "user_id"'], ["không bắt được: mã người là số"]],
   ["bo-mot-phan", TEP_VET, ['if (typeof giaTri !== "number" && ngan.some((m) => chi.includes(m))) return { truong, dang: "mot-phan" };', ""], ["không bắt được: chỉ đuôi"]],
   ["chi-quet-ba-cot", TEP_VET, ['    if (typeof giaTri === "string" && TRUONG_MA[truong]?.test(giaTri)) continue;\n', '    if (!["model", "user_id", "duration_ms"].includes(truong)) continue;\n    if (typeof giaTri === "string" && TRUONG_MA[truong]?.test(giaTri)) continue;\n'], ["không bắt được ở ma trận cột: input_tokens"]],
-  ["bo-qua-ma-may", TEP_VET, ['if (typeof giaTri === "string" && TRUONG_MA[truong]?.test(giaTri)) continue;', "if (TRUONG_MA[truong]) continue;"], ["không bắt được ở ma trận cột: company_id"]],
+  ["bo-qua-ma-may", TEP_VET, ['if (typeof giaTri === "string" && TRUONG_MA[truong]?.test(giaTri)) continue;', "if (TRUONG_MA[truong]) continue;"], ["không bắt được ở ma trận cột: id"]],
 ];
 
 function dungBanSao() {

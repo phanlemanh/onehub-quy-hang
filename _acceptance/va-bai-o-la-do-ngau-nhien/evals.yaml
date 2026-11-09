@@ -78,5 +78,5 @@ evals:
     executor: test
     cmd: config:executors.test.o_la_db
     paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
-    expected: "exit 0; ca «phép kiểm sổ: mọi cột của dòng thật» đạt: ma trận sinh từ khoá của dòng sổ thật cộng cột giả, số assert bằng số phần tử bảng (ca tự ghim số phần tử), mỗi phần tử gọi đúng tên cột. Chiều đỏ: kiểu phá chi-quet-ba-cot ở E7 đỏ với «không bắt được ở ma trận cột: input_tokens», kiểu phá bo-qua-ma-may đỏ với «không bắt được ở ma trận cột: company_id»."
+    expected: "exit 0; ca «phép kiểm sổ: mọi cột của dòng thật» đạt: ma trận sinh từ khoá của dòng sổ thật cộng cột giả, số assert bằng số phần tử bảng (ca tự ghim số phần tử), mỗi phần tử gọi đúng tên cột. Chiều đỏ: kiểu phá chi-quet-ba-cot ở E7 đỏ với «không bắt được ở ma trận cột: input_tokens», kiểu phá bo-qua-ma-may đỏ với «không bắt được ở ma trận cột: id»."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
