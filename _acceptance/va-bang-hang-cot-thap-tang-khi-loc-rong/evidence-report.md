@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 8d2d9474e703bc3fda68d391a90c00b1dc600654
+verified_commit: 05456fedc29cfd08ae8c6e94d3e79b4e202485b0
 human_signoff:
 ---
 
@@ -172,3 +172,7 @@ none — every multi-run eval is uniform
 
 Round 1: các phát hiện trong hợp đồng ở AC-6 (bộ cột đang giữ không bị bỏ khi áp góc nhìn; bài E4b đo bật cột chưa đúng) và AC-1 (bước liền trước) — đã sửa ở commit 496d65a9, quay lại thực thi.
 Round 2: E1, E2, E3, E4, E4b, E5, E6, E8 chạy lại và xanh; E7 mang từ round 1 vì delta không chạm paths của nó. Verdict PASS.
+
+### Re-pin lần 1 — 2026-11-09, do gộp main có mã mới, tới lượt gộp
+run_id: repin-20261109T052312Z-52942
+sha: 05456fedc29cfd08ae8c6e94d3e79b4e202485b0 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E5 (E5 không khai paths) · AC không có chốt máy: AC-5 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
