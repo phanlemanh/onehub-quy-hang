@@ -246,7 +246,7 @@ test("danh mục dùng chung: mỗi sàn chỉ thấy dòng tin của mình, kh�
       upi: upiB, subdivision_key: khuB, building_key: "toa-1", building_name: "[Mẫu] Toà", unit_number: "A-01",
       stack: null, floor: null, living_area: null, bedrooms_total: null, direction_faces: null,
       property_type: "Residential", property_sub_type: "Apartment", lot_size_area: null, stories_total: null,
-      frontage_length: null, access_road_width: null, provider: "onehub-invest",
+      frontage_length: null, access_road_width: null, field_confidence: null, provider: "onehub-invest",
     });
     // Đối chiếu: tập cột vai API đọc được (quyền theo cột) đúng bằng hai danh sách trên — không thiếu, không thừa.
     for (const [bang, mong] of [["catalog_subdivisions", DOC_KHU], ["catalog_units", DOC_CAN]]) {

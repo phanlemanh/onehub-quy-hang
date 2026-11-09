@@ -1,4 +1,4 @@
-import type { AnyCatalogFeed } from "@quy-hang/connect";
+import type { AnyCatalogFeed, CatalogFeedV2 } from "@quy-hang/connect";
 import type { Agreement } from "@quy-hang/core";
 import type pg from "pg";
 
@@ -42,7 +42,53 @@ export const toAgreement = (r: AgreementRow): Agreement => ({
   specialTerms: r.special_terms,
 });
 
-export async function ghiGoi(tx: pg.PoolClient, feed: AnyCatalogFeed, agreementId: string): Promise<{ created: number; updated: number }> {
+export type AnhChupGhi = { marketSnapshots: number; publicListingSnapshots: number; staleSnapshotsSkipped: number };
+export type KetQuaGhi = { created: number; updated: number; anhChup: AnhChupGhi | null };
+
+/**
+ * Ghi một ảnh chụp của khu: gói sau ghi đè cả dòng, mốc đo cũ hơn thì giữ số mới (Hỏi-6). Gán từ tham số, không đọc `excluded.*`:
+ * vai API không có quyền đọc các cột nội dung (migration 042). Trả về có ghi hay không.
+ */
+async function ghiAnhChup(
+  tx: pg.PoolClient,
+  bang: "catalog_market_snapshots" | "catalog_public_listing_snapshots",
+  cot: "segments" | "listings",
+  dong: { subdivisionKey: string; measuredAt: string; noiDung: unknown },
+  provider: string,
+  agreementId: string,
+): Promise<boolean> {
+  const { rowCount } = await tx.query(
+    `insert into ${bang} as t (subdivision_key, provider, measured_at, agreement_id, ${cot})
+     values ($1, $2, $3::timestamptz, $4, $5::jsonb)
+     on conflict (subdivision_key) do update
+       set provider = $2, measured_at = $3::timestamptz, agreement_id = $4, ${cot} = $5::jsonb, updated_at = now()
+       where t.measured_at <= $3::timestamptz`,
+    [dong.subdivisionKey, provider, dong.measuredAt, agreementId, JSON.stringify(dong.noiDung)],
+  );
+  return (rowCount ?? 0) > 0;
+}
+
+async function ghiPhanThiTruong(tx: pg.PoolClient, feed: CatalogFeedV2, agreementId: string): Promise<AnhChupGhi> {
+  let marketSnapshots = 0;
+  let publicListingSnapshots = 0;
+  let staleSnapshotsSkipped = 0;
+  for (const m of feed.marketStats) {
+    if (await ghiAnhChup(tx, "catalog_market_snapshots", "segments", { subdivisionKey: m.subdivisionKey, measuredAt: m.measuredAt, noiDung: m.segments }, feed.provider, agreementId)) marketSnapshots += 1;
+    else staleSnapshotsSkipped += 1;
+  }
+  for (const m of feed.publicListings) {
+    if (await ghiAnhChup(tx, "catalog_public_listing_snapshots", "listings", { subdivisionKey: m.subdivisionKey, measuredAt: m.measuredAt, noiDung: m.listings }, feed.provider, agreementId)) publicListingSnapshots += 1;
+    else staleSnapshotsSkipped += 1;
+  }
+  return { marketSnapshots, publicListingSnapshots, staleSnapshotsSkipped };
+}
+
+export async function ghiGoi(tx: pg.PoolClient, feed: AnyCatalogFeed, agreementId: string): Promise<KetQuaGhi> {
+  const danhMuc = await ghiDanhMuc(tx, feed, agreementId);
+  return { ...danhMuc, anhChup: feed.schemaVersion === 2 ? await ghiPhanThiTruong(tx, feed, agreementId) : null };
+}
+
+async function ghiDanhMuc(tx: pg.PoolClient, feed: AnyCatalogFeed, agreementId: string): Promise<{ created: number; updated: number }> {
   const khu = feed.subdivisions.map((s) => ({
     subdivision_key: s.subdivisionKey,
     subdivision_name: s.subdivisionName,
@@ -67,6 +113,8 @@ export async function ghiGoi(tx: pg.PoolClient, feed: AnyCatalogFeed, agreementI
         stories_total: u.storiesTotal ?? null,
         frontage_length: u.frontageLength ?? null,
         access_road_width: u.accessRoadWidth ?? null,
+        // Gói v1 không có nhãn: ghi lại căn thì xoá nhãn cũ, vì nhãn nói về giá trị cũ (Hỏi-3).
+        field_confidence: "fieldConfidence" in u ? u.fieldConfidence : null,
       })),
     ),
   );
@@ -95,14 +143,14 @@ export async function ghiGoi(tx: pg.PoolClient, feed: AnyCatalogFeed, agreementI
   const ghi = await tx.query(
     `insert into catalog_units (upi, subdivision_key, building_key, building_name, unit_number, stack, floor, living_area,
                                 bedrooms_total, direction_faces, property_type, property_sub_type, lot_size_area,
-                                stories_total, frontage_length, access_road_width, provider, measured_at, agreement_id)
+                                stories_total, frontage_length, access_road_width, field_confidence, provider, measured_at, agreement_id)
      select u.upi, u.subdivision_key, u.building_key, u.building_name, u.unit_number, u.stack, u.floor, u.living_area,
             u.bedrooms_total, u.direction_faces, u.property_type, u.property_sub_type, u.lot_size_area, u.stories_total,
-            u.frontage_length, u.access_road_width, $2, $3, $4
+            u.frontage_length, u.access_road_width, u.field_confidence, $2, $3, $4
      from jsonb_to_recordset($1::jsonb) as u(upi text, subdivision_key text, building_key text, building_name text,
           unit_number text, stack text, floor int, living_area numeric, bedrooms_total int, direction_faces text,
           property_type text, property_sub_type text, lot_size_area numeric, stories_total int, frontage_length numeric,
-          access_road_width numeric)
+          access_road_width numeric, field_confidence jsonb)
      on conflict (upi) do update
        set subdivision_key = excluded.subdivision_key, building_key = excluded.building_key,
            building_name = excluded.building_name, unit_number = excluded.unit_number, stack = excluded.stack,
@@ -110,18 +158,18 @@ export async function ghiGoi(tx: pg.PoolClient, feed: AnyCatalogFeed, agreementI
            direction_faces = excluded.direction_faces, property_type = excluded.property_type,
            property_sub_type = excluded.property_sub_type, lot_size_area = excluded.lot_size_area,
            stories_total = excluded.stories_total, frontage_length = excluded.frontage_length,
-           access_road_width = excluded.access_road_width, provider = excluded.provider,
+           access_road_width = excluded.access_road_width, field_confidence = excluded.field_confidence, provider = excluded.provider,
            measured_at = excluded.measured_at, agreement_id = $4, updated_at = now()
        where (catalog_units.subdivision_key, catalog_units.building_key, catalog_units.building_name,
               catalog_units.unit_number, catalog_units.stack, catalog_units.floor, catalog_units.living_area,
               catalog_units.bedrooms_total, catalog_units.direction_faces, catalog_units.property_type,
               catalog_units.property_sub_type, catalog_units.lot_size_area, catalog_units.stories_total,
-              catalog_units.frontage_length, catalog_units.access_road_width, catalog_units.provider)
+              catalog_units.frontage_length, catalog_units.access_road_width, catalog_units.field_confidence, catalog_units.provider)
              is distinct from
              (excluded.subdivision_key, excluded.building_key, excluded.building_name, excluded.unit_number,
               excluded.stack, excluded.floor, excluded.living_area, excluded.bedrooms_total, excluded.direction_faces,
               excluded.property_type, excluded.property_sub_type, excluded.lot_size_area, excluded.stories_total,
-              excluded.frontage_length, excluded.access_road_width, excluded.provider)`,
+              excluded.frontage_length, excluded.access_road_width, excluded.field_confidence, excluded.provider)`,
     [JSON.stringify(can), feed.provider, feed.measuredAt, agreementId],
   );
 
@@ -151,4 +199,9 @@ export function demGoi(feed: AnyCatalogFeed): { subdivisions: number; buildings:
     buildings: feed.subdivisions.reduce((n, s) => n + s.buildings.length, 0),
     units: feed.subdivisions.reduce((n, s) => n + s.buildings.reduce((m, b) => m + b.units.length, 0), 0),
   };
+}
+
+/** Thân trả về của cả hai đường vào: gói v1 đúng năm khoá như trước, gói v2 thêm số ảnh chụp. */
+export function taoPhanHoi(feed: AnyCatalogFeed, k: KetQuaGhi) {
+  return { ...demGoi(feed), created: k.created, updated: k.updated, ...(k.anhChup ?? {}) };
 }

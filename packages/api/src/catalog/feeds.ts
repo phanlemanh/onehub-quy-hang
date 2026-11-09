@@ -8,7 +8,7 @@ import { quanTriSan } from "../auth/quan-tri-san";
 import { docBearer } from "../auth/token-may";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
-import { demGoi, ghiGoi, toAgreement, type AgreementRow, type FeedHooks } from "./feeds-ghi";
+import { ghiGoi, taoPhanHoi, toAgreement, type AgreementRow, type FeedHooks } from "./feeds-ghi";
 import { nhanBangToken } from "./feeds-token";
 
 /**
@@ -31,6 +31,10 @@ const FeedResult = z
     created: z.number().int(),
     /** Căn đã có mà gói đổi ít nhất một thuộc tính. */
     updated: z.number().int(),
+    /** Chỉ gói v2: số ảnh chụp số thị trường, tin rao đã ghi, và số ảnh bỏ qua vì mốc đo cũ hơn. */
+    marketSnapshots: z.number().int().optional(),
+    publicListingSnapshots: z.number().int().optional(),
+    staleSnapshotsSkipped: z.number().int().optional(),
   })
   .openapi("CatalogFeedResult");
 const InvalidFeed = z
@@ -80,7 +84,8 @@ export function registerFeedRoutes(api: OpenAPIHono, deps: ApiDeps, hooks: FeedH
       // Thân không khai ở đây để thân hỏng (không phải JSON, không phải object) ra 422 invalid-feed thay vì 400 của
       // bộ kiểm tự động; khuôn đầy đủ ở packages/connect (CatalogFeed, schemaVersion 1).
       description:
-        "Thân: gói CatalogFeed v1 (`schemaVersion`, `provider`, `measuredAt`, `subdivisions` → `buildings` → `units`). " +
+        "Thân: gói CatalogFeed v1 (`schemaVersion`, `provider`, `measuredAt`, `subdivisions` → `buildings` → `units`) " +
+        "hoặc v2 (thêm `fieldConfidence` ở căn, `marketStats`, `publicListings`). " +
         "Cả gói hoặc không gì: sai khuôn 422, thoả thuận catalog_source chiều vào không hiệu lực 403.",
       responses: {
         200: { description: "Đã nhận", content: { "application/json": { schema: FeedResult } } },
@@ -110,7 +115,7 @@ export function registerFeedRoutes(api: OpenAPIHono, deps: ApiDeps, hooks: FeedH
       const { feed } = parsed;
 
       try {
-        const { created, updated } = await withCompany(appPool, q, async (tx) => {
+        const ketQua = await withCompany(appPool, q, async (tx) => {
           const tin = (
             await tx.query<{ t: boolean }>(
               "select exists (select 1 from catalog_trusted_companies where company_id = app.current_company_id()) as t",
@@ -121,7 +126,7 @@ export function registerFeedRoutes(api: OpenAPIHono, deps: ApiDeps, hooks: FeedH
           await hooks.truocKhiGhi?.();
           return ghiGoi(tx, feed, agreementId);
         });
-        return c.json({ ...demGoi(feed), created, updated }, 200);
+        return c.json(taoPhanHoi(feed, ketQua), 200);
       } catch (e) {
         if (e instanceof FeedRefused) return tra(c, e.entry);
         // Luật theo dòng từ chối câu ghi: thoả thuận hết hiệu lực giữa lúc kiểm và lúc ghi.
