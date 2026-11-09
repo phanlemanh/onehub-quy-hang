@@ -4,7 +4,7 @@ feature_slug: logo-onehub
 #   docker run --rm -d --name quy-hang-logo -e POSTGRES_PASSWORD=quyhang -p 5590:5432 postgres:16   (nếu chưa chạy)
 #   DATABASE_URL=postgres://postgres:quyhang@localhost:5590/postgres npm run db:migrate
 #   rm -rf apps/web/.next/dev
-#   DATABASE_URL=postgres://postgres:quyhang@localhost:5590/postgres BETTER_AUTH_SECRET=dev-logo-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3462 npm run dev -w @quy-hang/web -- -p 3462
+#   DATABASE_URL=postgres://postgres:quyhang@localhost:5590/postgres BETTER_AUTH_SECRET=dev-logo-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3460 npm run dev -w @quy-hang/web -- -p 3460
 # Vỏ thật không cần đăng nhập nằm ở trang mẫu sống /mau/he-bo-cuc. Mỗi bài mở một hồ sơ trình duyệt mới, không cookie.
 evals:
   - id: E1
@@ -44,7 +44,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG như đầu tệp. Khổ 1440x900, nền sáng: mở http://localhost:3462/mau/he-bo-cuc/xem?bo-cuc=tran&trang-thai=mac-dinh → chụp evidence/E5-sang.png. Đọc bằng script phần tử [data-slot=home-rail] img: currentSrc, naturalWidth, naturalHeight, alt, getBoundingClientRect rộng và cao; ghi document.documentElement.className và getComputedStyle(document.body).backgroundColor."
+      - "DỰNG nếu cổng 3460 chưa chạy (Postgres thử quy-hang-logo cổng 5590 đã có sẵn, đã migrate): rm -rf apps/web/.next/dev; DATABASE_URL=postgres://postgres:quyhang@localhost:5590/postgres BETTER_AUTH_SECRET=dev-logo-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3460 npm run dev -w @quy-hang/web -- -p 3460 chạy nền, chờ cổng mở. Khổ 1440x900, nền sáng: mở http://localhost:3460/mau/he-bo-cuc/xem?bo-cuc=tran&trang-thai=mac-dinh → chụp evidence/E5-sang.png. Đọc bằng script phần tử [data-slot=home-rail] img: currentSrc, naturalWidth, naturalHeight, alt, getBoundingClientRect rộng và cao; ghi document.documentElement.className và getComputedStyle(document.body).backgroundColor."
       - "Hồ sơ mới, emulate prefers-color-scheme: dark, tải lại → chụp evidence/E5-toi.png, ghi lại đúng các số đó."
     expected: "Cả hai ảnh: đầu cột nhà có hình sáu lục giác xanh, không còn ô hộp màu chính. currentSrc chứa /icons/onehub-mark.svg, naturalWidth > 0, rộng 28 và cao 28 (lệch tối đa 1px), alt rỗng. Ca tối: className có dark và màu nền khác ca sáng. Hình đọc rõ trên nền cột ở cả sáng và tối. Đối chứng: ảnh vỡ, méo, hay vẫn ô hộp là FAIL."
     paths: ["apps/web/src/components/shell/home-rail.tsx", "apps/web/src/components/dau-hieu-onehub.tsx", "apps/web/public/icons/onehub-mark.svg"]
@@ -55,7 +55,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG như đầu tệp. Hồ sơ trình duyệt mới, chưa đăng nhập. Mở http://localhost:3462/login ở khổ 1440x900 sáng → chụp evidence/E6-1440-sang.png; nền tối → chụp evidence/E6-1440-toi.png."
+      - "DỰNG nếu cổng 3460 chưa chạy (Postgres thử quy-hang-logo cổng 5590 đã có sẵn, đã migrate): rm -rf apps/web/.next/dev; DATABASE_URL=postgres://postgres:quyhang@localhost:5590/postgres BETTER_AUTH_SECRET=dev-logo-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3460 npm run dev -w @quy-hang/web -- -p 3460 chạy nền, chờ cổng mở. Hồ sơ trình duyệt mới, chưa đăng nhập. Mở http://localhost:3460/login ở khổ 1440x900 sáng → chụp evidence/E6-1440-sang.png; nền tối → chụp evidence/E6-1440-toi.png."
       - "Khổ 375x812 sáng → chụp evidence/E6-375-sang.png; nền tối → chụp evidence/E6-375-toi.png. Ở mỗi ảnh đọc phần tử main img: alt, rộng và cao; đọc document.documentElement.scrollWidth, className, getComputedStyle(document.body).backgroundColor và document.body.innerText. Nền tối mở bằng hồ sơ mới emulate prefers-color-scheme: dark."
     expected: "Bốn ảnh: hình sáu lục giác xanh ngay cạnh chữ «Quỹ hàng» ở đầu trang, đọc rõ trên nền sáng và tối. Ảnh rộng 32 và cao 32 (lệch tối đa 1px), alt rỗng. Ca tối: className có dark và màu nền khác ca sáng. Chữ trang không có «OneHub» hay «CRM». scrollWidth ở khổ 375 bằng 375. Đối chứng: ảnh vỡ, méo, thiếu chữ «Quỹ hàng», hay tràn ngang là FAIL."
     paths: ["apps/web/src/app/(auth)/khung.tsx", "apps/web/src/components/dau-hieu-onehub.tsx", "apps/web/public/icons/onehub-mark.svg"]
@@ -66,7 +66,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG như đầu tệp. Hồ sơ trình duyệt mới, không cookie. Trên trang http://localhost:3462/login chạy fetch(url, {redirect:'manual'}) lần lượt cho /favicon.ico, /icons/onehub-mark.svg, /icons/apple-touch-icon.png, /icons/icon-192.png, /icons/icon-512.png, /manifest.webmanifest; ghi status và content-type từng cái."
+      - "DỰNG nếu cổng 3460 chưa chạy (Postgres thử quy-hang-logo cổng 5590 đã có sẵn, đã migrate): rm -rf apps/web/.next/dev; DATABASE_URL=postgres://postgres:quyhang@localhost:5590/postgres BETTER_AUTH_SECRET=dev-logo-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3460 npm run dev -w @quy-hang/web -- -p 3460 chạy nền, chờ cổng mở. Hồ sơ trình duyệt mới, không cookie. Trên trang http://localhost:3460/login chạy fetch(url, {redirect:'manual'}) lần lượt cho /favicon.ico, /icons/onehub-mark.svg, /icons/apple-touch-icon.png, /icons/icon-192.png, /icons/icon-512.png, /manifest.webmanifest; ghi status và content-type từng cái."
       - "Đọc document.querySelectorAll('link[rel~=icon], link[rel=apple-touch-icon]'): ghi rel và href. Chụp evidence/E7-dau-trang.png."
       - "Trên trang /login chèn tạm hai ô nền trắng và nền đen, mỗi ô một <img src=/favicon.ico> cỡ 64 → chụp evidence/E7-favicon.png."
     expected: "Sáu đường đều status 200, không redirect, content-type là ảnh (riêng manifest là manifest hay json). Có link rel icon trỏ /favicon.ico và link apple-touch-icon trỏ /icons/apple-touch-icon.png. Ảnh favicon thấy rõ sáu lục giác trên cả nền trắng và nền đen. Đối chứng: một đường trả về trang đăng nhập hay 404 là FAIL."
@@ -94,7 +94,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "DỰNG như đầu tệp. Hồ sơ trình duyệt mới, không cookie. Mở http://localhost:3462/login, đọc href của link rel icon. Mở http://localhost:3462/s/ma-khong-co (trang khách, không cần dữ liệu), đọc href của link rel icon, chụp evidence/E10-trang-khach.png."
+      - "DỰNG nếu cổng 3460 chưa chạy (Postgres thử quy-hang-logo cổng 5590 đã có sẵn, đã migrate): rm -rf apps/web/.next/dev; DATABASE_URL=postgres://postgres:quyhang@localhost:5590/postgres BETTER_AUTH_SECRET=dev-logo-chuoi-thu-khong-dung-o-ban-that BETTER_AUTH_URL=http://localhost:3460 npm run dev -w @quy-hang/web -- -p 3460 chạy nền, chờ cổng mở. Hồ sơ trình duyệt mới, không cookie. Mở http://localhost:3460/login, đọc href của link rel icon. Mở http://localhost:3460/s/ma-khong-co (trang khách, không cần dữ liệu), đọc href của link rel icon, chụp evidence/E10-trang-khach.png."
     expected: "Href của link rel icon ở tuyến /s giống ở /login, cùng trỏ /favicon.ico. Đầu trang không có hình sáu lục giác. Đối chứng: thiếu link icon ở tuyến /s, hay href khác /login, là FAIL."
     paths: ["apps/web/src/app/favicon.ico", "apps/web/src/app/layout.tsx"]
     evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
