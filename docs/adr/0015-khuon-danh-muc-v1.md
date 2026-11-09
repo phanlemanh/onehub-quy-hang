@@ -53,3 +53,13 @@ theo khuyến nghị.
 - **Nhật ký.** Mỗi lời gọi mang token nhận ra được một dòng ở `machine_token_calls`, chỉ thêm; token lạ không ghi dòng. Lần
   nhận ghi trong cùng giao dịch với gói.
 - Chưa làm: giới hạn tần suất, hạn giữ nhật ký (Hỏi-8); màn bật tắt và đọc nhật ký (hàng 98); API kéo sự kiện (hàng 97).
+
+## Sửa đổi 09/11: khuôn v2 «nguồn danh mục và thị trường» (hàng 94)
+
+Manh Phan duyệt Cổng Phạm vi hồ sơ `khuon-nguon-danh-muc-v2` ngày 09/11, Hỏi-1..12 theo khuyến nghị. Điều «số thị trường và tin rao trong khuôn» ở mục Để sau đã làm.
+
+- **`schemaVersion: 2`**, cùng tệp `packages/connect/src/catalog-feed.ts`, `.strict()` mọi cấp. Danh mục như v1, mỗi căn thêm `fieldConfidence`; thêm `marketStats` (đoạn theo toà, loại hình, số phòng ngủ: giá thấp, cao, trung vị đang rao, số tin) và `publicListings` (mã tin mờ, UPI, giá, điều kiện phí, ngày đăng). Gói mẫu: `catalog-feed-v2.example.json`.
+- **Độ chắc**: ba nhãn `inferred`, `single_source`, `verified` trên chín trường có thể vắng của căn; giá trị có thì bắt buộc có nhãn. Gói v1 ghi lại căn thì xoá nhãn.
+- **Không vào được**: đường dẫn, tên nguồn, tên miền, ảnh, người đăng. Chuỗi có dáng URL, tên miền, số điện thoại làm cả gói 422. Khu, toà, căn được trỏ tới phải có trong chính gói.
+- **Ảnh chụp**: migration 042, mỗi khu một dòng cho số thị trường và một dòng cho tin rao, gói sau ghi đè cả dòng; mốc đo cũ hơn thì giữ số mới, gói vẫn 200 và đếm số ảnh bỏ qua. Vai API chưa đọc được nội dung, hàng 102 mở kèm luật vai.
+- **v1 vẫn nhận**, không đặt hạn; bỏ bằng một hàng riêng khi Invest báo đã chuyển. Mặt bằng theo trục chưa chở.

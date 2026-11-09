@@ -156,6 +156,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
 | K32 | Sự kiện xác nhận danh mục: ba loại (khung toà, thuộc tính căn, báo sai) và sáu trường báo sai được cố định trong khuôn v1 — sàn không chọn tập con (Google Maps, Waze đổi biểu mẫu theo loại địa điểm) | Nghĩa chuẩn để so giữa các sàn — Invest so lời hai công ty độc lập trên cùng trường; đổi là lên phiên bản khuôn | ADR-0027 quyết định 4; hồ sơ `khuon-xac-nhan-danh-muc` Hỏi-4 |
 | K33 | Hôm nay: sàn đổi được tên nhóm việc của vai khác đầu chủ (sổ từ vựng), chưa ẩn, chưa đổi thứ tự được; việc đầu khách tự hết sau 48 giờ, sàn chưa đổi được | Nền tảng — bản đầu của một danh sách việc, xem lại khi có sàn thứ hai hỏi (Hỏi-5, hồ sơ hom-nay-mot-danh-sach-viec) |  |
 | K34 | Tối đa 2 token máy còn sống mỗi thoả thuận, sàn không đổi được (MLS Grid: cấp lại là token cũ chết, tức một token) | Quyền và an toàn: số token còn sống là bề mặt lộ khoá; hai là đủ để đổi không gián đoạn (Hỏi-2, hồ sơ token-may-ket-noi) | `MACHINE_TOKEN_LIMIT` ở `packages/core/src/agreements.ts`; ADR-0015 sửa đổi 09/11 |
+| K35 | Độ chắc của giá trị danh mục: đúng ba nhãn (Suy ra · Một nguồn xác nhận · Đã xác minh), sàn không thêm bậc (nhà cung cấp dữ liệu khác như Vitki Data tự đặt bậc) | Nghĩa chuẩn để so giữa các sàn: hàng 100 dùng chung một luật cho «chưa chắc» (Hỏi-7, hồ sơ khuon-nguon-danh-muc-v2) | `CATALOG_CONFIDENCE_LEVELS` ở `packages/core/src/catalog/confidence.ts`; ADR-0015 sửa đổi 09/11 |
 
 ## Đếm
 
@@ -166,7 +167,7 @@ và trần lớp của thoả thuận. Sổ không có khoá cho nó.
   Hàng 25 (dãy L) dựng thực đơn chia lead và bảng `company_settings` (migration 011): bốn khoá #1, #2, #3, #3a ở đây là
   đúng khoá, khoảng và mặc định dãy L đặt (`DEFAULT_LEAD_ROUTING`, `LEAD_ROUTING_KEYS`), đối chiếu 01/11.
 - **Đang dựng ở dãy chạy**: #5 (hàng 22, dãy G). **Đã có trong mã ở hàng 23**: #33 và điều kiện K7 (máy chủ đọc #33; chưa có màn chỉnh).
-- **8 ứng viên** ở phần B (#34, #35 của hàng 28, #38 của hàng can-nhap-len-bang-chung), **34 điều khoá** ở phần C (K34 của hàng 96, K27 của hàng 103, K28 của hàng bang-quyen-theo-vai, K29 của hàng 46, K30 của hàng thue-phi, K31 của hàng 47, K32 của hàng 95).
+- **8 ứng viên** ở phần B (#34, #35 của hàng 28, #38 của hàng can-nhap-len-bang-chung), **35 điều khoá** ở phần C (K35 của hàng 94, K34 của hàng 96, K27 của hàng 103, K28 của hàng bang-quyen-theo-vai, K29 của hàng 46, K30 của hàng thue-phi, K31 của hàng 47, K32 của hàng 95).
 - Theo màn: hàng 48 nhận 6 điểm (#1–#5, #3a), 49 nhận 5 (#7–#11), 45 hai họ (#18, #19), 46 một, 47 hai, 50 ba, 44 hai, 70
   hai, 68 một; năm điểm (#6, #12, #13, #14, #17) chưa có hàng màn — sàn nhận mặc định tới khi Cổng Phạm vi hàng 35, 44
   hay 48 gom vào; #33 (hàng 23) chưa có hàng màn — sàn nhận mặc định 1.
