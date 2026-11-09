@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { agreementErrors, mayFlow, type Agreement } from "./agreements";
+import { agreementErrors, CONNECTION_KINDS, MACHINE_TOKEN_KINDS, MACHINE_TOKEN_LIMIT, machineTokenAllowed, mayFlow, type Agreement } from "./agreements";
 import { CEILING, DATA_CLASSES } from "./data-classes";
 
 const at = new Date("2026-11-01T00:00:00Z");
@@ -205,4 +205,20 @@ test("danh sách loại của ràng buộc cơ sở dữ liệu trùng CONNECTIO
   // Đối chứng âm cùng hàm so: SQL thử thiếu catalog_confirmation.
   const thieu = rutLoai("add constraint agreements_kind_check\n  check (kind in ('catalog_source', 'ai_processing'))");
   assert.ok(lechLoai(thieu, CONNECTION_KINDS).includes("thiếu ở cơ sở dữ liệu: catalog_confirmation"));
+});
+
+test("cấp token theo loại kết nối", () => {
+  // Ma trận viết trước: đúng hai cặp loại và chiều được cấp, mọi cặp khác bị từ chối.
+  const duocCap = new Set(["catalog_source/inbound", "catalog_confirmation/outbound"]);
+  let soLan = 0;
+  for (const kind of CONNECTION_KINDS) {
+    soLan += 1;
+    for (const direction of ["inbound", "outbound"] as const) {
+      assert.equal(machineTokenAllowed(kind, direction), duocCap.has(`${kind}/${direction}`), `${kind} chiều ${direction}`);
+    }
+  }
+  assert.equal(soLan, CONNECTION_KINDS.length);
+  assert.equal(CONNECTION_KINDS.filter((k) => !MACHINE_TOKEN_KINDS.some((m) => m.kind === k)).length, 6, "sáu loại còn lại");
+  assert.deepEqual(MACHINE_TOKEN_KINDS.map((m) => `${m.kind}/${m.direction}`).sort(), [...duocCap].sort());
+  assert.ok(Number.isInteger(MACHINE_TOKEN_LIMIT) && MACHINE_TOKEN_LIMIT > 0, "trần là số nguyên dương");
 });
