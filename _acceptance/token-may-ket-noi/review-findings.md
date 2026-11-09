@@ -1,69 +1,50 @@
+# Review findings: token-may-ket-noi (round 2)
+
 ## Trong hợp đồng
 
-- **Lỗi máy chủ sau khi đã nhận ra token thu hồi thì trả 500 mà không ghi nhật ký**
-  AC: AC-7
-  file: `packages/api/src/catalog/feeds-token.ts:90`
-  severity: low
-  source: bugs
-  detail: Khối try ở dòng 78-92 bọc cả traToken lẫn doThoaThuanKetThuc. Với token đã thu hồi, t đã có giá trị. Nếu doThoaThuanKetThuc (dòng 83) ném lỗi, catch ở dòng 90 chỉ gọi baoLoi, trả 500, không gọi ghiRieng(..., 'server_error'). AC-7 và thiết kế §5 đòi mỗi lời gọi mang token nhận ra được một dòng, kể cả lỗi giữa chừng. Khối try thứ hai (dòng 153) có ghi, khối này thì không. Ca kiểm server_error trong nhat-ky.test.ts chỉ phủ lỗi ở móc truocKhiGhi nên không bắt được đường này. Cách sửa: trong catch, nếu t khác null thì gọi ghiRieng với 500 và 'server_error' trước khi trả. Cửa sổ hẹp: chỉ khi token đã thu hồi và câu đọc đó lỗi.
-
-- **Hình 4 (âm tính một mình): quét route so 400 với 400 ở 14 route, không chạm tới lớp danh tính**
+- **Hình 4, assertion âm tính một mình: ba đường danh tính ngoài OpenAPI chỉ so mã HTTP, không có đối chứng dương trên đường thật**
+  file: `packages/api/test-db/token-may/pham-vi.test.ts:130`
+  severity: medium
   AC: AC-4
-  file: `packages/api/test-db/token-may/pham-vi.test.ts:43`
-  severity: medium
   source: measurement
-  detail: quetRoute gửi body "{}" cho mọi route không phải GET/HEAD (dòng 43), rồi chỉ ghi nhận khi hai mã lệch (dòng 46). Ca «token không mở route nào khác» chỉ assert lech = [] (dòng 70). Chạy createApi với deps giả, đúng cách gửi này, không kèm thông tin đăng nhập: 111 route gồm 1 route 200, 96 route 401 và 14 route 400 do bộ kiểm thân chạy trước khi handler kiểm danh tính (POST /me/company, POST /company/members, POST /company/zones, POST /imports, POST /leads/{leadId}/assign...). Ở 14 route này cả hai lượt đều trả 400 trước lớp danh tính, nên Bearer được coi là người cũng không làm mã lệch. Hai đối chứng dương không đại diện cho nhóm này: cửa nhận (dòng 76) và route giả me-gia không có bộ kiểm thân (dòng 79-82). Test cũng không assert mã của lượt không header (phải là 401), nên ô 400 vẫn tính vào soRoute như đã đo. Lời hứa Never của hợp đồng («token gọi được đường của người») vì vậy chưa được đo ở 14 route này.
+  detail: Dòng 130-132 chỉ assert `lech(kqDanhTinh)` rỗng, tức mã khi không header bằng mã khi có Bearer. Với better-auth 1.7.14, `get-session` không có cookie trả 200 với thân null (session.mjs dòng 47; session.test.ts:119 của kho cũng đọc null từ đường này). `sign-out` không cookie đi thẳng tới `ctx.json(signOutResponse())` (sign-out.mjs dòng 93), đọc mã thì là 200. Nếu Bearer được nhận làm người, `get-session` vẫn 200 nhưng thân mang phiên, nên `lech` vẫn rỗng và phép đo xanh. Hai trong ba đường vì vậy không phân biệt được có danh tính hay không. Lưới «phải dừng ở lớp danh tính» ở dòng 118-122 chỉ áp cho `kqKhac`, không áp cho `kqDanhTinh`. Chiều đỏ ở dòng 137-141 dùng route giả `/me-gia` trả 401/200, nên chỉ chứng minh bộ so hoạt động, không chứng minh trên ba đường này. Cần so cả thân phản hồi (get-session phải null khi có Bearer). Cùng hình dạng ở dòng 98: `POST /api/v1/jobs/lead-tick` là route còn lại đọc Bearer, nhưng `deps` trong chung.ts không có `jobSecret` nên cả hai chiều dừng ở 503 (jobs/routes.ts dòng 32), chưa tới bước so khoá; ô này trong phép quét không đo gì.
 
-- **Hình 4 (âm tính một mình, không ghim thông điệp): 42501 ở bốn cột khoá không phân biệt quyền cột với luật dòng**
-  AC: AC-8
-  file: `packages/db/tests/token-may.test.mjs:113`
+- **Hình 4, assertion âm tính một mình: ô «chữ hoa» của ma trận tra theo băm không có dòng nào để khớp nhầm**
+  file: `packages/db/tests/token-may.test.mjs:87`
   severity: medium
+  AC: AC-5
   source: measurement
-  detail: Ca «thu hồi một chiều» sửa token_hash, agreement_id, company_id, created_by trên token CÒN SỐNG và chỉ kiểm e.code === 42501 (hoiLoi, dòng 15). Migration 041 có hai lớp: grant update (revoked_at, revoked_by) và luật with check (revoked_at is not null). Nếu grant bị nới thành grant update toàn bảng, câu ở dòng 113 vẫn bị with check từ chối với cùng mã 42501, vì dòng sau khi sửa vẫn có revoked_at null. Vậy cả bốn ô vẫn xanh khi lớp quyền cột mất. Câu thực sự cần chặn là sửa cột khoá cùng lúc đặt revoked_at, ví dụ set token_hash = ..., revoked_at = now(): câu này qua with check và chỉ quyền cột chặn được, nhưng không có ô nào thử. Đối chứng dương dòng 123 chỉ chứng minh thu hồi đúng cách chạy được, không chứng minh cột khoá bị khoá. Thông điệp lỗi («permission denied» so với «row-level security») cũng không được ghim.
+  detail: Ô `{ ten: "chữ hoa", hash: bam("a").toUpperCase(), ra: [] }` mong 0 dòng, nhưng trong giao dịch này chỉ có hai token băm `bam("3")` và `bam("4")` (dòng 78-79); không có dòng `bam("a")`. Nếu hàm `app.machine_token_by_hash` bị đổi thành so `lower(p_hash)` hoặc so không phân biệt hoa thường, ô vẫn trả 0 dòng và vẫn xanh. Vì vậy ô không thể đỏ với đúng lỗi nó được đặt ra để bắt. Hai ô «63 hex» và «có dấu» lấy từ `bam("3")` còn chữ hoa thì đổi sang ký tự khác (chữ số không có dạng hoa), nên mất liên hệ với dòng có thật. Cần chèn một token có băm chứa chữ cái thường, assert băm thường ra 1 dòng, rồi mới assert bản viết hoa của chính băm đó ra 0 dòng.
+
+- **Hình 4, đối chứng dương không đại diện: máy quét console ép đối số bằng String nên không thấy token nằm trong object**
+  file: `packages/api/test-db/token-may/nhat-ky.test.ts:107`
+  severity: medium
+  AC: AC-8
+  source: measurement
+  detail: Bộ bắt console ghi `a.map(String).join(" ")`. Với `console.error("lỗi", { authorization: token })`, chuỗi ghi lại là `lỗi [object Object]`; với đối tượng Error, String chỉ giữ tên và message, bỏ stack, cause và các trường riêng. Console thật in những phần này qua util.inspect, nên `assert.deepEqual(quet([token, bam]), [])` ở dòng 126 xanh dù token đã bị log trong object. Đối chứng dương ở dòng 128-129 chỉ log token dưới dạng chuỗi trần (`console.error("bản thử", token)`), đúng dạng duy nhất máy quét thấy, nên không lộ điểm mù này. Lời hứa E9 là «không chuỗi ghi lại nào chứa token rõ hay băm». Cần dùng `util.format(...a)` hoặc `util.inspect`, và thêm đối chứng log token trong object.
+
+- **Hình 4, assertion một mình không có đối chứng: ca «ghi nhật ký từ chối lỗi» không chứng minh lỗi tiêm đã xảy ra**
+  file: `packages/api/test-db/token-may/nhat-ky.test.ts:94`
+  severity: low
+  AC: AC-7
+  source: measurement
+  detail: Ca ở dòng 94-101 gắn `truocGhiNhatKy: loiThu` rồi chỉ assert 403 và thân `agreement-inactive`. Đường từ chối cho ra đúng hai giá trị này dù móc có chạy hay không, nên nếu lời gọi móc hoặc cả bước ghi nhật ký từ chối bị gỡ khỏi `ghiRieng` thì ca vẫn xanh. Ca không có cờ đã chạy kiểu `daChay` như ca «tắt giữa lúc kiểm và ghi» (cua-nhan.test.ts:155), cũng không assert `dongNhatKy(s.tokenId)` rỗng. Thêm assert số dòng nhật ký bằng 0 sẽ chứng minh nhánh ghi lỗi thật sự được đi qua.
+
+- **Hình 5, số đếm của phép quét lớp là hằng đúng: soCot lấy từ danh sách chứ không đếm cột đã quét**
+  file: `packages/api/test-db/token-may/quan-ly.test.ts:62`
+  severity: low
+  AC: AC-1
+  source: measurement
+  detail: `quetCot` trả `soCot: cot.length` (dòng 29), tức độ dài của `danhSachCot()`, không phải bộ đếm tăng trong vòng lặp. Dòng 62 `assert.equal(quet.soCot, (await danhSachCot()).length)` vì thế so cùng một truy vấn với chính nó và không thể đỏ. Nếu vòng quét bị đổi sang bỏ qua một số cột (ví dụ chỉ quét cột text) hoặc thoát sớm, assert vẫn xanh. E1 ghi rõ «đếm số cột quét bằng số cột information_schema báo», và mẫu số assert bằng số phần tử đòi bộ đếm phải tăng theo từng lần quét thật. Các ma trận khác trong bộ này đều dùng `soLan += 1` trong vòng lặp; riêng phép quét cột thì không.
 
 ## Ngoài hợp đồng — người quyết ở Gate 2
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Thoả thuận sang ended ngay sau bước tra token thì máy nhận 401 token_revoked thay vì 403 agreement-inactive**
-  Người dùng thấy gì: Hiếm khi, nếu thoả thuận vừa tắt đúng lúc một lời gọi đang chạy, bên kia nhận báo token bị thu hồi thay vì báo thoả thuận đã tắt. Lời gọi kế tiếp sẽ nhận đúng báo thoả thuận đã tắt.
-  Căn cứ: Chỉ sai lời báo trong một lời gọi duy nhất ở khoảng thời gian rất hẹp, không lộ hay mất dữ liệu, và lời gọi sau tự đúng.
+- **Lỗi 500 ở đường token bị bỏ mất nội dung, nhật ký máy chủ chỉ còn mã lỗi hoặc «khong-ma»**
+  Người dùng thấy gì: Khi máy bên kia nhận lỗi 500 hàng loạt, người vận hành chỉ thấy mã lỗi chung chung nên khó truy ra nguyên nhân. Khách và dữ liệu không bị ảnh hưởng.
+  Căn cứ: Chỉ làm chậm việc tìm nguyên nhân khi sự cố, không mất hay lộ dữ liệu, và sửa sau vẫn rẻ nên ghi vào hạn chế đã biết.
   file: `packages/api/src/catalog/feeds-token.ts`
-  severity: low
-  Đề xuất: known-limits
-
-- **Ô «đã thu hồi» của bài Bearer hỏng kèm cookie thiếu đối chứng dương mà E6 đòi**
-  Người dùng thấy gì: Bài kiểm token đã thu hồi chưa chứng minh token đó từng dùng được trước khi bị thu hồi. Hành vi thực tế vẫn đúng và được bài khác kiểm.
-  Căn cứ: Chỉ làm bài kiểm kém chặt, người dùng không bị ảnh hưởng và có thể bổ sung sau với chi phí thấp.
-  file: `packages/api/test-db/token-may/cua-nhan.test.ts`
-  severity: low
-  Đề xuất: known-limits
-
-- **Hình 4 (âm tính một mình): ô «chữ hoa» của tra theo băm không có dòng nào để khớp nhầm**
-  Người dùng thấy gì: Một ô kiểm tra về chữ hoa chữ thường của mã băm token luôn xanh vì không có dữ liệu để khớp nhầm. Chưa có lỗi thật nào được thấy.
-  Căn cứ: Không ảnh hưởng người dùng; nguy cơ chỉ là bỏ sót một lỗi hồi quy hiếm và sửa bài kiểm rẻ.
-  file: `packages/db/tests/token-may.test.mjs`
-  severity: low
-  Đề xuất: known-limits
-
-- **Hình 4 (thiếu đối chứng dương): ô «đã thu hồi» của Bearer hỏng kèm cookie chưa từng được chứng minh là gọi được**
-  Người dùng thấy gì: Bài kiểm token đã thu hồi kèm cookie chưa cho thấy token từng hợp lệ trước đó, nên khó phân biệt với token chưa bao giờ hợp lệ. Hành vi thật không sai.
-  Căn cứ: Chỉ là độ chặt của bài kiểm, không có hậu quả với người dùng và bổ sung sau rất rẻ.
-  file: `packages/api/test-db/token-may/cua-nhan.test.ts`
-  severity: low
-  Đề xuất: known-limits
-
-- **Hình 5 (số đếm = số phần tử): soCot lấy từ độ dài danh sách, không đếm số cột đã quét**
-  Người dùng thấy gì: Phép kiểm token không bị lưu ở dạng rõ có một phép so đếm tự khớp, nên nếu vòng quét bỏ sót cột thì bài vẫn xanh. Chưa có dấu hiệu token bị lưu rõ.
-  Căn cứ: Rủi ro chỉ là bỏ sót trong tương lai khi thêm cột, không có rò rỉ hiện tại, và sửa bài kiểm rẻ.
-  file: `packages/api/test-db/token-may/quan-ly.test.ts`
-  severity: low
-  Đề xuất: known-limits
-
-- **Hình 5 (tuyên quét lớp, chỉ có điểm-case): quét console chỉ thấy đối số dạng chuỗi**
-  Người dùng thấy gì: Bài kiểm xem token có lọt vào nhật ký máy chủ chưa phát hiện được trường hợp token nằm trong đối tượng hay lỗi. Hiện không có chỗ nào ghi như vậy.
-  Căn cứ: Hiện không có rò rỉ nào; chỉ là lưới an toàn cho thay đổi sau này, sửa rẻ khi cần.
-  file: `packages/api/test-db/token-may/nhat-ky.test.ts`
   severity: low
   Đề xuất: known-limits
 
