@@ -7,7 +7,8 @@ import { dungTin, type CanTrongBo, type TinDauKhach, type VaoDungTin } from "@qu
 import type { DongLeadTruongNhom } from "../nguon";
 import { NHAN_VIEC, nutCuaViec, type ViecDong } from "../viec-dong";
 import { chuDong } from "./chu-dong";
-import { gopViec, tinConViec, type DongVai, type Nguon, type RaGop, type VaoGop } from "./gop-viec";
+import { nguonCanDocLai } from "./doc-nguon";
+import { canBaoChuaDoc, gopViec, nguonBoNhom, tinConViec, trangNguonCanDoc, trangNutGiao, type DongVai, type MaNguon, type Nguon, type RaGop, type TrangNguon, type VaoGop } from "./gop-viec";
 
 const BAY_GIO = "2026-11-09T10:00:00.000Z";
 const gioTruoc = (phut: number) => new Date(Date.parse(BAY_GIO) - phut * 60_000).toISOString();
@@ -37,6 +38,7 @@ const VAO = (b: Partial<VaoGop<string>>): VaoGop<string> => ({
   dauChu: [],
   leadGiao: { trang: "ok" },
   hangDoi: ok(),
+  dauChuSan: { trang: "ok" },
   leadCuaToi: ok(),
   tin: ok(),
   ...b,
@@ -120,6 +122,7 @@ describe("gopViec", () => {
       bayGio: BAY_GIO,
       tv: null,
       leadGiao: { trang: "ok" },
+      dauChuSan: { trang: "ok" },
       dauChu:
         loai === "new_lead"
           ? [{ code: loai, label: "Lead mới", viec: [{ kind: "lead", nhom: NHOM_LEAD as never, stage: "sent" }], soQua: 0 }]
@@ -221,5 +224,68 @@ describe("gopViec", () => {
   it("đang tải khi nguồn của vai chưa về", () => {
     assert.equal(gopViec(VAO({ vai: ["buyer_agent"], tin: { trang: "dang", ds: [] } })).dangTai, true);
     assert.equal(gopViec(VAO({ vai: ["team_lead"], tin: { trang: "dang", ds: [] } })).dangTai, false);
+  });
+});
+
+describe("chịu lỗi từng phần (hom-nay-chiu-loi-tung-phan)", () => {
+  it("nguồn bộ nhóm theo vai", () => {
+    const BANG: [string[], TrangNguon, boolean, ReturnType<typeof nguonBoNhom>][] = [
+      [["team_lead"], "dang", false, "khong-ap"],
+      [["telesales"], "loi", true, "khong-ap"],
+      [["listing_agent"], "ok", false, "moi"],
+      [["listing_agent"], "loi", true, "luu"],
+      [["listing_agent"], "loi", false, "mac-dinh"],
+    ];
+    let dem = 0;
+    for (const [vai, trang, daLuu, mong] of BANG) {
+      assert.equal(nguonBoNhom(vai, trang, daLuu), mong, `${vai} · ${trang} · ${daLuu}`);
+      dem++;
+    }
+    assert.equal(dem, 5);
+  });
+
+  it("danh sách đầu chủ lỗi", () => {
+    const co = gopViec(VAO({ vai: ["team_lead"], hangDoi: ok([doi("a", "accept_overdue")]), dauChuSan: { trang: "loi" } }));
+    assert.deepEqual(co.loi, [{ nguon: "dau-chu-san", chu: "Chưa tải được danh sách đầu chủ" }]);
+    const haiLoi = gopViec(VAO({ vai: ["team_lead"], hangDoi: loi(), dauChuSan: { trang: "loi" } }));
+    assert.deepEqual(haiLoi.loi.map((l) => l.nguon), ["hang-doi"]);
+    const rong = gopViec(VAO({ vai: ["team_lead"], hangDoi: ok(), dauChuSan: { trang: "loi" } }));
+    assert.deepEqual(rong.loi, []);
+    const dang = gopViec(VAO({ vai: ["team_lead"], hangDoi: ok([doi("a", "accept_overdue")]), dauChuSan: { trang: "dang" } }));
+    assert.equal(dang.dangTai, false, "danh sách đang đọc không giữ khung chờ của màn");
+  });
+
+  it("nút giao", () => {
+    assert.deepEqual(trangNutGiao("dang", 0), { tat: true });
+    assert.deepEqual(trangNutGiao("loi", 0), { tat: true });
+    assert.deepEqual(trangNutGiao("ok", 0), { tat: true, cau: "Sàn chưa có đầu chủ nào" });
+    assert.deepEqual(trangNutGiao("ok", 2), { tat: false });
+  });
+
+  it("nguồn cần đọc lại", () => {
+    const LANH = { boNhom: "ok", leadGiao: "ok", hangDoi: "ok", dauChuSan: "ok", leadCuaToi: "ok", tin: "ok" } as const;
+    const DU_VAI = ["listing_agent", "team_lead", "telesales", "buyer_agent"];
+    const BANG: [keyof typeof LANH, MaNguon, string][] = [
+      ["boNhom", "lead-giao", "listing_agent"],
+      ["leadGiao", "lead-giao", "listing_agent"],
+      ["hangDoi", "hang-doi", "team_lead"],
+      ["dauChuSan", "dau-chu-san", "team_lead"],
+      ["leadCuaToi", "lead-cua-toi", "telesales"],
+      ["tin", "tin", "buyer_agent"],
+    ];
+    let dem = 0;
+    for (const [nguon, ma, vai] of BANG) {
+      assert.deepEqual(nguonCanDocLai(trangNguonCanDoc({ vai: DU_VAI, ...LANH, [nguon]: "loi" })), [ma], nguon);
+      assert.deepEqual(nguonCanDocLai(trangNguonCanDoc({ vai: DU_VAI.filter((r) => r !== vai), ...LANH, [nguon]: "loi" })), [], `không vai ${vai}`);
+      dem++;
+    }
+    assert.equal(dem, 6);
+  });
+
+  it("báo chưa đọc", () => {
+    assert.equal(canBaoChuaDoc({ ngoaiTuyen: true, tong: 0, coLoi: true }), true);
+    assert.equal(canBaoChuaDoc({ ngoaiTuyen: false, tong: 0, coLoi: true }), false);
+    assert.equal(canBaoChuaDoc({ ngoaiTuyen: true, tong: 3, coLoi: true }), false);
+    assert.equal(canBaoChuaDoc({ ngoaiTuyen: true, tong: 0, coLoi: false }), false);
   });
 });

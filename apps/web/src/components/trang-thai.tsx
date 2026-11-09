@@ -1,7 +1,8 @@
-import { type LucideIcon, SearchXIcon } from "lucide-react";
+import { type LucideIcon, RotateCwIcon, SearchXIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/reui/alert";
+import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -22,6 +23,24 @@ type Props = {
   timKhongRa?: boolean;
   className?: string;
 };
+
+/** Lần đọc của một vùng thất bại (mẫu «Lỗi», ADR-0024): một câu, đúng một «Thử lại» cạnh câu. Vùng nào cũng báo bằng khối này, không tự ghép nút. */
+export function BaoLoiVung({ title, description, onThuLai, className }: { title: ReactNode; description?: ReactNode; onThuLai: () => void; className?: string }) {
+  return (
+    <TrangThai
+      kind="error"
+      title={title}
+      description={description}
+      className={className}
+      hanhDong={
+        <Button size="sm" variant="outline" onClick={onThuLai}>
+          <RotateCwIcon data-icon="inline-start" />
+          Thử lại
+        </Button>
+      }
+    />
+  );
+}
 
 export function TrangThai({ kind, title, description, icon, hanhDong, timKhongRa = false, className }: Props) {
   const Icon = icon ?? (timKhongRa ? SearchXIcon : undefined);

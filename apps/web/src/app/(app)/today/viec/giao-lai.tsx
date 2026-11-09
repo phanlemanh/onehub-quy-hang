@@ -13,8 +13,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 import { useDienThoai } from "../mobile/kho";
 import type { DauChuCuaSan, DongLeadTruongNhom } from "../nguon";
+import { trangNutGiao, type TrangNguon } from "./gop-viec";
 
-type Props = { nhan: string; className?: string; dong: DongLeadTruongNhom; dauChu: readonly DauChuCuaSan[]; tat: boolean; onGiao: (nguoi: string) => void };
+type Props = { nhan: string; className?: string; dong: DongLeadTruongNhom; dauChu: readonly DauChuCuaSan[]; trangDauChu: TrangNguon; tat: boolean; onGiao: (nguoi: string) => void };
 
 function DanhSach({ dong, dauChu, chon }: Pick<Props, "dong" | "dauChu"> & { chon: (nguoi: string) => void }) {
   return (
@@ -37,12 +38,12 @@ function DanhSach({ dong, dauChu, chon }: Pick<Props, "dong" | "dauChu"> & { cho
   );
 }
 
-export function GiaoLai({ nhan, className, dong, dauChu, tat, onGiao }: Props) {
+export function GiaoLai({ nhan, className, dong, dauChu, trangDauChu, tat, onGiao }: Props) {
   const [mo, setMo] = useState(false);
   const dienThoai = useDienThoai();
-  const coNguoi = dauChu.length > 0;
+  const trang = trangNutGiao(trangDauChu, dauChu.length);
   const nut = (
-    <Button type="button" variant="outline" size="sm" className={className} disabled={tat || !coNguoi} title={coNguoi ? undefined : "Sàn chưa có đầu chủ nào"} onClick={dienThoai ? () => setMo(true) : undefined}>
+    <Button type="button" variant="outline" size="sm" className={className} disabled={tat || trang.tat} title={trang.cau} onClick={dienThoai ? () => setMo(true) : undefined}>
       {nhan}
     </Button>
   );
