@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "den": "5f4b3494103cfdad3df55f3695f22f4e3944d21c",
+  "base": "4acd1c075742bda507087704ac25b9758fb41d47",
+  "ghim": null,
+  "theo_khuon": [],
+  "lech_moi": [],
+  "no_cu": [],
+  "khong_do": [],
+  "ngoai_ban_do": 0,
+  "nhom": [
+    "bang-hang",
+    "cai-dat-san",
+    "cuoc-goi",
+    "da-gui",
+    "gui",
+    "ho-so-can",
+    "hom-nay-dau-chu",
+    "hom-nay-dau-khach",
+    "hom-nay-truong-nhom",
+    "lead-cua-toi",
+    "lien-he",
+    "nhap-excel",
+    "o-nhan-lead",
+    "toi",
+    "trang-khach",
+    "trang-mau",
+    "trang-tam",
+    "trang-thai",
+    "xac-thuc"
+  ]
+}

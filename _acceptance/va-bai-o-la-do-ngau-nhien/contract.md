@@ -1,0 +1,93 @@
+---
+schema_version: 1
+feature: "Bài kiểm sổ chi phí AI của ô lạ không còn đỏ ngẫu nhiên vì mã máy và giờ ghi, mà vẫn đỏ khi số điện thoại lọt vào sổ dưới bất kỳ dạng nào."
+slug: va-bai-o-la-do-ngau-nhien
+owner: phanlemanh@gmail.com
+risk_tier: T2
+surfaces: [test]
+status: signed-off
+design_doc: docs/superpowers/specs/2026-11-09-va-bai-o-la-do-ngau-nhien-design.md
+approved_by:
+approved_at:
+veto_state: mo
+veto_opened_at: 2026-11-09T03:22:46Z
+---
+
+# Acceptance Contract: va-bai-o-la-do-ngau-nhien
+
+## Context
+
+Phép kiểm ở `packages/api/test-db/imports/o-la.test.ts` tìm `0900` và `011` trên toàn văn dòng sổ `ai_usage`, gồm cả mã
+sàn, mã dòng, mã người và giờ ghi. Đo trước khi sửa: 2 lần đỏ trong 200 lần chạy liên tiếp. Ngày 08–09/11 bài này đỏ hai
+lần không liên quan tới thay đổi nào, một lần làm bước triển khai trên main bị bỏ qua.
+
+Source input: hàng `va-bai-o-la-do-ngau-nhien` (`docs/plan/lo-trinh.json`) · giao từ giám sát đợt dau-khach-nhap. Bất biến
+2 của `AGENTS.md` không được yếu đi.
+
+## Criteria
+
+- **AC-1** — Given một dòng sổ có `011` ở mã dòng, giờ ghi, tiền, thời lượng và số token, còn mã người đúng bằng người đang
+  đăng nhập, When phép kiểm đọc dòng đó, Then không báo gì; và chính dòng ấy khiến phép kiểm cũ báo đỏ.
+- **AC-2** — Given số mẫu lọt vào trường chữ của sổ ở từng dạng — có khoảng trắng, liền, dấu chấm, gạch nối, đầu `+84`, đầu
+  `84` — When phép kiểm đọc dòng đó, Then báo đỏ, gọi đúng tên trường, xếp là số đầy đủ.
+- **AC-3** — Given chỉ phần đầu `0900` hoặc phần đuôi `011` lọt vào trường chữ, kể cả đuôi viết rời, When phép kiểm đọc dòng
+  đó, Then báo đỏ, gọi đúng tên trường, xếp là một phần số.
+- **AC-4** — Given mã người của dòng không phải người đang đăng nhập mà mang số mẫu hay phần đuôi, hoặc trường số mang đủ số
+  mẫu, When phép kiểm đọc dòng đó, Then báo đỏ gọi đúng tên trường: trường được bỏ qua không thành lỗ hổng.
+- **AC-5** — Given hai vạn dòng do Postgres sinh qua mặc định của bảng và đọc bằng đúng biểu thức của bài kiểm, giờ ghi có đủ
+  biến thể (đủ sáu chữ số lẻ, ít hơn sáu, không có phần lẻ), When chạy cả hai phép kiểm, Then phép kiểm mới không đỏ dòng nào,
+  phép kiểm cũ đỏ ít nhất một dòng.
+- **AC-6** — Given đường ghi sổ thật qua API với gói có số điện thoại, When đường ghi bị sửa trong bản sao cho lọt số vào
+  sổ, Then ca kiểm của đường ấy đỏ với thông báo «sổ chứa chuỗi số»; khi đường ghi nguyên vẹn thì xanh.
+- **AC-7** — Given bản sao cây, When hàm kiểm bị sửa thành luôn báo sạch, hoặc bị bỏ phần loại trường máy, Then ca đối chứng
+  đỏ với đúng thông điệp đã ghim cho mỗi kiểu phá.
+- **AC-8** — Given bài kiểm đã sửa, When chạy ca của đường ghi sổ 300 lần trên Postgres thử, Then cả 300 lần xanh. Với tỉ lệ
+  đỏ đo trước khi sửa là 1%, xác suất bài chưa sửa xanh cả 300 lần là khoảng 5%.
+- **AC-9** — Given nhánh này, When so với nhánh chính, Then mọi tệp đổi nằm trong danh sách viết trước: hai tệp bài kiểm, thư
+  mục hồ sơ, `_acceptance/config.yaml` (thêm lệnh đo), tài liệu thiết kế và kế hoạch của hàng, lộ trình, hai tệp sinh; không
+  tệp mã sản phẩm, job CI, script gốc hay rào nào đổi.
+- **AC-10** — Given từng cột của một dòng sổ thật đọc từ Postgres, cộng một cột giả chưa có trong sổ, When cột đó mang số mẫu
+  hay phần đuôi ở dạng chuỗi, hay mang số mẫu trong mảng, hay (với cột số) mang số mẫu ở dạng số, Then phép kiểm báo đỏ gọi
+  đúng tên cột, kể cả `id`, `company_id`, `created_at` khi sai dạng và `user_id` khi không phải người đang đăng nhập. Số
+  phần tử ma trận bằng số assert.
+- **AC-11** — Given số mẫu hay phần số nằm trong dữ liệu lồng của một cột (đối tượng, đối tượng trong đối tượng, mảng chứa
+  đối tượng, đối tượng chứa mảng, khoá của đối tượng, số tách ở hai giá trị), When phép kiểm đọc dòng đó, Then báo đỏ gọi đúng
+  tên cột và đúng loại số đầy đủ hay một phần; còn mã máy, giờ ghi đúng dạng và số đo ngắn trong dữ liệu lồng thì không báo,
+  kể cả với hai vạn dòng mã và giờ do Postgres sinh đặt vào dữ liệu lồng.
+
+## Coverage
+
+Trục: dạng số (đầy đủ có dấu phân cách · liền · đầu quốc gia · đầu số · đuôi · đuôi viết rời) × loại trường (trường chữ tự
+do · trường máy đúng dạng · trường máy sai dạng · mã người sai chủ · trường số · mảng · dữ liệu lồng · cột chưa có) × chiều
+(đỏ · xanh). AC-2 và AC-3 phủ dạng số trên trường chữ, AC-4 phủ mã người sai chủ và trường số, AC-10 phủ mọi cột thật, trường
+máy sai dạng, mảng và cột chưa có, AC-11 phủ dữ liệu lồng cả hai chiều, AC-1 phủ trường máy đúng dạng ở chiều xanh, AC-5 phủ giá trị ngẫu nhiên do Postgres sinh. Không gian nhỏ và
+đóng nên không chạy quét hình thái — xem dòng sổ «bỏ coverage-scan».
+
+## Out of scope
+
+- Không sửa mã sản phẩm, migration hay cột của sổ `ai_usage`.
+- Không rà các bài kiểm khác có cùng kiểu tìm chuỗi trên toàn văn dòng.
+- Không đổi job CI, không đổi cách bước triển khai xử lý một lần đỏ.
+
+## Notes
+
+Mã dòng, mã sàn và giờ ghi do cơ sở dữ liệu sinh, câu ghi sổ không truyền ba cột này, nên phép kiểm không dò số bên trong
+chúng khi chúng đúng dạng (tài liệu thiết kế, mục «Giới hạn có chủ ý»).
+
+Phép kiểm ghép chữ số của một trường trước khi so, nên một tên mô hình mang ngày có thể trùng đầu số hay đuôi. Lỗi đó đỏ
+tất định ngay khi đổi mô hình, không phải đỏ ngẫu nhiên.
+
+Lệnh đo dùng Postgres thử riêng ở cổng 5588, cổng ghim trong `_acceptance/config.yaml` theo nếp các hồ sơ khác.
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nhánh chưa cập nhật hai tệp bản đồ sản phẩm và lộ trình, nên bước kiểm cuối của kho sẽ báo đỏ và chưa gộp được cho tới khi vẽ lại. — `docs/plan/lo-trinh.json`
+- Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Hai tệp bản đồ sản phẩm và lộ trình đang lệch với hồ sơ mới, nên kiểm tra cuối của kho sẽ đỏ và chưa gộp được. — `docs/plan/lo-trinh.json`
+- Ngoài-7 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Phép đếm kiểm tra bộ ca đủ số lượng tự khớp với chính nó, nên nếu bộ ca bị hụt một cột thì phép đếm không báo. — `packages/api/test-db/imports/o-la.test.ts`
+- Ngoài-8 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm không tự xác nhận có dòng giờ ghi đủ sáu chữ số lẻ, nên nếu bộ sinh đổi và mất dạng này thì bài vẫn xanh. — `packages/api/test-db/imports/o-la.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu tên ca kiểm bị đổi, bộ đo 300 lần có thể chạy rỗng mà vẫn báo đạt, làm kết quả đo kém tin cậy. — `_acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs`
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Sổ quyết định của hồ sơ còn ghi hai giới hạn đã hết đúng, nên người đọc hồ sơ có thể hiểu nhầm.
+  - Ngoài-2: Hợp đồng còn nêu một hạn chế đã được khắc phục, nên người ký có thể đọc nhầm rằng nhánh chưa gộp được.
+  - Ngoài-3: Nếu ai đó đổi tên ca kiểm, phép đo 300 lần vẫn báo đạt dù không chạy gì.
+  - Ngoài-4: Nếu ai đó vô tình bỏ chỗ miễn trừ cho mã sàn hoặc mã người, bài kiểm vẫn xanh phần lớn các lần chạy, và lỗi đỏ ngẫu nhiên có thể quay lại.
+  - Ngoài-5: Nếu bộ ca kiểm bị hụt một cột thì phép đếm vẫn không báo.
+  - Ngoài-6: Nếu bộ sinh dữ liệu mất dạng giờ ghi đủ sáu chữ số lẻ thì bài kiểm vẫn xanh mà không báo.
+  - Ngoài-7: Phép đo 300 lần có thể báo đạt dù không chạy ca nào nếu tên ca bị đổi.
