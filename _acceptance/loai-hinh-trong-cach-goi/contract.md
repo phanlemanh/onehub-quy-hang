@@ -5,8 +5,10 @@ slug: loai-hinh-trong-cach-goi
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui, api, config]
-status: draft
+status: approved
 design_doc: docs/superpowers/specs/2026-11-09-loai-hinh-trong-cach-goi-design.md
+approved_by: Manh Phan
+approved_at: 2026-11-09
 ---
 
 # Acceptance Contract: loai-hinh-trong-cach-goi
