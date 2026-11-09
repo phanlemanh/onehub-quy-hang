@@ -1,5 +1,46 @@
-E10d network (Playwright, loi gia lap bang page.route, app-origin http://localhost:3462)
-step2 du-vai /today: 500 GET /api/v1/leads/assigned (x4), 500 GET /api/v1/team/lead-queue (x4); 200 cac API con lai (leads, today/buyer, listings, catalog, settings/queue, listing-agents, push/public-key)
-step3/5 dau-chu /today?nhom=new_lead: 500 GET /api/v1/leads/assigned (chan gia lap)
-step4 telesales /leads/mine: 500 GET /api/v1/leads (chan gia lap); sau bo chan + online: danh sach hien
-Console: loi 500 cua cac lan goi bi chan (ghi tai .playwright-mcp/console-2026-11-09T07-53-19-078Z.log)
+E10d network (Playwright, loi 500 gia lap bang page.route, app-origin http://localhost:3462)
+s3 500 GET /api/v1/leads/assigned
+s3 500 GET /api/v1/team/lead-queue
+s3 500 GET /api/v1/leads/assigned
+s3 500 GET /api/v1/team/lead-queue
+s3 500 GET /api/v1/leads/assigned
+s3 500 GET /api/v1/team/lead-queue
+s3 500 GET /api/v1/leads/assigned
+s3 500 GET /api/v1/team/lead-queue
+s4 500 GET /api/v1/leads/assigned
+s4 500 GET /api/v1/leads/assigned
+s4 500 GET /api/v1/leads/assigned
+s4 500 GET /api/v1/leads/assigned
+s5 500 GET /api/v1/leads
+s5 500 GET /api/v1/leads
+s6 500 GET /api/v1/leads/assigned
+s6 500 GET /api/v1/team/lead-queue
+s6 500 GET /api/v1/leads/assigned
+s6 500 GET /api/v1/team/lead-queue
+s6 500 GET /api/v1/leads/assigned
+s6 500 GET /api/v1/team/lead-queue
+s6 500 GET /api/v1/leads/assigned
+s6 500 GET /api/v1/team/lead-queue
+Console errors:
+s3 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s3 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s3 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s3 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s3 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s3 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s3 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s3 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s4 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s4 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s4 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s4 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s5 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s5 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s6 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s6 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s6 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s6 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s6 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s6 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s6 Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+s6 Failed to load resource: the server responded with a status of 500 (Internal Server Error)

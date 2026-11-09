@@ -5,7 +5,7 @@ slug: hom-nay-chiu-loi-tung-phan
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: verified
 design_doc: _acceptance/hom-nay-chiu-loi-tung-phan/design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -69,3 +69,7 @@ Quét độ phủ làm ngay trong hợp đồng, ba trục:
 
 - Bất biến chạm: không lối đọc mới, không chạm trang khách, chủ nhà không liên quan.
 - AC-1 và AC-8 ngoài chín vấn đề của audit: chủ kho quyết ở Cổng Phạm vi có gộp vào hàng này không (sổ quyết định, câu chỉ người có). Bản nháp theo khuyến nghị gộp; tách thì gỡ hai tiêu chí, ca 1 và ca 7 của ngưỡng, phần còn lại không phụ thuộc chúng.
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Khối báo lỗi của Lead đã nhập chưa được đo trên màn điện thoại hẹp, nên nếu nó bị tràn ngang thì lượt chấm có thể không phát hiện ra. Người dùng điện thoại có thể thấy khối lỗi bị lệch hay cắt chữ ở danh sách Lead đã nhập. — `_acceptance/hom-nay-chiu-loi-tung-phan/evals.yaml`
+- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Người dùng không bao giờ thấy khối lỗi này trên điện thoại, vì lỗi thật đã đi qua khối báo lỗi chung. Chỉ còn một đoạn thừa trong mã có thể bị chép lại về sau. — `apps/web/src/app/(app)/today/mobile/danh-sach.tsx`
+- Ngoài-4 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Chưa có bài kiểm giữ cho mọi nhóm việc lỗi đều không hiện số. Nếu sau này ai đó làm sót một nhóm, cột có thể hiện số 0 sai mà không bị bắt. — `apps/web/src/app/(app)/today/viec/kho-so.test.ts`
+- Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm tự động có thể không bắt được trường hợp câu báo bộ nhóm nháy lên vài giây trong lúc máy đang thử lại. Nếu lỗi này xảy ra, người dùng sẽ thấy câu lỗi thoáng qua dù sau đó tự hết. — `_acceptance/hom-nay-chiu-loi-tung-phan/evals.yaml`

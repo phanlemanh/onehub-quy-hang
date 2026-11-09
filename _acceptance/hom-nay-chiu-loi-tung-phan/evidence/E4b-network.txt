@@ -1,3 +1,53 @@
-E4b network (playwright page.on response, /team, vai truong-nhom). 500 tren /api/v1/team/listing-agents va /team/lead-queue la LOI GIA LAP do page.route.fulfill (dieu kien thu), khong phai loi cua app.
-Cac loi goi khong bi chan: /api/v1/listings 200, /api/v1/team/* khi bo chan 200, /api/v1/catalog 200, /api/v1/push/public-key 200.
-Console error: chi "Failed to load resource ... 500" tuong ung loi gia lap.
+E4b network (playwright page.on response/console, /team, vai truong-nhom). 500 tren listing-agents / lead-queue la LOI GIA LAP do page.route.fulfill.
+[ca1] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca1] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca1] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca1] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca1] 200 GET http://localhost:3462/api/v1/team/lead-queue
+[ca1] 200 GET http://localhost:3462/api/v1/team/lead-queue
+[ca1] 200 GET http://localhost:3462/api/v1/listings
+[ca1] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca1] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca1] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca1] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca2] 500 GET http://localhost:3462/api/v1/team/lead-queue
+[ca2] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca2] 500 GET http://localhost:3462/api/v1/team/lead-queue
+[ca2] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca2] 200 GET http://localhost:3462/api/v1/team/listing-agents
+[ca2] 200 GET http://localhost:3462/api/v1/team/listing-agents
+[ca2] 200 GET http://localhost:3462/api/v1/listings
+[ca2] 500 GET http://localhost:3462/api/v1/team/lead-queue
+[ca2] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca2] 500 GET http://localhost:3462/api/v1/team/lead-queue
+[ca2] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 500 GET http://localhost:3462/api/v1/team/lead-queue
+[ca3] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca3] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 500 GET http://localhost:3462/api/v1/team/lead-queue
+[ca3] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca3] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 200 GET http://localhost:3462/api/v1/listings
+[ca3] 500 GET http://localhost:3462/api/v1/team/lead-queue
+[ca3] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca3] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 500 GET http://localhost:3462/api/v1/team/lead-queue
+[ca3] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca3] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca3] 200 GET http://localhost:3462/api/v1/team/listing-agents
+[ca3] 200 GET http://localhost:3462/api/v1/team/lead-queue
+[ca6-375] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca6-375] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca6-375] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca6-375] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca6-375] 200 GET http://localhost:3462/api/v1/team/lead-queue
+[ca6-375] 200 GET http://localhost:3462/api/v1/team/lead-queue
+[ca6-375] 200 GET http://localhost:3462/api/v1/listings
+[ca6-375] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca6-375] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+[ca6-375] 500 GET http://localhost:3462/api/v1/team/listing-agents
+[ca6-375] console.error: Failed to load resource: the server responded with a status of 500 (Internal Server Error)
