@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 96a9df414fcba9dc8d79643fe2688ca12b0b4a4a
+verified_commit: 24740007875c1700157217e3edbdd4826092d6bd
 human_signoff:
 ---
 
@@ -181,3 +181,7 @@ none — every multi-run eval is uniform
 
 Round 1: lịch sử vòng đầu nằm ở run-log và báo cáo vòng trước; baseline cuối đo ở vòng này.
 Round 2: cả chín eval (E1, E1b, E2, E2b, E3b, E4, E4b, E5, E6) và bảy lệnh suite đều đạt trên commit 96a9df41; verdict PASS.
+
+### Re-pin lần 1 — 2026-11-09, do gộp main có #242
+run_id: repin-20261109T151110Z-36578
+sha: 24740007875c1700157217e3edbdd4826092d6bd · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · ngoài làn máy: E1b, E2b, E3b, E4b · AC không có chốt máy: AC-3 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
