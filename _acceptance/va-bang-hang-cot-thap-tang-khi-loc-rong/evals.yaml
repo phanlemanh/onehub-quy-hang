@@ -1,0 +1,72 @@
+schema_version: 1
+feature_slug: va-bang-hang-cot-thap-tang-khi-loc-rong
+# Lệnh máy: executors.test.web, executors.script.typecheck, executors.design.*. ui-check trên chỗ thử dãy X: thu/dung.mjs dựng trên
+# chỗ thử hàng 79 (Postgres 5576, máy dev 3496); Chrome không đầu.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; apps/web/src/app/(app)/inventory/cot-khi-loc-rong.test.ts ca «lọc rỗng ở cột thấp tầng: bộ cột còn nguyên» — dòng dựng qua ghepDanhMuc từ bộ mẫu hàng 73; bảng viết trước sáu ca, assert số ca chạy = 6: Đất lọc Loại hình × (lotSizeArea, frontageLength, accessRoadWidth); bảng trộn chưa lọc Loại hình × (lotSizeArea, storiesTotal); bảng trộn đã có ô Số tầng khớp rồi thêm ô Diện tích đất không khớp. Mỗi ca chạy qua hàm bước thật từng phím: locDong ra rỗng, bộ cột và tiêu đề vị trí bằng đúng bước liền trước; đối chứng dương: tính thẳng từ dòng rỗng thì cột đang lọc mất, assert ghim tên cột."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; cot-khi-loc-rong.test.ts ca «xoá ô lọc: hàng hiện lại» — cùng dữ liệu E1, bỏ giá trị ô lọc qua hàm bước: locDong ra đúng các id viết trước và bộ cột bằng bộ cột viết trước."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; cot-khi-loc-rong.test.ts ca «rỗng vì ô lọc cột chung» — Đất, ô lotSizeArea khớp, ô listPrice không khớp: toàn mảng cột và tiêu đề vị trí bằng mảng viết trước của đất; đối chứng dương trên cùng dữ liệu: tính thẳng từ dòng rỗng ra bộ cột căn hộ, lotSizeArea mất."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; cot-khi-loc-rong.test.ts ca «không đổi khi có dòng hay chỉ căn hộ» — bảng viết sẵn tên cột nguyên văn cho ba ca, assert số ca = 3: có dòng đất; có dòng trộn; sàn chỉ căn hộ lọc rỗng. Các ca cũ của loai-hinh.test.ts vẫn ok."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4b
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; cot-khi-loc-rong.test.ts ca «mở bảng đã rỗng, bật tắt cột lúc rỗng» — hàm bước với trước = null và số dòng 0: bộ cột theo các dòng chỉ lọc Loại hình = Đất (mảng viết trước), bỏ các ô lọc khác; bảng đang rỗng, tắt lotSizeArea thì mảng cột không còn nó, bật cột của loại hình đang hiện thì có, tiêu đề vị trí không đổi."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-5
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/thu/dung.mjs rồi node _acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/thu/chay-ui.mjs --ra _acceptance/va-bang-hang-cot-thap-tang-khi-loc-rong/evidence"
+      - "Đối chiếu dòng JSON ca1 (gõ ô Diện tích đất): truoc.cot chứa «Diện tích đất»; rong.soDong = 0, rong.cot bằng truoc.cot, rong.oLoc bằng chữ đã gõ, rong.focus đúng ô đang gõ, rong.baoRong có mặt và nằm trong khung nhìn; sau.soDong = truoc.soDong, sau.cot bằng truoc.cot. Ca2 (lọc Đất, ô Diện tích đất có giá trị khớp, gõ ô Giá không khớp): rong.soDong = 0, rong.cot bằng truoc.cot, ô Diện tích đất còn giá trị, focus ở ô Giá."
+    target: "http://localhost:3496/inventory"
+    expected: "Ảnh E5-rong.png, E5-sau.png, E5-cot-chung.png khớp từng ca; dòng JSON khớp."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E6
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.typecheck
+    paths: ["apps/web/src/**"]
+    expected: "exit 0; kiểm kiểu mọi gói xanh."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "apps/web/src/app/(app)/inventory/page.tsx", "apps/web/src/app/(app)/inventory/views/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E8
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
