@@ -6,7 +6,7 @@ import { getCookie } from "hono/cookie";
 import type { ApiDeps } from "../app";
 import { resolveCompany } from "../auth/company";
 import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
-import { SAMPLE_CATALOG } from "../catalog/sample";
+import { LOI_DOC_DANH_MUC, nguonCua, type NguonDanhMuc } from "../catalog/nguon";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 import { khoaSoChu } from "../owners/khoa";
@@ -64,7 +64,9 @@ class XemThu {
   constructor(readonly ketQua: BatchResult) {}
 }
 
-export function registerImportRoutes(api: OpenAPIHono, { appPool, auth, identityPool }: ApiDeps, catalog: CatalogData = SAMPLE_CATALOG) {
+export function registerImportRoutes(api: OpenAPIHono, deps: ApiDeps, danhMuc?: CatalogData | NguonDanhMuc) {
+  const { appPool, auth, identityPool } = deps;
+  const nguon = nguonCua(deps, danhMuc);
   const khoa = khoaSoChu();
 
   async function vao(c: Context): Promise<{ userId: string; companyId: string } | ApiErrorEntry> {
@@ -108,6 +110,10 @@ export function registerImportRoutes(api: OpenAPIHono, { appPool, auth, identity
       if ("code" in ctx) return c.json({ error: ctx.code }, ctx.status as 400) as never;
       const { importId } = c.req.valid("param");
       const body = c.req.valid("json");
+      // Đọc danh mục trước khi mở giao dịch: nguồn cũng cần một kết nối, không giữ hai kết nối cùng lúc.
+      const ban = await nguon.doc().catch(() => null);
+      if (!ban) return c.json({ error: LOI_DOC_DANH_MUC.code }, LOI_DOC_DANH_MUC.status) as never;
+      const catalog = ban.catalog;
       const kq = await withCompany(appPool, ctx, async (tx) => {
         const r = await writeBatch(tx, importId, body.rows, { khoa, catalog });
         if (isRefusal(r)) throw r;

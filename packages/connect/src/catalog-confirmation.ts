@@ -2,6 +2,8 @@ import {
   CATALOG_CONFIRMATION_SCHEMA_VERSION,
   DO_DAI_MA_CAN,
   HUONG_RESO,
+  MAU_DANG_SDT,
+  MAU_DOAN_SDT,
   MAU_MA_CAN,
   MAU_MA_TOA,
   MAU_MA_TRUC,
@@ -22,15 +24,19 @@ import { z } from "zod";
  */
 export { CATALOG_CONFIRMATION_SCHEMA_VERSION };
 
+/** Regex phủ định dựng từ chính hằng của lõi — khuôn và hàm dựng không thể lệch nhau. */
+const khongKhop = (m: RegExp) => new RegExp(`^(?!.*(?:${m.source}))`);
+
 const MaMo = z.string().regex(/^[A-Za-z0-9_-]{43}$/, "Mã mờ phải là 43 ký tự base64url.");
 const Ngay = z.string().regex(MAU_NGAY, "observedOn là ngày YYYY-MM-DD, không giờ.");
-const MaToa = z.string().regex(MAU_MA_TOA, "Khoá toà sai dạng.");
-const Upi = z.string().regex(MAU_UPI, "UPI phải có dạng urn:onehub:upi:…");
+const MaToa = z.string().regex(MAU_MA_TOA, "Khoá toà sai dạng.").regex(khongKhop(MAU_DOAN_SDT), "Khoá toà có đoạn dáng số điện thoại.");
+const Upi = z.string().regex(MAU_UPI, "UPI phải có dạng urn:onehub:upi:…").regex(khongKhop(MAU_DOAN_SDT), "UPI có đoạn dáng số điện thoại.");
 const MaCan = z
   .string()
   .max(DO_DAI_MA_CAN)
   .regex(MAU_MA_CAN, "Mã căn ngoài dạng đóng.")
-  .regex(/^(?!.*\d{8})/, "Mã căn không được là dãy số dài.");
+  .regex(/^(?!.*\d{8})/, "Mã căn không được là dãy số dài.")
+  .regex(khongKhop(MAU_DANG_SDT), "Mã căn không được có dáng số điện thoại.");
 const MaTruc = z.string().regex(MAU_MA_TRUC, "Mã trục ngoài dạng đóng.");
 const Huong = z.enum(HUONG_RESO);
 

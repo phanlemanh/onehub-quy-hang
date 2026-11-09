@@ -163,6 +163,14 @@ function danhDauChuaCo(nhan: string, dich: readonly Dich[]): boolean {
   return (nhan === NHAN_PHAN.legalStatus && dich.includes("legalStatus")) || (nhan === NHAN_PHAN.occupantType && dich.includes("occupantType"));
 }
 
+/** Địa chỉ hồ sơ theo hàng: đường đóng cột (giữ các tham số khác của màn) cộng `hang=`; vắng đường đóng thì địa chỉ tương đối. */
+export function duongTheoHang(dongHref: string | null, id: string): string {
+  const [goc = "", q = ""] = (dongHref ?? "").split("?");
+  const m = new URLSearchParams(q);
+  m.set("hang", id);
+  return `${goc}?${m}`;
+}
+
 export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
   const { ds, ngan, chon, duong } = v;
   // Hàng không toà đi đường hồ sơ theo hàng như hàng chưa có mã; khác ở thuộc tính và ô gắn mã.
@@ -207,7 +215,8 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
     khongToa,
     can,
     dangXem,
-    lan: lanRao.map((r, i) => ({ ...r, href: duong({ ma: chon.ma, toa, lan: r.id }), thu: lanRao.length - i })),
+    // Hàng không toà: «toà» là chữ vị trí, link theo toà + mã không tìm lại được — giữ đường mở theo hàng.
+    lan: lanRao.map((r, i) => ({ ...r, href: khongToa ? duongTheoHang(dongHref, r.id) : duong({ ma: chon.ma, toa, lan: r.id }), thu: lanRao.length - i })),
     co,
     dauChu,
     tt,
