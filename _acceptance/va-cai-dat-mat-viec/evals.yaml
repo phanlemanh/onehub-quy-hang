@@ -81,7 +81,7 @@ evals:
     executor: ui-check
     layer: ui-observed
     steps:
-      - "Chạy node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --dung-man. Lệnh dựng chỗ thử dãy D, nạp nhãn và mẫu nhập, chụp năm ảnh vào _acceptance/va-cai-dat-mat-viec/evidence/ và để nguyên dữ liệu; in đường các ảnh."
+      - "Chạy node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --dung-man, đặt hạn lệnh 10 phút vì lệnh chờ tới lượt nếu lệnh đo máy đang chạy. Lệnh dựng chỗ thử dãy D, nạp nhãn và mẫu nhập, chụp năm ảnh vào _acceptance/va-cai-dat-mat-viec/evidence/ và để nguyên dữ liệu; in đường các ảnh."
       - "Xem giu-nhan.png (Trạng thái sau «Giữ nhãn», 1440x900): đủ vỏ, nhãn sau còn, Lưu không khoá."
       - "Xem xoa-loi.png (hộp xoá có câu lỗi, 1440x900): hộp còn mở, câu lỗi đọc được, không đè nút."
       - "Xem mau-375.png và mau-375-hop.png (375x812): bảng không cuộn ngang, Sửa, Xoá trong màn, chữ dài ngắt dòng không đè cột nút; hộp nằm trong màn."

@@ -6,7 +6,7 @@
 //   node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --dung-man   # dựng dữ liệu, chụp năm ảnh cho bài nhìn E10, để máy dev chạy
 // Dữ liệu thử nhãn mẫu, không tên người thật; mỗi ca dựng lại nhãn và mẫu nhập của sàn mẫu rồi trả lại.
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
@@ -24,6 +24,29 @@ const iCa = process.argv.indexOf("--ca");
 const CHON = iCa > 0 ? process.argv[iCa + 1].split(",") : null;
 const ngu = (ms) => new Promise((r) => setTimeout(r, ms));
 const coi = (x) => JSON.stringify(x);
+
+// Lượt chấm chạy lệnh máy và bài nhìn song song, cả hai dùng chung máy dev 3495 và dữ liệu sàn mẫu: lần lượt qua khoá này.
+const KHOA = path.join("/tmp", `quy-hang-d48-${path.basename(GOC)}`, "kiem-man.khoa");
+mkdirSync(path.dirname(KHOA), { recursive: true });
+for (const dau = Date.now(); ; await ngu(2000)) {
+  try {
+    writeFileSync(KHOA, String(process.pid), { flag: "wx" });
+    break;
+  } catch {
+    let song = false;
+    try {
+      process.kill(Number(readFileSync(KHOA, "utf8")), 0);
+      song = true;
+    } catch {
+      rmSync(KHOA, { force: true });
+    }
+    if (song && Date.now() - dau > 540000) {
+      console.error("chờ khoá kiem-man quá 9 phút");
+      process.exit(2);
+    }
+  }
+}
+process.on("exit", () => rmSync(KHOA, { force: true }));
 
 if (!existsSync(AXE)) {
   console.error("thiếu axe-core");
