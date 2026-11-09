@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 3adff8a52df021de6955ee98b4f9c05729fc0b5a
+verified_commit: efa00e50ffd7b5dd23b3ac7424845326b9b14ba1
 human_signoff:
 ---
 
@@ -22,134 +22,135 @@ human_signoff:
 | E5 | AC-5 | test | PASS |
 | E6 | AC-6 | ui-check | PASS |
 | E7 | AC-1 | script | PASS |
-| E8 | AC-1 | script | PASS |
+| E8 | AC-1 | script | PASS (carry-forward tu round 1) |
 | E9 | AC-1 | script | PASS |
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-loi-doc-can-ngoai-khu-E1-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-E1-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
   output: |
-    npm test -w @quy-hang/web (lệnh: một lần chạy, chung cho E1 đến E5)
-    ℹ duration_ms 4660.860125
+    ℹ duration_ms 4961.263416
+    __EXIT=0
 
 - eval: E2
-  run_id: minted-va-loi-doc-can-ngoai-khu-E2-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-E2-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
   output: |
-    npm test -w @quy-hang/web (lệnh: một lần chạy, chung cho E1 đến E5)
-    ℹ duration_ms 4660.860125
+    ℹ duration_ms 4961.263416
+    __EXIT=0
 
 - eval: E3
-  run_id: minted-va-loi-doc-can-ngoai-khu-E3-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-E3-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
   output: |
-    npm test -w @quy-hang/web (lệnh: một lần chạy, chung cho E1 đến E5)
-    ℹ duration_ms 4660.860125
+    ℹ duration_ms 4961.263416
+    __EXIT=0
 
 - eval: E4
-  run_id: minted-va-loi-doc-can-ngoai-khu-E4-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-E4-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
   output: |
-    npm test -w @quy-hang/web (lệnh: một lần chạy, chung cho E1 đến E5)
-    ℹ duration_ms 4660.860125
+    ℹ duration_ms 4961.263416
+    __EXIT=0
 
 - eval: E5
-  run_id: minted-va-loi-doc-can-ngoai-khu-E5-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-E5-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.web
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
   output: |
-    npm test -w @quy-hang/web (lệnh: một lần chạy, chung cho E1 đến E5)
-    ℹ duration_ms 4660.860125
+    ℹ duration_ms 4961.263416
+    __EXIT=0
 
 - eval: E6
-  run_id: minted-va-loi-doc-can-ngoai-khu-E6-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-E6-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.ui-check
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
   screenshot: evidence/E6-bao.png
   observed: |
-    E6-bao.png: Bang hang, khoi bao do tren bang voi dung cau «Chưa đọc được danh sách căn ngoài khu — loại hình và địa chỉ của các căn này có thể thiếu» kem nut «Thử lại»; cac hang van hien (12/12 can), 5 can ngoai khu ten «Căn ngoài khu», ma «—», loai «Chưa rõ». Khop ca1. E6-sau.png: sau Thu lai khong con khoi bao; nhom theo dia chi (31 Đường Mẫu 3..., 33..., 35..., 37..., 39...), cot Loai hinh hien Nha pho, Nha pho, Biet thu, Dat, Dat — dung loai va dia chi da go; co them cot Loai hinh/Vi tri (ban giu). Khop. E6-ca-hai.png: mot khoi bao duy nhat, mot nut Thu lai, chu «Chưa đọc được danh bạ thành viên và danh sách căn ngoài khu — cột Đầu chủ và các căn ngoài khu có thể thiếu thông tin», dung cau AC-5; hang van hien. Khop.
+    E6-bao.png: Bảng hàng có khối báo đỏ trên bảng, chữ «Chưa đọc được danh sách căn ngoài khu — loại hình và địa chỉ của các căn này có thể thiếu» kèm một nút «Thử lại»; bảng vẫn hiện 12/12 căn, 5 căn ngoài khu tên «Căn ngoài khu», mã «—», loại «Chưa rõ». Khớp ca1/AC-1.
+    E6-sau.png: không còn khối báo; nhóm theo địa chỉ (31 Đường Mẫu 3, 33, 35, 37, 39...), cột Loại hình hiện Nhà phố, Nhà phố, Biệt thự, Đất, Đất, đúng loại hình và địa chỉ đã gõ; có thêm cột Loại hình/Vị trí. Khớp.
+    E6-ca-hai.png: đúng một khối báo, một nút «Thử lại», chữ «Chưa đọc được danh bạ thành viên và danh sách căn ngoài khu — cột Đầu chủ và các căn ngoài khu có thể thiếu thông tin» (đúng AC-5); các hàng vẫn hiện 12/12. Khớp.
   network_observed: n-a (driver)
   output: |
-    - ca500: bao dung cau AC-1, nutThuLai 1: PASS
-    - ca2: soBao 1, nutThuLai 1, chu dung cau AC-5; sau bo ngat: soBao 0, nutThuLai 0, tang ngoaiKhu 1 va danBa 1: PASS
-    Frame luu: E6-bao.png, E6-sau.png, E6-ca-hai.png, E6-network.txt (trong evidence/).
+    chay-ui.mjs in một dòng JSON; mọi assertion PASS (ca1 báo đúng câu AC-1, nút Thử lại 1, sau khi đọc được thì 5 dòng đúng loại và bản giữ còn; ca500 báo đúng câu; ca2 một khối báo đúng chữ AC-5). Máy dev riêng cổng 3496 đã tắt sau khi chạy.
 
 - eval: E7
-  run_id: minted-va-loi-doc-can-ngoai-khu-E7-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-E7-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.script.typecheck
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
   output: |
-    npm run typecheck — kiểm kiểu mọi gói xanh
+    kiểm kiểu mọi gói xanh
+    __EXIT=0
 
 - eval: E8
   run_id: minted-va-loi-doc-can-ngoai-khu-E8-r1
   exit_code: 0
-  baseline: green
+  carried_from_round: 1
   verifier: config:executors.design.khuon
   verified_at: 2026-11-09T10:08:44Z
   output: |
-    4 tệp giao diện ngoài bản đồ
+    carry-forward tu round 1 — delta khong cham paths cua eval
 
 - eval: E9
-  run_id: minted-va-loi-doc-can-ngoai-khu-E9-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-E9-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.design.floor
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
   output: |
-    (không in dòng nào; không mã màu thô trên tệp giao diện vòng chạm)
+    __EXIT=0
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-test_hooks-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
 
 - cmd: npm run lint
-  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-lint-r1
+  run_id: minted-va-loi-doc-can-ngoai-khu-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T10:08:44Z
+  verified_at: 2026-11-09T10:46:42Z
 
 ## Known limits
 
@@ -157,19 +158,15 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh trên cả HEAD lẫn baseline, chứng minh harness chứ chưa chứng minh tính năng; nên viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý):
-- npm test -w @quy-hang/web: E1, E2, E3, E4, E5
-- npm run typecheck: E7
-- design-floor-khuon (--kiem): E8
-- design-floor-s4: E9
+Eval không phân biệt (xanh trên cả code mới lẫn baseline diffBase): E1, E2, E3, E4, E5 (lệnh npm test -w @quy-hang/web), E7 (npm run typecheck), E9 (design-floor-s4). Cần viết lại để assert hành vi mới, hoặc xác nhận là regression-guard có chủ ý. E8 mang từ round 1, không đo baseline round này.
 
-Baseline không đo: E6 — eval ui-check, baseline n-a (không chạy được trên mã cũ diffBase).
+Không có eval judgment nào; không có panel judge để đề xuất.
 
 ## Variance
 
-none — mọi eval chạy một lần và xác định (runs: 1), không có pass_rate hỗn hợp.
+none — mọi eval đều chạy một lần, xác định, không có pass_rate hỗn hợp.
 
 ## Iterations
 
-Round 1: mọi eval (E1 đến E9) đạt, không có mục judgment đang chờ người. Verdict PASS.
-
+Round 1: PASS — mọi eval xanh; còn ba finding trong hợp đồng và một ngoài hợp đồng ghi ở review-findings.
+Round 2: PASS — E1-E7, E9 chạy lại trên commit efa00e50; E8 mang từ round 1 (delta không chạm paths của eval).

@@ -9,7 +9,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/inventory/**", "_acceptance/va-loi-doc-can-ngoai-khu/contract.md"]
-    expected: "exit 0; apps/web/src/app/(app)/inventory/loi-doc-can-ngoai-khu.test.ts ca «đọc lỗi» — bảng viết trước mười ba ca, assert số ca chạy = 13: fetch ném lỗi; 401; 404; 500; 503; 200 thân không phải JSON (trang HTML); 200 thân không có units; 200 units không phải mảng; 200 units có phần tử null; 200 units có phần tử thiếu unparsedAddress; thiếu id; thiếu propertySubType; unparsedAddress sai kiểu. Mỗi ca qua docCanNgoaiKhu không ném lỗi và ra đúng { kind: loi }. Đối chứng hai chiều cùng dữ liệu: 200 units hợp lệ ra { kind: xong } với danh sách viết trước, và bản nuốt lỗi như lối cũ cho ca 500 ra khác loi. Ca «chữ báo»: cauBaoLoiDoc ra đúng câu của AC-1, đọc nguyên văn từ contract.md của hồ sơ."
+    expected: "exit 0; apps/web/src/app/(app)/inventory/loi-doc-can-ngoai-khu.test.ts ca «đọc lỗi» — bảng viết trước mười lăm ca, assert số ca chạy = 15: fetch ném lỗi; 401; 404; 500; 503; 200 thân không phải JSON (trang HTML); 200 thân không có units; 200 units không phải mảng; 200 units có phần tử null; 200 units có phần tử thiếu unparsedAddress; thiếu id; thiếu propertySubType; unparsedAddress sai kiểu; id sai kiểu; propertySubType sai kiểu. Mỗi ca qua docCanNgoaiKhu không ném lỗi và ra đúng { kind: loi }. Đối chứng hai chiều cùng dữ liệu: 200 units hợp lệ ra { kind: xong } với danh sách viết trước, và bản nuốt lỗi như lối cũ cho ca 500 ra khác loi. Ca «chữ báo»: cauBaoLoiDoc ra đúng câu của AC-1, đọc nguyên văn từ contract.md của hồ sơ."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E2
     criterion: AC-2
@@ -23,7 +23,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/inventory/**"]
-    expected: "exit 0; cùng tệp ca «bản giữ» — bảng viết trước năm ca, assert số ca = 5, kho chữ nạp chuỗi thật rồi đi qua capNhatBanGiuNgoaiKhu(kho, san, null) và canBaoNgoaiKhu với đọc lỗi: vắng → báo; chuỗi hỏng (JSON cắt cụt) → báo, không ném lỗi; rỗng → không báo; thiếu một căn → không báo; đủ → không báo và ghepDanhMuc ra đúng loại hình, địa chỉ viết trước."
+    expected: "exit 0; cùng tệp ca «bản giữ» — bảng viết trước sáu ca, assert số ca = 6, kho chữ nạp chuỗi thật rồi đi qua capNhatBanGiuNgoaiKhu(kho, san, null) và canBaoNgoaiKhu với đọc lỗi: vắng → báo; chuỗi hỏng (JSON cắt cụt) → báo, không ném lỗi; mảng có phần tử sai → dòng sai bị bỏ, không ném lỗi, không báo; rỗng → không báo; thiếu một căn → không báo; đủ → không báo và ghepDanhMuc ra đúng loại hình, địa chỉ viết trước."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E4
     criterion: AC-4

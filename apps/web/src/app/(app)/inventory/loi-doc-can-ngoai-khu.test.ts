@@ -35,7 +35,7 @@ const khoTu = (ban: Record<string, string> = {}): KhoChu => {
 };
 const SAN = "san-1";
 
-test("đọc lỗi: mười ba ca đều ra loi và không ném", async () => {
+test("đọc lỗi: mười lăm ca đều ra loi và không ném", async () => {
   const CA: [string, typeof fetch][] = [
     ["fetch ném lỗi", (async () => { throw new TypeError("failed"); }) as unknown as typeof fetch],
     ["401", tra(401, { error: "x" })],
@@ -50,13 +50,15 @@ test("đọc lỗi: mười ba ca đều ra loi và không ném", async () => {
     ["200 phần tử thiếu id", tra(200, { units: [{ propertySubType: "Townhouse", unparsedAddress: "x" }] })],
     ["200 phần tử thiếu propertySubType", tra(200, { units: [{ id: "a", unparsedAddress: "x" }] })],
     ["200 unparsedAddress sai kiểu", tra(200, { units: [{ id: "a", propertySubType: "Townhouse", unparsedAddress: 12 }] })],
+    ["200 id sai kiểu", tra(200, { units: [{ id: 1, propertySubType: "Townhouse", unparsedAddress: "x" }] })],
+    ["200 propertySubType sai kiểu", tra(200, { units: [{ id: "a", propertySubType: 1, unparsedAddress: "x" }] })],
   ];
   let chay = 0;
   for (const [ten, goi] of CA) {
     assert.deepEqual(await docCanNgoaiKhu(goi), { kind: "loi" }, ten);
     chay++;
   }
-  assert.equal(chay, 13);
+  assert.equal(chay, 15);
 });
 
 test("đọc lỗi: đối chứng hai chiều cùng dữ liệu", async () => {
@@ -93,10 +95,11 @@ test("đọc được thì ghép đúng", () => {
   assert.equal(canBaoNgoaiKhu(false, ds, HANG_NK), false, "đọc được rồi thì thôi báo");
 });
 
-test("bản giữ: năm ca", () => {
+test("bản giữ: sáu ca", () => {
   const CA: [string, Record<string, string>, boolean][] = [
     ["vắng", {}, true],
     ["chuỗi hỏng", { [khoaNgoaiKhu(SAN)]: '[{"id":"nk-1","prop' }, true],
+    ["mảng có phần tử sai", { [khoaNgoaiKhu(SAN)]: JSON.stringify([null, { id: 1 }, NK[0]]) }, false],
     ["rỗng", { [khoaNgoaiKhu(SAN)]: "[]" }, false],
     ["thiếu một căn", { [khoaNgoaiKhu(SAN)]: JSON.stringify([NK[0]]) }, false],
     ["đủ", { [khoaNgoaiKhu(SAN)]: JSON.stringify(NK) }, false],
@@ -106,6 +109,10 @@ test("bản giữ: năm ca", () => {
     const ds = capNhatBanGiuNgoaiKhu(khoTu(ban), SAN, null);
     assert.equal(canBaoNgoaiKhu(true, ds, HANG_NK), bao, ten);
     assert.equal(cauBaoLoiDoc(false, canBaoNgoaiKhu(true, ds, HANG_NK)), bao ? CAU_NGOAI_KHU : null, `${ten}: câu báo`);
+    if (ten === "mảng có phần tử sai") {
+      assert.deepEqual(ds, [NK[0]], "dòng sai bị bỏ, dòng đúng còn");
+      assert.doesNotThrow(() => chiMuc(null, ds), "bản giữ có dòng sai không được làm sập bảng");
+    }
     if (ten === "đủ") {
       const d = ghepDanhMuc(HANG_NK[1]!, chiMuc(null, ds));
       assert.equal(d.propertySubType, "Townhouse", "đủ: loại hình theo bản giữ");
@@ -113,7 +120,7 @@ test("bản giữ: năm ca", () => {
     }
     chay++;
   }
-  assert.equal(chay, 5);
+  assert.equal(chay, 6);
 });
 
 test("không có hàng ngoài khu: không báo", () => {
