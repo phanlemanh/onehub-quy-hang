@@ -29,6 +29,9 @@ export const CHU = {
   quyDoiMoTa: "Mỗi dòng: chữ trong file → giá trị chuẩn",
   boQuyDoi: "Trường này không có quy đổi — quy đổi cũ sẽ bỏ khi lưu.",
   luuLoiMang: "Chưa lưu được — thử lại",
+  xoaLoi: "Chưa xoá được — dòng vẫn giữ nguyên, thử lại",
+  xoaKhongQuyen: "Chỉ quản trị sàn xoá được cột đã nhớ",
+  xoaDaMat: "Cột này đã bị xoá trước đó",
   xoaHoi: (h: string) => `Lần nhập sau, cột «${h}» sẽ ghép lại từ đầu.`,
   nguonLanNhap: (ngay: string) => `Lần nhập ${ngay}`,
   nguonSua: (ten: string | null, ngay: string) => `Sửa bởi ${ten ?? "quản trị"} · ${ngay}`,
@@ -74,6 +77,14 @@ export function sauKhiLuu(kq: { status: number; reason?: string } | null): { don
   if (kq && kq.status >= 200 && kq.status < 300) return { dong: true };
   if (kq && kq.status === 400) return { dong: false, loi: kq.reason ?? CHU.luuLoiMang };
   return { dong: false, loi: CHU.luuLoiMang };
+}
+
+/** Hộp xoá sau khi gọi: 2xx đóng; 404 giữ mở, nói dòng đã mất và làm mới bảng; 403 nói về quyền; còn lại (mạng, 5xx) mời thử lại. */
+export function sauKhiXoa(status: number | null): { dong: true } | { dong: false; loi: string; lamMoi?: true } {
+  if (status !== null && status >= 200 && status < 300) return { dong: true };
+  if (status === 404) return { dong: false, loi: CHU.xoaDaMat, lamMoi: true };
+  if (status === 403) return { dong: false, loi: CHU.xoaKhongQuyen };
+  return { dong: false, loi: CHU.xoaLoi };
 }
 
 export const TRUONG_CHON: readonly PlanTarget[] = [...(Object.keys(FIELD_LABEL) as PlanTarget[]), "keep_as_note", "ignore_with_reason"];

@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 
-import { CHU, coQuyDoi, nhanNguon, nhanTruong, quyDoiThanhChu, sauKhiLuu, thanSua, TRUONG_CHON, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
+import { CHU, coQuyDoi, nhanNguon, nhanTruong, quyDoiThanhChu, sauKhiLuu, sauKhiXoa, thanSua, TRUONG_CHON, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
 
 const goi = (method: string, khoa: string, body?: unknown) =>
   fetch(`/api/v1/company/import-templates/${encodeURIComponent(khoa)}`, {
@@ -44,6 +44,8 @@ export function BangMauNhap({ tt, lamMoi }: { tt: TrangThaiMau; lamMoi: () => vo
   const [loi, setLoi] = useState("");
   const [dangLuu, setDangLuu] = useState(false);
   const [xoa, setXoa] = useState<CotMauNhap | null>(null);
+  const [loiXoa, setLoiXoa] = useState("");
+  const [dangXoa, setDangXoa] = useState(false);
 
   if (tt.kieu === "dang-tai") return <TrangThai kind="loading" title={CHU.dangTai} />;
   if (tt.kieu === "loi")
@@ -70,10 +72,24 @@ export function BangMauNhap({ tt, lamMoi }: { tt: TrangThaiMau; lamMoi: () => vo
   };
   const xacNhanXoa = async () => {
     if (!xoa) return;
-    await goi("DELETE", xoa.headerKey).catch(() => null);
-    setXoa(null);
-    lamMoi();
+    setDangXoa(true);
+    setLoiXoa("");
+    const res = await goi("DELETE", xoa.headerKey).catch(() => null);
+    const kq = sauKhiXoa(res ? res.status : null);
+    setDangXoa(false);
+    if (kq.dong) {
+      setXoa(null);
+      lamMoi();
+      return;
+    }
+    setLoiXoa(kq.loi);
+    if (kq.lamMoi) lamMoi();
   };
+  const moXoa = (c: CotMauNhap) => {
+    setXoa(c);
+    setLoiXoa("");
+  };
+  const moTaQuyDoi = (c: CotMauNhap) => (c.valueMap ? `${Object.keys(c.valueMap).length} giá trị` : "—");
 
   return (
     <>
@@ -81,24 +97,30 @@ export function BangMauNhap({ tt, lamMoi }: { tt: TrangThaiMau; lamMoi: () => vo
         <TableHeader>
           <TableRow>
             <TableHead>{CHU.cotTieuDe}</TableHead>
-            <TableHead>{CHU.cotTruong}</TableHead>
-            <TableHead>{CHU.cotQuyDoi}</TableHead>
-            <TableHead>{CHU.cotNguon}</TableHead>
+            <TableHead className="hidden lg:table-cell">{CHU.cotTruong}</TableHead>
+            <TableHead className="hidden lg:table-cell">{CHU.cotQuyDoi}</TableHead>
+            <TableHead className="hidden lg:table-cell">{CHU.cotNguon}</TableHead>
             <TableHead className="text-end" />
           </TableRow>
         </TableHeader>
         <TableBody>
           {tt.ds.map((c) => (
             <TableRow key={c.headerKey}>
-              <TableCell className="font-medium">{c.headerKey}</TableCell>
-              <TableCell>{nhanTruong(c.target)}</TableCell>
-              <TableCell className="text-muted-foreground">{c.valueMap ? `${Object.keys(c.valueMap).length} giá trị` : "—"}</TableCell>
-              <TableCell className="text-muted-foreground">{nhanNguon(c)}</TableCell>
+              <TableCell className="font-medium wrap-anywhere whitespace-normal">
+                {c.headerKey}
+                <div data-dong-phu className="mt-0.5 text-xs font-normal text-muted-foreground lg:hidden">
+                  {CHU.cotTruong} {nhanTruong(c.target)}
+                  {c.valueMap ? ` · ${moTaQuyDoi(c)}` : ""} · {nhanNguon(c)}
+                </div>
+              </TableCell>
+              <TableCell className="hidden lg:table-cell">{nhanTruong(c.target)}</TableCell>
+              <TableCell className="hidden text-muted-foreground lg:table-cell">{moTaQuyDoi(c)}</TableCell>
+              <TableCell className="hidden text-muted-foreground lg:table-cell">{nhanNguon(c)}</TableCell>
               <TableCell className="text-end">
                 <Button variant="ghost" size="sm" onClick={() => moSua(c)}>
                   {CHU.sua}
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => setXoa(c)}>
+                <Button variant="ghost" size="sm" onClick={() => moXoa(c)}>
                   {CHU.xoa}
                 </Button>
               </TableCell>
@@ -110,7 +132,7 @@ export function BangMauNhap({ tt, lamMoi }: { tt: TrangThaiMau; lamMoi: () => vo
       <Dialog open={sua !== null} onOpenChange={(m) => !m && setSua(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="wrap-anywhere">
               {CHU.sua} «{sua?.headerKey}»
             </DialogTitle>
             <DialogDescription>{CHU.moTa}</DialogDescription>
@@ -144,17 +166,20 @@ export function BangMauNhap({ tt, lamMoi }: { tt: TrangThaiMau; lamMoi: () => vo
         </DialogContent>
       </Dialog>
 
-      <AlertDialog open={xoa !== null} onOpenChange={(m) => !m && setXoa(null)}>
+      <AlertDialog open={xoa !== null} onOpenChange={(m) => !m && !dangXoa && setXoa(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
+            <AlertDialogTitle className="wrap-anywhere">
               {CHU.xoa} «{xoa?.headerKey}»?
             </AlertDialogTitle>
-            <AlertDialogDescription>{xoa ? CHU.xoaHoi(xoa.headerKey) : null}</AlertDialogDescription>
+            <AlertDialogDescription className="wrap-anywhere">{xoa ? CHU.xoaHoi(xoa.headerKey) : null}</AlertDialogDescription>
           </AlertDialogHeader>
+          {loiXoa ? <FieldError>{loiXoa}</FieldError> : null}
           <AlertDialogFooter>
-            <AlertDialogCancel>{CHU.huy}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => void xacNhanXoa()}>{CHU.xoa}</AlertDialogAction>
+            <AlertDialogCancel disabled={dangXoa}>{CHU.huy}</AlertDialogCancel>
+            <AlertDialogAction disabled={dangXoa} onClick={() => void xacNhanXoa()}>
+              {CHU.xoa}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
