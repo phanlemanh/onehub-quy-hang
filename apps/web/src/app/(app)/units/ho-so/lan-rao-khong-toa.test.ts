@@ -15,7 +15,7 @@ const vao = (ds: ListingView[], chon: ChonCan, them: Partial<VaoHoSo>): VaoHoSo 
   nguoi: "n-1",
   vai: ["listing_agent"],
   ds,
-  ngan: { listings: [], history: {}, lastAttempt: null, lastPullAt: null },
+  ngan: { listings: [], history: {}, queue: [], lastAttempt: null, lastPullAt: null },
   danhMuc: null,
   chon,
   daKeo: {},
