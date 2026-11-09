@@ -74,7 +74,10 @@ jobs:
       - run: npm run db:migrate
       - run: npm run db:test
 
-  # Quét bí mật trên toàn bộ lịch sử — lưới thứ hai sau hook pre-commit trên máy.
+  # Quét bí mật trên toàn bộ lịch sử của commit đang xét — lưới thứ hai sau hook pre-commit trên máy. HEAD là commit gộp khi
+  # chạy PR (phủ cả main và nhánh PR), là đỉnh main khi push. Không quét mọi nhánh: .gitleaksignore chỉ đọc từ cây đang xét,
+  # nên giá trị mẫu trên một nhánh khác sẽ làm đỏ main và mọi PR (08/11, hàng va-ci-secrets-quet-dung-lich-su).
+  # fetch-depth 0 để HEAD có đủ lịch sử. --log-opts thay đối số phạm vi mặc định của gitleaks, nên phải chép lại hai cờ.
   secrets:
     name: secrets
     runs-on: ubuntu-latest
@@ -86,7 +89,7 @@ jobs:
         run: |
           mkdir -p "$HOME/bin"
           curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz -C "$HOME/bin" gitleaks
-          "$HOME/bin/gitleaks" git --redact --no-banner --log-level warn .
+          "$HOME/bin/gitleaks" git --redact --no-banner --log-level warn --log-opts="--full-history --diff-filter=tuxdb HEAD" .
 
   # Cổng nghiệm thu của Acceptance-Gate Kit (GUIDE §5.3): chạy từ bản kit ghim tag, không chép tệp kit vào kho.
   # Nâng kit = đổi KIT_TAG bằng một PR có chủ đích mỗi mốc; tệp này nằm trong t1_skip_globs nên PR đó không đỏ T1-escape.
