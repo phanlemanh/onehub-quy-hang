@@ -5,7 +5,7 @@ slug: logo-onehub
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 approved_by: Manh Phan
 approved_at: 2026-11-09
 design_doc: docs/superpowers/specs/2026-11-09-logo-onehub-design.md
@@ -73,3 +73,7 @@ Bảng ánh xạ từ CRM (`~/dev/crm`, commit 6adaf11e0):
 Máy đã cài Quỹ hàng lên màn hình chính nhận biểu tượng mới theo lịch của hệ điều hành; iPhone thường phải cài lại. Service
 worker của Quỹ hàng không cache trang hay tệp, nên không giữ biểu tượng cũ. Biểu tượng cài là bản CRM đã canh trong vùng an
 toàn nên không bị cắt khi khai maskable.
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Hồ sơ nghiệm thu sẽ hiện cờ đỏ hoặc báo thiếu ảnh ở bài so sánh tệp hình với bản gốc, dù các tệp hình thật vẫn đúng. Người dùng cuối không thấy gì khác. — `_acceptance/logo-onehub/evals.yaml`
+- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm giữ cho hai chỗ hiện logo dùng chung một thành phần còn lỏng, nên sau này ai đó tự vẽ logo riêng ở một chỗ thì có thể lọt. Hôm nay người dùng vẫn thấy logo đúng. — `apps/web/src/components/dau-hieu-onehub.test.ts`
+- Ngoài-3 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm trang khách mới thử trên một đường dẫn không tồn tại, nên chưa tự chứng minh được đầu trang thật của khách vẫn hiện tên sàn không kèm logo. Khách mở link hợp lệ có thể vẫn thấy đúng. — `_acceptance/logo-onehub/evals.yaml`
+- Ngoài-4 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Ảnh chụp màn hình nghiệm thu có thể vô tình lấy từ một bản khác của ứng dụng đang chạy trên máy, nên bằng chứng có thể không đúng bản đang xét. Lần này đã kiểm và đúng bản. — `_acceptance/logo-onehub/evals.yaml`

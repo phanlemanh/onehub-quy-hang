@@ -1,0 +1,1 @@
+E7 network: 0 request fetch/XHR bat thuong; 6 duong deu 200 khong redirect (favicon.ico image/x-icon, onehub-mark.svg image/svg+xml, apple-touch-icon/icon-192/icon-512 image/png, manifest application/manifest+json).
