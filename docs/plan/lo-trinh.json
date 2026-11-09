@@ -3313,6 +3313,22 @@
         "apps/web/src/app/(app)/leads/mine/nguon-that.tsx",
         "_acceptance/va-lead-da-nhap-than-hong/**"
       ]
+    },
+    {
+      "ma": "va-khuon-v2-moc-tuong-lai",
+      "cau_giao": "Gói danh mục có mốc đo ở tương lai bị từ chối thay vì đóng băng ảnh chụp của khu với mọi sàn; bộ chặn tên miền nhận đuôi bất kỳ (zalo.me, t.me, .land); mốc đo có phút múi giờ từ 60 trở lên báo sai khuôn thay vì lỗi máy chủ.",
+      "slug": "va-khuon-v2-moc-tuong-lai",
+      "vi_sao": "Ngoài của khuon-nguon-danh-muc-v2: Ngoài-1 và hai điểm trong hợp đồng còn lại ở lượt chấm 2, chủ kho chọn «mở hợp đồng mới» ở Cổng Bằng chứng 09/11. Dãy G.",
+      "hang": "T3",
+      "bat_khi": "Gửi gói có mốc đo ở tương lai, tên miền có đuôi lạ, hay phút múi giờ từ 60 trở lên: gói bị từ chối đúng lỗi khuôn và ảnh chụp của khu không đổi",
+      "sau": [
+        "khuon-nguon-danh-muc-v2"
+      ],
+      "vung": [
+        "packages/connect/src/catalog-feed*",
+        "packages/api/src/catalog/feeds*",
+        "_acceptance/va-khuon-v2-moc-tuong-lai/**"
+      ]
     }
   ],
   "chan_troi": [
