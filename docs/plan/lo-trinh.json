@@ -3193,6 +3193,12 @@
       ]
     },
     {
+      "ma": "logo-onehub",
+      "cau_giao": "Đổi logo của Quỹ hàng sang logo OneHub đang dùng ở OneHub CRM: thanh vỏ, trang đăng nhập, favicon và icon ứng dụng; rõ ở sáng và tối, khổ 1440 và 375.",
+      "slug": "logo-onehub",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-09"
+    },
+    {
       "ma": "va-bai-o-la-do-ngau-nhien",
       "cau_giao": "Sửa phép kiểm sổ chi phí AI của bài ô lạ để không đỏ ngẫu nhiên vì mã máy và giờ ghi, vẫn chứng minh số điện thoại không vào sổ dưới mọi dạng, kèm ca đối chứng dương.",
       "slug": "va-bai-o-la-do-ngau-nhien",
