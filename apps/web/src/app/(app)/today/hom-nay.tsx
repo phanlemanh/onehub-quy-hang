@@ -6,7 +6,7 @@
 // lead, bộ nhóm, hàng đợi trưởng nhóm, tin khách đọc qua API, mỗi nguồn báo lỗi riêng (viec/gop-viec.ts).
 import { NEED_LABELS, RETURN_REASON_LABEL, LEAD_STAGE_LABELS, type LeadState } from "@quy-hang/core/dedupe";
 import type { MyLeadView } from "@quy-hang/core/dedupe";
-import { BO_NHOM_MAC_DINH, chiaNhom, NHOM_VAI, nhomCuaLead, type BoNhom, type LeadAction, type Nhom, type TinDauKhach } from "@quy-hang/core/today";
+import { BO_NHOM_MAC_DINH, chiaNhom, nhomCuaLead, type BoNhom, type LeadAction, type Nhom, type TinDauKhach } from "@quy-hang/core/today";
 import { nhanGiaTri, type TuVung } from "@quy-hang/core/labels";
 import { useTable, type ColumnDef, type ExpandedState, type Row } from "@tanstack/react-table";
 import { ListChecksIcon, RotateCwIcon } from "lucide-react";
@@ -55,7 +55,7 @@ import { GiaoLai } from "./viec/giao-lai";
 import { chuDong, type ChuDong } from "./viec/chu-dong";
 import { docCoThuLai, docMang, nguonCanDocLai } from "./viec/doc-nguon";
 import { gopViec, type DongVai, type MaNguon, type Nguon } from "./viec/gop-viec";
-import { datSoViec } from "./viec/kho-so";
+import { boNhomCua, datSoViec, mucSoTuGop, type MucSo } from "./viec/kho-so";
 import { SuaSo } from "./viec/sua-so";
 import { mucHan, NHAN_VIEC, nutCuaViec, type MaViec, type MucHan, type ViecDong } from "./viec-dong";
 
@@ -472,21 +472,16 @@ export function HomNayDanhSach({ vai, nguoi, san, nhan, tv }: { vai: readonly st
   const tong = gop.so;
   // Bộ nhóm dùng để mở `?nhom=`: của sàn nếu là đầu chủ, cộng nhóm của mọi vai người xem.
   // Cùng thứ tự với thân: của trưởng nhóm trước, bộ đầu chủ, rồi telesales, đầu khách.
-  const nhomVaiCua = (laTruongNhom: boolean) => NHOM_VAI.filter((n) => vai.includes(n.vai) && (n.vai === "team_lead") === laTruongNhom).map((n) => nhomGia(n.code, nhanGiaTri(tv, "nhomViec", n.code, n.label)));
-  const boMo: BoNhom = [...nhomVaiCua(true), ...(laDauChu ? bo : []), ...nhomVaiCua(false)];
+  const boMo: BoNhom = boNhomCua(vai, bo, (ma, macDinh) => nhomGia(ma, nhanGiaTri(tv, "nhomViec", ma, macDinh)));
   const dangTaiHet = gop.dangTai || (laDauChu && (ngan.listings === null || taiBo.kind === "dang"));
 
   // Thân ghi số vào kho chung: đầu màn và cột thứ hai đọc từ đó, không thể lệch số.
-  const nguonMa: Record<string, MaNguon> = { lead_overdue: "hang-doi", lead_unrouted: "hang-doi", lead_returned: "lead-cua-toi", buyer_reaction: "tin", buyer_changed: "tin", buyer_new_match: "tin", new_lead: "lead-giao" };
-  const khoaSo = dangTaiHet
-    ? ""
-    : JSON.stringify(boMo.filter((n) => n.enabled).map((n) => [n.code, nhomGia(n.code, n.label).label, gop.nhom.find((g) => g.ma === n.code)?.viec.length ?? 0, gop.loi.some((l) => l.nguon === nguonMa[n.code])]));
+  const khoaSo = dangTaiHet ? "" : JSON.stringify(mucSoTuGop(boMo.map((n) => ({ ...n, label: nhomGia(n.code, n.label).label })), gop));
   const { so: soTong, quaHan: soQuaHan } = gop;
+  const coLoi = gop.loi.length > 0;
   useEffect(() => {
-    if (!khoaSo) return;
-    const muc = (JSON.parse(khoaSo) as [string, string, number, boolean][]).map(([ma, nhan, so, loi]) => ({ ma, nhan, so: loi ? null : so }));
-    datSoViec({ so: soTong, quaHan: soQuaHan, muc });
-  }, [khoaSo, soTong, soQuaHan]);
+    if (khoaSo) datSoViec({ so: soTong, quaHan: soQuaHan, coLoi, muc: JSON.parse(khoaSo) as MucSo[] });
+  }, [khoaSo, soTong, soQuaHan, coLoi]);
   useEffect(() => () => datSoViec(null), []);
 
   // Mạng trở lại: đọc lại đúng các nguồn đang lỗi, không cần bấm.

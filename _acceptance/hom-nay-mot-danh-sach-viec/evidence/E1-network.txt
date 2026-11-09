@@ -1,0 +1,1 @@
+E1 driver: CDP script (khong co read_network_requests); network khong doc duoc -> n-a (driver). Trang /today tai 200 tren 3462 o ca 2 kho.

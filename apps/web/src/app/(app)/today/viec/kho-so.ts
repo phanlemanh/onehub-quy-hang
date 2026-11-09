@@ -4,10 +4,35 @@
  */
 import { useSyncExternalStore } from "react";
 
-import { BO_NHOM_MAC_DINH, NHOM_VAI } from "@quy-hang/core/today";
+import { BO_NHOM_MAC_DINH, NHOM_VAI, type MaNhomVai } from "@quy-hang/core/today";
+
+import type { MaNguon, RaGop } from "./gop-viec";
 
 export type MucSo = { ma: string; nhan: string; so: number | null };
-export type SoViec = { so: number; quaHan: number; muc: readonly MucSo[] };
+/** `coLoi`: có nguồn của vai người xem đọc hỏng. */
+export type SoViec = { so: number; quaHan: number; coLoi: boolean; muc: readonly MucSo[] };
+
+/** Dòng dưới tiêu đề. Chưa có việc mà có nguồn đọc hỏng thì để trống: không được nói «Không còn việc» (AC-9). */
+export function moTaSoViec(s: SoViec | null): string | undefined {
+  if (!s) return undefined;
+  if (s.so) return `${s.so} việc${s.quaHan ? ` · ${s.quaHan} quá hạn` : ""}`;
+  return s.coLoi ? undefined : "Không còn việc";
+}
+
+/** Bộ nhóm của người xem, cùng thứ tự với thân: của trưởng nhóm, bộ đầu chủ, rồi telesales, đầu khách. */
+export function boNhomCua<T>(vai: readonly string[], boDauChu: readonly T[], tao: (ma: MaNhomVai, macDinh: string) => T): T[] {
+  const cua = (truongNhom: boolean) => NHOM_VAI.filter((n) => vai.includes(n.vai) && (n.vai === "team_lead") === truongNhom).map((n) => tao(n.code, n.label));
+  return [...cua(true), ...(vai.includes("listing_agent") ? boDauChu : []), ...cua(false)];
+}
+
+const NGUON_NHOM: Readonly<Record<string, MaNguon>> = { lead_overdue: "hang-doi", lead_unrouted: "hang-doi", lead_returned: "lead-cua-toi", buyer_reaction: "tin", buyer_changed: "tin", buyer_new_match: "tin", new_lead: "lead-giao" };
+
+/** Số từng mục của cột thứ hai, lấy từ chính kết quả gộp; nhóm của nguồn đọc hỏng không có số. */
+export function mucSoTuGop(bo: readonly { code: string; label: string; enabled: boolean }[], gop: Pick<RaGop<unknown>, "nhom" | "loi">): MucSo[] {
+  return bo
+    .filter((n) => n.enabled)
+    .map((n) => ({ ma: n.code, nhan: n.label, so: gop.loi.some((l) => l.nguon === NGUON_NHOM[n.code]) ? null : (gop.nhom.find((g) => g.ma === n.code)?.viec.length ?? 0) }));
+}
 
 let hien: SoViec | null = null;
 const nghe = new Set<() => void>();

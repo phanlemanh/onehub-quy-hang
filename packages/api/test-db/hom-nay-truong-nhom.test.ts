@@ -268,6 +268,34 @@ test("đầu chủ để giao: tên, nghỉ, lead mở", async () => {
   assert.ok(!text.includes("@"));
 });
 
+test("hàng đợi trưởng nhóm: giao lại rời hàng đợi", async () => {
+  const s = await sanMoi({
+    ts: { vai: ["telesales"] },
+    tn: { vai: ["team_lead"] },
+    dc1: { vai: ["listing_agent"], khu: ["Toà A"] },
+    dc2: { vai: ["listing_agent"], khu: ["Toà B"] },
+  });
+  const giao = (await nhap(s, nam(soMoi(s), "Toà A"))).id;
+  const giu = (await nhap(s, nam(soMoi(s), "Toà A"))).id;
+  await nhip(s);
+  await luiMocGiao(giao, ACCEPT + 5);
+  await luiMocGiao(giu, ACCEPT + 5);
+  assert.deepEqual((await hangDoi(s)).items.map((d) => d.leadId).sort(), [giao, giu].sort());
+
+  // Vai khác không giao được, hàng đợi không đổi.
+  const cam = await send("POST", `/api/v1/leads/${giao}/assign`, { agentUserId: s.nguoi.dc2!.userId }, s.nguoi.ts!.cookie);
+  assert.equal(cam.status, 403, await cam.clone().text());
+  assert.equal((await hangDoi(s)).items.length, 2);
+
+  const r = await send("POST", `/api/v1/leads/${giao}/assign`, { agentUserId: s.nguoi.dc2!.userId }, s.nguoi.tn!.cookie);
+  assert.equal(r.status, 200, await r.clone().text());
+  // Lead vừa giao rời hàng đợi; đối chứng: lead không giao vẫn còn.
+  assert.deepEqual((await hangDoi(s)).items.map((d) => d.leadId), [giu]);
+  const cuaDc2 = await send("GET", "/api/v1/leads/assigned", undefined, s.nguoi.dc2!.cookie);
+  assert.equal(cuaDc2.status, 200);
+  assert.deepEqual(((await cuaDc2.json()) as { id: string }[]).map((l) => l.id), [giao], "đầu chủ nhận thấy đúng lead vừa giao");
+});
+
 // ---- E5: giao lại từ hàng đợi ----
 test("giao lại từ hàng đợi: lead rời hàng đợi, cơ sở dữ liệu ghi người mới", async () => {
   const s = await sanMoi({

@@ -1,0 +1,103 @@
+E8b network (fetch wrapper in page, origin http://localhost:3462)
+
+[binhThuong]
+/api/v1/catalog 200
+/api/v1/company/settings/queue 200
+/api/v1/leads/assigned 200
+/api/v1/team/lead-queue 200
+/api/v1/team/listing-agents 200
+/api/v1/leads 200
+/api/v1/company/settings/queue 200
+/api/v1/team/lead-queue 200
+/api/v1/today/buyer 200
+/api/v1/leads/assigned 200
+/api/v1/team/listing-agents 200
+/api/v1/leads 200
+/api/v1/today/buyer 200
+/api/v1/push/public-key 200
+/api/v1/catalog 200
+/api/v1/push/public-key 200
+/api/v1/listings 200
+console errors: n/a (driver CDP script)
+
+[loi500]
+/api/v1/listings 200
+/api/v1/today/buyer 500 forced
+/api/v1/today/buyer 500 forced
+/api/v1/catalog 200
+/api/v1/company/settings/queue 200
+/api/v1/team/lead-queue 200
+/api/v1/leads/assigned 200
+/api/v1/team/listing-agents 200
+/api/v1/company/settings/queue 200
+/api/v1/leads 200
+/api/v1/leads/assigned 200
+/api/v1/team/lead-queue 200
+/api/v1/team/listing-agents 200
+/api/v1/push/public-key 200
+/api/v1/push/public-key 200
+/api/v1/leads 200
+/api/v1/catalog 200
+/api/v1/today/buyer 500 forced
+/api/v1/today/buyer 500 forced
+console errors: n/a (driver CDP script)
+
+[tatCa]
+/api/v1/listings 200
+/api/v1/catalog 200
+/api/v1/team/lead-queue 200
+/api/v1/team/listing-agents 200
+/api/v1/leads/assigned 200
+/api/v1/company/settings/queue 200
+/api/v1/leads 200
+/api/v1/today/buyer 200
+/api/v1/company/settings/queue 200
+/api/v1/leads/assigned 200
+/api/v1/team/lead-queue 200
+/api/v1/team/listing-agents 200
+/api/v1/leads 200
+/api/v1/push/public-key 200
+/api/v1/catalog 200
+/api/v1/push/public-key 200
+/api/v1/today/buyer 200
+console errors: n/a (driver CDP script)
+
+[hopLe]
+/api/v1/listings 200
+/api/v1/catalog 200
+/api/v1/company/settings/queue 200
+/api/v1/team/lead-queue 200
+/api/v1/leads/assigned 200
+/api/v1/team/listing-agents 200
+/api/v1/leads 200
+/api/v1/today/buyer 200
+/api/v1/company/settings/queue 200
+/api/v1/leads/assigned 200
+/api/v1/team/lead-queue 200
+/api/v1/team/listing-agents 200
+/api/v1/leads 200
+/api/v1/push/public-key 200
+/api/v1/catalog 200
+/api/v1/push/public-key 200
+/api/v1/today/buyer 200
+console errors: n/a (driver CDP script)
+
+[la]
+/api/v1/listings 200
+/api/v1/catalog 200
+/api/v1/company/settings/queue 200
+/api/v1/leads/assigned 200
+/api/v1/team/lead-queue 200
+/api/v1/team/listing-agents 200
+/api/v1/leads 200
+/api/v1/company/settings/queue 200
+/api/v1/today/buyer 200
+/api/v1/leads/assigned 200
+/api/v1/team/lead-queue 200
+/api/v1/team/listing-agents 200
+/api/v1/leads 200
+/api/v1/catalog 200
+/api/v1/today/buyer 200
+/api/v1/push/public-key 200
+/api/v1/push/public-key 200
+console errors: n/a (driver CDP script)

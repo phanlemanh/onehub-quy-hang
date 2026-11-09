@@ -1,0 +1,2 @@
+E5b network (app origin localhost:3462): moi request 200. Chi co 4 "FAILED ... _rsc=... net::ERR_ABORTED" = prefetch RSC bi huy khi bam chuyen trang (note-only). Khong 4xx/5xx, console error khong xet them.
+FAILED GET /shares?lan=...&_rsc net::ERR_ABORTED x3 ; FAILED GET /shares/new?can=...&_rsc net::ERR_ABORTED x2

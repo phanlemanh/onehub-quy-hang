@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import type { MyLeadView } from "@quy-hang/core/dedupe";
-import type { TinDauKhach } from "@quy-hang/core/today";
+import { dungTin, type CanTrongBo, type TinDauKhach, type VaoDungTin } from "@quy-hang/core/today";
 
 import type { DongLeadTruongNhom } from "../nguon";
-import { gopViec, tinConViec, type Nguon, type VaoGop } from "./gop-viec";
+import { NHAN_VIEC, nutCuaViec, type ViecDong } from "../viec-dong";
+import { chuDong } from "./chu-dong";
+import { gopViec, tinConViec, type DongVai, type Nguon, type RaGop, type VaoGop } from "./gop-viec";
 
 const BAY_GIO = "2026-11-09T10:00:00.000Z";
 const gioTruoc = (phut: number) => new Date(Date.parse(BAY_GIO) - phut * 60_000).toISOString();
@@ -17,6 +19,16 @@ const tin = (kind: TinDauKhach["kind"], at: string) =>
   (kind === "new_match"
     ? { kind, at, day: "2026-11-09", shares: [], listing: { id: "c1", name: "A-1" } }
     : { kind, at, day: "2026-11-09", share: { id: "s1", recipient: "[Tên]" }, listing: { id: "c1", name: "A-1" }, opens: 1, interested: [] }) as unknown as TinDauKhach;
+
+// Tin dựng bằng chính lõi, không ép kiểu: một căn đã gửi có giá lúc gửi, đổi giá sau đó; một căn cùng toà vừa lên Đang bán.
+const GUI_LUC = "2026-11-09T08:00:00.000Z";
+const CAN_GUI: CanTrongBo = { id: "c1", name: "Toà A · A-1", buildingName: "Toà A", bedroomsTotal: 2, giaLucGui: 1_000, suSau: [{ type: "price_changed", payload: { listPrice: 900 } }], suSauAt: gioTruoc(30) };
+const vaoDung = (can: CanTrongBo): VaoDungTin => ({
+  shares: [{ id: "s1", recipient: "[Tên]", createdAt: GUI_LUC, disabledAt: null, listings: [can] }],
+  events: [{ shareId: "s1", type: "link_opened", listingId: null, createdAt: gioTruoc(40) }, { shareId: "s1", type: "interest", listingId: "c1", createdAt: gioTruoc(39) }],
+  activeSau: [{ id: "c2", name: "Toà A · A-2", buildingName: "Toà A", bedroomsTotal: 2, listPrice: 1_050, activeAt: gioTruoc(20) }],
+});
+const tinThat = (kind: TinDauKhach["kind"]) => dungTin(vaoDung(CAN_GUI), new Date(BAY_GIO)).find((t) => t.kind === kind)!;
 
 const VAO = (b: Partial<VaoGop<string>>): VaoGop<string> => ({
   vai: [],
@@ -84,6 +96,109 @@ describe("gopViec", () => {
     const ra = gopViec(VAO({ vai: ["team_lead"], hangDoi: ok() }));
     assert.deepEqual(ra.loi, []);
     assert.equal(ra.so, 0);
+  });
+
+  describe("gộp việc: ma trận năm vai × tám loại việc", () => {
+    const CO = "một dòng";
+    const KHONG = "không có dòng";
+    const LOAI = ["lead_overdue", "lead_unrouted", "new_lead", "missing_info", "lead_returned", "buyer_reaction", "buyer_changed", "buyer_new_match"] as const;
+    type Loai = (typeof LOAI)[number];
+    const NGUON: Record<Loai, string> = { lead_overdue: "hàng đợi", lead_unrouted: "hàng đợi", new_lead: "lead giao", missing_info: "căn đầu chủ", lead_returned: "lead của tôi", buyer_reaction: "tin", buyer_changed: "tin", buyer_new_match: "tin" };
+    // Viết trước, mỗi ô một câu; đọc theo thứ tự của LOAI.
+    const BANG: Record<string, readonly string[]> = {
+      team_lead: [CO, CO, KHONG, KHONG, KHONG, KHONG, KHONG, KHONG],
+      listing_agent: [KHONG, KHONG, CO, CO, KHONG, KHONG, KHONG, KHONG],
+      telesales: [KHONG, KHONG, KHONG, KHONG, CO, KHONG, KHONG, KHONG],
+      buyer_agent: [KHONG, KHONG, KHONG, KHONG, KHONG, CO, CO, CO],
+      company_admin: [KHONG, KHONG, KHONG, KHONG, KHONG, KHONG, KHONG, KHONG],
+    };
+    const NHOM_LEAD = { code: "new_lead", actions: ["accept", "return"] as const };
+    const NHOM_CAN = { code: "missing_info", actions: ["open_record"] as const };
+    type DongDc = ViecDong;
+    const vaoCua = (vai: string, loai: Loai): VaoGop<DongDc> => ({
+      vai: [vai],
+      bayGio: BAY_GIO,
+      tv: null,
+      leadGiao: { trang: "ok" },
+      dauChu:
+        loai === "new_lead"
+          ? [{ code: loai, label: "Lead mới", viec: [{ kind: "lead", nhom: NHOM_LEAD as never, stage: "sent" }], soQua: 0 }]
+          : loai === "missing_info"
+            ? [{ code: loai, label: "Thiếu thông tin", viec: [{ kind: "can", nhom: NHOM_CAN as never }], soQua: 0 }]
+            : [],
+      hangDoi: ok(loai === "lead_overdue" ? [doi("a", "accept_overdue")] : loai === "lead_unrouted" ? [doi("b", "unrouted")] : []),
+      leadCuaToi: ok(loai === "lead_returned" ? [{ ...lead("t", "returned"), need: "sale", createdAt: gioTruoc(60) } as MyLeadView] : []),
+      tin: ok(loai === "buyer_reaction" ? [tinThat("reaction")] : loai === "buyer_changed" ? [tinThat("changed")] : loai === "buyer_new_match" ? [tinThat("new_match")] : []),
+    });
+    /** Nút chính của một dòng: dòng vai đọc từ `chuDong`, dòng đầu chủ đọc từ bảng nút. */
+    function nutChinh(d: DongDc | DongVai): string | null {
+      if (d.kind === "can" || d.kind === "lead") {
+        const { chinh } = nutCuaViec(d);
+        return chinh ? NHAN_VIEC[chinh] : null;
+      }
+      return chuDong(d, BAY_GIO, () => "[Tên]").nut || null;
+    }
+    function chayMaTran(gop: (v: VaoGop<DongDc>) => RaGop<DongDc>): number {
+      let dem = 0;
+      for (const [vai, hang] of Object.entries(BANG))
+        LOAI.forEach((loai, i) => {
+          dem += 1;
+          const ten = `${vai} × ${loai} (nguồn ${NGUON[loai]})`;
+          const ra = gop(vaoCua(vai, loai));
+          const dong = ra.nhom.filter((g) => g.ma === loai).flatMap((g) => [...g.viec]);
+          if (hang[i] === KHONG) {
+            assert.equal(dong.length, 0, `${ten}: phải không có dòng`);
+            return;
+          }
+          assert.equal(dong.length, 1, `${ten}: phải đúng một dòng`);
+          assert.ok(nutChinh(dong[0]!), `${ten}: phải có đúng một nút chính`);
+          assert.equal(ra.so, 1, `${ten}: số đầu màn bằng số dòng`);
+        });
+      return dem;
+    }
+
+    it("mọi ô đúng bảng viết trước", () => {
+      assert.equal(chayMaTran(gopViec), 40, "đủ năm vai × tám loại");
+    });
+
+    it("đối chứng: bản cố ý bỏ một nguồn thì đỏ, thông điệp nêu tên nguồn", () => {
+      const boTin = (v: VaoGop<DongDc>) => gopViec({ ...v, tin: ok() });
+      assert.throws(() => chayMaTran(boTin), /nguồn tin/);
+      const boHangDoi = (v: VaoGop<DongDc>) => gopViec({ ...v, hangDoi: ok() });
+      assert.throws(() => chayMaTran(boHangDoi), /nguồn hàng đợi/);
+    });
+  });
+
+  it("dòng đầu khách không có khoá lớp nguồn", () => {
+    const LOP_NGUON = ["ownerName", "ownerPhone", "floorPrice", "titleDeedPhoto"];
+    const MOI = "0900 000 099";
+    // Mồi nằm ở dữ liệu vào; lõi dựng tin phải bỏ lại.
+    const canMoi = { ...CAN_GUI, ownerPhone: MOI, ownerName: "[Tên chủ]", floorPrice: 1 };
+    assert.ok(JSON.stringify(canMoi).includes(MOI), "đối chứng: mồi có ở dữ liệu nguồn");
+    const VIET_TRUOC: Record<TinDauKhach["kind"], string[]> = {
+      reaction: ["at", "day", "id", "interested", "kind", "name", "opens", "recipient", "share"],
+      changed: ["at", "changed", "day", "from", "id", "kind", "listing", "name", "price", "recipient", "share", "to"],
+      new_match: ["at", "day", "id", "kind", "listPrice", "listing", "name", "recipient", "shares"],
+    };
+    const khoa = (o: unknown, ra = new Set<string>()): Set<string> => {
+      if (Array.isArray(o)) for (const x of o) khoa(x, ra);
+      else if (o && typeof o === "object")
+        for (const [k, v] of Object.entries(o)) {
+          ra.add(k);
+          khoa(v, ra);
+        }
+      return ra;
+    };
+    const ds = dungTin(vaoDung(canMoi), new Date(BAY_GIO));
+    assert.deepEqual([...new Set(ds.map((t) => t.kind))].sort(), ["changed", "new_match", "reaction"], "đủ ba loại tin");
+    for (const t of ds) {
+      const dong: DongVai = { kind: "tin", id: "x", tin: t };
+      assert.deepEqual([...khoa(t)].sort(), VIET_TRUOC[t.kind], `khoá của tin ${t.kind}`);
+      for (const k of LOP_NGUON) assert.equal(khoa(dong).has(k), false, `dòng ${t.kind} có khoá ${k}`);
+      const chu = JSON.stringify(chuDong(dong, BAY_GIO, () => "[Tên]"));
+      assert.equal(chu.includes(MOI), false, `chữ dòng ${t.kind} lộ số`);
+      assert.equal(JSON.stringify(dong).includes(MOI), false, `dòng ${t.kind} lộ số`);
+    }
   });
 
   it("hai nguồn lỗi ra hai dòng báo", () => {

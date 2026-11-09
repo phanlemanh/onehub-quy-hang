@@ -1,0 +1,22 @@
+50. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
+51. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
+52. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
+53. [GET] http://localhost:3462/api/v1/leads => [200] OK
+54. [GET] http://localhost:3462/api/v1/today/buyer => [200] OK
+57. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
+58. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
+59. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
+60. [GET] http://localhost:3462/api/v1/leads => [200] OK
+61. [GET] http://localhost:3462/api/v1/today/buyer => [200] OK
+151. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
+152. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
+154. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
+155. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
+158. [POST] http://localhost:3462/api/v1/leads/00937426-90b2-489f-b108-1dffb2d3c4d9/assign => [200] OK
+159. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
+160. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
+162. [POST] http://localhost:3462/api/v1/leads/2a22fad8-06ac-456d-9d28-28342925b3e9/assign => [200] OK
+163. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
+164. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
+
+Note: 129 static requests not shown, run with "static" option to see them.

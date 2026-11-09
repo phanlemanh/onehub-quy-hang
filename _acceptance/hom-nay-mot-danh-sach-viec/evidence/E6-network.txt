@@ -1,0 +1,5 @@
+200 /api/v1/team/listing-agents
+200 /api/v1/team/lead-queue (x2)
+200 /api/v1/listings (x2)
+console errors: not inspected beyond playwright log; no failed app requests
+dau-khach direct GET /api/v1/team/lead-queue -> 403 team-lead-required

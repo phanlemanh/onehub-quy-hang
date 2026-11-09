@@ -1,0 +1,3 @@
+Driver playwright, origin localhost:3462, vai du-vai, /today
+GET /api/v1/team/lead-queue 500 x4 (do chinh buoc chan cua eval); sau bo chan moi fetch app 200
+Console errors 4 tu cac 500 chu y
