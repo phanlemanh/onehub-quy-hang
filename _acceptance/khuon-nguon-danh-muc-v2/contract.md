@@ -5,7 +5,7 @@ slug: khuon-nguon-danh-muc-v2
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: approved
+status: implemented
 approved_by: Manh Phan
 approved_at: 2026-11-09
 design_doc: docs/superpowers/specs/2026-11-09-khuon-nguon-danh-muc-v2-design.md
