@@ -1,0 +1,96 @@
+schema_version: 1
+feature_slug: va-lead-da-nhap-than-hong
+# Luật đọc chấm bằng bài kiểm của apps/web với fetch giả; mỗi tiêu chí một bài nhìn màn với phản hồi giả lập. Dữ liệu mẫu: `[Tên]`, `0900 000 0xx`.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong leads/mine/nguon-that.test.ts ca «thân không phải JSON» có mặt và ok: fetch giả trả 200 thân {hong → nguon.lay() trả null, không ném. Chiều đỏ: bản res.json() cũ ném ở ca này."
+    paths: ["apps/web/src/app/(app)/leads/mine/nguon-that.tsx", "apps/web/src/app/(app)/leads/mine/nguon-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E1b
+    criterion: AC-1
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/leads/mine"
+    steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); mở trong một browser context mới, đặt cookie bằng context.addCookies, phản hồi giả lập bằng page.route, khổ 1440. Trước khi chấm: gọi GET /api/v1/leads thật bằng cookie telesales phải ra mảng có ít nhất một phần tử. Dòng lead là hàng trong tbody của bảng"
+      - "Đối chứng dương của bộ đếm: giữ treo GET /api/v1/leads, đếm [data-cho-tai] phải ít nhất 1"
+      - "Vai telesales, GET /api/v1/leads trả 200 thân {hong mọi lần: chờ 6 giây, đếm phần tử [data-cho-tai], đếm [role=alert]:not(#__next-route-announcer__), đếm nút «Thử lại», chụp"
+      - "Lặp bước trên ở khổ 375: đọc scrollWidth so với clientWidth của tài liệu, đo nút «Thử lại» nằm trong khung nhìn, chụp"
+    expected: "Đối chứng: có khung chờ. Ở 1440 và 375: không còn khung chờ, đúng một khối báo lỗi có chữ «Không tải được lead đã nhập», đúng một «Thử lại»; ở 375 không tràn ngang, nút trong khung nhìn. Đỏ trên bản cũ: khung chờ mãi, không nút."
+    paths: ["apps/web/src/app/(app)/leads/mine/nguon-that.tsx", "apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong leads/mine/nguon-that.test.ts ca «JSON không phải danh sách» có mặt và ok, năm dòng: 200 thân {\"a\":1}, 200 thân null, 200 thân \"chuoi\", 200 thân [null], 200 thân [{\"a\":1}] đều → null, đếm 5. Chiều đỏ: bản cũ trả nguyên giá trị ở cả năm dòng; bỏ điều kiện từng phần tử thì hai dòng cuối đỏ."
+    paths: ["apps/web/src/app/(app)/leads/mine/nguon-that.tsx", "apps/web/src/app/(app)/leads/mine/nguon-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2b
+    criterion: AC-2
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/leads/mine"
+    steps:
+      - "Dựng chỗ thử như E1b, trong một browser context mới; bắt lỗi trang bằng page.on(\"pageerror\")"
+      - "Vai telesales, GET /api/v1/leads trả 200 thân {\"a\":1} mọi lần: chờ 6 giây, đếm khối báo lỗi, nút «Thử lại», số pageerror, chụp"
+      - "Trang mới, GET /api/v1/leads trả 200 thân [null] mọi lần: chờ 6 giây, đếm như trên"
+    expected: "Hai ca: đúng một khối báo lỗi, đúng một «Thử lại», không có pageerror, không có trang lỗi toàn màn. Đỏ trên bản cũ: vỡ lúc dựng."
+    paths: ["apps/web/src/app/(app)/leads/mine/nguon-that.tsx", "apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E3b
+    criterion: AC-3
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/leads/mine"
+    steps:
+      - "Dựng chỗ thử như E1b, trong một browser context mới"
+      - "Vai telesales, GET /api/v1/leads trả 200 thân {hong: đợi khối báo lỗi; bỏ chặn, bấm «Thử lại», chờ 4 giây, đọc số dòng lead và khối báo lỗi"
+      - "Trang mới, 200 thân {hong: đợi khối báo lỗi; bỏ chặn, phát sự kiện online, không bấm, chờ 4 giây, đọc lại"
+      - "Trang mới, 200 thân {hong mọi lần: đợi khối báo lỗi; giữ chặn, đếm số GET /api/v1/leads, phát sự kiện online, chờ 5 giây, đếm lại số GET, [data-cho-tai] và khối báo lỗi"
+      - "Trang mới, 200 thân {hong mọi lần: đợi khối báo lỗi; bấm «Thử lại» hai lần, sau mỗi lần chờ 3 giây rồi đếm số GET, [data-cho-tai], khối báo lỗi, «Thử lại»"
+    expected: "Bước 2 và 3: có dòng lead, hết khối báo lỗi. Bước 4: số GET tăng, không còn khung chờ, đúng một khối báo lỗi, đúng một «Thử lại». Bước 5: mỗi lần bấm số GET tăng đúng 1 ở máy đã bỏ qua lượt đôi của chế độ dev, không khung chờ, đúng một khối, đúng một «Thử lại». Đỏ trên bản cũ: bước 2 không đạt vì không có nút."
+    paths: ["apps/web/src/app/(app)/leads/mine/nguon-that.tsx", "apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; trong leads/mine/nguon-that.test.ts ca «phản hồi đúng giữ nguyên» có mặt và ok, bốn dòng: 200 danh sách một lead đủ trường → đúng danh sách đó; 200 [] → mảng rỗng, không null; 500 → null; fetch ném → null; đếm 4. Chiều đỏ: thay mảng rỗng bằng null thì dòng 2 đỏ."
+    paths: ["apps/web/src/app/(app)/leads/mine/nguon-that.tsx", "apps/web/src/app/(app)/leads/mine/nguon-that.test.ts"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4b
+    criterion: AC-4
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    target: "http://localhost:3462/leads/mine"
+    steps:
+      - "Dựng chỗ thử như E1b, trong một browser context mới"
+      - "Vai telesales không chặn gì: chờ 5 giây, đọc số dòng lead"
+      - "GET /api/v1/leads trả 200 thân []: đọc chữ"
+      - "GET /api/v1/leads trả 500 mọi lần: đếm khối báo lỗi và «Thử lại»"
+      - "GET /api/v1/leads cắt mạng (route.abort), trình duyệt vẫn báo có mạng: đếm khối báo lỗi, «Thử lại», [data-cho-tai]"
+    expected: "Bước 2 có ít nhất một dòng lead. Bước 3 có «Chưa có lead nào», không khối báo lỗi. Bước 4 và 5: đúng một khối báo lỗi, đúng một «Thử lại», không khung chờ."
+    paths: ["apps/web/src/app/(app)/leads/mine/nguon-that.tsx", "apps/web/src/app/(app)/leads/mine/lead-da-nhap.tsx"]
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E5
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/leads/mine/**"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
