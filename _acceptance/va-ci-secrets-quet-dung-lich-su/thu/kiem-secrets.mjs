@@ -142,8 +142,9 @@ function chayLenh(cwd, lenh, nha, { trace = false } = {}) {
   const ra = (r.stdout ?? "") + (r.stderr ?? "");
   const commits = new Map();
   if (existsSync(bao)) for (const f of JSON.parse(readFileSync(bao, "utf8"))) commits.set(f.Commit, (commits.get(f.Commit) ?? 0) + 1);
-  const m = ra.match(/trace: built-in: git log ([^\x1b\n]*)/);
-  return { ma: r.status, commits, gitLog: m ? `log ${m[1].trim()}` : null };
+  // gitleaks in lại dòng trace kèm mã màu ANSI ở cuối, bắt đầu bằng ký tự ESC.
+  const m = ra.match(/trace: built-in: git log ([^\n]*)/);
+  return { ma: r.status, commits, gitLog: m ? `log ${m[1].split(String.fromCharCode(27))[0].trim()}` : null };
 }
 const inCommit = (m) => `[${[...m.keys()].map((s) => s.slice(0, 8)).join(", ")}]`;
 const bangTap = (m, s) => (s ? m.size === 1 && m.has(s) : m.size === 0);
