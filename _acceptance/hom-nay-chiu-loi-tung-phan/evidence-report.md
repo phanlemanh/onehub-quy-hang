@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 3d2907e2e5b2f2cf40ce438014c50c02de4fa728
+verified_commit: a8ac972e08cf0f6f9172ebc1c62a4d18b544cbae
 human_signoff: Manh Phan 2026-11-09
 ---
 
@@ -311,3 +311,7 @@ Round 2: E2b, E4b, E5b, E10b, E10c, E10d và các lệnh suite chạy lại trê
 ### Re-pin lần 1 — 2026-11-09, do gộp main có #237 sau chữ ký
 run_id: repin-20261109T124454Z-27516
 sha: 3d2907e2e5b2f2cf40ce438014c50c02de4fa728 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E1b, E2b, E3b, E4b, E5b, E6b, E7b, E8, E9b, E10, E10d · AC không có chốt máy: AC-8 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
+
+### Re-pin lần 2 — 2026-11-09, do gộp main có #240 sau chữ ký
+run_id: repin-20261109T132359Z-35702
+sha: a8ac972e08cf0f6f9172ebc1c62a4d18b544cbae · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E1b, E2b, E3b, E4b, E5b, E6b, E7b, E8, E9b, E10, E10d · AC không có chốt máy: AC-8 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
