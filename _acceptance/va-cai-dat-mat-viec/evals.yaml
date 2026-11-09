@@ -96,3 +96,10 @@ evals:
     expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
     paths: ["apps/web/src/app/(app)/settings/**"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E12
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
