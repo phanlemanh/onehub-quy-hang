@@ -1,0 +1,4 @@
+200 GET /api/v1/listings
+200 GET /api/v1/leads (real, step1 + mocked-fulfilled steps 3/4)
+no failed requests, no console errors captured
+(step2 leads request held pending by route; counted not failed)

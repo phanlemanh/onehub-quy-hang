@@ -1,0 +1,6 @@
+ca1 {a:1} 200 GET http://localhost:3462/api/v1/leads
+ca1 {a:1} 200 GET http://localhost:3462/api/v1/leads
+ca1 {a:1} 200 GET http://localhost:3462/api/v1/listings
+ca2 [null] 200 GET http://localhost:3462/api/v1/leads
+ca2 [null] 200 GET http://localhost:3462/api/v1/leads
+ca2 [null] 200 GET http://localhost:3462/api/v1/listings

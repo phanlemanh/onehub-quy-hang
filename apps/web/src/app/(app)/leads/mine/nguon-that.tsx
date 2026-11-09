@@ -1,14 +1,30 @@
 "use client";
 
-import type { MyLeadView } from "@quy-hang/core/dedupe";
+import { LEAD_SIDE_STATES, LEAD_STAGES, NEED_LABELS, type MyLeadView } from "@quy-hang/core/dedupe";
 
 import { docMang } from "../../today/viec/doc-nguon";
 import { LeadDaNhap, type NguonLeadDaNhap } from "./lead-da-nhap";
 
-/** Màn dựng từng dòng từ các trường này; thiếu thì cả lần đọc là hỏng, không để lọt tới màn. */
+const NAC: readonly unknown[] = [...LEAD_STAGES, ...LEAD_SIDE_STATES];
+const MOC = ["routedAt", "acceptedAt", "firstCalledAt", "boardAt", "returnedAt", "resubmittedAt"] as const;
+const laNgay = (x: unknown) => typeof x === "string" && !Number.isNaN(Date.parse(x));
+
+/** Đủ các trường màn dựng dòng từ đó (`DongLead`); một phần tử sai thì cả lần đọc là hỏng, không để màn hiện chữ rác hay vỡ lúc dựng. */
 function laLead(x: unknown): x is MyLeadView {
-  const l = x as Partial<MyLeadView> | null;
-  return typeof l === "object" && l !== null && typeof l.id === "string" && typeof l.buildingName === "string" && typeof l.stage === "string";
+  if (typeof x !== "object" || x === null) return false;
+  const l = x as Record<string, unknown>;
+  return (
+    typeof l.id === "string" &&
+    typeof l.buildingName === "string" &&
+    (l.unitNumber === null || typeof l.unitNumber === "string") &&
+    typeof l.need === "string" &&
+    Object.hasOwn(NEED_LABELS, l.need) &&
+    typeof l.listPrice === "number" &&
+    typeof l.feeInclusion === "string" &&
+    NAC.includes(l.stage) &&
+    laNgay(l.createdAt) &&
+    MOC.every((k) => l[k] === null || laNgay(l[k]))
+  );
 }
 
 // Hai lời gọi thật của vùng «Lead đã nhập»: liệt lead mình nhập và «Sửa số và gửi lại» (hàng 27, ADR-0020).
