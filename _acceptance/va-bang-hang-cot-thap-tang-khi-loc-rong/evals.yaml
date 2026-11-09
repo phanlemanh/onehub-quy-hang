@@ -8,7 +8,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/inventory/**"]
-    expected: "exit 0; apps/web/src/app/(app)/inventory/cot-khi-loc-rong.test.ts ca «lọc rỗng ở cột thấp tầng: bộ cột còn nguyên» — dòng dựng qua ghepDanhMuc từ bộ mẫu hàng 73; bảng viết trước sáu ca, assert số ca chạy = 6: Đất lọc Loại hình × (lotSizeArea, frontageLength, accessRoadWidth); bảng trộn chưa lọc Loại hình × (lotSizeArea, storiesTotal); bảng trộn đã có ô Số tầng khớp rồi thêm ô Diện tích đất không khớp. Mỗi ca chạy qua hàm bước thật từng phím: locDong ra rỗng, bộ cột và tiêu đề vị trí bằng đúng bước liền trước; đối chứng dương: tính thẳng từ dòng rỗng thì cột đang lọc mất, assert ghim tên cột."
+    expected: "exit 0; apps/web/src/app/(app)/inventory/cot-khi-loc-rong.test.ts ca «lọc rỗng ở cột thấp tầng: bộ cột còn nguyên» — dòng dựng qua ghepDanhMuc từ bộ mẫu hàng 73; bảng viết trước tám ca, assert số ca chạy = 8: Đất lọc Loại hình × (lotSizeArea, frontageLength, accessRoadWidth); bảng trộn chưa lọc Loại hình × (lotSizeArea, storiesTotal); bảng trộn đã có ô Số tầng khớp rồi thêm ô Diện tích đất không khớp; hai ca ba bước còn dòng liên tiếp (trộn → Đất → rỗng, trộn → Số tầng → rỗng). Mỗi ca chạy qua hàm bước thật từng phím: locDong ra rỗng, bộ cột và tiêu đề vị trí bằng đúng bước liền trước; đối chứng dương: tính thẳng từ dòng rỗng thì cột đang lọc mất, assert ghim tên cột."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E2
     criterion: AC-2
@@ -36,7 +36,7 @@ evals:
     executor: test
     cmd: config:executors.test.web
     paths: ["apps/web/src/app/(app)/inventory/**"]
-    expected: "exit 0; cot-khi-loc-rong.test.ts ca «mở bảng đã rỗng, bật tắt cột lúc rỗng» — hàm bước với trước = null và số dòng 0: bộ cột theo các dòng chỉ lọc Loại hình = Đất (mảng viết trước), bỏ các ô lọc khác; bảng đang rỗng, tắt lotSizeArea thì mảng cột không còn nó, bật cột của loại hình đang hiện thì có, tiêu đề vị trí không đổi."
+    expected: "exit 0; cot-khi-loc-rong.test.ts ca «mở bảng đã rỗng, bật tắt cột lúc rỗng» — hàm bước với trước = null và số dòng 0: bộ cột theo các dòng chỉ lọc Loại hình = Đất (mảng viết trước), bỏ các ô lọc khác; bảng đang rỗng, tắt lotSizeArea thì mảng cột không còn nó, bật lại thì có, floor bị loại hình ẩn thì bật vẫn không có, tiêu đề vị trí bằng bước liền trước; ca «áp góc nhìn: bỏ bộ cột đang giữ» — qua bước không lọc rồi áp góc nhìn đã rỗng ra bộ cột của đất, đối chứng không bỏ nhớ ra bộ cột trộn, và hàm áp góc nhìn của màn có lệnh bỏ nhớ."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
   - id: E5
     criterion: AC-5
