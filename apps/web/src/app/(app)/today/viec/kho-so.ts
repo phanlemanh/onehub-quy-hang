@@ -28,10 +28,12 @@ export function boNhomCua<T>(vai: readonly string[], boDauChu: readonly T[], tao
 const NGUON_NHOM: Readonly<Record<string, MaNguon>> = { lead_overdue: "hang-doi", lead_unrouted: "hang-doi", lead_returned: "lead-cua-toi", buyer_reaction: "tin", buyer_changed: "tin", buyer_new_match: "tin", new_lead: "lead-giao" };
 
 /** Số từng mục của cột thứ hai, lấy từ chính kết quả gộp; nhóm của nguồn đọc hỏng không có số. */
-export function mucSoTuGop(bo: readonly { code: string; label: string; enabled: boolean }[], gop: Pick<RaGop<unknown>, "nhom" | "loi">): MucSo[] {
+export function mucSoTuGop(bo: readonly { code: string; label: string; enabled: boolean; subject?: string }[], gop: Pick<RaGop<unknown>, "nhom" | "loi">): MucSo[] {
+  // Nhóm sàn tự đặt mã không có trong bảng: nhóm lead thuộc nguồn lead giao, nhóm căn đọc từ máy nên không thuộc nguồn nào.
+  const nguonCua = (n: { code: string; subject?: string }): MaNguon | undefined => NGUON_NHOM[n.code] ?? (n.subject === "lead" ? "lead-giao" : undefined);
   return bo
     .filter((n) => n.enabled)
-    .map((n) => ({ ma: n.code, nhan: n.label, so: gop.loi.some((l) => l.nguon === NGUON_NHOM[n.code]) ? null : (gop.nhom.find((g) => g.ma === n.code)?.viec.length ?? 0) }));
+    .map((n) => ({ ma: n.code, nhan: n.label, so: gop.loi.some((l) => l.nguon === nguonCua(n)) ? null : (gop.nhom.find((g) => g.ma === n.code)?.viec.length ?? 0) }));
 }
 
 let hien: SoViec | null = null;
@@ -55,9 +57,9 @@ export function useSoViec(): SoViec | null {
 
 export type MucCotViec = { label: string; href: string; so: number | null };
 
-/** Mục của cột: «Tất cả việc», rồi nhóm của vai người xem. Chưa có số thì nhãn mặc định, không số. */
+/** Mục của cột: «Tất cả việc», rồi nhóm của vai người xem. Chưa có số, hay tổng 0 mà có nguồn đọc hỏng, thì không số. */
 export function mucCotHomNay(roles: readonly string[], soViec: SoViec | null): MucCotViec[] {
-  const dau: MucCotViec = { label: "Tất cả việc", href: "/today", so: soViec?.so ?? null };
+  const dau: MucCotViec = { label: "Tất cả việc", href: "/today", so: soViec && !(soViec.coLoi && soViec.so === 0) ? soViec.so : null };
   if (soViec) return [dau, ...soViec.muc.map((m) => ({ label: m.nhan, href: `/today?nhom=${m.ma}`, so: m.so }))];
   const dauChu = roles.includes("listing_agent") ? BO_NHOM_MAC_DINH.filter((n) => n.enabled).map((n) => ({ code: n.code, label: n.label })) : [];
   const vai = NHOM_VAI.filter((n) => roles.includes(n.vai));

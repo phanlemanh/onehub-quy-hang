@@ -1,0 +1,5 @@
+E6b network (Playwright page.on response, app-origin http://localhost:3462/api/v1)
+ca1 truong-nhom, lead-queue 500 injected: 500 lead-queue x4 (injected); recheck: catalog/listing-agents/push/listings 200. First run also showed listing-agents 500 x4 (not reproduced in recheck; page-level route leftover suspected, listing-agents real = 200 via curl)
+ca2 dau-chu, leads/assigned 500 injected: 500 leads/assigned x4 (injected); no other failures
+ca3 truong-nhom control: no failures
+Console errors: only the injected 500 resource loads (playwright console log .playwright-mcp/console-2026-11-09T07-53-19-078Z.log)

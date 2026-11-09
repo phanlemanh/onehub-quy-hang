@@ -1,0 +1,8 @@
+E9b network (Playwright page.on response, app-origin /api/):
+step1 3 loi: 200 (than {hong, chan) x4 -> khung loi, 0 busy
+step2 (go chan): 200 GET /api/v1/today/buyer, 200 GET /api/v1/listings
+step4: 500 x2 (chan co y) roi 200 thuc
+step5: 500 chan co y moi lan, sau go chan + online: 200 thuc
+Moi 500 la loi gia lap theo buoc eval (page.route); khong co 500/4xx/connection-error nao tu may that tren request khong bi chan.
+console errors: chi 'Failed to load resource 500 today/buyer' do chan gia lap; (leads/assign 500 la tu phien khac truoc eval).
+navigator.onLine=false trong trinh duyet Playwright -> banner shell 'Dang xem ban da tai - mat mang' (role=alert) co o moi khung, khong thuoc vung tin.

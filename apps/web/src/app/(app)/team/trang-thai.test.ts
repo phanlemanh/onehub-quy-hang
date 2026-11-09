@@ -9,8 +9,11 @@ import { hangCuTheoNguoi, tongCanGoiLai } from "@quy-hang/core/today";
 import { layHangDoiTruongNhom, type DongLeadTruongNhom } from "../today/nguon";
 import {
   baO,
+  baoLoiDoi,
   dongTheoNguoi,
   hangCuTrenMay,
+  kyHieuDauChu,
+  moTaMatMang,
   trangThaiTruongNhom,
   type CanTrenMay,
   type TrangThaiTruongNhom,
@@ -120,3 +123,24 @@ describe("hôm nay trưởng nhóm", () => {
 
 });
 
+
+describe("Đội chịu lỗi từng phần (hom-nay-chiu-loi-tung-phan)", () => {
+  it("một báo lỗi của Đội", () => {
+    assert.equal(baoLoiDoi({ hangDoi: false, dauChu: false }), null);
+    assert.equal(baoLoiDoi({ hangDoi: true, dauChu: false }), "Không tải được lead quá hạn");
+    assert.equal(baoLoiDoi({ hangDoi: false, dauChu: true }), "Không tải được tên đầu chủ");
+    assert.equal(baoLoiDoi({ hangDoi: true, dauChu: true }), "Không tải được lead quá hạn");
+  });
+  it("kyHieuDauChu", () => {
+    assert.equal(kyHieuDauChu("Người Thử"), "TH");
+    assert.equal(kyHieuDauChu("Chưa rõ tên"), "—");
+    assert.equal(kyHieuDauChu(""), "—");
+  });
+  it("câu mất mạng", () => {
+    const co = moTaMatMang([]);
+    const chua = moTaMatMang(null);
+    assert.equal(co, "Số là lần đọc cuối.");
+    assert.equal(chua, "Máy sẽ tự đọc lại khi có mạng.");
+    for (const cau of [co, chua]) assert.ok(!cau.includes("giao lại"), cau);
+  });
+});

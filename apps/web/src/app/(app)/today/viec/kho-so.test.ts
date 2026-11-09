@@ -8,7 +8,7 @@ import type { TinDauKhach } from "@quy-hang/core/today";
 import type { MyLeadView } from "@quy-hang/core/dedupe";
 
 import { mucDangChon } from "../mo-nhom";
-import { gopViec, type VaoGop } from "./gop-viec";
+import { gopViec, type MaNguon, type VaoGop } from "./gop-viec";
 import { boNhomCua, moTaSoViec, mucCotHomNay, mucSoTuGop, type SoViec } from "./kho-so";
 
 const TL = ["lead_overdue", "lead_unrouted"];
@@ -37,6 +37,7 @@ const VAO = (vai: string[], b: Partial<VaoGop<string>> = {}): VaoGop<string> => 
   tv: null,
   dauChu: [{ code: "new_lead", label: "Lead mới", viec: ["l1", "l2"], soQua: 1 }, { code: "viec_rieng", label: "Việc riêng", viec: ["c1"], soQua: 0 }],
   leadGiao: { trang: "ok" },
+  dauChuSan: { trang: "ok" },
   hangDoi: { trang: "ok", ds: [doi("a", "accept_overdue"), doi("b", "first_call_overdue"), doi("c", "first_call_overdue"), doi("d", "unrouted")] },
   leadCuaToi: { trang: "ok", ds: [{ id: "t", stage: "returned" } as MyLeadView] },
   tin: { trang: "ok", ds: [tin("reaction"), tin("reaction"), tin("changed"), tin("new_match")] },
@@ -99,6 +100,22 @@ describe("cột thứ hai của Hôm nay", () => {
     assert.equal(mucDangChon(muc, "/today", ""), "/today");
     assert.equal(mucDangChon(muc, "/today", "nhom=lead_overdue"), "/today?nhom=lead_overdue");
     assert.equal(mucDangChon(muc, "/today", "nhom=la_lam"), "/today", "mã lạ về Tất cả việc");
+  });
+
+  it("cột không có số khi chưa đọc được", () => {
+    const so = (s: Partial<SoViec>) => mucCotHomNay([], { so: 0, quaHan: 0, coLoi: false, muc: [], ...s })[0]!.so;
+    assert.equal(so({ coLoi: true, so: 0 }), null);
+    assert.equal(so({ coLoi: true, so: 15 }), 15);
+    assert.equal(so({ coLoi: false, so: 0 }), 0);
+    const bo = [
+      { code: "lead_tu_dat", label: "Lead riêng", enabled: true, subject: "lead" },
+      { code: "can_tu_dat", label: "Căn riêng", enabled: true, subject: "listing" },
+      { code: "lead_overdue", label: "Quá hạn", enabled: true, subject: "lead" },
+    ];
+    const moc = (loi: MaNguon[]) => mucSoTuGop(bo, { loi: loi.map((nguon) => ({ nguon, chu: "" })), nhom: [{ ma: "can_tu_dat", nhan: "", thuoc: "dau-chu", viec: ["a", "b"], soQua: 0 }] });
+    assert.equal(moc(["lead-giao"])[0]!.so, null, "nhóm lead sàn tự đặt mã");
+    assert.equal(moc(["lead-giao"])[1]!.so, 2, "nhóm căn giữ số thật");
+    assert.equal(moc(["hang-doi"])[2]!.so, null, "nhóm của vai");
   });
 
   it("sổ điểm biến thiên có dòng điều khoá của nhóm và mốc 48 giờ", () => {
