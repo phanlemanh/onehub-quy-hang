@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 258eae51da3c8862a5b9b4bab8e8b20ba9ec7dc8
+verified_commit: 0dc875638c5fbe7b84e57efd8504f648517dbbc4
 human_signoff:
 ---
 
@@ -205,3 +205,7 @@ sha: 5bc6b8b3a36415f0c4b7214f867380dcf2a00522 · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 4 — 2026-11-09, do gộp main lần bốn, không đổi tệp của hồ sơ
 run_id: repin-20261109T065757Z-92875
 sha: 258eae51da3c8862a5b9b4bab8e8b20ba9ec7dc8 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
+
+### Re-pin lần 5 — 2026-11-09, do gộp main lần năm, không đổi tệp của hồ sơ
+run_id: repin-20261109T075440Z-99571
+sha: 0dc875638c5fbe7b84e57efd8504f648517dbbc4 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
