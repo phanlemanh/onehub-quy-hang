@@ -1,0 +1,1 @@
+E8b network (playwright, origin http://localhost:3462). 500 on /api/v1/team/lead-queue were INJECTED by page.route in step 2 (4 requests); all other app requests 200. No failed requests, no real 4xx/5xx.

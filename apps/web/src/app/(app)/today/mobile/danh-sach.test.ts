@@ -214,7 +214,7 @@ const NHOM_LUOI = BO_NHOM_MAC_DINH.filter((n) => n.enabled).map((n) => ({
   viec: [n.subject === "lead" ? LEAD_DA_NHAN : ({ kind: "can", nhom: n } as ViecDong)],
 }));
 const theCua = (v: ViecDong) => the({ id: `x:${v.nhom.code}`, dong: v });
-const dungDs = (nhomThe: readonly NhomThe[], trangThai: "dang" | "loi" | "co" = "co", trong: ReactNode = createElement(HetViec)) =>
+const dungDs = (nhomThe: readonly NhomThe[], trangThai: "dang" | "loi" | "co" = "co", trong: ReactNode = createElement(HetViec, { vai: ["listing_agent"] })) =>
   renderToStaticMarkup(createElement(DanhSachDienThoai, { trangThai, nhom: nhomThe, coMang: true, onThuLai: () => {}, trong, kho: null }));
 const thuTuNhom = (html: string) => [...html.matchAll(/data-nhom-the="([^"]+)"/g)].map((m) => m[1]);
 type HamDung = typeof dungNhomThe<{ kind: string } & ViecDong, TheDong, "primary-light">;

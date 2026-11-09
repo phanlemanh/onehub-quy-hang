@@ -5,7 +5,7 @@
 // ngày ở đầu trang (cần `date-fns`/`react-day-picker` qua `date-range-picker` chưa chép), nút Export và toast hoàn tác
 // (`sonner`), trình đơn «…» của hàng đợi (xử lý hết/mở lại/ẩn đã xong — dòng giao xong rời hàng đợi), lề và nền
 // `min-h-svh` của khung ngoài (vỏ app đã có). IconPlaceholder thay bằng icon lucide.
-import { Fragment, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { ListChecksIcon } from "lucide-react";
 
 import { Badge, type BadgeProps } from "@/components/reui/badge";
@@ -13,7 +13,6 @@ import { Frame, FrameDescription, FrameFooter, FrameHeader, FramePanel, FrameTit
 import { cn } from "cn";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Item, ItemMedia } from "@/components/ui/item";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -53,34 +52,6 @@ function IconTile({ children, variant, size = "default" }: { children: ReactNode
         {children}
       </ItemMedia>
     </Item>
-  );
-}
-
-export type Crumb = { label: string; href?: string };
-
-function CoverageHeader({ crumbs, label }: { crumbs: Crumb[]; label: string }) {
-  return (
-    <header className="flex min-h-9 w-full shrink-0 items-center justify-between gap-2" aria-label={label}>
-      <Breadcrumb className="min-w-0">
-        <BreadcrumbList className="flex-nowrap">
-          {crumbs.map((c, i) => {
-            const last = i === crumbs.length - 1;
-            return last ? (
-              <BreadcrumbItem key={c.label} className="min-w-0">
-                <BreadcrumbPage className="truncate">{c.label}</BreadcrumbPage>
-              </BreadcrumbItem>
-            ) : (
-              <Fragment key={c.label}>
-                <BreadcrumbItem className="hidden md:inline-flex">
-                  <BreadcrumbLink render={<a href={c.href ?? "#"} />}>{c.label}</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:flex" />
-              </Fragment>
-            );
-          })}
-        </BreadcrumbList>
-      </Breadcrumb>
-    </header>
   );
 }
 
@@ -244,34 +215,18 @@ function ActionQueue({ items, renderCta, t }: { items: QueueAction[]; renderCta:
 }
 
 export function CoverageDashboard({
-  heading,
-  crumbs,
   metrics,
   members,
   coverage,
   queue,
-  queueItems,
-  renderQueueCta,
 }: {
-  heading: string;
-  crumbs: Crumb[];
   metrics: MetricCard[];
   members: CrewMember[];
   coverage: CoverageLabels;
-  queue: QueueLabels;
-  queueItems: QueueAction[];
-  renderQueueCta: (item: QueueAction) => ReactNode;
+  queue?: { labels: QueueLabels; items: QueueAction[]; renderCta: (item: QueueAction) => ReactNode };
 }) {
   return (
-    <div className="bg-background text-foreground w-full">
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-4" aria-labelledby="page-heading">
-        <h1 id="page-heading" className="sr-only">
-          {heading}
-        </h1>
-
-        {/* Header */}
-        <CoverageHeader crumbs={crumbs} label={heading} />
-
+    <div className="text-foreground flex w-full min-w-0 flex-col gap-4">
         {/* Metrics */}
         <div className="@container">
           <Frame spacing="default">
@@ -285,12 +240,11 @@ export function CoverageDashboard({
 
         {/* Operations */}
         <div className="grid items-stretch gap-4 lg:grid-cols-3">
-          <div className="min-w-0 lg:col-span-2">
+          <div className={queue ? "min-w-0 lg:col-span-2" : "min-w-0 lg:col-span-3"}>
             <CoverageTable members={members} t={coverage} />
           </div>
-          <ActionQueue items={queueItems} renderCta={renderQueueCta} t={queue} />
+          {queue ? <ActionQueue items={queue.items} renderCta={queue.renderCta} t={queue.labels} /> : null}
         </div>
-      </main>
     </div>
   );
 }

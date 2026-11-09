@@ -137,7 +137,7 @@ function kiemBoc(ten: string, nguon: string, the: string): string[] {
 }
 const TRANG: [string, string][] = [
   ["units/[code]/page.tsx", "HoSoToanMan"],
-  ["today/page.tsx", "HomNayDauChu"],
+  ["today/page.tsx", "HomNayDanhSach"],
   ["inventory/page.tsx", "BangCoHoSo"],
   ["inventory/views/[id]/page.tsx", "BangHang"],
 ];
@@ -160,7 +160,7 @@ test("hồ sơ: bốn đường dựng đều nằm trong từ vựng", () => {
 
 test("hồ sơ: đúng bốn lời gọi cột hồ sơ, thêm chỗ thứ năm thì đỏ", () => {
   const VIET_TRUOC: Record<string, number> = {
-    "app/(app)/today/hom-nay-dau-chu.tsx": 1,
+    "app/(app)/today/hom-nay.tsx": 1,
     "app/(app)/units/ho-so/bang-co-ho-so.tsx": 2,
     "app/(app)/units/ho-so/ho-so-toan-man.tsx": 1,
   };

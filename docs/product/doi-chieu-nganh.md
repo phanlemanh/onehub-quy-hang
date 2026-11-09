@@ -281,6 +281,21 @@ mã sàn và mã người mờ, máy thu kéo về (ADR-0027, hàng 95). Tra ng�
 Chỗ ta viết cứng mà họ cho cấu hình: ba loại sự kiện và sáu trường báo sai cố định trong khuôn v1 — điều khoá K32 (nghĩa
 chuẩn để so giữa các sàn).
 
+## 13. Màn việc mở đầu: một danh sách hay theo vai
+
+Tra 09/11 cho hàng `hom-nay-mot-danh-sach-viec`. Trang help của Follow Up Boss chặn đọc trực tiếp (403) nên các dòng của nó lấy
+từ bản tóm công cụ tìm kiếm trên đúng các trang ấy, chưa đọc nguyên văn.
+
+| Sản phẩm | Màn việc | Người quản lý | Báo cáo đội | Nguồn |
+| --- | --- | --- | --- | --- |
+| Keller Williams Command | Một trang Tasks, hai tab theo đối tượng (Contact, Opportunity); xong bằng tick kèm ghi chú | Chưa kiểm | Chưa kiểm | [Mark task complete](https://documentation.kw.com/html/kellercloud/command/tasks/mark-task-complete.html) |
+| Follow Up Boss | Một trang Tasks: hôm nay, quá hạn; việc tự động hiện đúng ngày, không bắn thông báo | Cùng giao diện: agent thấy của mình, team lead thêm của đội, owner thấy hết | Mục Reporting riêng | [Tasks](https://help.followupboss.com/hc/en-us/articles/360014274453-Tasks-Overview), [Roles](https://help.followupboss.com/hc/en-us/articles/4402370636567-Users-Roles-Permissions), [Agent activity](https://help.followupboss.com/hc/en-us/articles/360014693073-Agent-activity-report) |
+| HubSpot | CRM › Tasks một chỗ; hàng đợi là nhãn để nhóm, tối đa 20 mỗi người | Hàng đợi chia sẻ cho nhiều người | Dashboard riêng | [Task queues](https://knowledge.hubspot.com/tasks/use-task-queues) |
+| Salesforce | Home có hai khung tách: sự kiện và việc hôm nay | Chưa kiểm | Báo cáo hoạt động riêng | [Trailhead](https://trailhead.salesforce.com/sales_admin_maximize_productivity/sales_admin_maximize_productivity_unit_1) |
+| RESO DD 2.0 | Không có tài nguyên cho việc; `Queue` là nhật ký sự kiện, `InternetTracking` ghi sự kiện web | — | `Teams`, `TeamMembers` lưu đội | [Resources](https://dd.reso.org/DD2.0/about/resources/) |
+
+Không tìm được nguồn về tin khách phản ứng thành việc hay cách tự hết: khoảng trống ngành, sản phẩm tự đặt.
+
 ## Sản phẩm Việt Nam
 
 Tra bằng tiếng Việt ngày 01/11. Trang chính thức chỉ liệt kê tính năng ở mức tiếp thị. Không sản phẩm nào công bố gọi theo
