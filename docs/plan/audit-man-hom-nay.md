@@ -76,6 +76,54 @@ Từ 01/11 chỉ có 4 lần gọi: 06/11 07:58Z và 09:02Z trả 503 (Vercel ch
 | Nhãn dài trong nút rộng cố định | D1, D2 | Nhãn duyệt ở AC-3, bề rộng `w-36` chung; điện thoại dành chỗ nút trước, tên căn chịu ép |
 | Việc hẹn không có chủ | C2, C3, A7, A8, A9, C7, D3–D6, B2, B3 | `va-he-bo-cuc` hẹn số đếm sang hàng 42, hợp đồng 42 không nhận. Known limit ký ở Cổng Bằng chứng không sinh hàng lộ trình nào, nên chưa mục nào được quay lại |
 
+## IA và UX/UI: vì sao không nhất quán
+
+Không có một màn Hôm nay. `/today` là bốn màn của bốn vai xếp vào một cột. Đặt cạnh nhau:
+
+| Tiêu chí | Trưởng nhóm | Đầu chủ | Lead đã nhập | Đầu khách |
+| --- | --- | --- | --- | --- |
+| Câu hỏi thật sự trả lời | Đội có gì cần chia lại | Tôi phải làm gì | Lead tôi nhập tới đâu | Khách phản ứng gì |
+| Loại nội dung | Bảng số + hàng đợi | Hàng đợi việc | Theo dõi | Dòng tin |
+| Phạm vi | Cả sàn | Của tôi | Tôi đã nhập | Link của tôi |
+| Bố cục khai ở khuôn | Bảng điều khiển | Tràn | Danh sách – chi tiết | Dòng tin |
+| Khối ReUI | `dashboard-6` | `solution-agents-2` | `list-11` | `solution-crm-5` |
+| Đầu vùng | Đường dẫn, không tiêu đề | «Hôm nay» 16 px, «N việc» | «Lead đã nhập» 16 px, không đếm | «Đầu khách» 20 px ngoài khung, «N tin trong M ngày» |
+| Tên vùng gọi theo | Vai | Thời gian | Đối tượng | Vai |
+| Bấm vào dòng | Không gì | Không gì, mở hồ sơ qua ⋯ | Không gì | Cả tin là link sang trang khác |
+| Việc trên dòng | Nút nhỏ «Giao lại» mở danh sách | Nút rộng cố định + ⋯ | Ô sửa số ngay trong dòng | Không nút, mũi tên |
+| Khi trống | Hộp trống trong thẻ, không lối đi | «Mở Bảng hàng» | Chữ «Bấm + Lead» | Nút «Gửi căn» |
+| Điện thoại | Một dòng «mở trên máy tính» | Thẻ hai tầng | Một cột | Giữ nguyên |
+
+**Lệch so với điều đã viết ra:**
+
+- ADR-0024 quyết định 2 «màn chọn một bố cục». `/today` mang bốn khuôn khai bốn bố cục; bài quét không đỏ vì hai khuôn
+  khai `ngoai_le` cho chính trang này, trong khi `hom-nay-truong-nhom.md` vẫn ghi «một trang, một bố cục».
+- Tham chiếu §9 «mọi màn có đường dẫn ở đầu màn»: đầu màn để trống (`today/khung.tsx:14`), đường dẫn đi vào giữa trang.
+- ADR-0024 «Dòng tin giữ 48rem căn giữa»: vùng Đầu khách rộng 1607 px.
+- `vo-va-ia.md` §2 «bấm dòng mở cột hồ sơ»: lưới đầu chủ không có sự kiện bấm dòng.
+- ADR-0024 quyết định 13 «cột thứ hai có số»: không có số (C2).
+- Tham chiếu «Hôm nay — giờ làm gì?», luật 18 «chỉ Hôm nay được đẩy việc»: chỉ vùng đầu chủ và hàng đợi của trưởng nhóm là
+  việc. Bảng theo đầu chủ trả lời câu của nhà Đội (nhà này vẫn là trang tạm), «Lead đã nhập» lặp `/leads/mine`, tin phản
+  ứng trùng câu của nhà Đã gửi.
+
+**Nguyên nhân, từ gốc ra ngọn:**
+
+| # | Nguyên nhân | Căn cứ |
+| --- | --- | --- |
+| N1 | **«Hôm nay» chưa được định nghĩa ở cấp màn.** Tham chiếu chỉ có một câu hỏi và ví dụ theo từng vai. Khái niệm «việc» chỉ có ở đầu chủ (bộ nhóm); ba vai kia không có đơn vị chung, nên không có gì để gộp, đếm hay sắp | Tham chiếu §9, §10; `packages/core/src/today/mac-dinh.ts` chỉ biết `lead` và `listing` của một người |
+| N2 | **Đơn vị thiết kế là vai, không phải địa chỉ.** Bảy hồ sơ của bốn dãy trong năm ngày (01–05/11), mỗi hồ sơ một Cổng Phạm vi, một khối chọn riêng. `KhungHomNay` chỉ là một cột. Không hàng nào, không khuôn nào chịu trách nhiệm cả trang | `vo-va-ia.md` §2 tách ba dòng Hôm nay; bốn tệp `design/patterns/`; dãy X, D, H, L |
+| N3 | **Quy tắc đa vai sinh ra như tác dụng phụ.** Hàng 42 gặp câu hỏi người hai vai, tự ghi «Tham chiếu chưa nói», chốt cho đúng hai vai. Rồi `vungTheoVai` cộng dồn thêm vai. `chu-san-du-vai` đưa chủ sàn lên năm vai nhưng chỉ kiểm có đủ nhà và nút, không kiểm Hôm nay | `_acceptance/hom-nay-truong-nhom/decisions.jsonl` Hỏi-2; AC-5 của `chu-san-du-vai` |
+| N4 | **Rào kiểm từng vùng, không kiểm trang.** Bài nhìn màn của từng hồ sơ đăng nhập một vai; thứ tự vùng chỉ kiểm ở hàm thuần. Không bài nào mở `/today` với người đủ vai. Rào bố cục được mở bằng ngoại lệ | `evals.yaml` các hồ sơ; `ngoai_le` ở hai tệp khuôn |
+| N5 | **Thang dùng lại chọn khối cho từng ô.** Luật «chuyển thể chỉ đổi dữ liệu, chữ, prop» đúng với một màn một khối, nhưng ở đây giữ nguyên bốn ngữ pháp của bốn họ khối, kể cả phần cấp trang của `dashboard-6` | `.claude/rules/giao-dien.md`; B2–B4 |
+| N6 | **Không có tầng hành vi chung** cho chờ, lỗi, trống, đầu vùng. Đây là chẩn đoán toàn app của PR #219, Hôm nay là ca nặng nhất. Tầng ấy gỡ được phần UX; **không gỡ được N1–N3** | `docs/plan/thong-nhat-ia-khuon-ux.md` trên PR #219 |
+
+**Khuyến nghị.** Chốt mô hình trước khi sửa giao diện, vì đổi tab hay đồng bề rộng (R2) chỉ làm bốn màn đứng ngay ngắn
+hơn. Hướng đề xuất: **Hôm nay là một danh sách việc của tôi, cùng một kiểu dòng**. Lead quá hạn cần giao lại, khách vừa
+quan tâm, lead bị trả lại đều thành việc cùng dạng với việc của đầu chủ, chia nhóm theo bộ nhóm của sàn. Phần theo dõi về
+đúng nhà: bảng theo đầu chủ về Đội, lead đã nhập về `/leads/mine`, tin phản ứng về Đã gửi. Hướng này đổi điều đã ký (Hỏi-2,
+khối đích ba dòng Hôm nay), chưa đối chiếu ngành theo ADR-0022 và chưa thử với người dùng, nên phải qua Cổng Phạm vi có bản
+bấm được.
+
 ## Bảng đối chiếu
 
 Mức tác động: **Cao** — sai hay mất việc của người dùng · **Vừa** — người dùng hiểu nhầm, tốn thêm thao tác · **Thấp** —
@@ -172,7 +220,7 @@ sở dữ liệu, trừ R5 thêm lối đọc API.
     "cau_giao": "Người mang nhiều vai mở Hôm nay thấy một việc chính rõ ràng thay vì bốn vùng xếp chồng; các vùng cùng bề rộng, cùng kiểu đầu vùng; người chỉ quản trị không gặp số nội bộ",
     "bat_khi": "Đo ở khổ 1440 và 1912: mọi vùng cùng mép trái và phải; trang có một vùng chính và một tiêu đề cấp một; không còn đường dẫn giữa trang; người đủ năm vai thấy phần của một vai trong một màn hình và chuyển phần khác một chạm, lần sau nhớ lựa chọn; dòng thông báo đã tắt rời đầu trang nhưng vẫn tìm được; ô số chạm được hay không trông như nút; người một vai không đổi gì",
     "vung": ["apps/web/src/app/(app)/today/**", "apps/web/src/components/khoi/dashboard-6/**", "apps/web/src/components/shell/placeholder.tsx", "design/patterns/hom-nay-*.md", "docs/design/vo-va-ia.md"],
-    "ghi_chu": "Đi Cổng Phạm vi có bản bấm được và trang ba lối (ADR-0019), đối chiếu ngành theo ADR-0022. Đổi điều đã chốt ở Hỏi-2 của hom-nay-truong-nhom nên chủ kho duyệt"
+    "ghi_chu": "Đi Cổng Phạm vi có bản bấm được và trang ba lối (ADR-0019), đối chiếu ngành theo ADR-0022. Đổi điều đã chốt ở Hỏi-2 của hom-nay-truong-nhom nên chủ kho duyệt. Chốt mô hình ở mục IA và UX/UI trước; nếu chọn một danh sách việc thì câu giao và bat_khi về «chuyển vùng một chạm» phải viết lại"
   },
   {
     "slug": "cot-hai-hom-nay-theo-vai",
