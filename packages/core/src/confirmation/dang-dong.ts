@@ -16,10 +16,11 @@ export const MAU_DAY_SO = /\d{8,}/;
  */
 export const MAU_DANG_SDT = /\+?\d(?:[.\-_/]?\d){8}/;
 /**
- * Dáng số điện thoại trong khoá máy cấp: cả một đoạn (phân cách bằng `:` hay `_`) là 9–11 chữ số, có thể nối bằng
- * `.-_/`. Không cấm 9 số liền như mã người gõ: ULID của Invest cỡ 1/2000 khoá có đoạn như vậy (ADR-0027).
+ * Dáng số điện thoại trong khoá máy cấp: dãy 9–11 chữ số, giữa các chữ số có thể có dấu tách mà khoá cho phép. Chặn khi hai
+ * đầu dãy không dính chữ hay số, hoặc khi trong dãy có dấu tách dù hai đầu dính chữ. Số liền không dấu tách dính chữ thì
+ * qua: ULID của Invest cỡ 1/2000 khoá có đoạn như vậy (ADR-0027).
  */
-export const MAU_DOAN_SDT = /(?:^|[:_])\+?\d(?:[.\-_/]?\d){8,10}(?:[:_]|$)/;
+export const MAU_DOAN_SDT = /(?<![A-Za-z0-9])\d(?:[.\-_:]*\d){8,10}(?![A-Za-z0-9])|(?<!\d)(?=\d+[.\-_:]+\d)\d(?:[.\-_:]*\d){8,10}(?!\d)/;
 export const MAU_MA_TRUC = /^[A-Z0-9]{1,6}$/;
 export const MAU_MA_TOA = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,79}$/;
 export const MAU_UPI = /^urn:onehub:upi:[A-Za-z0-9_.:-]+$/;
@@ -51,6 +52,11 @@ export function docHuong(raw: string): Huong | null {
 
 export function laMaTruc(s: string): boolean {
   return MAU_MA_TRUC.test(s);
+}
+
+/** Chuỗi có đoạn dáng số điện thoại — để lỗi nói đúng nguyên nhân. */
+export function coDangSdt(s: unknown): boolean {
+  return typeof s === "string" && MAU_DOAN_SDT.test(s);
 }
 
 /** Khoá toà đúng dạng khuôn — kiểm trước khi tra danh mục. */
