@@ -7,7 +7,7 @@ import type { Agreement } from "../agreements";
 import { mayFlow } from "../agreements";
 import { normalizeCode } from "../catalog/code-rule";
 import type { CatalogBuildingData, CatalogData, CatalogUnitData } from "../catalog/types";
-import { chuanHoaMaCan, docHuong, laMaTruc, MAU_MA_TOA, MAU_NGAY, MAU_UPI } from "./dang-dong";
+import { chuanHoaMaCan, docHuong, laMaToa, laMaTruc, laUpi, MAU_NGAY } from "./dang-dong";
 import {
   CATALOG_CONFIRMATION_SCHEMA_VERSION,
   KHOA_RIENG,
@@ -88,8 +88,9 @@ function kiemChung(
   if (!nc.companyId) loi.push({ truong: "companyId", thongDiep: "Thiếu mã sàn." });
   if (!nc.userId) loi.push({ truong: "userId", thongDiep: "Thiếu mã người." });
   const buildingKey = dau["buildingKey"];
-  const toa = typeof buildingKey === "string" && MAU_MA_TOA.test(buildingKey) ? timToa(nc.danhMuc, buildingKey) : undefined;
-  if (!toa) loi.push({ truong: "buildingKey", thongDiep: "Toà không có trong danh mục dùng chung." });
+  const toa = laMaToa(buildingKey) ? timToa(nc.danhMuc, buildingKey) : undefined;
+  if (!laMaToa(buildingKey)) loi.push({ truong: "buildingKey", thongDiep: "Khoá toà sai dạng." });
+  else if (!toa) loi.push({ truong: "buildingKey", thongDiep: "Toà không có trong danh mục dùng chung." });
   if (loi.length > 0 || !nc.khoaBenNhan) return { loi };
   return {
     loi,
@@ -167,8 +168,9 @@ export function dungThuocTinhCan(dau: DauThuocTinhCan, nc: NguCanh): KetQua<Thuo
   const { loi, vo, toa } = kiemChung("unit_attributes", dau, nc);
   const unitNumber = giaTriTruong("unitNumber", dau.unitNumber);
   if (unitNumber === undefined) loi.push({ truong: "unitNumber", thongDiep: "Mã căn ngoài dạng đóng (chữ hoa, số, dấu nối; không câu, không số điện thoại)." });
-  if (dau.upi !== null && (typeof dau.upi !== "string" || !MAU_UPI.test(dau.upi) || (toa && !toa.units.some((u) => u.upi === dau.upi)))) {
-    loi.push({ truong: "upi", thongDiep: "UPI không phải căn của toà này trong danh mục." });
+  if (dau.upi !== null) {
+    if (!laUpi(dau.upi)) loi.push({ truong: "upi", thongDiep: "UPI ngoài dạng khuôn." });
+    else if (toa && !toa.units.some((u) => u.upi === dau.upi)) loi.push({ truong: "upi", thongDiep: "UPI không phải căn của toà này trong danh mục." });
   }
   const gt: Record<string, number | string> = {};
   for (const k of TRUONG_KHAI_CAN) {
@@ -187,8 +189,10 @@ export type DauBaoSai = { buildingKey: string; upi: string; field: TruongBaoSai;
 
 export function dungBaoSai(dau: DauBaoSai, nc: NguCanh): KetQua<BaoSai> {
   const { loi, vo, toa } = kiemChung("correction", dau, nc);
-  const can = toa?.units.find((u) => u.upi === dau.upi);
-  if (toa && !can) loi.push({ truong: "upi", thongDiep: "Căn không có trong danh mục — chỉ báo sai được căn đã có." });
+  const upiDungDang = laUpi(dau.upi);
+  if (!upiDungDang) loi.push({ truong: "upi", thongDiep: "UPI ngoài dạng khuôn — căn này chưa báo sai được, nguồn danh mục phải sửa." });
+  const can = upiDungDang ? toa?.units.find((u) => u.upi === dau.upi) : undefined;
+  if (upiDungDang && toa && !can) loi.push({ truong: "upi", thongDiep: "Căn không có trong danh mục — chỉ báo sai được căn đã có." });
   const field = (TRUONG_BAO_SAI as readonly string[]).includes(dau.field) ? dau.field : undefined;
   if (!field) loi.push({ truong: "field", thongDiep: `Chỉ báo sai được: ${TRUONG_BAO_SAI.join(", ")}.` });
   const correctValue = field ? giaTriTruong(field, dau.correctValue) : undefined;

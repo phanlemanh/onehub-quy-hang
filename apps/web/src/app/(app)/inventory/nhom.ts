@@ -3,7 +3,8 @@
  * của TanStack. Mặc định Toà → Loại căn (Tham chiếu §9). Số căn của nhóm tính trên dòng đã lọc.
  */
 import { CHUA_RO, type DongBang } from "./cot";
-import { laKhongDung, laLoaiHinhBiet, nhanLoaiHinh } from "./loai-hinh";
+import type { TuVung } from "@quy-hang/core/labels";
+import { laKhongDung, laLoaiHinhBiet, tenLoaiHinh } from "./loai-hinh";
 
 export type CachNhom = "toa-loai" | "toa" | "loai-hinh" | "loai-hinh-toa" | "khong";
 export const CACH_NHOM: { value: CachNhom; label: string }[] = [
@@ -42,17 +43,17 @@ function gom(dong: readonly DongBang[], khoa: (d: DongBang) => string): [string,
 }
 
 /** Nhãn loại hình của dòng; chưa rõ → «Chưa rõ» (đứng cuối). */
-const loaiHinhCua = (d: DongBang) => (laLoaiHinhBiet(d.propertySubType) ? nhanLoaiHinh(d.propertySubType) : CHUA_RO);
+const loaiHinhCua = (d: DongBang, tv?: TuVung | null) => (laLoaiHinhBiet(d.propertySubType) ? tenLoaiHinh(tv, d.propertySubType) : CHUA_RO);
 /** Cấp Loại căn: dòng không dùng phòng ngủ (đất) đọc nhãn loại hình thay «Chưa rõ» (hàng 79). */
-const loaiCanCua = (d: DongBang) => d.unitType || (laKhongDung(d, "unitType") ? loaiHinhCua(d) : "");
+const loaiCanCua = (d: DongBang, tv?: TuVung | null) => d.unitType || (laKhongDung(d, "unitType") ? loaiHinhCua(d, tv) : "");
 
 /** Dòng đã lọc và sắp → cây dòng của lưới. Thứ tự sắp giữ nguyên trong từng nhóm. */
-export function nhomDong(dong: readonly DongBang[], cach: CachNhom): DongLuoi[] {
+export function nhomDong(dong: readonly DongBang[], cach: CachNhom, tv?: TuVung | null): DongLuoi[] {
   let stt = 0;
   const can = (d: DongBang): DongCan => ({ kind: "can", id: d.id, stt: ++stt, dong: d });
   if (cach === "khong") return dong.map(can);
   if (cach === "loai-hinh" || cach === "loai-hinh-toa") {
-    return gom(dong, loaiHinhCua).map(([loai, trongLoai]) => ({
+    return gom(dong, (d) => loaiHinhCua(d, tv)).map(([loai, trongLoai]) => ({
       kind: "nhom",
       id: `nhom-lh:${loai}`,
       label: loai,
@@ -71,7 +72,7 @@ export function nhomDong(dong: readonly DongBang[], cach: CachNhom): DongLuoi[] 
     subRows:
       cach === "toa"
         ? trongToa.map(can)
-        : gom(trongToa, loaiCanCua).map(([loai, ds]) => ({
+        : gom(trongToa, (d) => loaiCanCua(d, tv)).map(([loai, ds]) => ({
             kind: "nhom",
             id: `nhom:${toa}:${loai}`,
             label: loai,

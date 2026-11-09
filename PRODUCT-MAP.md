@@ -7,13 +7,13 @@
 ```mermaid
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
-  GD --> B["Sắp mở vòng<br/>4 việc"]
+  GD --> B["Sắp mở vòng<br/>3 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>26 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>129 việc"] --> GG{"Cổng Giá trị"}
+  GB --> DG["Đã giao<br/>27 việc"]
+  GB --> CN["Chờ phiên nghiệm thu<br/>135 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -24,7 +24,6 @@ flowchart TD
 
 ## Sắp mở vòng
 
-- Đầu chủ gõ mã căn, mở Bảng hàng hay hồ sơ căn và thấy thuộc tính căn đọc từ vùng danh mục dùng chung — danh mục đã nhận từ nguồn danh mục — thay cho gói mẫu cố định; căn chưa có vẫn đi đường mã ngoài danh mục (`doc-vung-danh-muc`)
 - Người trong sàn thấy chữ trên mọi màn theo ba lớp đã chốt: «Lead» chỉ còn là dấu trên một liên hệ chưa nói chuyện hai chiều, còn việc với một người (bán, cho thuê, mua, thuê) hiện là «Cơ hội» với nhãn pha đã chốt ở Cổng Phạm vi hàng 103 — đổi một lượt cho cả bàn làm việc, nút «+ Lead» và «Gửi lead» giữ nguyên. (`doi-chu-lead-co-hoi`)
 - Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
@@ -65,6 +64,7 @@ flowchart TD
 - Đầu chủ gõ mã căn và thấy thuộc tính căn tự điền theo cách đọc mã của dự án; mã chưa có trong danh mục thì báo rõ (`danh-muc-go-ma-can`)
 - Lõi địa chỉ biết đủ 3.321 xã, phường, đặc khu của 34 tỉnh theo danh mục chính thống, đổi được xã cũ, tỉnh cũ trước sắp xếp 2025 sang đơn vị mới, và mã hàng 75 đã đối chiếu với nguồn — trước khi hàng 76 lưu khoá (`danh-muc-xa-day-du`)
 - Lõi đọc một địa chỉ Việt Nam gõ kiểu nào cũng được ra địa chỉ chuẩn và khoá địa chỉ, đổi tên phường cũ ra phường mới, và nói thiếu phần nào khi không đọc chắc — không gọi dịch vụ ngoài (`dia-chi-chuan`)
+- Đầu chủ gõ mã căn, mở Bảng hàng hay hồ sơ căn và thấy thuộc tính căn đọc từ vùng danh mục dùng chung thay cho gói mẫu cố định; căn chưa có vẫn đi đường mã ngoài danh mục (`doc-vung-danh-muc`)
 - Bộ đọc địa chỉ nhận ra phường khi người gõ thiếu một phần dấu (ví dụ «Phường Tan Định», «Phường Đong Ba») mà không dựng lại lỗi khớp nhầm tên giữa tỉnh (Tân Định ↔ Tân Dĩnh) (`doc-xa-thieu-mot-phan-dau`)
 - Trưởng nhóm đổi đầu chủ cho nhiều căn một lần, kéo theo mọi căn và liên hệ của cùng chủ nhà, hoàn tác được (`doi-dau-chu-hang-loat`)
 - Đầu chủ đổi giá hoặc trạng thái nhanh trên điện thoại sau cuộc gọi, theo đúng luật sửa giá (`doi-gia-nhanh`)
@@ -95,6 +95,7 @@ flowchart TD
 - Telesales nhập lead trên điện thoại: thiếu một mục thì chưa gửi được, gửi xong theo dõi được bốn nấc (`lead-dien-thoai`)
 - Mỗi người làm việc với sàn là một liên hệ (RESO Contacts) — một người, nhiều số, nhiều loại liên hệ, một người giữ; lead và hàng gắn vào liên hệ chủ nhà (`lien-he`)
 - Đầu khách lưu khách là một liên hệ loại Người mua hoặc Người thuê, gắn nhu cầu và Lần gửi vào liên hệ ấy qua nhu cầu khách; một khách hai số vẫn là một người; số khách không ra trang khách (`lien-he-khach`)
+- Quản trị sàn đặt tên riêng cho loại hình ở Cài đặt › Cách gọi, neo vào giá trị RESO; Bảng hàng và hồ sơ căn hiện tên ấy, xoá tên riêng thì về tên mặc định. (`loai-hinh-trong-cach-goi`)
 - Mọi thay đổi của hàng đi qua một lệnh API và thành sự kiện chỉ thêm; sáu trạng thái chuẩn, độ tươi và mức đủ thông tin tính ra từ sự kiện (`loi-hang-va-su-kien`)
 - Đầu chủ giữ căn thấy chủ nhà, số điện thoại và giá đáy của căn mình; người khác trong sàn mở cùng hồ sơ thì không thấy, và mỗi lần mở số chủ thành một sự kiện (`lop-truong-nguon`)
 - Mọi cửa ra lấy dữ liệu từ một bộ luật ẩn ở lõi, và bộ kiểm rò rỉ chứng không trường nội bộ nào có trong trang khách, kể cả trong mã nguồn trang; luật ẩn phủ cả liên hệ (mọi liên hệ không ra ngoài) và ngăn ảnh (chỉ ngăn Gửi được ra trang khách) (`luat-an-va-kiem-ro-ri`)
@@ -140,15 +141,19 @@ flowchart TD
 - Quản trị sàn tạo trường riêng có / không hoặc chọn một sau khi máy dò không có trường chuẩn cùng nghĩa; trường của hàng hiện và lọc được ở Bảng hàng, không ra trang khách; liên hệ có trường riêng theo loại, trường của liên hệ chủ nhà mang lớp nguồn (`truong-rieng-toi-thieu`)
 - Bài kiểm «AC-8 không dữ liệu thật» của bộ dữ liệu mẫu thấp tầng không còn đỏ chập chờn: phép dò số điện thoại gỡ các đoạn được phép (UUID, ngày, mốc giờ) trước khi dò, nên không bắt dãy chữ số nằm trong UUID ngẫu nhiên; một số điện thoại thật cài vào bộ mẫu vẫn bị bắt. (`va-ac8-uuid-nham-so`)
 - Bài «AC-9 nạp và xoá một lần» của bộ dữ liệu mẫu thấp tầng chỉ đếm những dòng do chính bài nạp, nên chạy được trên cơ sở dữ liệu đã có sàn mẫu khác (như trên bản thật); bước triển khai trên nhánh chính xanh lại. (`va-ac9-mau-co-san`)
+- Khi bộ lọc ở cột của hàng thấp tầng làm Bảng hàng ra rỗng, cột và ô lọc đang gõ vẫn ở nguyên để người dùng sửa; xoá ký tự trong ô thì hàng hiện lại. (`va-bang-hang-cot-thap-tang-khi-loc-rong`)
 - "Bảng hàng của sàn có 5.000 căn mở và cuộn được tới «/ 5000 căn» mà không sập (React (`va-bang-hang-cuon-so-lon`)
 - Công cụ chụp màn dùng chung của các lượt chấm (cdp.mjs) luôn tắt Chrome do chính nó mở, kể cả khi tác tử chấm hết giờ hay bị ngắt: ghi PID, bắt tín hiệu thoát, dọn hồ sơ tạm; không còn Chrome chạy ẩn mồ côi sau lượt chấm. (`va-cdp-tat-chrome`)
 - Bước triển khai trên nhánh chính không còn chạy bộ kiểm cách ly trên cơ sở dữ liệu bản thật: bộ kiểm chạy trên cơ sở dữ liệu tạm dựng từ migration của đúng lần gộp; bản thật chỉ cập nhật cấu trúc dữ liệu rồi kiểm nhanh chỉ đọc rằng mọi bảng công ty bật và ép luật theo dòng và vai của API không là chủ bảng; không quá hai kết nối bản thật (`va-deploy-csdl-tam`)
+- Dòng «Tính theo định nghĩa ngày …» ở hồ sơ căn không hiện dấu cũ khi giá còn chờ gửi và đổi sang dấu mới ngay khi giá lên máy chủ, không cần tải lại trang. (`va-dinh-nghia-doc-lai`)
 - Vá đổi giá căn Đã bán: máy chủ từ chối lệnh đổi giá trên căn Đã bán với lý do rõ, kể cả khi bản trên máy đã mới; bộ đồng bộ đưa lệnh ấy vào «Cần xem» (`va-doi-gia-can-da-ban`)
 - Bài kiểm «đường lõi mật khẩu đóng» thôi đếm tổng người dùng của cả cơ sở dữ liệu: nó chỉ xét người dùng mang đúng email mà đường đăng ký được thử, để chạy song song với các tệp kiểm khác không vỡ, và vẫn bắt được đường đăng ký lỡ mở lại. (`va-dong-duong-gui-ma-song-song`)
 - Đầu chủ hoàn tác một lần sửa hay một lô mà máy không ghi được: thông báo nói đúng căn nào chưa trả về và vì sao, lần hoàn tác chưa xong vẫn bấm lại được, lỗi bất ngờ sau khi ô sửa đã đóng hiện thông báo thay vì im lặng (`va-duong-loi-hoan-tac`)
 - Bộ đọc địa chỉ đọc đúng tên đường dạng «Đường số N»: chữ «số» trong tên đường không bị lấy làm số nhà, hai đường số khác nhau không bao giờ ra cùng khoá, mọi cách viết của cùng một đường số ra cùng khoá, và khoá cũ của bộ thử hàng 73 không đổi (`va-duong-so-n`)
 - Hàng vá va-gui-can-da-go: căn đã gỡ khi hoàn tác lần nhập không vào được Lần gửi mới và không ghi được sự kiện «Quan tâm» ở tầng cơ sở dữ liệu (Ngoài-2 hàng 66, luật 65) (`va-gui-can-da-go`)
+- Trong hồ sơ của căn lô hoặc căn ngoài khu, bấm vào một lần rao ở mục «Các lần rao» mở đúng lần rao ấy, không báo «không thấy căn». (`va-ho-so-lan-rao-hang-lo-ngoai-khu`)
 - Hàng vá va-ho-so-lien-he: ma trận vai phủ cả ba đường đọc liên hệ chủ nhà và đếm đủ ô (Ngoài-22 hàng 103); «Xem thêm» không trộn trang của bộ lọc cũ (AC-2 thấp hàng 103) (`va-ho-so-lien-he`)
+- Sự kiện báo sai của Xác nhận danh mục chỉ dựng được khi mã căn đúng dạng UPI như khuôn; phép quét rò rỉ của sự kiện đỏ được khi hàm dựng làm rò (đối chứng dương trên chính đường dựng); và phép quét cả lớp chuỗi đo được khuôn có chặn chữ tự do và dãy số dáng điện thoại, không chỉ «có khuôn». (`va-khuon-xac-nhan-bao-sai-quet-ro-ri`)
 - Vá mốc gọi đầu: lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ, mốc không đổi; lead đang giữ vẫn ghi gọi đầu như cũ (`va-moc-goi-dau-lead-tra-lai`)
 - Nút «Ghim lại hồ sơ cần bản thật» chạy được làn ghim lại trên máy chủ GitHub không cài kit: bước «Ghim lại» trỏ làn vào kit lấy theo tag; một phép đo chạy nguyên dòng lệnh của bước ấy như máy chủ GitHub để lỗi này không lọt lần nữa. (`va-nut-ci-ag-root`)
 - Nút «Ghim lại hồ sơ cần bản thật» cài gitleaks (đúng bản của CI, kiểm băm) trước bước «Ghim lại», để bài tự kiểm của rào trong làn chạy được trên máy chủ GitHub; lượt bấm lại không còn đỏ vì thiếu gitleaks. (`va-nut-ci-gitleaks`)
@@ -176,6 +181,7 @@ flowchart TD
 - Đầu chủ tải ảnh điện thoại tới 10 MB lên hồ sơ căn trên bản thật mà không bị chặn ở giới hạn máy chủ, mở lại hồ sơ không thấy ảnh vỡ, và thấy lời báo khi sửa hay xoá ảnh không thành (`va-anh-ban-that`)
 - Mở Bảng hàng (máy tính và điện thoại) không còn lỗi hydration trên console: lượt dựng đầu trên máy khách giống lượt dựng trên máy chủ, dữ liệu trên máy hiện ngay lượt sau; giao diện và hành vi không đổi. (`va-bang-hang-hydration`)
 - Vá Che vùng ảnh — trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ (`va-che-vung-anh`)
+- Job secrets của CI chỉ quét đúng lịch sử của commit đang xét, vẫn phủ toàn bộ lịch sử main và nhánh PR; giá trị trên một nhánh khác không còn làm đỏ main và PR khác. (`va-ci-secrets-quet-dung-lich-su`)
 - Vá hai kẽ an toàn của mật khẩu do sàn cấp: người vào sàn khác thì phiên cũ cũng bị thu khi mật khẩu gốc sàn cấp bị vô hiệu; đổi mật khẩu ở Cá nhân đếm lần sai mật khẩu hiện tại chung bộ đếm với đăng nhập (`va-dang-nhap-mat-khau`)
 - Vá Điền mã căn — mã căn phải có ít nhất một chữ hay số; mã toàn dấu bị từ chối với lời báo rõ, không khoá hàng (`va-dien-ma-can-cho-hang`)
 - Phép nhìn khung 3 của bài E7 (màn Luật chia lead, cặp hạn hỏng) dựng lỗi bằng phản hồi do máy chủ viết thay cho câu lỗi gõ tay, nên khi chữ lỗi của máy chủ đổi thì phép nhìn đỏ theo. (`va-e7-loi-that-cap-han`) — đã giao — máy thông, bằng chứng xanh-sạch

@@ -22,15 +22,15 @@ ký của chính pooler Supabase không đọc được, nên phần «ai giữ 
 ## Kết luận
 
 1. **Băng lỗi ở ảnh 05:37 không phải lỗi của vai.** Cơ sở dữ liệu bản thật hết kết nối đúng giây màn mở, và chính một
-   người dùng mở app đã đủ làm cạn trần. Bản vá gốc đã ký từ 06/11, chỉ chờ chủ kho bật công tắc; bản thật vẫn chạy chế
-   độ cũ.
+   người dùng mở app đã đủ làm cạn trần. Bản vá gốc đã ký từ 06/11; chủ kho duyệt bật 09/11, bản thật đã sang chế độ giao
+   dịch và theo dõi 30 phút không lỗi.
 2. **Màn phản ứng với lỗi đó kém.** Một lỗi nói ba chỗ, không tự thử lại, kéo theo «0 đầu chủ» và mã thô. Phần này chưa
    có kế hoạch.
 3. **Bốn vùng xếp chồng là điều đã chốt khi đa vai còn hiếm.** Từ 08/11 chủ sàn mới mang đủ năm vai nên đây thành màn mặc
    định của người mở sàn, và chưa có kế hoạch cho nó.
 4. **Cột thứ hai chỉ phục vụ đầu chủ**: không số đếm, không theo vai, không theo bộ nhóm của sàn. Lời hứa số đếm rơi
    giữa hai hàng.
-5. Tổng 41 vấn đề: **8 đã sửa · 2 đã có kế hoạch · 31 chưa có kế hoạch.**
+5. Tổng 41 vấn đề: **9 đã sửa · 1 đã có kế hoạch · 31 chưa có kế hoạch.**
 
 ## Truy nguyên gốc
 
@@ -38,8 +38,8 @@ ký của chính pooler Supabase không đọc được, nên phần «ai giữ 
 
 Chuỗi nguyên nhân, từ gần tới xa:
 
-1. **Bản thật còn ở chế độ phiên.** Mỗi kết nối bị giữ suốt đời của nó, cả dự án chung trần 15. Nhật ký mỗi lần dựng bể
-   đều ghi `cổng 5432`.
+1. **Lúc sự cố bản thật còn ở chế độ phiên.** Mỗi kết nối bị giữ suốt đời của nó, cả dự án chung trần 15. Nhật ký mỗi lần
+   dựng bể đều ghi `cổng 5432`. Đã đổi sang cổng 6543 ngày 09/11.
 2. **Phép tính ngân sách kết nối sai giả định.** Mã tính mỗi hàm một phiên bản: (4 + 2) × 2 bản triển khai + 2 khách khác
    = 14, vừa dưới trần (`lib/api.ts:19-30`). Thực đo: chỉ bản chính thức đã dựng 5 phiên bản hàm trang và 3 phiên bản bước
    chặn đầu trong 45 giây (22:33:17–22:34:02Z), tức tới 26 kết nối. Bản xem trước không góp: không dòng nhật ký nào.
@@ -134,7 +134,7 @@ là `app/(app)/today/`.
 
 | # | Vấn đề | Nguồn | Căn cứ | Tác động | Tình trạng |
 | --- | --- | --- | --- | --- | --- |
-| A1 | Băng «Không tải được lead quá hạn» và «Không tải được lead đã nhập»: API hàng đợi trưởng nhóm, đầu chủ của sàn và lead đã nhập cùng trả 500. Không theo vai: cùng người, cùng lần mở, «lead giao cho tôi» và «đầu khách» vẫn 200; lần 05:33 thì tập API hỏng khác hẳn | Lần này | Nhật ký Vercel 22:37:25Z: `team/lead-queue`, `team/listing-agents`, `leads` = 500, `leads/assigned`, `today/buyer` = 200. Lý do: `EMAXCONNSESSION … pool_size: 15`; mọi dòng lỗi 24 giờ qua là lý do này hay hệ quả của nó | Cao | **Đã có kế hoạch** — hàng `pooler-che-do-giao-dich` (T3, đã ký, PR #162, dãy V đang nghỉ). Còn đúng bước E7: chủ kho duyệt đổi bản thật. Biến `DATABASE_POOLER_PORT` chưa đặt, nhật ký 22:44Z vẫn ghi `cổng 5432` |
+| A1 | Băng «Không tải được lead quá hạn» và «Không tải được lead đã nhập»: API hàng đợi trưởng nhóm, đầu chủ của sàn và lead đã nhập cùng trả 500. Không theo vai: cùng người, cùng lần mở, «lead giao cho tôi» và «đầu khách» vẫn 200; lần 05:33 thì tập API hỏng khác hẳn | Lần này | Nhật ký Vercel 22:37:25Z: `team/lead-queue`, `team/listing-agents`, `leads` = 500, `leads/assigned`, `today/buyer` = 200. Lý do: `EMAXCONNSESSION … pool_size: 15`; mọi dòng lỗi 24 giờ qua là lý do này hay hệ quả của nó | Cao | **Đã sửa** — PR #162 (`pooler-che-do-giao-dich`), chủ kho duyệt đổi bản thật 09/11. Công tắc `DATABASE_POOLER_PORT=6543` đặt và triển khai lại lúc 01:06Z, theo dõi 30 phút không lỗi kết nối. Lần tải cao kế tiếp mới chứng được trần mới đủ |
 | A2 | Mở Hôm nay với người đủ vai bắn 8 lời gọi cùng lúc, mỗi lời gọi đọc phiên rồi đọc dữ liệu, tự nhân áp lực lên trần kết nối | Lần này | Bản máy: 8 lời gọi API riêng. Bản thật: các lời gọi của Hôm nay trong 5 mili giây. Nguồn đọc rải ở `today/truong-nhom.tsx:127`, `today/hom-nay-dau-chu.tsx:312`, `today/buyer/vung.tsx:10`. Cộng thêm tải trước đường dẫn qua bước chặn đầu, xem Truy nguyên gốc | Cao | **Chưa có kế hoạch** → R5 |
 | A3 | Lỗi thoáng qua đứng yên trên màn tới khi người bấm tay; mỗi vùng một nút «Thử lại» riêng | Lần này | `today/nguon.ts:72-78` không thử lại; ảnh 05:37 có hai nút | Vừa | **Chưa có kế hoạch** → R1 |
 | A4 | Một lỗi nói ba chỗ: băng đầu trang, hai ô số «—», thẻ «Lead quá hạn và ngoại lệ» | Lần này | Ảnh 05:37; `today/truong-nhom.tsx:196,205,266-284,304-306` | Vừa | **Chưa có kế hoạch** → R1 |
@@ -278,15 +278,15 @@ sở dữ liệu, trừ R5 thêm lối đọc API.
 **Làm `hom-nay-chiu-loi-tung-phan` (R1) trước trong nhóm chưa có kế hoạch**, vì lỗi đọc đang xảy ra trên bản thật và đây
 là nhóm duy nhất có màn nói sai với người dùng (A9, A10). R1 không phụ thuộc cách chia vùng ở R2.
 
-Trước cả R1 là một việc đã có kế hoạch và không tốn mã: **chủ kho duyệt đổi bản thật sang chế độ giao dịch** (bước E7 của
-`pooler-che-do-giao-dich`). Việc này gỡ gốc của ảnh 05:37. Thứ tự sau đó: R2 rồi R3, R4 song song được, R5 sau khi đo lại,
-R6 và R7 khi rảnh.
+Việc đổi bản thật sang chế độ giao dịch đã xong 09/11, gỡ gốc của ảnh 05:37. Thứ tự sau đó: R2 rồi R3, R4 song song được,
+R5 sau khi đo lại, R6 và R7 khi rảnh. Chủ kho đã mở Cổng Phạm vi cho hướng một danh sách việc ở hồ sơ
+`hom-nay-mot-danh-sach-viec`; hồ sơ ấy gom R1 đến R4 trên màn Hôm nay.
 
 Chữ «Lead» trên màn sẽ đổi theo hàng `doi-chu-lead-co-hoi` (dãy L, chưa mở hồ sơ). R2 và R3 nên lấy nhãn từ `CONTEXT.md`
 lúc làm, không viết cứng.
 
 ## Việc ngoài màn phát hiện trong lúc soát
 
-**Lần gộp PR #213 không lên bản thật.** Job quét bí mật trên `main` báo 3 chỗ lộ, job đưa lên bản thật bị bỏ qua (CI
-`42529678617`). Bản thật vẫn là bản dựng 17:59Z ngày 08/11, nên «Vai kéo theo vai» chưa chạy ở đó. PR #211 đang đỏ
-cùng job ấy. Chưa kiểm ba chỗ lộ là gì, cần xem riêng trước khi gộp tiếp.
+**Lần gộp PR #213 lúc đầu không lên bản thật.** Job quét bí mật trên `main` báo 3 chỗ lộ, job đưa lên bản thật bị bỏ qua (CI
+`42529678617`). Các lần gộp sau (#214, #211, #215) có CI xanh trên `main`. Ba chỗ lộ chưa kiểm là gì; một phiên riêng đang
+vá bài quét bí mật.

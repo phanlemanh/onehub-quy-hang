@@ -47,11 +47,11 @@ import { useTuVung } from "./tu-vung";
 import { useDanhBaDauChu } from "./danh-ba";
 import { useCanNgoaiKhu, useDanhMuc } from "./danh-muc";
 import { chiMuc, ghepDanhMuc } from "./ghep-danh-muc";
-import { cotHienTheoLoaiHinh, tieuDeViTri } from "./loai-hinh";
+import { cotHienTuBoCot, type BoCot } from "./loai-hinh";
 import { CACH_XEM_MAC_DINH, daDoi, luuDe, type CachXem, type GocNhin } from "./goc-nhin";
 import { khoTrinhDuyet, useDatPhamVi, useGocNhinCuaToi, useMoLuuGocNhin } from "./goc-nhin-react";
 import { HangLocContext, HeaderStack, NutXoaLoc, OLoc } from "./hang-loc";
-import { locDong, locSai, luaChon, sapDong, soOLocDangChay, type BoLocCot } from "./loc";
+import { locDong, locSai, luaChon, sapDong, tinhBoCot, soOLocDangChay, type BoLocCot } from "./loc";
 import { nhomDong, type CachNhom, type DongLuoi } from "./nhom";
 import { ChonCot, ChonNhom, HopGocNhin, MenuGocNhin, type CheDoHop } from "./thanh-cong-cu";
 import { COT_SUA, useSuaTrenO } from "./cell-edit/tren-o";
@@ -284,7 +284,10 @@ export function BangHang({
   const [expanded, setExpanded] = useState<ExpandedState>(true);
   const [hop, setHop] = useState<CheDoHop | null>(null);
 
+  // Bộ cột của lần gần nhất còn dòng (tinhBoCot). Áp góc nhìn thì bỏ: góc nhìn đã rỗng tính theo bộ lọc của chính nó.
+  const [giuBoCot, setGiuBoCot] = useState<BoCot | null>(null);
   const apCachXem = useCallback((cx: CachXem) => {
+    setGiuBoCot(null);
     setLoc(cx.loc);
     setCot(cx.cot);
     setSap(cx.sap);
@@ -314,7 +317,7 @@ export function BangHang({
   const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx, danhBa)), [hang, idx, danhBa]);
   const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap, tv), [dong, loc, sap, tv]);
   const loat = useSuaHangLoat(dong, daLoc);
-  const cay = useMemo(() => nhomDong(daLoc, nhom), [daLoc, nhom]);
+  const cay = useMemo(() => nhomDong(daLoc, nhom, tv), [daLoc, nhom, tv]);
   const sai = useMemo(() => locSai(loc), [loc]);
 
   const cuonLenDau = useCallback(() => {
@@ -341,8 +344,11 @@ export function BangHang({
 
   // Hàng 79: cột hiện = cột người bật trừ cột mà không loại hình nào trong dòng đã lọc dùng; cột Loại hình chỉ khi sàn có
   // hàng khác căn hộ. `cot` giữ lựa chọn của người — cột bị loại hình ẩn hiện lại khi lọc đổi.
-  const cotHien = useMemo(() => cotHienTheoLoaiHinh(cot, daLoc, dong), [cot, daLoc, dong]);
-  const viTri = useMemo(() => tieuDeViTri(daLoc), [daLoc]);
+  // Lọc ra rỗng: bộ cột giữ như lần gần nhất còn dòng, để cột và ô đang gõ ở nguyên (tinhBoCot).
+  const { boCot, giu } = useMemo(() => tinhBoCot(giuBoCot, dong, daLoc, loc), [giuBoCot, dong, daLoc, loc]);
+  if (JSON.stringify(giu) !== JSON.stringify(giuBoCot)) setGiuBoCot(giu);
+  const cotHien = useMemo(() => cotHienTuBoCot(cot, boCot, dong), [cot, boCot, dong]);
+  const viTri = boCot.viTri;
   const cotNhanNhom: CotId = cotHien.includes("buildingName") ? "buildingName" : (cotHien[0] ?? "unitNumber");
   const columns = useMemo(() => taoCot(cotNhanNhom, tv, viTri), [cotNhanNhom, tv, viTri]);
   const columnVisibility = useMemo(() => visibilityTu(cotHien, tv), [cotHien, tv]);

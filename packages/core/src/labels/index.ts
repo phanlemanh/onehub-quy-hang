@@ -6,6 +6,7 @@
  */
 import { FIELD_CLASS } from "../import/fields";
 import { detectPersonal } from "../import/detect";
+import type { PropertySubType } from "../catalog/property-type";
 import { FEE_INCLUSIONS } from "../listing/events";
 import { isStandardStatus, MA_NHAN_TRANG_THAI_RE, WITHDRAWN_REASONS } from "../listing/status";
 // Chỉ kiểu: `statuses` nhập `kiemChuNhan` của tệp này, nên nhập giá trị từ `statuses` sẽ thành vòng nhập.
@@ -39,13 +40,15 @@ export const TRUONG_DAT_TEN = {
   closePrice: "Giá chốt",
   closeDate: "Ngày bán",
   withdrawnReason: "Lý do ngừng",
+  propertySubType: "Loại hình",
 } as const;
 export type TruongDatTen = keyof typeof TRUONG_DAT_TEN;
 export const DS_TRUONG_DAT_TEN = Object.keys(TRUONG_DAT_TEN) as TruongDatTen[];
 
 /**
  * Tập đóng sàn đặt tên riêng cho từng giá trị (Hỏi-2: mỗi giá trị chuẩn đúng một tên riêng). Trạng thái là hàng 46;
- * hướng, loại hình để sau (cột chữ, chưa là cột).
+ * hướng để sau (cột chữ, chưa là cột). Loại hình: bốn giá trị RESO của bảng loại hình (ADR-0016), tên mặc định ở đây là chỗ
+ * duy nhất của nhãn mặc định.
  */
 export const TAP_DONG = {
   feeInclusion: { included: "Bao phí", excluded: "Không bao phí" },
@@ -59,6 +62,7 @@ export const TAP_DONG = {
     buyer_changed: "Vừa đổi",
     buyer_new_match: "Căn mới khớp",
   },
+  propertySubType: { Condominium: "Căn hộ", Townhouse: "Nhà phố", "Single Family Residence": "Biệt thự", "Unimproved Land": "Đất" },
 } as const satisfies Record<string, Record<string, string>>;
 export type TruongDong = keyof typeof TAP_DONG;
 export const DS_TRUONG_DONG = Object.keys(TAP_DONG) as TruongDong[];
@@ -66,8 +70,10 @@ export const DS_TRUONG_DONG = Object.keys(TAP_DONG) as TruongDong[];
 // Tập đóng phải khớp tập giá trị chuẩn của lõi — đổi một bên mà quên bên kia là lỗi kiểu ở đây.
 const _khopPhi: Record<(typeof FEE_INCLUSIONS)[number], string> = TAP_DONG.feeInclusion;
 const _khopLyDo: Record<(typeof WITHDRAWN_REASONS)[number], string> = TAP_DONG.withdrawnReason;
+const _khopLoaiHinh: Record<PropertySubType, string> = TAP_DONG.propertySubType;
 void _khopPhi;
 void _khopLyDo;
+void _khopLoaiHinh;
 
 export const laTruongDatTen = (v: unknown): v is TruongDatTen => typeof v === "string" && Object.hasOwn(TRUONG_DAT_TEN, v);
 export const laTruongDong = (v: unknown): v is TruongDong => typeof v === "string" && Object.hasOwn(TAP_DONG, v);
@@ -317,11 +323,13 @@ export function nhanGiaTri(tv: TuVung | null | undefined, truong: string, chuan:
 /**
  * Phần từ vựng được theo căn ra ngoài công ty (bất biến 4 — cửa duy nhất nhãn đi ra): nhãn của trường có trong tập
  * khoá ra của người nhận, và tên giá trị của trường đóng có khoá ra (`feeInclusion`). `withdrawnReason`, trạng thái chuẩn,
- * giá chốt, ngày bán không có khoá ra nên không bao giờ đi.
+ * giá chốt, ngày bán không có khoá ra nên không bao giờ đi. Loại hình có khoá ra (cột danh mục) nhưng tên riêng của nó
+ * không đi: trang khách và bản xuất chưa hiện loại hình (hàng loai-hinh-trong-cach-goi).
  */
 export function tuVungRaNgoai(tv: TuVung | null | undefined, khoaRa: readonly string[]): TuVung {
   if (!tv) return TU_VUNG_RONG;
   const cho = new Set(khoaRa);
+  cho.delete("propertySubType");
   const truong: Partial<Record<TruongDatTen, string>> = {};
   for (const [f, nhan] of Object.entries(tv.truong) as [TruongDatTen, string][]) if (cho.has(f)) truong[f] = nhan;
   const giaTri: TuVung["giaTri"] = {};

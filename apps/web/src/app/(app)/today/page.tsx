@@ -7,6 +7,7 @@ import { Placeholder } from "@/components/shell/placeholder";
 import { readMe } from "@/lib/api";
 
 import { docTuVung } from "../inventory/doc-tu-vung";
+import { TuVungProvider } from "../inventory/tu-vung";
 import { DaiBatThongBao } from "./dai-bat";
 import { HomNayDanhSach } from "./hom-nay";
 import { KhungHomNay } from "./khung";
@@ -27,7 +28,9 @@ export default async function Page() {
       {me?.activeCompany && vai.length > 0 ? (
         <>
           {vai.includes("listing_agent") || vai.includes("team_lead") ? <DaiBatThongBao /> : null}
-          <HomNayDanhSach vai={vai} nguoi={me.user.id} san={me.activeCompany.id} nhan={tv.trangThai} tv={tv} />
+          <TuVungProvider tuVung={tv}>
+            <HomNayDanhSach vai={vai} nguoi={me.user.id} san={me.activeCompany.id} nhan={tv.trangThai} tv={tv} />
+          </TuVungProvider>
         </>
       ) : (
         <Placeholder path="/today" trongKhung />

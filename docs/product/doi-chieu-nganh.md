@@ -205,6 +205,8 @@ Quỹ hàng: sổ điểm biến thiên, ba bậc (ADR-0018); một cấp sàn, 
 | BoldTrail | Admin lồng nhau: Công ty ⊃ Văn phòng ⊃ Đội; chiến dịch của broker agent chỉ nhân bản được, có chiến dịch bắt buộc | Ba cấp | [Defining User Roles](https://help.insiderealestate.com/en/articles/4336931-boldtrail-defining-user-roles), [Smart Campaigns](https://help.insiderealestate.com/en/articles/3330227-boldtrail-a-complete-guide-to-smart-campaigns) |
 | BoomTown | Kế hoạch nuôi ba tầng: của agent, của công ty, dựng sẵn của hãng; Success Assurance do admin đặt chi tiết (nguồn, danh mục, giờ làm, lời chào) | Ba tầng | [Smart-Drip](https://intercom.help/boomtown/en/articles/8421705-smart-drip-overview), [Success Assurance](https://intercom.help/boomtown/en/articles/8421573-success-assurance-overview) |
 
+Tên hiển thị neo vào giá trị chuẩn (tra 09/11): RESO Lookup có `LookupValue` là tên địa phương hay từ đồng nghĩa, `StandardLookupValue` giữ mục chuẩn ([Terms](https://dd.reso.org/DD2.1/about/terms/), [đề xuất Transport](https://transport.reso.org/proposals/data-dictionary.html)), nên nhiều tên trỏ một mục chuẩn là hợp lệ. Cận kề: Veeva Vault tách tên máy khỏi nhãn của giá trị ([API](https://general.veevavault.dev/vault-api/api-reference/26.1/picklists/update-picklist-value-label/)). BoldTrail, Lofty, Follow Up Boss đặt tên loại hình thế nào: **chưa kiểm**.
+
 **Bài học:** mẫu chung là **hãng dựng sẵn → sàn đặt → người tự thêm**. Quỹ hàng đã có hãng → sàn, và ở góc nhìn có người.
 Cấp văn phòng hay đội nằm giữa sàn và người thì chưa có; Quỹ hàng chưa có khái niệm «Nhóm» (Tham chiếu §6).
 

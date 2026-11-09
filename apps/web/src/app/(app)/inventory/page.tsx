@@ -21,6 +21,7 @@ export default async function Page() {
     <KhungBangHang
       title="Bảng hàng"
       hoSo={{ nguoi: me.user.id, san: me.activeCompany.id }}
+      tuVung={tuVung}
       dienThoai={
         <TuVungProvider tuVung={tuVung}>
           <BangTheDienThoai nguoi={me.user.id} san={me.activeCompany.id} />

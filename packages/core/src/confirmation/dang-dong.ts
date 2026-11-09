@@ -10,6 +10,16 @@ export const MAU_MA_CAN = /^[A-Z0-9]+([.\-_/][A-Z0-9]+)*$/;
 export const DO_DAI_MA_CAN = 12;
 /** Tám chữ số liền là dáng số điện thoại — không phải mã căn. */
 export const MAU_DAY_SO = /\d{8,}/;
+/**
+ * Dáng số điện thoại trong mã người gõ: từ 9 chữ số nối nhau, cho phép một dấu `.-_/` giữa hai chữ số. Tám số có dấu
+ * nối vẫn là mã căn được (`12.34.56.78`).
+ */
+export const MAU_DANG_SDT = /\+?\d(?:[.\-_/]?\d){8}/;
+/**
+ * Dáng số điện thoại trong khoá máy cấp: cả một đoạn (phân cách bằng `:` hay `_`) là 9–11 chữ số, có thể nối bằng
+ * `.-_/`. Không cấm 9 số liền như mã người gõ: ULID của Invest cỡ 1/2000 khoá có đoạn như vậy (ADR-0027).
+ */
+export const MAU_DOAN_SDT = /(?:^|[:_])\+?\d(?:[.\-_/]?\d){8,10}(?:[:_]|$)/;
 export const MAU_MA_TRUC = /^[A-Z0-9]{1,6}$/;
 export const MAU_MA_TOA = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,79}$/;
 export const MAU_UPI = /^urn:onehub:upi:[A-Za-z0-9_.:-]+$/;
@@ -18,7 +28,7 @@ export const MAU_NGAY = /^\d{4}-\d{2}-\d{2}$/;
 /** Mã căn chuẩn hoá như ô Gõ mã căn; ngoài dạng đóng thì `null`. */
 export function chuanHoaMaCan(raw: string): string | null {
   const n = normalizeCode(raw);
-  return MAU_MA_CAN.test(n) && n.length <= DO_DAI_MA_CAN && !MAU_DAY_SO.test(n) ? n : null;
+  return MAU_MA_CAN.test(n) && n.length <= DO_DAI_MA_CAN && !MAU_DAY_SO.test(n) && !MAU_DANG_SDT.test(n) ? n : null;
 }
 
 const HUONG_VIET: Readonly<Record<(typeof DIRECTIONS)[number], Huong>> = {
@@ -41,4 +51,14 @@ export function docHuong(raw: string): Huong | null {
 
 export function laMaTruc(s: string): boolean {
   return MAU_MA_TRUC.test(s);
+}
+
+/** Khoá toà đúng dạng khuôn — kiểm trước khi tra danh mục. */
+export function laMaToa(s: unknown): s is string {
+  return typeof s === "string" && MAU_MA_TOA.test(s) && !MAU_DOAN_SDT.test(s);
+}
+
+/** UPI đúng dạng khuôn — kiểm trước khi tra danh mục. */
+export function laUpi(s: unknown): s is string {
+  return typeof s === "string" && MAU_UPI.test(s) && !MAU_DOAN_SDT.test(s);
 }
