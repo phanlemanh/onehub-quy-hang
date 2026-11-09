@@ -5,7 +5,7 @@ slug: va-khuon-doan-sdt-ranh-gioi
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [api]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-09-va-khuon-doan-sdt-ranh-gioi-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09T02:16:23Z
@@ -67,3 +67,7 @@ Ngưỡng của ô là câu «bật khi» của hàng: khoá có dãy số dáng
 
 - Không đổi hình khuôn v1: chỉ thêm giá trị bị từ chối; tệp ví dụ giữ nguyên.
 - Câu hỏi Cổng Phạm vi: Hỏi-1 dấu nối ngoài câu giao · Hỏi-2 ranh giới hai đầu · Hỏi-3 đoạn đứng riêng · Hỏi-4 dính chữ mà có dấu tách (thiết kế §5).
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Thẻ duyệt phạm vi của hàng này viết rộng hơn thực tế (nói chặn cả mã căn và mọi trường hợp sát chữ); hành vi thật đúng hợp đồng.
+  - Ngoài-2: Khi báo sai căn có UPI giống số điện thoại, thông báo không nhắc phải nhờ nguồn danh mục sửa; hiện chưa có màn nào hiện thông báo này.
+  - Ngoài-3: Một dạng khoá hiếm (số dài dính chữ, kèm đuôi số sau dấu tách) bị từ chối dù luật đã ghi là qua; khoá thật của Invest hiện không có dạng này.
