@@ -101,8 +101,14 @@ test("API_ERRORS khớp bảng đổi tên", () => {
     statusLabelInUse: ["status-label-in-use", 409],
     // Hàng 47.
     customFieldSameMeaning: ["trung-nghia", 409],
+    // Hàng 96.
+    invalidMachineToken: ["invalid-machine-token", 401],
+    tokenScope: ["token-scope", 403],
+    tokenKindNotSupported: ["token-kind-not-supported", 400],
+    tokenLimitReached: ["token-limit-reached", 409],
+    internalError: ["internal-error", 500],
   };
-  assert.equal(Object.keys(API_ERRORS).length, 78);
+  assert.equal(Object.keys(API_ERRORS).length, 83);
   assert.deepEqual(Object.keys(API_ERRORS).sort(), Object.keys(bang).sort());
   for (const [k, e] of Object.entries(API_ERRORS)) {
     assert.deepEqual([e.code, e.status], bang[k], k);

@@ -15,6 +15,7 @@ import { registerImportRoutes } from "./imports/routes";
 import { registerAiRoutes } from "./imports/ai/routes";
 import type { KhachAi, KhachOLa } from "./imports/ai/claude";
 import { registerFeedRoutes } from "./catalog/feeds";
+import { registerMachineTokenRoutes } from "./auth/token-may-routes";
 import { taoNguonDanhMuc, type NguonDanhMuc } from "./catalog/nguon";
 import { registerCatalogRoutes } from "./catalog/routes";
 import { registerCatalogReadAll } from "./catalog/doc-ca-danh-muc";
@@ -210,6 +211,8 @@ export function createApi(depsVao: ApiDeps) {
   registerImportRoutes(api, deps);
   registerCatalogRoutes(api, deps);
   registerFeedRoutes(api, deps);
+  // Hàng 96: token máy của một thoả thuận — quản trị sàn cấp, đọc, thu hồi.
+  registerMachineTokenRoutes(api, deps);
   registerCatalogReadAll(api, deps);
   // Hàng 22: trước lối lead — /leads/assigned phải khớp trước /leads/{leadId}.
   registerTodayRoutes(api, deps);

@@ -101,6 +101,12 @@ export const API_ERRORS = {
   statusLabelInUse: { code: "status-label-in-use", status: 409 },
   // Trường riêng (hàng 47): tên trùng nghĩa một trường chuẩn — thân kèm trường chuẩn để màn chỉ sang Cách gọi.
   customFieldSameMeaning: { code: "trung-nghia", status: 409 },
+  // Token máy của kết nối (hàng 96): token sai, lạ, đã thu hồi chung một mã, để người dò không biết token từng có thật (Hỏi-7).
+  invalidMachineToken: { code: "invalid-machine-token", status: 401 },
+  tokenScope: { code: "token-scope", status: 403 },
+  tokenKindNotSupported: { code: "token-kind-not-supported", status: 400 },
+  tokenLimitReached: { code: "token-limit-reached", status: 409 },
+  internalError: { code: "internal-error", status: 500 },
 } as const;
 
 export type ApiErrorKey = keyof typeof API_ERRORS;

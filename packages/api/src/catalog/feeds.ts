@@ -2,11 +2,9 @@ import { createRoute, z, type OpenAPIHono } from "@hono/zod-openapi";
 import { parseCatalogFeed, type CatalogFeed, type CatalogFeedError } from "@quy-hang/connect";
 import { mayFlow, type Agreement } from "@quy-hang/core";
 import type { Context } from "hono";
-import { getCookie } from "hono/cookie";
 import type pg from "pg";
 import type { ApiDeps } from "../app";
-import { resolveCompany } from "../auth/company";
-import { ACTIVE_COMPANY_COOKIE } from "../auth/constants";
+import { quanTriSan } from "../auth/quan-tri-san";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
 
@@ -42,8 +40,6 @@ export type FeedResult = z.infer<typeof FeedResult>;
 
 /** Móc chỉ cho tệp kiểm: chạy sau khi kiểm thoả thuận, ngay trước câu ghi đầu tiên. */
 export type FeedHooks = { truocKhiGhi?: () => Promise<void> };
-
-type Ctx = { userId: string; companyId: string };
 
 /** Ném ra khỏi giao dịch để rollback và trả mã lỗi của API. */
 class FeedRefused extends Error {
@@ -194,20 +190,8 @@ async function ghiGoi(tx: pg.PoolClient, feed: CatalogFeed, agreementId: string)
   return { created, updated: (ghi.rowCount ?? 0) - created };
 }
 
-export function registerFeedRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps, hooks: FeedHooks = {}) {
-  /** Quản trị của sàn đang làm — đọc lại mỗi lời gọi như thanh-vien.ts. */
-  async function quanTri(c: Context): Promise<Ctx | ApiErrorEntry> {
-    const user = (await auth.api.getSession({ headers: c.req.raw.headers }))?.user;
-    if (!user) return API_ERRORS.unauthenticated;
-    const r = await resolveCompany(appPool, user.id, getCookie(c, ACTIVE_COMPANY_COOKIE));
-    if (!r.active) return r.reason === API_ERRORS.selectCompany.code ? API_ERRORS.selectCompany : API_ERRORS.noCompany;
-    const ctx = { userId: user.id, companyId: r.active.id };
-    const admin = await withCompany(appPool, ctx, async (tx) => {
-      const { rows } = await tx.query<{ a: boolean }>("select app.current_user_is_admin() as a");
-      return rows[0]?.a === true;
-    });
-    return admin ? ctx : API_ERRORS.adminRequired;
-  }
+export function registerFeedRoutes(api: OpenAPIHono, deps: ApiDeps, hooks: FeedHooks = {}) {
+  const { appPool } = deps;
   const tra = (c: Context, l: ApiErrorEntry) => c.json({ error: l.code }, l.status as 403);
   const saiKhuon = (c: Context, errors: CatalogFeedError[]) =>
     c.json({ error: API_ERRORS.invalidFeed.code, errors }, API_ERRORS.invalidFeed.status);
@@ -231,7 +215,7 @@ export function registerFeedRoutes(api: OpenAPIHono, { appPool, auth }: ApiDeps,
       },
     }),
     async (c) => {
-      const q = await quanTri(c);
+      const q = await quanTriSan(c, deps);
       if ("status" in q) return tra(c, q);
 
       let raw: unknown;

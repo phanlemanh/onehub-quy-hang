@@ -71,6 +71,9 @@ test("OpenAPI liệt đúng bộ đường tiếng Anh", async () => {
     "GET /api/v1/catalog/lots/{code}",
     // Nhận danh mục Invest (ADR-0015).
     "POST /api/v1/catalog/feeds",
+    "POST /api/v1/agreements/{agreementId}/machine-tokens",
+    "GET /api/v1/agreements/{agreementId}/machine-tokens",
+    "DELETE /api/v1/agreements/{agreementId}/machine-tokens/{tokenId}",
     // Hàng 14: Bảng hàng đọc cả danh mục một lần.
     "GET /api/v1/catalog",
     // Hàng 24 (ADR-0012).
