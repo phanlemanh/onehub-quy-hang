@@ -160,7 +160,7 @@ test("khuôn v1: khoá lạ ở từng cấp bị từ chối, nêu đúng đư�
 });
 
 test("khuôn v1: phiên bản sai và UPI trùng bị từ chối", () => {
-  for (const v of [0, 2, undefined]) {
+  for (const v of [0, 3, undefined]) {
     const g: Record<string, unknown> = mau();
     if (v === undefined) delete g.schemaVersion;
     else g.schemaVersion = v;

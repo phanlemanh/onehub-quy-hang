@@ -83,6 +83,9 @@ dùng trong code — chốt khi viết phần đó. Khái niệm mới: thêm d�
 | Xử lý bằng AI | `ai_processing` *(đề xuất)* | Loại kết nối: gửi hồ sơ cột đã che cho nhà cung cấp AI lập kế hoạch nhập; sàn bật / tắt; không bao giờ mở lớp nguồn | «Tích hợp AI» |
 | Xác nhận danh mục | `catalog_confirmation` | Loại kết nối chiều ra: sàn gửi sự kiện xác nhận danh mục (khung toà, thuộc tính căn, báo sai) cho bên nhận qua hộp thư đi; chỉ lớp danh mục, mã công ty và mã người mờ | «Tích hợp» |
 | Token máy | `machine_token` | Chuỗi bí mật gắn đúng một thoả thuận, để máy của bên kia gọi API không cần ai đăng nhập; hiện một lần lúc cấp, hệ thống chỉ giữ băm; thu hồi là không sống lại | «API key», «khoá API» |
+| Độ chắc | `field_confidence` | Mức chắc của một giá trị danh mục, do nguồn khai: «Suy ra» `inferred` · «Một nguồn xác nhận» `single_source` · «Đã xác minh» `verified` | «Độ tin cậy», «điểm tin cậy» |
+| Số thị trường | `catalog_market_snapshots` | Ảnh chụp theo khu và mốc đo: dải giá đang rao, trung vị, số tin theo toà và loại căn; không phải giá chốt | «Giá thị trường» |
+| Tin rao đã khớp căn | `catalog_public_listing_snapshots` | Ảnh chụp theo khu các tin rao công khai đã gắn đúng căn: giá, điều kiện phí, ngày đăng; không đường dẫn, không tên nguồn, không ảnh | «Tin nguồn» |
 | Nhật ký gọi | `machine_token_calls` | Mỗi lời gọi mang token máy nhận ra được một dòng chỉ thêm: thoả thuận, đường gọi, mã trả, kết cục | «Log tích hợp» |
 | Cấu hình sàn | `company_settings` | Giá trị sàn đặt cho một điểm sàn chỉnh được; sàn chưa đặt thì nhận mặc định dựng sẵn; mỗi lần đổi là một sự kiện ghi người và vai (ADR-0018) | «Tuỳ biến» |
 | Nhật ký cấu hình | `company_settings_events` | Mỗi lần ghi cấu hình sàn một dòng chỉ thêm: khoá, giá trị, lớp, người, vai, lúc (hàng 82) | «Lịch sử cài đặt» |

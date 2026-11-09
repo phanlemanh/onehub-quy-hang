@@ -6,7 +6,7 @@ import type { ApiDeps } from "../app";
 import { traToken, type TokenDaTra } from "../auth/token-may";
 import { withCompany } from "../db";
 import { API_ERRORS, type ApiErrorEntry } from "../errors";
-import { demGoi, ghiGoi, toAgreement, type AgreementRow, type FeedHooks } from "./feeds-ghi";
+import { ghiGoi, taoPhanHoi, toAgreement, type AgreementRow, type FeedHooks } from "./feeds-ghi";
 
 /**
  * Đường token của cửa nhận danh mục (hàng 96, thiết kế §5). Sàn và thoả thuận lấy từ token, không từ cookie. Một giao dịch
@@ -139,7 +139,7 @@ export async function nhanBangToken(c: Context, token: string, { appPool }: ApiD
       await chenNhatKy(tx, daTra, 200, "accepted");
       return { feed: parsed.feed, ketQua };
     });
-    return c.json({ ...demGoi(feed), ...ketQua }, 200);
+    return c.json(taoPhanHoi(feed, ketQua), 200);
   } catch (e) {
     if (e instanceof TuChoi) {
       await ghiRieng(daTra, e.entry.status, e.outcome);

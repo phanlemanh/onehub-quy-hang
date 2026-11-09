@@ -1,0 +1,39 @@
+{
+  "feature_plain": "Invest đẩy được một gói mới vào sàn: danh mục có ghi độ chắc của từng giá trị, số thị trường theo toà và loại căn, và tin rao công khai đã khớp căn. Hàng này chỉ nhận và cất, chưa có màn nào hiện.",
+  "will_do": [
+    { "id": "AC-1", "p": "Sẽ nhận gói phiên bản 2 bằng cả tài khoản quản trị lẫn khoá máy, ghi đúng từng phần; gửi lại không nhân đôi." },
+    { "id": "AC-2", "p": "Sẽ vẫn nhận gói phiên bản 1 như cũ, và từ chối số phiên bản lạ." },
+    { "id": "AC-3", "p": "Sẽ bắt buộc mỗi giá trị của căn có đúng một trong ba nhãn độ chắc." },
+    { "id": "AC-7", "p": "Sẽ từ chối cả gói nếu có đường dẫn, tên miền, ảnh, số điện thoại hay khoá lạ, không ghi gì." },
+    { "id": "AC-10", "p": "Sẽ có sẵn một gói mẫu sinh từ chính khuôn, để Invest thử và hàng tra căn dùng lại." },
+    { "id": "AC-11", "p": "Sẽ ghi nhật ký mỗi lần máy đẩy gói mới và khai rõ khuôn trong tài liệu API." }
+  ],
+  "wont_do": [
+    { "id": "AC-4", "p": "Chặn số thị trường sai: khu, toà không có trong gói, giá lệch thứ tự, đoạn trùng." },
+    { "id": "AC-5", "p": "Chặn gói đến muộn đè lên số mới: gói sau thay gói trước của cùng khu, gói có mốc đo cũ hơn thì không thay." },
+    { "id": "AC-6", "p": "Chặn tin rao sai: căn không có trong gói, mã tin trùng, giá hay ngày sai." },
+    { "id": "AC-8", "p": "Chặn nhận gói ngay khi thoả thuận tạm dừng, kết thúc, quá hạn, sai loại, hay sàn rời danh sách được tin." },
+    { "id": "AC-9", "p": "Chặn ở cơ sở dữ liệu: chưa ai đọc được nội dung số thị trường, tin rao, và không ai xoá được." },
+    { "id": "OOS-1", "p": "KHÔNG làm chỗ đọc và hiện số thị trường, tin rao; đó là hàng 102." },
+    { "id": "OOS-2", "p": "KHÔNG làm việc không điền sẵn giá trị chưa chắc; đó là hàng 100." },
+    { "id": "OOS-3", "p": "KHÔNG bỏ khuôn phiên bản 1 ở hàng này (câu hỏi 5)." },
+    { "id": "OOS-4", "p": "KHÔNG chở mặt bằng theo trục (câu hỏi 12)." },
+    { "id": "OOS-5", "p": "KHÔNG làm bước đẩy từ phía Invest; đó là việc của kho Invest." }
+  ],
+  "scope_plain": "Những việc dưới đây cố ý để ngoài hàng này.",
+  "coverage_plain": [
+    { "i": 0, "p": "Đã xét đủ các phần của gói: đầu gói, danh mục có nhãn, số thị trường, tin rao (AC-3, AC-4, AC-6)." },
+    { "i": 1, "p": "Đã xét từng kiểu giá trị: đúng, thiếu, sai kiểu, khoá lạ, giá trị cấm (AC-3, AC-4, AC-6, AC-7)." },
+    { "i": 2, "p": "Đã xét số phiên bản 1, 2 và số lạ (AC-2)." },
+    { "i": 3, "p": "Đã xét hai đường vào: tài khoản quản trị và khoá máy (AC-1, AC-8)." },
+    { "i": 4, "p": "Đã xét mọi trạng thái thoả thuận, kể cả đổi ngay giữa lúc ghi (AC-8)." },
+    { "i": 5, "p": "Đã xét lần gửi đầu, gửi lại, và mốc đo mới hơn, bằng, cũ hơn (AC-1, AC-5)." }
+  ],
+  "gap_probe_plain": [
+    { "i": 0, "p": "Máy đã tự quyết hai điều thật ra là cam kết với Invest (bỏ mặt bằng, gói phải tự đủ): đã thành câu hỏi 11 và 12 cho anh." },
+    { "i": 1, "p": "Ba điều máy tự quyết chưa có căn cứ đủ chắc (nhãn bắt buộc tới đâu, chuỗi cấm từ chối tới đâu, tin rao thay thế nào): đã thành câu hỏi 8, 9, 10; câu 7 ghi lại là khó đảo." },
+    { "i": 2, "p": "Khuôn chưa nói rõ nhà thấp tầng và đất: đã chốt theo bảng loại hình và thêm ca kiểm." },
+    { "i": 3, "p": "Phép đo «thoả thuận tắt thì không ghi» chỉ đếm dòng nên bỏ sót ghi đè: đã đổi sang so toàn nội dung." },
+    { "i": 4, "p": "Bộ kiểm giá trị cấm chưa phủ hết mọi chuỗi và mọi cấp: đã đổi sang duyệt hết, thêm ca mã tin dáng số điện thoại." }
+  ]
+}

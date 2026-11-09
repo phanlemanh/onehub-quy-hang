@@ -309,6 +309,19 @@ Quỹ hàng: máy bên kia gọi bằng token tĩnh dạng Bearer gắn đúng m
 
 Chỗ ta viết cứng: số token còn sống tối đa mỗi thoả thuận — điều khoá K34 (quyền và an toàn).
 
+## 14. Độ chắc, số thị trường, tin rao trong gói nguồn
+
+Quỹ hàng: gói nguồn v2 mang ba nhãn độ chắc từng giá trị, số thị trường theo toà và loại căn, tin rao đã khớp căn (hàng 94, ADR-0015 sửa đổi 09/11). Tra ngày 09/11.
+
+| Năng lực | RESO | Vitki Data | BatchData | MLS Grid, Bridge | Quỹ hàng |
+| --- | --- | --- | --- | --- | --- |
+| Độ chắc từng giá trị | Không có trường chuẩn; chưa kiểm phần mở rộng | Bậc độ chắc theo từng trường và vết nguồn ([nguồn](https://vitkidata-com.pages.dev/)) | Khuyên giữ độ chắc ở mức trường khi quy trình cần ([nguồn](https://batchdata.io/uncategorized/what-is-confidence-scoring)) | Chưa kiểm | Ba nhãn theo Invest |
+| Giá đang rao theo nhóm | Chưa kiểm | Chưa kiểm | Chưa kiểm | Chưa kiểm | Đoạn theo toà, loại hình, số phòng |
+| Tin rao: giá, ngày | `ListPrice` ([giải thích bên thứ ba](https://batchdata.io/?p=17660)), `OnMarketDate` ([RESO DD 2.0](https://ddwiki.reso.org/display/DDW20/OnMarketDate+Field)) | Chưa kiểm | Chưa kiểm | Chưa kiểm | `listPrice`, `onMarketDate` |
+| Người đăng | `ListAgentFullName` ([RESO DD 2.0](https://ddwiki.reso.org/display/DDW20/ListAgentFullName+Field)) | Chưa kiểm | Chưa kiểm | Chưa kiểm | Không chở |
+
+Chỗ ta viết cứng: ba nhãn độ chắc — điều khoá K35 (nghĩa chuẩn để so giữa các sàn).
+
 ## Sản phẩm Việt Nam
 
 Tra bằng tiếng Việt ngày 01/11. Trang chính thức chỉ liệt kê tính năng ở mức tiếp thị. Không sản phẩm nào công bố gọi theo
