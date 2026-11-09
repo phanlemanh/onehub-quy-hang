@@ -13,7 +13,7 @@ flowchart TD
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>29 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>142 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>143 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -156,6 +156,7 @@ flowchart TD
 - Trong hồ sơ của căn lô hoặc căn ngoài khu, bấm vào một lần rao ở mục «Các lần rao» mở đúng lần rao ấy, không báo «không thấy căn». (`va-ho-so-lan-rao-hang-lo-ngoai-khu`)
 - Hàng vá va-ho-so-lien-he: ma trận vai phủ cả ba đường đọc liên hệ chủ nhà và đếm đủ ô (Ngoài-22 hàng 103); «Xem thêm» không trộn trang của bộ lọc cũ (AC-2 thấp hàng 103) (`va-ho-so-lien-he`)
 - Số điện thoại dính dấu tách trong khoá toà hay UPI bị hàm dựng và khuôn Xác nhận danh mục từ chối; khoá dạng thật của Invest vẫn qua. (`va-khuon-doan-sdt-ranh-gioi`)
+- Gói danh mục có mốc đo ở tương lai bị từ chối thay vì đóng băng ảnh chụp của khu với mọi sàn; bộ chặn tên miền nhận đuôi bất kỳ (zalo.me, t.me, .land); mốc đo có phút múi giờ từ 60 trở lên báo sai khuôn thay vì lỗi máy chủ. (`va-khuon-v2-moc-tuong-lai`)
 - Sự kiện báo sai của Xác nhận danh mục chỉ dựng được khi mã căn đúng dạng UPI như khuôn; phép quét rò rỉ của sự kiện đỏ được khi hàm dựng làm rò (đối chứng dương trên chính đường dựng); và phép quét cả lớp chuỗi đo được khuôn có chặn chữ tự do và dãy số dáng điện thoại, không chỉ «có khuôn». (`va-khuon-xac-nhan-bao-sai-quet-ro-ri`)
 - Lead đã nhập báo lỗi có nút Thử lại khi máy chủ trả nội dung hỏng, không treo mãi ở khung chờ (`va-lead-da-nhap-than-hong`)
 - Khi đọc danh sách căn ngoài khu bị lỗi mà máy chưa có bản giữ, Bảng hàng báo lỗi và có nút Thử lại, không âm thầm hiện các căn ngoài khu là «Chưa rõ». (`va-loi-doc-can-ngoai-khu`)

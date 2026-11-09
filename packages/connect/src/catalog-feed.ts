@@ -20,18 +20,22 @@ import { z } from "zod";
  */
 export const CATALOG_FEED_SCHEMA_VERSION = 1;
 
+/** Mốc đo vượt giờ nhận gói quá dung sai này thì bị từ chối; đủ rộng cho đồng hồ máy đẩy lệch (Hỏi-1 của hàng vá). */
+export const CATALOG_FEED_FUTURE_TOLERANCE_MS = 60 * 60 * 1000;
+
 /**
- * Mốc đo có múi giờ. Thêm hai giới hạn của `timestamptz`, vì khuôn nhận mà cơ sở dữ liệu từ chối thì bên đẩy nhận lỗi máy chủ
- * thay vì lỗi có đường khoá: độ lệch múi giờ tới ±15:59, năm từ 0001.
+ * Mốc đo có múi giờ. Thêm các giới hạn của `timestamptz`, vì khuôn nhận mà cơ sở dữ liệu từ chối thì bên đẩy nhận lỗi máy chủ
+ * thay vì lỗi có đường khoá: độ lệch múi giờ tới ±15:59 với phút dưới 60, năm từ 0001, phần lẻ giây tối đa 9 chữ số.
  */
 const MocDo = z
   .string()
   .datetime({ offset: true })
   .refine((s) => {
     const m = /([+-])(\d{2}):?(\d{2})$/.exec(s);
-    const lechHopLe = !m || Number(m[2]) * 60 + Number(m[3]) <= 15 * 60 + 59;
-    return lechHopLe && !s.startsWith("0000");
-  }, "Mốc đo có múi giờ hoặc năm ngoài khoảng nhận được.");
+    const lechHopLe = !m || (Number(m[3]) < 60 && Number(m[2]) * 60 + Number(m[3]) <= 15 * 60 + 59);
+    const phanLe = /\.(\d+)/.exec(s)?.[1] ?? "";
+    return lechHopLe && phanLe.length <= 9 && !s.startsWith("0000");
+  }, "Mốc đo có múi giờ, năm hay phần lẻ giây ngoài khoảng nhận được.");
 
 const Upi = z.string().regex(/^urn:onehub:upi:/, "UPI phải có dạng urn:onehub:upi:…");
 
@@ -181,18 +185,29 @@ const KHOA_KHONG_SOAT = new Set(["schemaVersion", "measuredAt", "onMarketDate", 
 const DANG_CAM: { ten: string; mau: RegExp }[] = [
   { ten: "đường dẫn", mau: /https?:\/\//i },
   { ten: "đường dẫn", mau: /\bwww\./i },
-  { ten: "tên miền", mau: /\b[a-z0-9-]+\.(?:com|net|org|vn|io|info|biz|asia|co)(?:\.[a-z]{2})?\b/i },
+  // Đuôi không thể nhầm với chữ viết tắt: `.co`, `.io` đã bỏ vì «P.Co Giang» là tên địa danh, viết thường thì mẫu đuôi bất kỳ bắt.
+  { ten: "tên miền", mau: /\b[a-z0-9-]+\.(?:com|net|org|vn|info|biz|asia|xyz)(?:\.[a-z]{2})?\b/i },
+  { ten: "tên miền", mau: /\b(?:zalo|fb|m|t)\.me\b/i },
   { ten: "số điện thoại", mau: /(?<![A-Za-z0-9])\+?\d(?:[\s.\-_/:]*\d){8,10}(?![A-Za-z0-9])/ },
   { ten: "số điện thoại", mau: MAU_DOAN_SDT },
 ];
 /** Khoá do máy cấp được phép có dãy số dính chữ (như ULID, ADR-0027); chữ do người gõ thì không. */
 const KHOA_MA_MAY = new Set(["subdivisionKey", "buildingKey", "upi"]);
 const SO_TRONG_CHU_TU_DO = /\d(?:[\s().\-_/:]*\d){8,10}/;
+/**
+ * Tên miền đuôi bất kỳ: cả nhãn lẫn đuôi đều chữ thường ASCII, chỉ áp cho chữ do người gõ. «Tp.HCM», «H.Me Linh» có chữ hoa nên qua;
+ * giá đã duyệt: «tp.hcm» viết toàn chữ thường bị từ chối. Ranh giới tính theo mọi chữ cái, vì `\b` coi chữ có dấu là ranh giới và bắt nhầm «q.thủ».
+ */
+const DUOI_BAT_KY = /(?<![\p{L}\p{N}_])(?=[0-9-]*[a-z])[a-z0-9-]+\.[a-z]{2,24}(?![\p{L}\p{N}_])/u;
 
 /** Duyệt đệ quy mọi lá chuỗi: khuôn đóng chặn khoá lạ, lưới này chặn đường dẫn hay số lọt qua trường chữ. */
 function soatChuoi(gt: unknown, path: (string | number)[], ctx: z.RefinementCtx, khoa?: string) {
   if (typeof gt === "string") {
-    const trung = DANG_CAM.find((d) => d.mau.test(gt)) ?? (khoa && !KHOA_MA_MAY.has(khoa) && SO_TRONG_CHU_TU_DO.test(gt) ? { ten: "số điện thoại" } : undefined);
+    const chuNguoiGo = khoa !== undefined && !KHOA_MA_MAY.has(khoa);
+    const trung =
+      DANG_CAM.find((d) => d.mau.test(gt)) ??
+      (chuNguoiGo && SO_TRONG_CHU_TU_DO.test(gt) ? { ten: "số điện thoại" } : undefined) ??
+      (chuNguoiGo && DUOI_BAT_KY.test(gt) ? { ten: "tên miền" } : undefined);
     if (trung) ctx.addIssue({ code: z.ZodIssueCode.custom, path, message: `Giá trị có dáng ${trung.ten}, không được vào gói.` });
     return;
   }
@@ -311,14 +326,34 @@ export const CatalogFeedV2 = z
 export type CatalogFeedV2 = z.infer<typeof CatalogFeedV2>;
 export type AnyCatalogFeed = CatalogFeed | CatalogFeedV2;
 
-/** Đọc một gói danh mục theo số phiên bản nó khai; sai khuôn thì trả mọi lỗi kèm đường khoá, không ném. */
-export function parseCatalogFeed(raw: unknown): { ok: true; feed: AnyCatalogFeed } | { ok: false; errors: CatalogFeedError[] } {
+/** Mốc đo vượt `now` quá dung sai bị từ chối: ảnh chụp chỉ thay khi mốc mới hơn hay bằng, nên một mốc đẩy nhầm năm làm khu đứng yên với mọi sàn. */
+function kiemTuongLai(feed: AnyCatalogFeed, ctx: z.RefinementCtx, now: Date) {
+  const tran = now.getTime() + CATALOG_FEED_FUTURE_TOLERANCE_MS;
+  const kiem = (moc: string, path: (string | number)[]) => {
+    // Mốc sai dạng đã có lỗi của khuôn, không báo lần hai. Viết phủ định để mốc không đọc ra thời điểm rơi về từ chối.
+    if (MocDo.safeParse(moc).success && !(Date.parse(moc) <= tran)) ctx.addIssue({ code: z.ZodIssueCode.custom, path, message: `Mốc đo «${moc}» ở tương lai, vượt giờ nhận gói quá dung sai.` });
+  };
+  kiem(feed.measuredAt, ["measuredAt"]);
+  if (feed.schemaVersion !== CATALOG_FEED_V2_SCHEMA_VERSION) return;
+  feed.marketStats.forEach((m, i) => kiem(m.measuredAt, ["marketStats", i, "measuredAt"]));
+  feed.publicListings.forEach((m, i) => kiem(m.measuredAt, ["publicListings", i, "measuredAt"]));
+}
+
+/**
+ * Đọc một gói danh mục theo số phiên bản nó khai; sai khuôn thì trả mọi lỗi kèm đường khoá, không ném.
+ * `now` là giờ để so mốc đo, mặc định giờ máy; bên đẩy dùng cùng hàm này để tự kiểm trước khi gửi.
+ */
+export function parseCatalogFeed(raw: unknown, opts: { now?: Date } = {}): { ok: true; feed: AnyCatalogFeed } | { ok: false; errors: CatalogFeedError[] } {
   const v = (raw as { schemaVersion?: unknown } | null | undefined)?.schemaVersion;
   if (v !== CATALOG_FEED_SCHEMA_VERSION && v !== CATALOG_FEED_V2_SCHEMA_VERSION) {
     if (raw === null || typeof raw !== "object" || Array.isArray(raw)) return { ok: false, errors: [{ path: [], message: "Thân gói phải là một đối tượng." }] };
     return { ok: false, errors: [{ path: ["schemaVersion"], message: `schemaVersion phải là ${CATALOG_FEED_VERSIONS.join(" hoặc ")}.` }] };
   }
-  const r = v === CATALOG_FEED_V2_SCHEMA_VERSION ? CatalogFeedV2.safeParse(raw) : CatalogFeed.safeParse(raw);
+  const now = opts.now ?? new Date();
+  const r =
+    v === CATALOG_FEED_V2_SCHEMA_VERSION
+      ? CatalogFeedV2.superRefine((feed, ctx) => kiemTuongLai(feed, ctx, now)).safeParse(raw)
+      : CatalogFeed.superRefine((feed, ctx) => kiemTuongLai(feed, ctx, now)).safeParse(raw);
   if (r.success) return { ok: true, feed: r.data };
   return { ok: false, errors: r.error.issues.map((issue) => ({ path: [...issue.path], message: issue.message })) };
 }
