@@ -84,6 +84,8 @@ export type TheDong = {
   soCu: string | null;
   moSo: () => Promise<KetQuaMoSo>;
   daMo: (so: string) => void;
+  /** Việc của vai khác đầu chủ: nút riêng, không có ⋯. */
+  nutRieng?: ReactNode;
 };
 
 export type NhomThe = {
@@ -156,7 +158,7 @@ export function TheViec({
   const tatCua = (m: MaViecDT) => t.ban || (m === "goi" && !coMang);
   const loiGoi =
     !coMang && (chinh === "goi" || phu.includes("goi")) ? LOI_CAN_MANG : null;
-  const nut = chinh
+  const nut = t.nutRieng ?? (chinh
     ? (() => {
         const href = lienKet(chinh);
         return href ? (
@@ -183,7 +185,7 @@ export function TheViec({
           </Button>
         );
       })()
-    : null;
+    : null);
   return (
     <li
       className="flex items-center gap-2 border-b px-3.5 py-2.5 last:border-b-0"
@@ -204,16 +206,18 @@ export function TheViec({
       </div>
       <div className="flex shrink-0 items-center gap-1">
         {nut}
-        <Button
-          type="button"
-          size="icon-sm"
-          variant="ghost"
-          aria-label={`Việc khác của ${t.tren}`}
-          disabled={phu.length === 0}
-          onClick={() => setMoKhac(true)}
-        >
-          <MoreHorizontalIcon aria-hidden="true" />
-        </Button>
+        {t.nutRieng ? null : (
+          <Button
+            type="button"
+            size="icon-sm"
+            variant="ghost"
+            aria-label={`Việc khác của ${t.tren}`}
+            disabled={phu.length === 0}
+            onClick={() => setMoKhac(true)}
+          >
+            <MoreHorizontalIcon aria-hidden="true" />
+          </Button>
+        )}
       </div>
       <NganNoi mo={moKhac} onMo={setMoKhac} tieuDe={t.tren} moTa="Việc khác">
         <ViecKhac t={t} coMang={coMang} onGoi={onGoi} hoiTraLai={hoiTraLai} xong={() => setMoKhac(false)} />

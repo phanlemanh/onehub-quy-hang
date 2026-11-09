@@ -30,6 +30,7 @@ executors:
     chu_san_nguoi_du_vai: "node --import tsx --test packages/core/src/access/nguoi-du-vai.test.ts"   # chu-san-du-vai E5: nhà và nút của người đủ vai
     token_may_db: "export DATABASE_URL=${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres} && npm run db:migrate && cd packages/api && node --env-file-if-exists=../../.env.local --import tsx --test --test-concurrency=1 --test-reporter=spec \"test-db/token-may/*.test.ts\" \"test-db/catalog/nhan-goi.test.ts\""   # token-may-ket-noi E1-E4, E6, E7, E9: cửa token trên Postgres dãy G
     token_may_cach_ly: "export DATABASE_URL=${DATABASE_URL:-postgres://postgres:quyhang@localhost:5573/postgres} && npm run db:migrate && npm run db:test"   # token-may-ket-noi E5, E8: cách ly và ràng buộc hai bảng mới
+    o_la_db: "export DATABASE_URL=postgres://postgres:quyhang@localhost:5588/postgres && npm run db:migrate && cd packages/api && node --import tsx --test --test-concurrency=1 test-db/imports/o-la.test.ts"   # va-bai-o-la-do-ngau-nhien E1–E5: bài ô lạ trên Postgres thử riêng (5588, ghim cứng)
   script:
     hooks: "npm run test:hooks"                   # suy từ: package.json — phải in «TỔNG: ĐẠT»
     # Kit nằm ngoài kho: CI đặt CLAUDE_PLUGIN_ROOT = bản kit tải theo tag; ở máy, export CLAUDE_PLUGIN_ROOT
@@ -74,6 +75,9 @@ executors:
     va_ci_secrets_ma_tran: "node _acceptance/va-ci-secrets-quet-dung-lich-su/thu/kiem-secrets.mjs --ma-tran"   # va-ci-secrets-quet-dung-lich-su AC-1..AC-5: mười ca trên kho tạm dựng đúng refspec của actions/checkout
     va_ci_secrets_tinh: "node _acceptance/va-ci-secrets-quet-dung-lich-su/thu/kiem-secrets.mjs --tinh"   # AC-7: trạng thái rào, ma trận phá thử trên bản sao văn bản
     va_ci_secrets_that: "node _acceptance/va-ci-secrets-quet-dung-lich-su/thu/kiem-secrets.mjs --that"   # AC-6: hai lần đỏ thật 08/11 trên lịch sử kho — cần lịch sử đầy đủ
+    o_la_pha_thu: "node _acceptance/va-bai-o-la-do-ngau-nhien/thu/pha-thu.mjs"   # va-bai-o-la-do-ngau-nhien AC-6, AC-7: phá trên bản sao ở thư mục tạm
+    o_la_lap: "node _acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs --lan 300"   # AC-8: 300 lần ca đường ghi sổ, ba luồng song song
+    o_la_pham_vi: "node _acceptance/va-bai-o-la-do-ngau-nhien/thu/pham-vi.mjs"   # AC-9: không đổi mã sản phẩm, cặp hai chiều
   ui-check: "npm run dev -w @quy-hang/web -- -p 3462"   # tang-5-giao-dien: máy chủ dev mà eval ui-check mở (E4) — người chấm bài nhìn giao diện
   design:
     floor: "R=\"${CLAUDE_PLUGIN_ROOT:-$(node packages/ui-lint/tim-kit.mjs)}\" && node \"$R/scripts/design-floor-s4.mjs\" --root ."   # S4: chặn mã màu thô trên tệp giao diện vòng chạm

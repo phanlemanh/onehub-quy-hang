@@ -138,7 +138,7 @@ test("link nội bộ: hai nút «Gửi căn» mở Bảng hàng", () => {
   const ds = linkCuaKho();
   const NUT: [string, number][] = [
     ["app/(app)/shares/danh-sach.tsx", 1],
-    ["app/(app)/today/buyer/dong-tin.tsx", 1],
+    ["app/(app)/shares/tin/dong-tin.tsx", 1],
   ];
   assert.equal(NUT.length, 2, "số nút viết trước");
   for (const [t, n] of NUT) {

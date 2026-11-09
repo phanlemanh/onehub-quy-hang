@@ -8,12 +8,12 @@
 flowchart TD
   A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
   GD --> B["Sắp mở vòng<br/>2 việc"]
-  GD --> XL["Xếp lại sau<br/>chưa có"]
+  GD --> XL["Xếp lại sau<br/>2 việc"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>26 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>136 việc"] --> GG{"Cổng Giá trị"}
+  GB --> DG["Đã giao<br/>29 việc"]
+  GB --> CN["Chờ phiên nghiệm thu<br/>137 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -146,6 +146,7 @@ flowchart TD
 - Bài «AC-9 nạp và xoá một lần» của bộ dữ liệu mẫu thấp tầng chỉ đếm những dòng do chính bài nạp, nên chạy được trên cơ sở dữ liệu đã có sàn mẫu khác (như trên bản thật); bước triển khai trên nhánh chính xanh lại. (`va-ac9-mau-co-san`)
 - Khi bộ lọc ở cột của hàng thấp tầng làm Bảng hàng ra rỗng, cột và ô lọc đang gõ vẫn ở nguyên để người dùng sửa; xoá ký tự trong ô thì hàng hiện lại. (`va-bang-hang-cot-thap-tang-khi-loc-rong`)
 - "Bảng hàng của sàn có 5.000 căn mở và cuộn được tới «/ 5000 căn» mà không sập (React (`va-bang-hang-cuon-so-lon`)
+- Quản trị sàn sửa nhãn, mẫu nhập, thuế phí mà không mất việc: «Giữ nhãn» luôn giữ nhãn; xoá hay sửa cột mẫu nhập hỏng thì màn nói rõ và dòng còn; bảng Mẫu nhập trên điện thoại không phải cuộn ngang; ô tỉ lệ môi giới có nhãn cho máy đọc màn (`va-cai-dat-mat-viec`)
 - Công cụ chụp màn dùng chung của các lượt chấm (cdp.mjs) luôn tắt Chrome do chính nó mở, kể cả khi tác tử chấm hết giờ hay bị ngắt: ghi PID, bắt tín hiệu thoát, dọn hồ sơ tạm; không còn Chrome chạy ẩn mồ côi sau lượt chấm. (`va-cdp-tat-chrome`)
 - Bước triển khai trên nhánh chính không còn chạy bộ kiểm cách ly trên cơ sở dữ liệu bản thật: bộ kiểm chạy trên cơ sở dữ liệu tạm dựng từ migration của đúng lần gộp; bản thật chỉ cập nhật cấu trúc dữ liệu rồi kiểm nhanh chỉ đọc rằng mọi bảng công ty bật và ép luật theo dòng và vai của API không là chủ bảng; không quá hai kết nối bản thật (`va-deploy-csdl-tam`)
 - Dòng «Tính theo định nghĩa ngày …» ở hồ sơ căn không hiện dấu cũ khi giá còn chờ gửi và đổi sang dấu mới ngay khi giá lên máy chủ, không cần tải lại trang. (`va-dinh-nghia-doc-lai`)
@@ -176,12 +177,15 @@ flowchart TD
 - Bài kiểm chuyển dữ liệu cũ của hàng 85 không kẹt khoá với các bài kiểm gỡ ràng buộc chạy song song (`chuyen-khong-ket-khoa`)
 - Đầu chủ điền mã căn cho hàng tạo từ lead chỉ biết toà — mở hồ sơ căn của hàng chưa có mã, gắn mã một lần, máy chặn trùng hàng đang mở cùng căn; hàng có mã thì thôi báo thiếu mã căn và xét ảnh như thường (`dien-ma-can-cho-hang`)
 - Đổi đường API, mã lỗi và đường màn đăng nhập sang tiếng Anh, giữ nguyên hành vi và chữ trên màn (`doi-ten-api-tieng-anh`)
+- Mở Hôm nay, mỗi người thấy một danh sách việc của mình, cùng một kiểu dòng cho mọi vai; phần theo dõi về đúng nhà (`hom-nay-mot-danh-sach-viec`)
+- Quỹ hàng dùng logo OneHub đang chạy ở OneHub CRM: cột nhà, đăng nhập, thẻ trình duyệt, màn hình chính; rõ ở sáng và tối, khổ 1440 và 375. (`logo-onehub`) — đã giao — máy thông, bằng chứng xanh-sạch
 - Đầu chủ được giao lead mở số chủ nhà của lead ấy ở Hôm nay để gọi; mỗi lần mở là một vết (`mo-so-lead`)
 - Môi trường chạy thật — Supabase dự án riêng và Vercel vùng Singapore, migration áp qua CI trước khi deploy, mã đăng nhập gửi qua Resend (`moi-truong-that`)
 - Nâng kit nghiệm thu lên 2.36.0 và bật các nấc có căn cứ — gộp không dừng ở tệp sinh, phản biện bắt buộc, chặn việc ngoài lộ trình, máy tự định tuyến mục ngoài hợp đồng (`nang-kit-2-36-0`)
 - Vá nạp mẫu bản thật — căn mẫu Đang bán nhận một ảnh thật vẽ bằng mã trước khi lên Đang bán, để nút «Nạp dữ liệu mẫu» chạy trọn trên sàn mới sau luật ảnh thật của hàng 23 (`nap-mau-co-anh`)
 - Phiên đăng nhập giữ 30 ngày thay vì 7, vẫn trượt theo ngày dùng (`phien-dang-nhap-30-ngay`)
 - Đầu chủ tải ảnh điện thoại tới 10 MB lên hồ sơ căn trên bản thật mà không bị chặn ở giới hạn máy chủ, mở lại hồ sơ không thấy ảnh vỡ, và thấy lời báo khi sửa hay xoá ảnh không thành (`va-anh-ban-that`)
+- Bài kiểm sổ chi phí AI của ô lạ không còn đỏ ngẫu nhiên vì mã máy và giờ ghi, mà vẫn đỏ khi số điện thoại lọt vào sổ dưới bất kỳ dạng nào. (`va-bai-o-la-do-ngau-nhien`)
 - Mở Bảng hàng (máy tính và điện thoại) không còn lỗi hydration trên console: lượt dựng đầu trên máy khách giống lượt dựng trên máy chủ, dữ liệu trên máy hiện ngay lượt sau; giao diện và hành vi không đổi. (`va-bang-hang-hydration`)
 - Vá Che vùng ảnh — trên máy tính khung vẽ nằm gọn trong hộp che ở mọi cỡ ảnh, ảnh co theo khung; điện thoại giữ như cũ (`va-che-vung-anh`)
 - Job secrets của CI chỉ quét đúng lịch sử của commit đang xét, vẫn phủ toàn bộ lịch sử main và nhánh PR; giá trị trên một nhánh khác không còn làm đỏ main và PR khác. (`va-ci-secrets-quet-dung-lich-su`)
@@ -198,3 +202,8 @@ flowchart TD
 - Vá Sẵn sàng bán — chuyển căn hay điền xong thì «Còn thiếu» và «Chưa có» làm mới đúng căn đang xem; nút chỉ báo đã gửi khi lệnh vào hàng đợi, không vào thì báo lỗi và giữ nút bấm lại được (`va-san-sang-ban`)
 - Vá sửa trên ô: dòng «Hiểu là» đọc lại đúng số máy ghi, không làm tròn; nút Hoàn tác trên thông báo hoàn tác đúng lần sửa của chính nó và không ghi đè lần sửa sau (`va-sua-tren-o`)
 - Vá Thông báo lead — chỉ nhận địa chỉ của dịch vụ đẩy đã biết; gửi có thời hạn, không treo lối giao lead, không gửi trùng; lưu đăng ký hỏng thì dải bật vẫn hiện và báo (`va-thong-bao-lead`)
+
+## Xếp lại sau
+
+- Đầu khách bấm Gửi và luôn biết chắc đã đi cái gì: bảng chia sẻ của điện thoại mở với đủ ảnh đã chuẩn bị sẵn, thiếu ảnh thì màn nói rõ trước khi mở, kết quả hiện ngay trong khung nhìn, bấm lại không sinh link thứ hai; Gửi căn, Hỏi đầu chủ và Báo sai đi chung một lối chia sẻ, người vẫn tự bấm gửi (`chot-gui-chac-chan`)
+- Bài quét khuôn giao diện đọc cả đồ thị nhập của màn chứ không chỉ page.tsx, và cấm Toaster ngoài vỏ; sáu chỗ đang có ghi ngoại lệ có hạn ở bản đồ khuôn theo ADR-0024 quyết định 9, mức nợ giữ trần 0. (`luoi-quet-do-thi-nhap`)

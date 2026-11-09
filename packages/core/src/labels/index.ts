@@ -53,6 +53,15 @@ export const DS_TRUONG_DAT_TEN = Object.keys(TRUONG_DAT_TEN) as TruongDatTen[];
 export const TAP_DONG = {
   feeInclusion: { included: "Bao phí", excluded: "Không bao phí" },
   withdrawnReason: { sold_elsewhere: "Chủ đã bán nơi khác", owner_changed_mind: "Chủ đổi ý", unreachable: "Không liên lạc được" },
+  // Nhóm việc của vai khác đầu chủ ở Hôm nay (hồ sơ hom-nay-mot-danh-sach-viec): sàn đổi tên, không ẩn, không đổi thứ tự (K33).
+  nhomViec: {
+    lead_overdue: "Lead quá hạn",
+    lead_unrouted: "Chưa chia được",
+    lead_returned: "Lead bị trả lại",
+    buyer_reaction: "Khách phản ứng",
+    buyer_changed: "Vừa đổi",
+    buyer_new_match: "Căn mới khớp",
+  },
   propertySubType: { Condominium: "Căn hộ", Townhouse: "Nhà phố", "Single Family Residence": "Biệt thự", "Unimproved Land": "Đất" },
 } as const satisfies Record<string, Record<string, string>>;
 export type TruongDong = keyof typeof TAP_DONG;

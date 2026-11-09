@@ -1,10 +1,9 @@
 "use client";
 
 import { type Home, HOME_PATH } from "@quy-hang/core";
-import { BoxesIcon } from "lucide-react";
 import Link from "next/link";
 
-import { Item, ItemMedia } from "@/components/ui/item";
+import { DauHieuOneHub } from "@/components/dau-hieu-onehub";
 import {
   Sidebar,
   SidebarContent,
@@ -49,11 +48,7 @@ export function HomeRail({ homes, current }: { homes: Home[]; current: Home | nu
     <Sidebar collapsible="icon" className="top-0 bottom-0" variant="inset">
       <div className="flex h-full flex-col" data-slot="home-rail">
         <SidebarHeader className="flex items-center justify-center py-3">
-          <Item className="flex size-7 shrink-0 items-center justify-center bg-primary p-0 text-primary-foreground" aria-hidden="true">
-            <ItemMedia variant="icon" className="size-auto">
-              <BoxesIcon className="size-3.5" />
-            </ItemMedia>
-          </Item>
+          <DauHieuOneHub canh={28} />
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>

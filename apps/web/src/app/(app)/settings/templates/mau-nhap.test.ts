@@ -6,7 +6,7 @@ import { test } from "node:test";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { chanMucSan } from "../cai-dat";
-import { CHU, coQuyDoi, sauKhiLuu, thanSua, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
+import { CHU, coQuyDoi, sauKhiLuu, sauKhiXoa, thanSua, type CotMauNhap, type TrangThaiMau } from "./mau-nhap";
 import { BangMauNhap } from "./vung-mau-nhap";
 
 const cot: CotMauNhap = { headerKey: "tinh trang", target: "standardStatus", valueMap: { "con hang": "Active" }, nguon: { kieu: "lan-nhap", importId: "i-1", at: "2026-11-05T01:00:00Z" } };
@@ -68,4 +68,11 @@ test("mẫu nhập: trang chặn vai trước khi đọc API", () => {
   const nguon = readFileSync(new URL("./page.tsx", import.meta.url), "utf8");
   assert.match(nguon, /const chan = chanMucSan\(me\.activeCompany\.roles\);\s*if \(chan\) redirect\(chan\);/, "trang mẫu không chặn vai");
   assert.ok(nguon.indexOf("chanMucSan(") < nguon.indexOf("/api/v1/company/import-templates"), "trang đọc API trước khi chặn");
+});
+
+test("sauKhiXoa: mỗi kết quả của lời gọi xoá một cách xử lý của hộp", () => {
+  assert.deepEqual(sauKhiXoa(204), { dong: true });
+  assert.deepEqual(sauKhiXoa(403), { dong: false, loi: "Chỉ quản trị sàn xoá được cột đã nhớ" });
+  assert.deepEqual(sauKhiXoa(404), { dong: false, loi: "Cột này đã bị xoá trước đó", lamMoi: true });
+  for (const s of [400, 500, 503, null]) assert.deepEqual(sauKhiXoa(s), { dong: false, loi: "Chưa xoá được — dòng vẫn giữ nguyên, thử lại" });
 });
