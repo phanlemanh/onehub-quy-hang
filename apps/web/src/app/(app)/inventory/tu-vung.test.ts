@@ -91,9 +91,13 @@ test("bảng hàng: mọi trang đọc cách gọi của sàn", () => {
   const day = dirname(fileURLToPath(import.meta.url));
   const trang = ["page.tsx", join("views", "[id]", "page.tsx")];
   const coTuVung = (nguon: string) => {
-    const bang = (nguon.match(/<(BangHang|BangCoHoSo|BangTheDienThoai)\b/g) ?? []).length;
-    const boc = (nguon.match(/<TuVungProvider\b/g) ?? []).length;
-    return bang > 0 && nguon.includes("docTuVung(") && boc >= 2;
+    const the = [...nguon.matchAll(/<(BangHang|BangCoHoSo|BangTheDienThoai)\b/g)];
+    // Mọi bảng nằm giữa một cặp thẻ từ vựng (trang Bảng hàng bọc một lần cả khung, trang góc nhìn bọc từng bảng).
+    const trongBoc = (i: number) => {
+      const truoc = nguon.slice(0, i);
+      return truoc.lastIndexOf("<TuVungProvider") > truoc.lastIndexOf("</TuVungProvider>");
+    };
+    return the.length > 0 && nguon.includes("docTuVung(") && the.every((m) => trongBoc(m.index));
   };
   for (const t of trang) assert.equal(coTuVung(readFileSync(join(day, t), "utf8")), true, `${t} thiếu docTuVung/TuVungProvider`);
   // Chiều đỏ: trang trước bản sửa (không provider) thì phép đo đỏ.

@@ -9,6 +9,7 @@ import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 
 import { useBoDongBo, useDanhSachHang } from "@/lib/sync/react";
 import type { ListingView } from "@/lib/sync/types";
 import { useCanNgoaiKhu, useDanhMuc } from "../../inventory/danh-muc";
+import { useTuVung } from "../../inventory/tu-vung";
 import { ngheKho } from "../../today/mobile/kho";
 import { type Dich } from "../ready/san-sang";
 import { NutSanSang } from "../ready/nut-san-sang";
@@ -85,6 +86,7 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa, khongToa, cho = "t
   const danhMuc = useDanhMuc(san);
   const ngoaiKhu = useCanNgoaiKhu(san);
   const than = useThan(cho);
+  const tv = useTuVung();
   // Mọi lần rao của căn (để kéo lịch sử ở nền) — cùng luật tìm của mô hình.
   const ids = useMemo(() => {
     if (khongToa) return khongToa.id;
@@ -113,7 +115,7 @@ function HoSoCan({ nguoi, san, chon, dongHref, duong, chuaMa, khongToa, cho = "t
     };
   }, [bd, ids]);
 
-  const m = moHinhHoSo({ nguoi, vai, ds, ngan, danhMuc, chon, chuaMa, khongToa, ngoaiKhu, daKeo, thieuCua, ngoaiTuyen, dongHref, duong });
+  const m = moHinhHoSo({ nguoi, vai, ds, ngan, danhMuc, chon, chuaMa, khongToa, ngoaiKhu, tv, daKeo, thieuCua, ngoaiTuyen, dongHref, duong });
   // Nút cần bộ đồng bộ dựng ở đây rồi trao vào khe của thân: «Sẵn sàng bán» nằm trong mục «Lần rao đang mở» của thân.
   let khe: KheHoSo = { sanSang: null, oMa: null };
   if (m.kind === "co") {

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { FieldError, FieldLegend, FieldSeparator, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { coTheLuu, loiCuaO, oBanDau, oGiaTri, oTruong, tenTruong, thanLuu, traVeMacDinh, type BoNhanMan } from "./cach-goi-thuan";
+import { coTheLuu, idO, loiCuaO, oBanDau, oGiaTri, oTruong, tenTruong, thanLuu, traVeMacDinh, type BoNhanMan } from "./cach-goi-thuan";
 
 type TrangThaiLuu = { loai: "yen" } | { loai: "dang-luu" } | { loai: "da-luu" } | { loai: "loi"; cau: string };
 
@@ -61,10 +61,10 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
     const chu = o[khoa] ?? "";
     const loi = loiCuaO(bo, o, khoa);
     return (
-      <SettingField key={khoa} title={f.default} description={chu.trim() ? `Mặc định «${f.default}»` : "Đang dùng tên mặc định"} labelFor={khoa} last={i === bo.fields.length - 1}>
+      <SettingField key={khoa} title={f.default} description={chu.trim() ? `Mặc định «${f.default}»` : "Đang dùng tên mặc định"} labelFor={idO(khoa)} last={i === bo.fields.length - 1}>
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
-            <Input id={khoa} value={chu} placeholder={f.default} aria-invalid={loi ? true : undefined} onChange={(e) => doi(khoa, e.target.value)} />
+            <Input id={idO(khoa)} value={chu} placeholder={f.default} aria-invalid={loi ? true : undefined} onChange={(e) => doi(khoa, e.target.value)} />
             {chu.trim() ? (
               <Button type="button" variant="ghost" size="sm" onClick={() => veMacDinh(khoa)}>
                 Trả về mặc định
@@ -86,12 +86,12 @@ export function CachGoi({ bo: boDau, thu = false }: { bo: BoNhanMan; /** Bản m
         key={khoa}
         title={`${tenTruong(bo, v.field)} · ${v.default}`}
         description={`Neo vào giá trị chuẩn «${v.default}» — lọc và đếm vẫn theo giá trị chuẩn`}
-        labelFor={khoa}
+        labelFor={idO(khoa)}
         last={i === bo.values.length - 1}
       >
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
-            <Input id={khoa} value={chu} placeholder={v.default} aria-invalid={loi ? true : undefined} onChange={(e) => doi(khoa, e.target.value)} />
+            <Input id={idO(khoa)} value={chu} placeholder={v.default} aria-invalid={loi ? true : undefined} onChange={(e) => doi(khoa, e.target.value)} />
             {chu.trim() ? (
               <Button type="button" variant="ghost" size="sm" onClick={() => veMacDinh(khoa)}>
                 Trả về mặc định

@@ -11,6 +11,8 @@ export type BoNhanMan = { fields: DongTruong[]; values: DongGiaTri[] };
 /** Khoá ô của màn: `f:<trường>` cho tên trường, `v:<trường>:<giá trị chuẩn>` cho giá trị riêng. */
 export const oTruong = (field: string) => `f:${field}`;
 export const oGiaTri = (field: string, value: string) => `v:${field}:${value}`;
+/** Thuộc tính `id` của ô: giá trị RESO có thể mang dấu cách («Single Family Residence»), `id` thì không. */
+export const idO = (khoa: string) => khoa.replace(/\s+/g, "_");
 
 /** Chữ ban đầu của các ô: tên riêng đã lưu; chưa đặt thì rỗng (chữ mặc định hiện làm gợi ý). */
 export function oBanDau(bo: BoNhanMan): Record<string, string> {

@@ -2,10 +2,13 @@
 
 import type { ReactNode } from "react";
 
+import { TU_VUNG_RONG, type TuVung } from "@quy-hang/core/labels";
+
 import { BoCuc } from "@/components/bo-cuc";
 import { Frame, FrameDescription, FrameHeader, FrameTitle } from "@/components/reui/frame";
 import { TrangThai } from "@/components/trang-thai";
 import { BangCoHoSoCtx, useHoSoCanhBang } from "../units/ho-so/bang-co-ho-so";
+import { TuVungProvider } from "./tu-vung";
 
 // Khuôn của nhóm `bang-hang` (design/patterns/bang-hang.md): Bảng hàng trên máy tính dựng trong bố cục «Danh sách – chi
 // tiết» (ADR-0024 sửa đổi 05/11, hàng 105) — thân là đúng một Frame cao hết vùng làm việc, lưới cuộn trong khung; hồ sơ căn
@@ -19,18 +22,21 @@ export function KhungBangHang({
   children,
   dienThoai,
   hoSo,
+  tuVung,
 }: {
   title: string;
   children: ReactNode;
   dienThoai?: ReactNode;
   /** Mở hồ sơ căn ở cột cạnh bảng theo `?unit=` (Bảng hàng); góc nhìn đã lưu không trao. */
   hoSo?: { nguoi: string; san: string };
+  /** Cách gọi riêng của sàn cho cột hồ sơ: cột dựng ở đây, ngoài phần con mà trang đã bọc từ vựng. */
+  tuVung?: TuVung;
 }) {
   const cot = useHoSoCanhBang(hoSo);
   return (
     <>
       <div className="hidden md:contents">
-        <BoCuc kieu="danh-sach-chi-tiet" dauMan={null} chiTiet={{ mo: cot.mo }} cotPhu={cot.cotPhu}>
+        <BoCuc kieu="danh-sach-chi-tiet" dauMan={null} chiTiet={{ mo: cot.mo }} cotPhu={cot.cotPhu ? <TuVungProvider tuVung={tuVung ?? TU_VUNG_RONG}>{cot.cotPhu}</TuVungProvider> : cot.cotPhu}>
           <Frame dense className="min-h-0 w-full flex-1">
             <FrameHeader>
               <FrameTitle>{title}</FrameTitle>

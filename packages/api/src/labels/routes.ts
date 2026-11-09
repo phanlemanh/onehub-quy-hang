@@ -45,7 +45,7 @@ export function registerLabelsRoutes(api: OpenAPIHono, deps: ApiDeps) {
     createRoute({
       method: "get",
       path: "/api/v1/company/labels",
-      summary: "Cách gọi riêng của sàn — tên của 15 trường chuẩn và tên giá trị của tập đóng, kèm tên mặc định",
+      summary: "Cách gọi riêng của sàn — tên của các trường chuẩn và tên giá trị của tập đóng, kèm tên mặc định",
       responses: { 200: ok("Bộ nhãn", Labels), ...loi },
     }),
     async (c) => {

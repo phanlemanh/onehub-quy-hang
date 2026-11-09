@@ -314,7 +314,7 @@ export function BangHang({
   const dong = useMemo(() => hang.map((l) => ghepDanhMuc(l, idx, danhBa)), [hang, idx, danhBa]);
   const daLoc = useMemo(() => sapDong(locDong(dong, loc), sap, tv), [dong, loc, sap, tv]);
   const loat = useSuaHangLoat(dong, daLoc);
-  const cay = useMemo(() => nhomDong(daLoc, nhom), [daLoc, nhom]);
+  const cay = useMemo(() => nhomDong(daLoc, nhom, tv), [daLoc, nhom, tv]);
   const sai = useMemo(() => locSai(loc), [loc]);
 
   const cuonLenDau = useCallback(() => {

@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { FIELD_CLASS } from "../import/fields";
+import { PROPERTY_SUBTYPE_FIELDS } from "../catalog/property-type";
 import { truongRa, TRUONG_RA } from "../redaction";
 import {
   bangNhan,
@@ -109,7 +110,7 @@ test("từ vựng: chỉ phần ra ngoài", () => {
     truong: Object.fromEntries(DS_TRUONG_DAT_TEN.map((f) => [f, `Riêng ${f}`])) as Partial<Record<TruongDatTen, string>>,
     giaTri: { feeInclusion: { included: "BP", excluded: "KBP" }, withdrawnReason: { unreachable: "MOI-LYDO" } },
   };
-  // Tập viết trước: giao 15 trường với khoá ra của từng người nhận.
+  // Tập viết trước: giao các trường với khoá ra của từng người nhận.
   const KY: Record<string, string[]> = {
     khach_rieng: ["buildingName", "unitNumber", "livingArea", "floor", "directionFaces", "listPrice", "feeInclusion", "furnished", "legalStatus", "financing", "occupantType"],
     nhom_moi_gioi: ["buildingName", "unitNumber", "livingArea", "floor", "directionFaces", "listPrice", "feeInclusion", "furnished", "legalStatus", "financing", "occupantType"],
@@ -185,7 +186,7 @@ const loiCua = (kq: ReturnType<typeof dungDongNhan>) => (kq.ok ? "" : kq.loi);
 
 test("trùng tên đang hiện: mọi cặp riêng–mặc định anh em của mọi tập đóng", () => {
   // Ma trận sinh từ TAP_DONG của lõi; tập mới chưa vào danh sách khẳng định thì ca đỏ.
-  assert.deepEqual([...DS_TRUONG_DONG].sort(), ["feeInclusion", "withdrawnReason"], "tập đóng của lõi đổi — xét lại ma trận");
+  assert.deepEqual([...DS_TRUONG_DONG].sort(), ["feeInclusion", "propertySubType", "withdrawnReason"], "tập đóng của lõi đổi — xét lại ma trận");
   const mo = (s: string) => `  ${s.toLocaleUpperCase("vi").replace(/ /g, "   ")} `;
   let dem = 0;
   let mong = 0;
@@ -204,7 +205,7 @@ test("trùng tên đang hiện: mọi cặp riêng–mặc định anh em của 
       }
   }
   assert.equal(dem, mong);
-  assert.equal(dem, 8);
+  assert.equal(dem, 20);
 });
 
 test("trùng tên đang hiện: riêng–riêng, hoa thường, đổi chéo, khác tập, đối chứng", () => {
@@ -236,4 +237,67 @@ test("trùng tên đang hiện: riêng–riêng, hoa thường, đổi chéo, kh
   assert.ok(!cheo.ok && /Trùng tên của «(Bao phí|Không bao phí)»$/.test(cheo.loi), loiCua(cheo));
   // E1e — khác tập được trùng chữ.
   assert.equal(dungDongNhan(boGT(["withdrawnReason", "unreachable", "Bao phí"])).ok, true);
+});
+
+// ---- Loại hình trong Cách gọi (hàng loai-hinh-trong-cach-goi: E1, E3, E8) ----
+/** Khoá thừa và khoá thiếu của tập tên so với bảng loại hình của lõi — bộ so của E1, chạy được trên bản sao hỏng. */
+function lechLoaiHinh(tap: Record<string, string>): string[] {
+  const bang = Object.keys(PROPERTY_SUBTYPE_FIELDS);
+  return [...Object.keys(tap).filter((k) => !bang.includes(k)).map((k) => `thừa ${k}`), ...bang.filter((k) => !Object.hasOwn(tap, k)).map((k) => `thiếu ${k}`)];
+}
+
+test("loại hình: tập đóng khớp bảng loại hình của lõi", () => {
+  const VIET_TRUOC: [string, string][] = [
+    ["Condominium", "Căn hộ"],
+    ["Townhouse", "Nhà phố"],
+    ["Single Family Residence", "Biệt thự"],
+    ["Unimproved Land", "Đất"],
+  ];
+  const tap = TAP_DONG.propertySubType as Record<string, string>;
+  for (const [neo, ten] of VIET_TRUOC) assert.equal(tap[neo], ten, neo);
+  assert.deepEqual(lechLoaiHinh(tap), []);
+  // Chiều đỏ: bản sao có thêm một khoá ngoài bảng, và bản sao thiếu một khoá.
+  assert.deepEqual(lechLoaiHinh({ ...tap, Shophouse: "Shophouse" }), ["thừa Shophouse"]);
+  const thieu = { ...tap };
+  delete thieu.Townhouse;
+  assert.deepEqual(lechLoaiHinh(thieu), ["thiếu Townhouse"]);
+  const bang = bangNhan(null);
+  assert.deepEqual(bang.fields.filter((f) => f.field === "propertySubType").map((f) => f.default), ["Loại hình"]);
+  assert.deepEqual(bang.values.filter((v) => v.field === "propertySubType").map((v) => [v.value, v.default]), VIET_TRUOC);
+});
+
+test("loại hình: riêng–riêng trùng tên bị từ chối, câu lỗi nêu tên mặc định của giá trị kia", () => {
+  const kq = dungDongNhan(boGT(["propertySubType", "Townhouse", "Liền kề"], ["propertySubType", "Single Family Residence", "liền  KỀ"]));
+  assert.ok(!kq.ok && /Trùng tên của «(Nhà phố|Biệt thự)»$/.test(kq.loi), loiCua(kq));
+  assert.ok(!loiCua(kq).includes("Liền kề"), "câu lỗi không lặp chữ gõ");
+  assert.equal(dungDongNhan(boGT(["propertySubType", "Townhouse", "Liền kề"], ["propertySubType", "Single Family Residence", "Dinh thự"])).ok, true, "đối chứng");
+});
+
+test("loại hình: chữ sai", () => {
+  const NEO = "Single Family Residence";
+  const BANG: [string, unknown, boolean, RegExp | null][] = [
+    ["rỗng", "   ", false, /chữ rỗng$/],
+    ["41 ký tự", "x".repeat(41), false, /dài hơn 40 ký tự$/],
+    ["số điện thoại", "Gọi 0900 000 001", false, /chứa số điện thoại$/],
+    ["40 ký tự", "x".repeat(40), true, null],
+  ];
+  for (const [ten, chu, dat, loi] of BANG) {
+    const kq = kiemNhanGiaTri("propertySubType", NEO, chu);
+    assert.equal(kq.ok, dat, ten);
+    if (loi && !kq.ok) assert.match(kq.loi, loi, ten);
+  }
+  assert.equal(kiemNhanGiaTri("propertySubType", "Shophouse", "Shop").ok, false, "neo ngoài bốn giá trị RESO");
+});
+
+test("loại hình: không ra ngoài công ty", () => {
+  const tv: TuVung = {
+    truong: { propertySubType: "Dòng sản phẩm", feeInclusion: "Phí CN" },
+    giaTri: { propertySubType: { Townhouse: "Liền kề" }, feeInclusion: { included: "BP" } },
+  };
+  const ra = tuVungRaNgoai(tv, ["propertySubType", "feeInclusion"]);
+  assert.equal(Object.hasOwn(ra.truong, "propertySubType"), false, "tên trường");
+  assert.equal(Object.hasOwn(ra.giaTri, "propertySubType"), false, "tên giá trị");
+  // Đối chứng dương trên cùng dữ liệu: điều kiện phí vẫn đi.
+  assert.equal(ra.truong.feeInclusion, "Phí CN");
+  assert.deepEqual(ra.giaTri.feeInclusion, { included: "BP" });
 });

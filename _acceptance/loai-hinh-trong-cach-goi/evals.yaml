@@ -1,0 +1,153 @@
+schema_version: 1
+feature_slug: loai-hinh-trong-cach-goi
+# Lệnh máy: executors.test.core, executors.test.web, executors.test.doi_nhan_db (Postgres dãy X, cổng 5576),
+# executors.script.ro_ri, executors.script.typecheck. ui-check trên chỗ thử dãy X: thu/dung.mjs dựng trên chỗ thử hàng 79
+# (Postgres 5576, máy dev 3496). Mỗi eval máy đòi đủ tên ca trong `expected`, có mặt và ok.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.core
+    paths: [packages/core/src/labels/**, packages/core/src/catalog/property-type.ts]
+    expected: "exit 0; packages/core/src/labels/labels.test.ts ca «loại hình: tập đóng khớp bảng loại hình của lõi» — bảng viết trước bốn cặp giá trị RESO ↔ tên mặc định so từng cặp với TAP_DONG.propertySubType, và tập khoá so hai chiều với Object.keys(PROPERTY_SUBTYPE_FIELDS); chiều đỏ: bản sao tập có thêm một khoá ngoài bảng loại hình bị bộ so báo tên khoá đó; bangNhan(null) có đúng một dòng field propertySubType mặc định «Loại hình» và bốn dòng value."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E1b
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/settings/labels/**", packages/core/src/labels/**]
+    expected: "exit 0; apps/web/src/app/(app)/settings/labels/cach-goi.test.ts ca «màn cách gọi: mục loại hình» — tenTruong trả «Loại hình» cho field propertySubType (không phải tên máy); cả bốn ô giá trị có khoá riêng; hàm dựng id ô cho khoá v:propertySubType:Single Family Residence trả chuỗi không dấu cách và hai giá trị khác nhau ra hai id khác nhau."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.doi_nhan_db
+    paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/loai-hinh-cach-goi/**]
+    expected: "exit 0; packages/api/test-db/loai-hinh-cach-goi/nhan.test.ts có mặt và ok: «loại hình: lưu tên riêng neo RESO» — quản trị sàn A PUT values [{field:propertySubType,value:Townhouse,label:\"Liền kề\"}], GET thấy dòng value Townhouse label «Liền kề» custom true; sàn B GET thấy label «Nhà phố» custom false; propertySubType đọc của một căn Townhouse sàn A bằng nhau trước và sau PUT; ca «loại hình: giá trị có dấu cách» — PUT Single Family Residence rồi GET thấy đúng label, custom true; và «loại hình: neo lạ bị từ chối» — PUT value «Shophouse» trả 400, reason nêu «Shophouse», GET không đổi (đối chứng dương cùng tệp: lượt neo đúng trả 200)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3c
+    criterion: AC-3
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.doi_nhan_db
+    paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/loai-hinh-cach-goi/**]
+    expected: "exit 0; nhan.test.ts ca «loại hình: máy chủ từ chối chữ sai và trùng» — bảng viết trước năm dòng: trùng riêng–mặc định, trùng riêng–riêng, rỗng, 41 ký tự, số 0900 000 001; mỗi dòng PUT trả 400, reason chứa đoạn ghim của dòng ấy, GET không đổi; đối chứng 200 với tên hợp lệ trên cùng sàn."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.core
+    paths: [packages/core/src/labels/**]
+    expected: "exit 0; labels.test.ts ca «trùng tên đang hiện: mọi cặp riêng–mặc định anh em của mọi tập đóng» — ma trận sinh từ TAP_DONG, danh sách tập khẳng định gồm propertySubType, assert số cặp = 20; mỗi cặp có đối chứng không trùng; ca riêng–riêng trên propertySubType: hai giá trị cùng tên lạ bị từ chối, câu lỗi nêu tên mặc định của giá trị kia. Ca «loại hình: chữ sai» — bảng viết trước rỗng, 41 ký tự, 0900 000 001 đều bị kiemNhanGiaTri từ chối cho value «Single Family Residence»; 40 ký tự được nhận."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3b
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/settings/labels/**", packages/core/src/labels/**]
+    expected: "exit 0; cach-goi.test.ts ca «màn cách gọi: trùng tên loại hình khoá Lưu» — ô Single Family Residence gõ «nhà  PHỐ»: loiCuaO trả «Trùng tên của «Nhà phố»», coTheLuu false; đối chứng: gõ «Biệt thự đơn lập» thì không lỗi, coTheLuu true, thanLuu gửi đúng value «Single Family Residence»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**", packages/core/src/labels/**]
+    expected: "exit 0; apps/web/src/app/(app)/inventory/loai-hinh-cach-goi.test.ts — dòng dựng qua ghepDanhMuc (không viết tay khuôn bên đọc) với tu vựng đọc từ tuVungTuBang(bangNhan(dòng đã lưu)); bảng viết trước bốn mặt: ô chuCuaO, nhãn luaChon, nhãn nhóm nhomDong(…, «loai-hinh», tv), cấp Loại căn của đất ở «toa-loai» — mỗi mặt so bằng đúng chữ riêng «Liền kề»/«Lô đất» và bằng tên mặc định khi tv rỗng (chiều đỏ của chính bảng); locDong theo Townhouse ra đúng id các hàng nhà phố dù chữ hiện là tên riêng; sapDong theo cột ra đúng thứ tự id viết trước, thứ tự khác thứ tự theo tên mặc định; hàng chưa rõ loại hình ra «Chưa rõ» khi tv có tên riêng; nhanCot đổi theo tên trường riêng."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/units/ho-so/**", packages/core/src/labels/**]
+    expected: "exit 0; apps/web/src/app/(app)/units/ho-so/loai-hinh-cach-goi.test.ts — ba dạng (căn hộ, lô, ngoài khu) dựng từ danh mục và hàng theo cùng khuôn của units/ho-so/loai-hinh.test.ts (chiMuc thật), đi qua moHinhHoSo: dòng thuộc tính mang tiêu đề tên trường riêng và giá trị tên riêng, m.dauCot chứa tên riêng; khi tv rỗng tiêu đề «Loại hình» và tên mặc định; hàng căn hộ danh mục không mang loại hình hiện «—» và dauCot không chứa «—»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/today/page.tsx", "apps/web/src/app/(app)/inventory/**"]
+    expected: "exit 0; loai-hinh-cach-goi.test.ts ca «hồ sơ: bốn đường dựng đều nằm trong từ vựng» — với mỗi trang units/[code]/page.tsx, today/page.tsx, inventory/page.tsx, inventory/views/[id]/page.tsx: mọi JSX phần tử mở hồ sơ của trang nằm giữa cặp TuVungProvider nhận giá trị đọc từ docTuVung; tập tệp apps/web có gọi <CotHoSo khớp bảng viết trước bốn mục (bang-co-ho-so.tsx, ho-so-toan-man.tsx, hom-nay-dau-chu.tsx và trang tương ứng), thêm mục thứ năm thì đỏ; chiều đỏ: bản sao nguồn bỏ thẻ bọc bị bộ quét báo tên trang; cot-ho-so.tsx truyền từ vựng của useTuVung vào moHinhHoSo."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7
+    criterion: AC-7
+    executor: test
+    layer: backend-effect
+    cmd: config:executors.test.doi_nhan_db
+    paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/loai-hinh-cach-goi/**]
+    expected: "exit 0; nhan.test.ts ca «loại hình: trả về mặc định» — sàn A đã đặt «Liền kề», có một căn Townhouse; PUT bộ không có dòng ấy; GET thấy label «Nhà phố» custom false; propertySubType của căn trước và sau lượt lưu bằng nhau."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7b
+    criterion: AC-7
+    executor: test
+    cmd: config:executors.test.web
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/ho-so/**", packages/core/src/labels/**]
+    expected: "exit 0; loai-hinh-cach-goi.test.ts ở inventory và ho-so: từ vựng đọc hỏng (TU_VUNG_RONG, dòng đã lưu hỏng qua boTuVung có neo lạ) cho ô, nhóm và dòng hồ sơ bằng đúng tên mặc định, không ném lỗi."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E8
+    criterion: AC-8
+    executor: test
+    cmd: config:executors.test.core
+    paths: [packages/core/src/labels/**, packages/core/src/sharing/**, packages/core/src/export/**]
+    expected: "exit 0; labels.test.ts ca «loại hình: không ra ngoài công ty» — từ vựng có tên trường, tên giá trị propertySubType và feeInclusion; tuVungRaNgoai với khoá ra [propertySubType, feeInclusion] ra đối tượng không có khoá propertySubType ở truong và giaTri, vẫn có feeInclusion (đối chứng dương trên cùng dữ liệu)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E8b
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.ro_ri
+    paths: [packages/core/src/redaction/**, packages/core/src/labels/**, "apps/web/src/app/s/**"]
+    expected: "exit 0; bộ kiểm rò rỉ xanh."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E9
+    criterion: AC-9
+    executor: ui-check
+    layer: ui-observed
+    cmd: config:executors.ui-check
+    steps:
+      - "node _acceptance/loai-hinh-trong-cach-goi/thu/dung.mjs rồi node _acceptance/loai-hinh-trong-cach-goi/thu/chay-ui.mjs --ra _acceptance/loai-hinh-trong-cach-goi/evidence"
+      - "Đối chiếu dòng JSON của từng bước: buoc1 màn Cách gọi có ô Loại hình · Nhà phố; buoc2 sau lưu, Bảng hàng có «Liền kề» ở ô cột và ở lựa chọn ô lọc Loại hình, không có «Nhà phố»; buoc3 hồ sơ một nhà phố có dòng Loại hình «Liền kề»; buoc4 hồ sơ toàn màn /units/<mã> của một căn hộ khi Căn hộ đặt tên riêng hiện tên ấy; buoc5 cột hồ sơ ở Hôm nay của đầu chủ hiện tên riêng của hàng đang mở; buoc6 sau Trả về mặc định, Bảng hàng hiện lại «Nhà phố». Bước 2–5 chạy bằng phiên đầu chủ, bước 1 và trả về bằng phiên quản trị sàn."
+    target: "http://localhost:3496/settings/labels"
+    expected: "Ảnh E9-cach-goi.png, E9-bang-hang.png, E9-ho-so.png, E9-toan-man.png, E9-hom-nay.png, E9-tra-ve.png khớp từng bước; dòng JSON khớp."
+    evidence_required: [run_id, screenshot, observed, verifier, verified_at]
+  - id: E10
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.typecheck
+    paths: ["apps/web/src/**", "packages/core/src/**", "packages/api/src/**"]
+    expected: "exit 0; kiểm kiểu mọi gói xanh; đổi một khoá của TAP_DONG.propertySubType khác bảng loại hình là lỗi kiểu."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E11
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/bang-hang.md", "apps/web/src/app/(app)/inventory/page.tsx", "apps/web/src/app/(app)/inventory/views/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm bang-hang"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E12
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/ho-so-can.md", "apps/web/src/app/(app)/units/[code]/page.tsx", "apps/web/src/app/(app)/proto/cot-ho-so-can/page.tsx", "apps/web/src/app/(app)/proto/anh-can-ba-ngan/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm ho-so-can"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E13
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/hom-nay-dau-chu.md", "apps/web/src/app/(app)/today/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm hom-nay-dau-chu"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E14
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/cai-dat-san.md", "apps/web/src/app/(app)/settings/**/page.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm cai-dat-san"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E15
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.design.floor
+    paths: ["apps/web/src/app/(app)/inventory/**", "apps/web/src/app/(app)/units/**", "apps/web/src/app/(app)/settings/labels/**", "apps/web/src/app/(app)/today/page.tsx"]
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

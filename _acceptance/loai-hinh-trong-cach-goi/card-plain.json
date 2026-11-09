@@ -1,0 +1,35 @@
+{
+  "feature_plain": "Quản trị sàn đặt được tên riêng cho từng loại hình, ví dụ gọi nhà phố là «Liền kề»; Bảng hàng và hồ sơ căn hiện đúng tên đó, xoá tên riêng thì về tên mặc định.",
+  "scope_plain": "Bản này chỉ làm hai mặt Bảng hàng và hồ sơ căn, mỗi loại hình một tên; các phần dưới để hàng sau.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ có thêm mục Loại hình ở màn Cách gọi: tên cột và bốn loại Căn hộ, Nhà phố, Biệt thự, Đất."},
+    {"id": "AC-2", "p": "Sẽ lưu tên riêng của sàn, căn vẫn giữ loại hình chuẩn, sàn khác không thấy tên này."},
+    {"id": "AC-4", "p": "Sẽ hiện tên riêng ở cột, ô lọc, nhóm và sắp của Bảng hàng; lọc vẫn ra đúng hàng."},
+    {"id": "AC-5", "p": "Sẽ hiện tên riêng trong hồ sơ căn hộ, hàng lô và căn ngoài khu."},
+    {"id": "AC-6", "p": "Sẽ hiện cùng một tên ở mọi chỗ mở hồ sơ: cạnh bảng, bảng thẻ, toàn màn, Hôm nay."},
+    {"id": "AC-7", "p": "Sẽ về lại tên mặc định khi quản trị bỏ tên riêng, hoặc khi đọc tên riêng bị lỗi."},
+    {"id": "AC-9", "p": "Sẽ chứng trên màn đang chạy: quản trị đặt tên, đầu chủ thấy tên ấy, trả về mặc định thì thấy lại tên cũ."}
+  ],
+  "wont_do": [
+    {"id": "AC-3", "p": "Chặn tên trùng với loại hình khác, tên rỗng, quá dài hay chứa số điện thoại, cả ở màn lẫn máy chủ."},
+    {"id": "AC-8", "p": "Sẽ KHÔNG đưa tên riêng của loại hình ra trang khách hay bản xuất."},
+    {"id": "OOS-1", "p": "Chưa làm một loại hình nhiều tên, ví dụ vừa «Liền kề» vừa «Shophouse» cùng là nhà phố."},
+    {"id": "OOS-2", "p": "Chưa hiện tên riêng ở trang khách và bản xuất, vì hai nơi này chưa hiện loại hình."},
+    {"id": "OOS-3", "p": "Chưa hiện trên thẻ điện thoại của Bảng hàng, vì thẻ chưa có ô loại hình."},
+    {"id": "OOS-4", "p": "Chưa nhận tên riêng làm giá trị loại hình khi nhập Excel."},
+    {"id": "OOS-5", "p": "Không thêm loại hình ngoài chuẩn và không cho sàn tắt bớt loại hình."}
+  ],
+  "coverage_plain": [
+    {"i": 0, "p": "Trạng thái của tên: mặc định, đã đặt, đã bỏ, bị từ chối — mỗi trạng thái có tiêu chí riêng (AC-1, AC-2, AC-3, AC-7)."},
+    {"i": 1, "p": "Nơi hiện tên: màn Cách gọi, Bảng hàng, hồ sơ căn, và phía ngoài công ty không nhận tên (AC-1, AC-4, AC-5, AC-8)."},
+    {"i": 2, "p": "Dạng hàng: căn hộ, hàng lô, căn ngoài khu, và hàng chưa rõ loại hình (AC-4, AC-5, AC-9)."},
+    {"i": 3, "p": "Bốn chỗ mở hồ sơ đều dùng cùng tên (AC-6, AC-9)."}
+  ],
+  "gap_probe_plain": [
+    {"i": 0, "p": "Chưa có phép đo nào đi tới máy chủ cho tên trùng và loại hình có dấu cách như Biệt thự — đã thêm phép đo trên cơ sở dữ liệu thật."},
+    {"i": 1, "p": "Bốn lựa chọn máy tự quyết ghi căn cứ chưa đúng — đã ghi lại, trích đúng câu đã chốt; việc không đưa tên ra ngoài là phạm vi của bản này, không phải luật cứng."},
+    {"i": 2, "p": "Phép nhìn màn chưa đi bằng phiên đầu chủ và chưa tới Hôm nay — đã thêm; bảng thẻ dùng chung nguồn với cạnh bảng nên không chụp riêng."},
+    {"i": 3, "p": "Chưa đo sắp và hàng chưa rõ loại hình — đã thêm vào tiêu chí Bảng hàng."},
+    {"i": 4, "p": "Câu hỏi một hay nhiều tên chưa nói lý do — đã ghi rõ đây là hoãn vì giá làm, không phải khoá lại, và phần sản phẩm cùng ngành là chưa kiểm."}
+  ]
+}

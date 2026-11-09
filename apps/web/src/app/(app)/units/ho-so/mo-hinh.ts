@@ -7,6 +7,7 @@
 import type { CatalogData } from "@quy-hang/core";
 import { lopPhuHoSo, type CoHoSo } from "@quy-hang/core/access";
 import { nhanViTri, type ListingEvent } from "@quy-hang/core/listing";
+import type { TuVung } from "@quy-hang/core/labels";
 import type { LanThu, ListingView } from "@/lib/sync/types";
 import { chiMuc, type CanNgoaiKhuXem } from "../../inventory/ghep-danh-muc";
 import { khoCuaSo } from "../../today/mobile/kho";
@@ -107,6 +108,8 @@ export type VaoHoSo = {
   khongToa?: ListingView | null;
   /** Căn ngoài khu của sàn giữ trên máy (hàng 79) — loại hình, địa chỉ của hàng ngoài khu. */
   ngoaiKhu?: readonly CanNgoaiKhuXem[] | null;
+  /** Cách gọi riêng của sàn (hàng loai-hinh-trong-cach-goi); vắng là chữ mặc định. */
+  tv?: TuVung | null;
   /** Lần rao đã có lượt kéo lịch sử xong. */
   daKeo: Readonly<Record<string, true>>;
   /** Điều còn thiếu sau lần bấm «Sẵn sàng bán» gần nhất (hàng 23). */
@@ -195,7 +198,7 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
   const lanRao = chuaMa ? [lanRaoCua(chuaMa, ngan.history)] : cacLanRao(ds, toa, chon.ma, ngan.history);
   const lanId = chonLanRao(lanRao, chon.lan);
   const can = ds.find((l) => l.id === lanId)!;
-  const tt = khongToa ? thuocTinhKhongToa(chiMuc(v.danhMuc, v.ngoaiKhu), khongToa) : chuaMa ? null : thuocTinh(v.danhMuc, toa, chon.ma);
+  const tt = khongToa ? thuocTinhKhongToa(chiMuc(v.danhMuc, v.ngoaiKhu), khongToa, v.tv) : chuaMa ? null : thuocTinh(v.danhMuc, toa, chon.ma, v.tv);
   const p = phanLanRao(can);
   const lichSuGoc = ngan.history[can.id] ?? [];
   const ttls = trangThaiLichSu({ coBan: lichSuGoc.length > 0, dangTai: !v.daKeo[can.id], lan: ngan.lastAttempt, ngoaiTuyen: v.ngoaiTuyen });
@@ -204,7 +207,7 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
   const dauChu = can.listAgentKey ?? null;
   const co = lopPhuHoSo({ userId: v.nguoi, roles: v.vai }, dauChu);
   const tuoi = can.freshness as { confirmed?: boolean; ageDays?: number } | undefined;
-  const loaiHinh = tt?.kind === "co" ? tt.truong.find(([k]) => k === "Loại hình")?.[1] : null;
+  const loaiHinh = tt?.kind === "co" ? tt.loaiHinh : null;
   const matMang = v.ngoaiTuyen || ngan.lastAttempt === "mang";
 
   return {
@@ -222,7 +225,7 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
     tt,
     coBaoSai: tt !== null && !khongToa && coBaoSai(tt),
     thongSo: chuaMa ? null : thongSoChinh(v.danhMuc, toa, chon.ma),
-    dauCot: [tt?.kind === "co" ? tt.khu : null, toa, loaiHinh === "—" ? null : loaiHinh].filter(Boolean).join(" · "),
+    dauCot: [tt?.kind === "co" ? tt.khu : null, toa, loaiHinh].filter(Boolean).join(" · "),
     xacNhan: tuoi?.confirmed ? (tuoi.ageDays === 0 ? "Xác nhận hôm nay" : `Xác nhận ${tuoi.ageDays} ngày trước`) : "Chưa xác nhận với chủ nhà",
     gia: dichThieu.includes("gia") ? "Chưa có giá về tay" : p.gia,
     phi: p.phi,
