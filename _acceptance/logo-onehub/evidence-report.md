@@ -93,7 +93,7 @@ human_signoff:
   run_id: minted-logo-onehub-E5-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.web
+  verifier: config:executors.ui-check
   verified_at: 2026-11-09T03:23:05Z
   screenshot: evidence/E5-step1.png
   observed: |
@@ -104,7 +104,7 @@ human_signoff:
   run_id: minted-logo-onehub-E6-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.web
+  verifier: config:executors.ui-check
   verified_at: 2026-11-09T03:23:05Z
   screenshot: evidence/E6-1440-sang.png
   observed: |
@@ -120,7 +120,7 @@ human_signoff:
   run_id: minted-logo-onehub-E7-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.web
+  verifier: config:executors.ui-check
   verified_at: 2026-11-09T03:23:05Z
   screenshot: evidence/E7-step1.png
   observed: |
@@ -131,7 +131,7 @@ human_signoff:
   run_id: minted-logo-onehub-E10-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.web
+  verifier: config:executors.ui-check
   verified_at: 2026-11-09T03:23:05Z
   screenshot: evidence/E10-trang-khach.png
   observed: |
@@ -142,7 +142,7 @@ human_signoff:
   run_id: minted-logo-onehub-E9-r1
   exit_code: 0
   baseline: n-a
-  verifier: config:executors.ui.web
+  verifier: config:executors.ui-check
   verified_at: 2026-11-09T03:23:05Z
   observed: |
     Không có frame ảnh. Tệp evidence/E9-so-bam.txt chứa 10 dòng băm, từng cặp nguồn CRM và tệp kho có cùng giá trị sha256. Cả 5 băm khớp bảng BAM_CRM trong apps/web/src/components/dau-hieu-onehub.test.ts.
