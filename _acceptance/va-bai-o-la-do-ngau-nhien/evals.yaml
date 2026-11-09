@@ -1,0 +1,90 @@
+# Bộ đo của hàng va-bai-o-la-do-ngau-nhien. E1–E5 chạy trên Postgres thử riêng cổng 5588 (đã áp migration trong lệnh);
+# E6, E7 phá trên bản sao ở thư mục tạm của hệ điều hành, không ghi vào cây kho.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.o_la_db
+    paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
+    expected: "exit 0; ca «phép kiểm sổ: đỏ khi số lọt vào, không bắt nhầm mã máy» đạt, gồm assert phép kiểm cũ báo đỏ trên đúng dòng ấy (dòng có 011 ở trường máy) và vetSoTrongSo trả null trên dòng ấy. Chiều đỏ: bỏ phần loại trường máy thì ca đỏ với thông điệp «bắt nhầm mã máy hay giờ ghi» (đo ở E7)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.o_la_db
+    paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
+    expected: "exit 0; sáu dạng số đầy đủ trong bảng ca đều trả {truong: model, dang: day-du}, số assert bằng số phần tử bảng. Chiều đỏ: hàm luôn báo sạch thì ca đỏ với thông điệp «không bắt được: có khoảng trắng» (đo ở E7)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.o_la_db
+    paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
+    expected: "exit 0; các ca đầu số, đuôi, đuôi viết rời trả {truong: model, dang: mot-phan}. Chiều đỏ: hàm bỏ so một phần số thì ca đỏ với thông điệp «không bắt được: chỉ đuôi» (đo ở E7)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.o_la_db
+    paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
+    expected: "exit 0; mã người mang số, mã người mang đuôi, trường số mang đủ số đều báo đỏ gọi đúng tên trường user_id hoặc duration_ms. Chiều đỏ: bỏ qua user_id vô điều kiện thì ca đỏ với thông điệp «không bắt được: mã người là số» (đo ở E7)."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.o_la_db
+    paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
+    expected: "exit 0; ca «phép kiểm sổ không đỏ trên mã máy ngẫu nhiên» đạt: 20000 dòng Postgres sinh, đọc bằng row_to_json, có giờ ghi đủ, thiếu và không phần lẻ; phép mới 0 dòng đỏ, phép cũ đỏ ít nhất một dòng. Chiều đỏ: kiểu phá khong-loai-ma-may ở E7 làm ca đỏ với thông điệp «bắt nhầm dòng ngẫu nhiên»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.o_la_pha_thu
+    paths: ["packages/api/src/imports/ai/store.ts", "packages/api/test-db/imports/**", "_acceptance/va-bai-o-la-do-ngau-nhien/thu/**"]
+    expected: "exit 0; in «ĐẠT lành» (bản sao nguyên vẹn xanh) và «ĐẠT ro-that» (đường ghi sổ trong bản sao thêm số vào cột model thì ca cửa máy chủ đỏ, nhật ký có «sổ chứa chuỗi số»). Chiều đỏ: phép kiểm không đọc được số trên đường thật thì in «HỎNG ro-that» và KẾT: HỎNG, exit 1."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.o_la_pha_thu
+    paths: ["packages/api/test-db/imports/**", "_acceptance/va-bai-o-la-do-ngau-nhien/thu/**"]
+    expected: "exit 0; in «ĐẠT luon-sach», «ĐẠT khong-loai-ma-may», «ĐẠT user-id-mo», «ĐẠT bo-mot-phan», «ĐẠT chi-quet-ba-cot», «ĐẠT bo-qua-ma-may», «ĐẠT khong-de-quy», «ĐẠT bo-khoa-long», «ĐẠT khong-bo-ma-long»: mỗi bản phá làm ca đỏ và nhật ký có đúng thông điệp ghim của kiểu phá đó. Chiều đỏ: bản phá không làm ca đỏ, hoặc đỏ với thông điệp khác, thì in «HỎNG <kiểu>» và KẾT: HỎNG, exit 1."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.o_la_lap
+    paths: ["packages/api/test-db/imports/**", "packages/api/src/imports/ai/**", "_acceptance/va-bai-o-la-do-ngau-nhien/thu/**"]
+    expected: "exit 0; in «KẾT: 300 lần, đỏ 0». Chiều đỏ: một lần nào đỏ thì in «lần <n>: ĐỎ» kèm dòng lỗi và «KẾT: 300 lần, đỏ <k>», exit 1; đầu lượt in «ĐẠT tự kiểm» sau khi lệnh giả thoát 1 bị đếm là đỏ."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: config:executors.script.o_la_pham_vi
+    paths: ["**"]
+    expected: "exit 0; in «ĐẠT phạm vi» và «ĐẠT chiều đỏ» (danh sách giả có packages/api/src/app.ts, .github/workflows/ci.yml, package.json đều bị báo «HỎNG: ngoài phạm vi: <tệp>»). Chiều đỏ: nhánh đổi một tệp ngoài danh sách viết trước thì in «HỎNG: ngoài phạm vi: <tệp>», exit 1."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E10
+    criterion: AC-10
+    executor: test
+    cmd: config:executors.test.o_la_db
+    paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
+    expected: "exit 0; ca «phép kiểm sổ: mọi cột của dòng thật» đạt: ma trận sinh từ khoá của dòng sổ thật cộng cột giả, số assert bằng số phần tử bảng (ca tự ghim số phần tử), mỗi phần tử gọi đúng tên cột. Chiều đỏ: kiểu phá chi-quet-ba-cot ở E7 đỏ với «không bắt được ở ma trận cột: input_tokens», kiểu phá bo-qua-ma-may đỏ với «không bắt được ở ma trận cột: id»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11
+    criterion: AC-11
+    executor: test
+    cmd: config:executors.test.o_la_db
+    paths: ["packages/api/test-db/imports/o-la.test.ts", "packages/api/test-db/imports/vet-so-trong-so.ts"]
+    expected: "exit 0; ca «phép kiểm sổ: số trong dữ liệu lồng» đạt: 11 dạng lồng ở hai cột đều báo đúng tên cột và đúng loại, mẫu âm có 011 ở mã, giờ và số đo lồng không báo; ca hai vạn dòng không đỏ dòng nào khi đặt mã và giờ vào dữ liệu lồng. Chiều đỏ: kiểu phá khong-de-quy ở E7 đỏ với «không bắt được ở dữ liệu lồng: đối tượng, số đầy đủ», bo-khoa-long đỏ với «không bắt được ở dữ liệu lồng: số nằm ở khoá», khong-bo-ma-long đỏ với «bắt nhầm mã máy trong dữ liệu lồng» và «bắt nhầm dòng ngẫu nhiên lồng»."
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
