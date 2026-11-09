@@ -10,6 +10,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Đăng nhập tài khoản mẫu đủ năm vai; đo ở khổ 1440 và 1912"
       - "Đếm main, h1; đo x và right của danh sách so với vùng data-vung=than; chụp E1-1440.png, E1-1912.png"
     expected: "main = 1, h1 = 1, đường dẫn ở đầu màn; không có [aria-label='Hôm nay của trưởng nhóm'], bảng Lead đã nhập, Timeline; lệch mép danh sách so với vùng nội dung = 0 px ở cả hai khổ. Chiều đỏ: dựng lại trên main cũ cho lệch 164 px."
@@ -23,6 +24,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Mỗi vai mẫu ở trạng thái không còn việc: ghi đích của nút đi tiếp"
       - "Quản trị mẫu chỉ giữ vai Quản trị gõ /today"
     expected: "Mỗi vai đúng một câu và một nút đi tiếp có đích khác trang tạm; quản trị về /settings, trang không có chữ «mục 22»; telesales hết việc vẫn có dòng Lead đã nhập."
@@ -44,6 +46,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Điều kiện trước: sàn thử có đủ tám loại việc, mỗi loại ít nhất một dòng, thiếu thì đỏ. Người đủ vai ở khổ 1440: đo scrollWidth và clientWidth mọi nút chính trên dòng; chụp E2b-1440.png"
     expected: "Không nút nào scrollWidth > clientWidth; mỗi dòng đúng một nút chính và một ⋯; số ở đầu màn bằng số dòng việc đếm trên trang, dòng «Lead đã nhập (N)» không được tính."
     paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/components/khoi/solution-agents-2/**"]
@@ -56,6 +59,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Trưởng nhóm mẫu, hai lead quá hạn; bấm Giao lại trên một dòng, chọn đầu chủ B; chụp trước và sau"
       - "Đọc GET /api/v1/team/lead-queue và /api/v1/leads/assigned bằng phiên của đầu chủ B"
       - "Lặp với một lead ở nhóm Chưa chia được"
@@ -87,6 +91,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Telesales mẫu có một lead bị trả lại; bấm Sửa số, nhập 0900 000 0xx, gửi; đọc GET /api/v1/leads trước và sau"
     expected: "Lead gốc chuyển resubmitted ở máy chủ và rời danh sách; có dòng «Lead đã nhập (N)», N bằng độ dài GET /api/v1/leads."
     paths: ["apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/leads/mine/**"]
@@ -107,6 +112,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Đầu khách mẫu có đủ ba loại tin, dữ liệu đi qua API thật (gửi link, khách mở, căn đổi giá, căn mới khớp), không fixture tay"
       - "Bấm từng dòng, so URL đích với bảng viết trước: phản ứng và vừa đổi về /shares?lan=, căn mới về /shares/new?can="
       - "Quét văn bản mọi dòng ở cả bốn vai bằng mồi số khách 0900 000 0xx và mồi trường lớp nguồn"
@@ -121,6 +127,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/team"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Trưởng nhóm mẫu mở /team, đối chiếu ba ô số với GET /team/lead-queue; đầu khách mở /team"
     expected: "Ba ô số và bảng theo đầu chủ hiện đúng số; có đường dẫn ở đầu màn; không còn «Màn này đang dựng»; đầu khách không vào được."
     paths: ["apps/web/src/app/(app)/team/**", "apps/web/src/components/khoi/dashboard-6/**"]
@@ -133,6 +140,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/shares/tin"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Đầu khách mẫu có một link đã mở; mở Tin của khách ở khổ 1440, đo bề rộng cột tin"
     expected: "Tin hiện đủ, cột rộng 768 px căn giữa."
     paths: ["apps/web/src/app/(app)/shares/**"]
@@ -153,6 +161,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Người đủ vai, sàn đổi tên một nhóm của Trưởng nhóm; so số từng mục cột hai với số dòng nhóm trên cùng trang, lặp khi một nguồn trả 500"
       - "Mở /today, /today?nhom=<hợp lệ>, /today?nhom=la; đếm aria-current"
     expected: "Nhãn mới ở cả cột và thân; số khớp từng mục, mục của nguồn lỗi không có số; ba địa chỉ đều đúng một aria-current."
@@ -174,6 +183,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Người đủ vai; chặn GET /api/v1/team/lead-queue trả 500 hai lần trong trình duyệt; chụp E9b-1440.png; bỏ chặn, bấm Thử lại"
       - "Ngắt mạng trình duyệt: đếm dải ngoại tuyến và dòng báo theo nguồn; bật lại mạng, không bấm gì"
     expected: "Đúng một dòng «Chưa tải được lead quá hạn» và một «Thử lại»; không câu «không có việc» nào cho nguồn ấy; sau khi bỏ chặn nhóm hiện lại; mất mạng đúng một dải, 0 dòng báo theo nguồn; có mạng lại thì nhóm tự hiện."
@@ -187,6 +197,7 @@ evals:
     cmd: config:executors.ui-check
     target: "http://localhost:3462/today"
     steps:
+      - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599 nạp sàn mẫu, máy dev 3462, đủ các loại việc; dòng cuối in hàng đợi, lead, tin; cookie đăng nhập từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json, khoá du-vai là người đủ năm vai) — tắt bằng cờ --tat"
       - "Khổ 375 ở bốn vai; đo tên căn có bị cắt không; trưởng nhóm bấm Giao lại, chọn đầu chủ trong ngăn đáy, đọc lại GET /api/v1/team/lead-queue; chụp E10-*.png"
     expected: "Không tên căn nào bị nút ép cắt; giao lại mở ngăn đáy và lead rời hàng đợi ở máy chủ; không còn «mở trên máy tính»."
     paths: ["apps/web/src/app/(app)/today/**"]

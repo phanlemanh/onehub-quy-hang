@@ -5,25 +5,7 @@
 import { CAU_HINH_SAN_MAC_DINH } from "@quy-hang/core/config";
 import { hangCuTheoNguoi, tongCanGoiLai, type CanHangCu, type DongHangCu } from "@quy-hang/core/today";
 
-import type { DauChuCuaSan, DongLeadTruongNhom } from "./nguon";
-
-// ——— Vùng của /today theo vai ———
-
-export type VungHomNay = "truong-nhom" | "dau-chu" | "telesales" | "dau-khach";
-
-/**
- * Vùng của `/today` theo vai, thứ tự từ trên xuống. Trưởng nhóm: bảng điều khiển trên cùng; người có cả vai Đầu chủ thấy
- * hàng đợi của mình dưới (gate1, Hỏi-2). Telesales giữ vùng Lead đã nhập sau vùng đầu chủ như trước. Rỗng → trang tạm.
- */
-export function vungTheoVai(roles: readonly string[]): VungHomNay[] {
-  const ra: VungHomNay[] = [];
-  if (roles.includes("team_lead")) ra.push("truong-nhom");
-  if (roles.includes("listing_agent")) ra.push("dau-chu");
-  if (roles.includes("telesales")) ra.push("telesales");
-  // Hàng 37: vùng Đầu khách sau các vùng sẵn có.
-  if (roles.includes("buyer_agent")) ra.push("dau-khach");
-  return ra;
-}
+import type { DauChuCuaSan, DongLeadTruongNhom } from "../today/nguon";
 
 // ——— Sáu trạng thái ———
 
@@ -96,9 +78,6 @@ export function hangCuTrenMay(can: readonly CanTrenMay[], homNay: string, cauHin
   return { dong, hangCu: tongCanGoiLai(dong) };
 }
 
-/** Mã ngắn của người không có trong danh sách đầu chủ. */
-export const maNgan = (userId: string) => userId.slice(0, 8);
-
 export type DongTheoNguoi = DongHangCu & { ten: string; nghi: boolean };
 
 /** Tên người giữ khớp danh sách đầu chủ theo mã; không có trong danh sách thì mã ngắn; dòng `null` là «Chưa có người giữ». */
@@ -106,7 +85,7 @@ export function dongTheoNguoi(dong: readonly DongHangCu[], dauChu: readonly DauC
   const theoMa = new Map(dauChu.map((d) => [d.userId, d]));
   return dong.map((d) => {
     const n = d.userId ? theoMa.get(d.userId) : undefined;
-    return { ...d, ten: d.userId === null ? "Chưa có người giữ" : (n?.displayName ?? maNgan(d.userId)), nghi: n?.onLeave ?? false };
+    return { ...d, ten: d.userId === null ? "Chưa có người giữ" : (n?.displayName || "Chưa rõ tên"), nghi: n?.onLeave ?? false };
   });
 }
 

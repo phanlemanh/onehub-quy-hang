@@ -6,17 +6,16 @@ import { describe, it } from "node:test";
 import { giaiCauHinh } from "@quy-hang/core/config";
 import { hangCuTheoNguoi, tongCanGoiLai } from "@quy-hang/core/today";
 
-import { layHangDoiTruongNhom, type DongLeadTruongNhom } from "./nguon";
+import { layHangDoiTruongNhom, type DongLeadTruongNhom } from "../today/nguon";
 import {
   baO,
   dongTheoNguoi,
   hangCuTrenMay,
   trangThaiTruongNhom,
-  vungTheoVai,
   type CanTrenMay,
   type TrangThaiTruongNhom,
   type VaoTrangThai,
-} from "./truong-nhom-trang-thai";
+} from "./trang-thai";
 
 const dong = (leadId: string, kind: DongLeadTruongNhom["kind"]): DongLeadTruongNhom => ({
   leadId,
@@ -109,47 +108,15 @@ describe("hôm nay trưởng nhóm", () => {
     const coRieng = hangCuTrenMay([...BANG, { listAgentKey: "u-a", standardStatus: "Active", lastConfirmedAt: null, visibility: "Private" }], HOM_NAY);
     assert.equal(coRieng.hangCu, 5);
 
-    // Tên người giữ khớp danh sách đầu chủ theo mã; người ngoài danh sách hiện mã ngắn.
+    // Tên người giữ khớp danh sách đầu chủ theo mã; người ngoài danh sách hiện chữ thay, không hiện mã.
     const ten = dongTheoNguoi(macDinh.dong, [{ userId: "u-a", displayName: "[Đầu chủ A]", onLeave: true, openLeads: 2 }]).map((d) => [d.ten, d.nghi]);
     assert.deepEqual(ten, [
       ["[Đầu chủ A]", true],
-      ["u-b", false],
-      ["u-c", false],
+      ["Chưa rõ tên", false],
+      ["Chưa rõ tên", false],
       ["Chưa có người giữ", false],
     ]);
   });
 
-  it("/today xếp vùng theo vai", () => {
-    // Ma trận viết trước: bốn tổ hợp vai → danh sách vùng.
-    const MA_TRAN: [string, string[], string[]][] = [
-      ["chỉ đầu chủ", ["listing_agent"], ["dau-chu"]],
-      ["chỉ trưởng nhóm", ["team_lead"], ["truong-nhom"]],
-      ["cả hai (Hỏi-2: bảng điều khiển trên, hàng đợi mình dưới)", ["listing_agent", "team_lead"], ["truong-nhom", "dau-chu"]],
-      ["telesales như trước", ["telesales"], ["telesales"]],
-    ];
-    let so = 0;
-    for (const [ten, vai, mong] of MA_TRAN) {
-      assert.deepEqual(vungTheoVai(vai), mong, ten);
-      so++;
-    }
-    assert.equal(so, 4);
-    // Chiều đỏ: vai khác không có vùng nào → trang tạm; thứ tự vai đưa vào không đổi thứ tự vùng.
-    assert.deepEqual(vungTheoVai(["admin"]), []);
-    assert.deepEqual(vungTheoVai(["team_lead", "listing_agent"]), ["truong-nhom", "dau-chu"]);
-  });
 });
 
-// Hàng 37 (E1b): vùng Đầu khách xếp sau các vùng sẵn có; trưởng nhóm không có vai Đầu khách thì không có vùng này.
-describe("hôm nay theo vai: vùng Đầu khách", () => {
-  it("bảng vai → vùng", () => {
-    const BANG: [string[], string[]][] = [
-      [["buyer_agent"], ["dau-khach"]],
-      [["buyer_agent", "listing_agent"], ["dau-chu", "dau-khach"]],
-      [["team_lead"], ["truong-nhom"]],
-      [["team_lead", "buyer_agent"], ["truong-nhom", "dau-khach"]],
-      [["telesales"], ["telesales"]],
-    ];
-    assert.equal(BANG.length, 5, "số dòng bảng viết trước");
-    for (const [vai, mong] of BANG) assert.deepEqual(vungTheoVai(vai), mong, vai.join("+"));
-  });
-});

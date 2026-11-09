@@ -4,6 +4,7 @@ import { type Home, HOME_LABEL } from "@quy-hang/core";
 import { BO_NHOM_MAC_DINH } from "@quy-hang/core/today";
 import { cn } from "cn";
 import {
+  BellDotIcon,
   CalendarClockIcon,
   ContactIcon,
   ChevronLeftIcon,
@@ -26,6 +27,7 @@ import Link from "next/link";
 import { SU_KIEN_MO_LUU, useGocNhinCuaToi } from "@/app/(app)/inventory/goc-nhin-react";
 import { cotCaiDat, MUC_SAN } from "@/app/(app)/settings/cai-dat";
 import { mucDangChon, mucHomNay } from "@/app/(app)/today/mo-nhom";
+import { mucCotHomNay, useSoViec } from "@/app/(app)/today/viec/kho-so";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -33,10 +35,11 @@ import { useDuongVoDayDu } from "./dia-chi-mau";
 
 // Cột thứ hai theo nhà (§9) — chuyển thể InnerSidebar + InnerSidebarNav của app-shell-8. Mọi nhà có cột, mặc định mở
 // (hàng 91, chủ kho 02/11).
-type Item = { label: string; href: string; icon: LucideIcon };
+type Item = { label: string; href: string; icon: LucideIcon; so?: number | null };
 
 const SHARES: Item[] = [
   { label: "Link đã gửi", href: "/shares", icon: LinkIcon },
+  { label: "Tin của khách", href: "/shares/tin", icon: BellDotIcon },
   { label: "Lịch xem", href: "/viewings", icon: CalendarClockIcon },
 ];
 
@@ -125,7 +128,7 @@ function NavList({ items }: { items: Item[] }) {
   const dangChon = mucDangChon(items, vo.duong, vo.thamSo);
   return (
     <div className="flex flex-col gap-0.5 px-2">
-      {items.map(({ label, href, icon: Icon }) => {
+      {items.map(({ label, href, icon: Icon, so }) => {
         const isActive = href === dangChon;
         return (
           <Button
@@ -142,11 +145,19 @@ function NavList({ items }: { items: Item[] }) {
           >
             <Icon className="size-4 shrink-0 opacity-70" aria-hidden="true" />
             <span className="truncate">{label}</span>
+            {so != null ? <span className="text-muted-foreground ms-auto text-xs tabular-nums">{so}</span> : null}
           </Button>
         );
       })}
     </div>
   );
+}
+
+/** Cột của Hôm nay: nhóm của vai người xem, số đọc từ kho chung với thân màn. */
+function TodayColumn({ roles }: { roles: readonly string[] }) {
+  const soViec = useSoViec();
+  const items: Item[] = mucCotHomNay(roles, soViec).map((m) => ({ ...m, icon: ListChecksIcon }));
+  return <DanhSachMuc home="today" items={items} />;
 }
 
 function InventoryColumn() {
@@ -247,7 +258,7 @@ function ColumnContent({ home, caiDat }: { home: Home; caiDat: CaiDatCua }) {
     case "shares":
       return <DanhSachMuc home={home} items={SHARES} />;
     case "today":
-      return <DanhSachMuc home={home} items={TODAY_ITEMS} />;
+      return <TodayColumn roles={caiDat.roles} />;
     case "team":
       return <DanhSachMuc home={home} items={TEAM} />;
     default: {

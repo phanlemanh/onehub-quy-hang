@@ -5,7 +5,7 @@ import type { MyLeadView } from "@quy-hang/core/dedupe";
 import { LeadDaNhap, type NguonLeadDaNhap } from "./lead-da-nhap";
 
 // Hai lời gọi thật của vùng «Lead đã nhập»: liệt lead mình nhập và «Sửa số và gửi lại» (hàng 27, ADR-0020).
-const nguon: NguonLeadDaNhap = {
+export const nguon: NguonLeadDaNhap = {
   async lay() {
     const res = await fetch("/api/v1/leads", { cache: "no-store" }).catch(() => null);
     if (!res?.ok) return null;

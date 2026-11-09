@@ -3,7 +3,7 @@
 import { giaTin } from "@quy-hang/core/sharing";
 import { LECH_GIO_VN, NHAN_TIN, type TinDauKhach } from "@quy-hang/core/today";
 
-import { NHAN_TRANG_THAI } from "../../shares/da-gui";
+import { NHAN_TRANG_THAI } from "../da-gui";
 
 export type { TinDauKhach };
 export { NHAN_TIN };

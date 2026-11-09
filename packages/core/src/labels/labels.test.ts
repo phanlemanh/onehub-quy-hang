@@ -185,7 +185,7 @@ const loiCua = (kq: ReturnType<typeof dungDongNhan>) => (kq.ok ? "" : kq.loi);
 
 test("trùng tên đang hiện: mọi cặp riêng–mặc định anh em của mọi tập đóng", () => {
   // Ma trận sinh từ TAP_DONG của lõi; tập mới chưa vào danh sách khẳng định thì ca đỏ.
-  assert.deepEqual([...DS_TRUONG_DONG].sort(), ["feeInclusion", "withdrawnReason"], "tập đóng của lõi đổi — xét lại ma trận");
+  assert.deepEqual([...DS_TRUONG_DONG].sort(), ["feeInclusion", "nhomViec", "withdrawnReason"], "tập đóng của lõi đổi — xét lại ma trận");
   const mo = (s: string) => `  ${s.toLocaleUpperCase("vi").replace(/ /g, "   ")} `;
   let dem = 0;
   let mong = 0;
@@ -204,7 +204,7 @@ test("trùng tên đang hiện: mọi cặp riêng–mặc định anh em của 
       }
   }
   assert.equal(dem, mong);
-  assert.equal(dem, 8);
+  assert.equal(dem, 38);
 });
 
 test("trùng tên đang hiện: riêng–riêng, hoa thường, đổi chéo, khác tập, đối chứng", () => {

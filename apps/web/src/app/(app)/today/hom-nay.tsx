@@ -1,16 +1,18 @@
 "use client";
 
-// Hôm nay của đầu chủ (hàng 22, làm lại ở hàng 92 theo quyết định 14A: khung solution-agents-2, ô hạn data-grid-base-5)
-// bằng thành phần `data-grid` đã cài: danh sách việc không đầu cột, nhóm theo hàng đợi của bộ nhóm đang áp (dòng nhóm gập
-// được kèm số), cột Việc · Vì sao hôm nay · Giá · Hành động — một nút việc chính mỗi dòng, việc còn lại trong ⋯.
-// Căn đọc từ kho trên máy (bộ đồng bộ); lead và bộ nhóm đọc qua API, bộ nhóm đọc được thì lưu trên máy theo sàn.
+// Hôm nay — một danh sách việc của mọi vai (hồ sơ hom-nay-mot-danh-sach-viec; dòng việc của hàng 92, quyết định 14A: khung
+// solution-agents-2, ô hạn data-grid-base-5) bằng thành phần `data-grid` đã cài: nhóm gập được kèm số, cột Việc · Vì sao
+// hôm nay · Chi tiết · Hành động — một nút việc chính mỗi dòng, việc còn lại trong ⋯. Căn đọc từ kho trên máy (bộ đồng bộ);
+// lead, bộ nhóm, hàng đợi trưởng nhóm, tin khách đọc qua API, mỗi nguồn báo lỗi riêng (viec/gop-viec.ts).
 import { NEED_LABELS, RETURN_REASON_LABEL, LEAD_STAGE_LABELS, type LeadState } from "@quy-hang/core/dedupe";
-import { BO_NHOM_MAC_DINH, chiaNhom, nhomCuaLead, type BoNhom, type LeadAction, type Nhom } from "@quy-hang/core/today";
+import type { MyLeadView } from "@quy-hang/core/dedupe";
+import { BO_NHOM_MAC_DINH, chiaNhom, NHOM_VAI, nhomCuaLead, type BoNhom, type LeadAction, type Nhom, type TinDauKhach } from "@quy-hang/core/today";
+import { nhanGiaTri, type TuVung } from "@quy-hang/core/labels";
 import { useTable, type ColumnDef, type ExpandedState, type Row } from "@tanstack/react-table";
-import { RotateCwIcon } from "lucide-react";
+import { ListChecksIcon, RotateCwIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState, useSyncExternalStore, type ComponentProps } from "react";
+import { useCallback, useEffect, useEffectEvent, useMemo, useState, useSyncExternalStore, type ComponentProps } from "react";
 
 import { ChoTai } from "@/components/bo-cuc";
 import { Badge } from "@/components/reui/badge";
@@ -45,15 +47,23 @@ import { chuSo, moSo, telHref } from "./mo-so";
 import { DanhSachDienThoai, type NhomThe, type TheDong } from "./mobile/danh-sach";
 import { dungNhomThe, noiThe, noiViecCan, noiViecLead } from "./mobile/hanh-dong";
 import { HetViec } from "./mobile/het-viec";
+import { nguon as nguonLead } from "../leads/mine/nguon-that";
 import { useDienThoai } from "./mobile/kho";
 import { moSoChu } from "./mobile/mo-so-chu";
-import { ghiLead, layBoNhom, layLeadGiao, type LeadGiao } from "./nguon";
+import { ghiLead, giaoLaiLead, layBoNhom, layDauChuCuaSan, layHangDoiTruongNhom, layLeadGiao, type DauChuCuaSan, type DongLeadTruongNhom, type LeadGiao } from "./nguon";
+import { GiaoLai } from "./viec/giao-lai";
+import { chuDong, type ChuDong } from "./viec/chu-dong";
+import { docCoThuLai, docMang, nguonCanDocLai } from "./viec/doc-nguon";
+import { gopViec, type DongVai, type MaNguon, type Nguon } from "./viec/gop-viec";
+import { datSoViec } from "./viec/kho-so";
+import { SuaSo } from "./viec/sua-so";
 import { mucHan, NHAN_VIEC, nutCuaViec, type MaViec, type MucHan, type ViecDong } from "./viec-dong";
 
 type Feat = DataGridFeatures;
 type Viec =
   | { kind: "can"; id: string; nhom: Nhom; can: CanHomNay; lyDo: string }
-  | { kind: "lead"; id: string; nhom: Nhom; lead: LeadGiao };
+  | { kind: "lead"; id: string; nhom: Nhom; lead: LeadGiao }
+  | { kind: "vai"; id: string; nhom: Nhom; dong: DongVai; chu: ChuDong };
 type DongLuoi = { kind: "nhom"; id: string; nhom: Nhom; so: number; subRows: DongLuoi[] } | { kind: "viec"; id: string; v: Viec };
 type DefCot = ColumnDef<Feat, DongLuoi>;
 
@@ -114,12 +124,23 @@ const BADGE_NHOM: Record<string, BadgeVariant> = {
   call_back: "destructive-light",
   missing_info: "invert-light",
   recent_change: "primary-light",
+  lead_overdue: "destructive-light",
+  lead_unrouted: "warning-light",
+  lead_returned: "destructive-light",
+  buyer_reaction: "primary-light",
+  buyer_changed: "primary-light",
+  buyer_new_match: "primary-light",
 };
 const badgeNhom = (n: Nhom): BadgeVariant => BADGE_NHOM[n.code] ?? (n.subject === "lead" ? "info-light" : "primary-light");
 
 const tieuDe = (v: Viec) =>
-  v.kind === "lead" ? `${v.lead.buildingName} · ${v.lead.unitNumber ?? "chỉ biết toà"}` : `${v.can.unitNumber ?? "Chưa có mã căn"} · ${v.can.buildingName}`;
-const phuDe = (v: Viec) => (v.kind === "lead" ? (NEED_LABELS[v.lead.need as keyof typeof NEED_LABELS] ?? v.lead.need) : chuLoai(v.can));
+  v.kind === "vai"
+    ? v.chu.tieuDe
+    : v.kind === "lead"
+      ? `${v.lead.buildingName} · ${v.lead.unitNumber ?? "chỉ biết toà"}`
+      : `${v.can.unitNumber ?? "Chưa có mã căn"} · ${v.can.buildingName}`;
+const phuDe = (v: Viec) =>
+  v.kind === "vai" ? v.chu.phu : v.kind === "lead" ? (NEED_LABELS[v.lead.need as keyof typeof NEED_LABELS] ?? v.lead.need) : chuLoai(v.can);
 const nhanNac = (stage: string) => LEAD_STAGE_LABELS[stage as LeadState] ?? stage;
 
 /** Hành động của dòng: căn ghi qua bộ đồng bộ, lead gọi API; lỗi nói ở dòng, dòng giữ nguyên. */
@@ -133,19 +154,25 @@ type HanhDong = {
   /** Số đã mở theo dòng lead (hàng mo-so-lead) — chỉ trong trạng thái của màn, không lưu trên máy. */
   so: Readonly<Record<string, string>>;
   moSo: (l: LeadGiao) => void;
+  dauChu: readonly DauChuCuaSan[];
+  giao: (d: DongLeadTruongNhom, nguoi: string) => void;
+  guiLai: (id: string, so: string) => Promise<string | null>;
 };
 
 /** Dòng trên của «Vì sao hôm nay»: lý do bằng chữ của căn, hay nấc lead và giờ nhập. */
 function lyDoChu(v: Viec): string {
   if (v.kind === "can") return v.lyDo;
+  if (v.kind === "vai") return v.chu.lyDo;
   return `${nhanNac(v.lead.stage)} · nhập ${chuGio(v.lead.createdAt)}`;
 }
 
-const chuGiaViec = (v: Viec) => (v.kind === "can" ? chuGiaPhi(v.can.listPrice, v.can.feeInclusion) : v.lead.priceText);
+const chuGiaViec = (v: Viec) =>
+  v.kind === "can" ? chuGiaPhi(v.can.listPrice, v.can.feeInclusion) : v.kind === "vai" ? v.chu.chiTiet : v.lead.priceText;
 
 /** Hạn của dòng (chỉ lead có hạn): chữ và mốc màu — đã quá đỏ, còn dưới 15 phút vàng (hàng 92). */
 function hanCua(v: Viec, bayGio: string): { chu: string; muc: MucHan } | null {
   if (v.kind === "can") return null;
+  if (v.kind === "vai") return v.chu.han;
   const iso = v.lead.stage === "sent" ? v.lead.acceptDueAt : v.lead.callDueAt;
   return { chu: chuHan(v.lead, bayGio).chu, muc: mucHan(iso, bayGio) };
 }
@@ -157,10 +184,38 @@ function ViSao({ v, bayGio }: { v: Viec; bayGio: string }) {
   return <OHaiTang tren={lyDoChu(v)} duoi={h?.chu} duoiClassName={h ? MAU_HAN[h.muc] : undefined} />;
 }
 
-const viecDong = (v: Viec): ViecDong => (v.kind === "can" ? { kind: "can", nhom: v.nhom } : { kind: "lead", nhom: v.nhom, stage: v.lead.stage });
+const viecDong = (v: Viec): ViecDong =>
+  v.kind === "can" ? { kind: "can", nhom: v.nhom } : { kind: "lead", nhom: v.nhom, stage: v.kind === "lead" ? v.lead.stage : "" };
+
+/** Việc của vai khác đầu chủ: cùng ô thao tác, nút chính theo loại việc. */
+function NutCuaVai({ v, hd, rong }: { v: Extract<Viec, { kind: "vai" }>; hd: HanhDong; rong: boolean }) {
+  const c = v.chu;
+  const lop = rong ? RONG_NUT_CHINH : undefined;
+  if (v.dong.kind === "doi") {
+    const d = v.dong.dong;
+    return <GiaoLai nhan={c.nut} className={lop} dong={d} dauChu={hd.dauChu} tat={hd.dangGhi.has(v.id)} onGiao={(nguoi) => hd.giao(d, nguoi)} />;
+  }
+  if (v.dong.kind === "tra-lai") return <SuaSo nhan={c.nut} className={lop} leadId={v.dong.lead.id} tieuDe={c.tieuDe} guiLai={hd.guiLai} />;
+  return (
+    <Button size="sm" variant="outline" className={lop} nativeButton={false} render={<Link href={c.href ?? "/shares"} />}>
+      {c.nut}
+    </Button>
+  );
+}
+
+const MENU_VAI: Record<DongVai["kind"], MucMenu> = {
+  doi: { khoa: "doi", nhan: "Mở Đội", href: "/team" },
+  "tra-lai": { khoa: "lead", nhan: "Mở Lead đã nhập", href: "/leads/mine" },
+  tin: { khoa: "gui", nhan: "Mở Đã gửi", href: "/shares" },
+};
 
 /** Đúng một nút viền cùng bề rộng (việc đầu của nhóm), việc còn lại trong ⋯; Trả lại luôn hỏi lại (hàng 92). */
 function NutViec({ v, hd }: { v: Viec; hd: HanhDong }) {
+  if (v.kind === "vai") return <OThaoTac chinh={<NutCuaVai v={v} hd={hd} rong />} phu={[MENU_VAI[v.dong.kind]]} nhanMenu={`Việc khác của ${tieuDe(v)}`} />;
+  return <NutViecDauChu v={v} hd={hd} />;
+}
+
+function NutViecDauChu({ v, hd }: { v: Exclude<Viec, { kind: "vai" }>; hd: HanhDong }) {
   const [hoiTraLai, setHoiTraLai] = useState(false);
   const ban = hd.dangGhi.has(v.id);
   const loi = hd.loi[v.id];
@@ -257,7 +312,7 @@ function taoCot(hd: HanhDong, rong: boolean): DefCot[] {
     { id: "lyDo", header: "Vì sao hôm nay", size: 260, cell: ({ row }) => (row.original.kind === "viec" ? <ViSao v={row.original.v} bayGio={hd.bayGio} /> : null) },
     {
       id: "gia",
-      header: "Giá",
+      header: "Chi tiết",
       size: 160,
       cell: ({ row }) => (row.original.kind === "viec" ? <span className="text-sm whitespace-normal">{chuGiaViec(row.original.v)}</span> : null),
     },
@@ -284,7 +339,8 @@ type TaiBo = { kind: "dang" } | { kind: "ok"; bo: BoNhom } | { kind: "loi" };
 type TaiLead = { kind: "dang" } | { kind: "ok"; ds: LeadGiao[] } | { kind: "loi" };
 
 /** `nhan`: bộ nhãn trạng thái của sàn (hàng 46), trang đọc ở máy chủ qua từ vựng của sàn; vắng = chữ mặc định. */
-export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string; nhan?: readonly NhanTrangThai[] }) {
+export function HomNayDanhSach({ vai, nguoi, san, nhan, tv }: { vai: readonly string[]; nguoi: string; san: string; nhan?: readonly NhanTrangThai[]; tv: TuVung | null }) {
+  const laDauChu = vai.includes("listing_agent");
   const { bd } = useBoDongBo();
   const dsHang = useDanhSachHang();
   const ngan = bd.ngan();
@@ -307,18 +363,62 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
     },
     [bd],
   );
-  useEffect(() => {
-    let huy = false;
-    void Promise.all([layBoNhom(), layLeadGiao()]).then(([bo, leads]) => {
-      if (!huy) ap(bo, leads);
-    });
-    return () => {
-      huy = true;
-    };
+  const docDauChu = useCallback(() => {
+    void Promise.all([layBoNhom(), docCoThuLai(layLeadGiao)]).then(([bo, leads]) => ap(bo, leads));
   }, [ap]);
-  const thuLai = () => {
-    setTaiLead({ kind: "dang" });
-    void Promise.all([layBoNhom(), layLeadGiao()]).then(([bo, leads]) => ap(bo, leads));
+
+  // ——— Nguồn của vai khác đầu chủ, mỗi nguồn tự thử lại một lần trước khi báo (AC-9) ———
+  const RONG = { trang: "dang", ds: [] } as const;
+  const [hangDoi, setHangDoi] = useState<Nguon<DongLeadTruongNhom>>(RONG);
+  const [leadCuaToi, setLeadCuaToi] = useState<Nguon<MyLeadView>>(RONG);
+  const [tin, setTin] = useState<Nguon<TinDauKhach>>(RONG);
+  const [dauChuSan, setDauChuSan] = useState<readonly DauChuCuaSan[]>([]);
+  const ketQua = <T,>(ds: readonly T[] | null): Nguon<T> => (ds ? { trang: "ok", ds } : { trang: "loi", ds: [] });
+
+  const docHangDoi = useCallback(() => {
+    void Promise.all([
+      docCoThuLai(async () => {
+        const r = await layHangDoiTruongNhom();
+        return r.ok ? r.items : null;
+      }),
+      layDauChuCuaSan(),
+    ]).then(([d, dc]) => {
+      setHangDoi(ketQua(d));
+      if (dc.ok) setDauChuSan(dc.items);
+    });
+  }, []);
+  const docLeadCuaToi = useCallback(() => {
+    void docCoThuLai(() => docMang<MyLeadView>("/api/v1/leads")).then((d) => setLeadCuaToi(ketQua(d)));
+  }, []);
+  const docTin = useCallback(() => {
+    void docCoThuLai(() => docMang<TinDauKhach>("/api/v1/today/buyer", (j) => (j as { items?: unknown } | null)?.items)).then((d) => setTin(ketQua(d)));
+  }, []);
+
+  const docNguon = useCallback(
+    (ma: MaNguon) => {
+      if (ma === "lead-giao") docDauChu();
+      else if (ma === "hang-doi") docHangDoi();
+      else if (ma === "lead-cua-toi") docLeadCuaToi();
+      else docTin();
+    },
+    [docDauChu, docHangDoi, docLeadCuaToi, docTin],
+  );
+
+  const vaiKhoa = vai.join(",");
+  useEffect(() => {
+    const cua = vaiKhoa.split(",");
+    if (cua.includes("listing_agent")) docDauChu();
+    if (cua.includes("team_lead")) docHangDoi();
+    if (cua.includes("telesales")) docLeadCuaToi();
+    if (cua.includes("buyer_agent")) docTin();
+  }, [vaiKhoa, docDauChu, docHangDoi, docLeadCuaToi, docTin]);
+
+  const thuLai = (ma: MaNguon) => {
+    if (ma === "lead-giao") setTaiLead({ kind: "dang" });
+    else if (ma === "hang-doi") setHangDoi(RONG);
+    else if (ma === "lead-cua-toi") setLeadCuaToi(RONG);
+    else setTin(RONG);
+    docNguon(ma);
   };
 
   // Bộ đang áp: bộ vừa đọc; đọc lỗi thì bộ đã lưu trên máy; chưa từng lưu thì bộ mặc định kèm chữ báo.
@@ -329,7 +429,8 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
   // ——— Hàng đợi ———
   const idx = useMemo(() => chiMuc(danhMuc), [danhMuc]);
   const cans = useMemo(() => dsHang.map((l) => canHomNay(l, idx)), [dsHang, idx]);
-  const nhom = (() => {
+  const nhomDauChu = (() => {
+    if (!laDauChu) return [];
     const theoCan = new Map(chiaNhom(bo, cans, nguoi, bayGio).map((g) => [g.nhom.code, g.cans]));
     const leads = taiLead.kind === "ok" ? taiLead.ds : [];
     return bo
@@ -343,7 +444,64 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
       })
       .filter((g) => g.viec.length > 0);
   })();
-  const tong = nhom.reduce((s, g) => s + g.viec.length, 0);
+
+  // ——— Gộp mọi nguồn thành một danh sách ———
+  // Đọc lỗi hay chưa đặt tên thì chữ thay, không hiện mã thô.
+  const tenNguoi = (id: string | null) => (id ? dauChuSan.find((d) => d.userId === id)?.displayName || "Chưa rõ tên" : "Chưa có người");
+  const gop = gopViec<Exclude<Viec, { kind: "vai" }>>({
+    vai,
+    bayGio,
+    tv,
+    dauChu: nhomDauChu.map((g) => ({
+      code: g.nhom.code,
+      label: g.nhom.label,
+      viec: g.viec as Exclude<Viec, { kind: "vai" }>[],
+      soQua: g.viec.filter((v) => hanCua(v, bayGio)?.muc === "qua").length,
+    })),
+    leadGiao: { trang: taiLead.kind === "dang" ? "dang" : taiLead.kind === "loi" ? "loi" : "ok" },
+    hangDoi,
+    leadCuaToi,
+    tin,
+  });
+  const nhomGia = (ma: string, nhan: string): Nhom => nhomDauChu.find((g) => g.nhom.code === ma)?.nhom ?? { code: ma, label: nhan, subject: "lead", enabled: true, conditions: [], actions: [] };
+  const nhom = gop.nhom.map((g) => {
+    const n = nhomGia(g.ma, g.nhan);
+    const viec = g.viec.map((v): Viec => (v.kind === "can" || v.kind === "lead" ? v : { kind: "vai", id: v.id, nhom: n, dong: v, chu: chuDong(v, bayGio, tenNguoi) }));
+    return { nhom: n, viec };
+  });
+  const tong = gop.so;
+  // Bộ nhóm dùng để mở `?nhom=`: của sàn nếu là đầu chủ, cộng nhóm của mọi vai người xem.
+  // Cùng thứ tự với thân: của trưởng nhóm trước, bộ đầu chủ, rồi telesales, đầu khách.
+  const nhomVaiCua = (laTruongNhom: boolean) => NHOM_VAI.filter((n) => vai.includes(n.vai) && (n.vai === "team_lead") === laTruongNhom).map((n) => nhomGia(n.code, nhanGiaTri(tv, "nhomViec", n.code, n.label)));
+  const boMo: BoNhom = [...nhomVaiCua(true), ...(laDauChu ? bo : []), ...nhomVaiCua(false)];
+  const dangTaiHet = gop.dangTai || (laDauChu && (ngan.listings === null || taiBo.kind === "dang"));
+
+  // Thân ghi số vào kho chung: đầu màn và cột thứ hai đọc từ đó, không thể lệch số.
+  const nguonMa: Record<string, MaNguon> = { lead_overdue: "hang-doi", lead_unrouted: "hang-doi", lead_returned: "lead-cua-toi", buyer_reaction: "tin", buyer_changed: "tin", buyer_new_match: "tin", new_lead: "lead-giao" };
+  const khoaSo = dangTaiHet
+    ? ""
+    : JSON.stringify(boMo.filter((n) => n.enabled).map((n) => [n.code, nhomGia(n.code, n.label).label, gop.nhom.find((g) => g.ma === n.code)?.viec.length ?? 0, gop.loi.some((l) => l.nguon === nguonMa[n.code])]));
+  const { so: soTong, quaHan: soQuaHan } = gop;
+  useEffect(() => {
+    if (!khoaSo) return;
+    const muc = (JSON.parse(khoaSo) as [string, string, number, boolean][]).map(([ma, nhan, so, loi]) => ({ ma, nhan, so: loi ? null : so }));
+    datSoViec({ so: soTong, quaHan: soQuaHan, muc });
+  }, [khoaSo, soTong, soQuaHan]);
+  useEffect(() => () => datSoViec(null), []);
+
+  // Mạng trở lại: đọc lại đúng các nguồn đang lỗi, không cần bấm.
+  const trangNguon: Record<MaNguon, "dang" | "ok" | "loi"> = {
+    "lead-giao": laDauChu ? (taiLead.kind === "loi" ? "loi" : "ok") : "ok",
+    "hang-doi": vai.includes("team_lead") ? hangDoi.trang : "ok",
+    "lead-cua-toi": vai.includes("telesales") ? leadCuaToi.trang : "ok",
+    tin: vai.includes("buyer_agent") ? tin.trang : "ok",
+  };
+  const docLaiNguonLoi = useEffectEvent(() => {
+    for (const ma of nguonCanDocLai(trangNguon)) docNguon(ma);
+  });
+  useEffect(() => {
+    if (!ngoaiTuyen) docLaiNguonLoi();
+  }, [ngoaiTuyen]);
 
   // ——— Hành động ———
   const [dangGhi, setDangGhi] = useState<ReadonlySet<string>>(new Set());
@@ -376,6 +534,25 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
     dangGhi,
     loi,
     so: soDaMo,
+    dauChu: dauChuSan,
+    giao: (d, nguoi) => {
+      const id = `doi:${d.leadId}`;
+      ban(id, true);
+      datLoi(id, null);
+      void giaoLaiLead(d.leadId, nguoi)
+        .then((kq) => {
+          if (!kq.ok) return datLoi(id, kq.loi);
+          setHangDoi((t) => ({ ...t, ds: t.ds.filter((x) => x.leadId !== d.leadId) }));
+          docHangDoi();
+        })
+        .finally(() => ban(id, false));
+    },
+    guiLai: async (id, so) => {
+      const kq = await nguonLead.guiLai(id, so);
+      if (!kq.ok) return kq.loi;
+      docLeadCuaToi();
+      return null;
+    },
     moSo: (l) => {
       const id = `lead:${l.id}`;
       ban(id, true);
@@ -427,7 +604,7 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
 
   // ——— Mở đúng lead từ thông báo (hàng 26): /today?lead=<id> ———
   const leadMo = docLeadThamSo(qs);
-  const dangTaiLead = ngan.listings === null || taiBo.kind === "dang" || taiLead.kind === "dang";
+  const dangTaiLead = dangTaiHet;
   const ketQuaMo = leadMo && !dangTaiLead && taiLead.kind === "ok" ? timLead(nhom, leadMo) : null;
   const dongMo = ketQuaMo && "dong" in ketQuaMo ? ketQuaMo.dong : null;
   const nhomMo = ketQuaMo && "nhom" in ketQuaMo ? ketQuaMo.nhom : null;
@@ -448,7 +625,7 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
   // ——— Mở đúng nhóm từ cột thứ hai (va-he-bo-cuc): /today?nhom=<mã> — cùng đường với lead; có lead thì lead thắng ———
   const nhomThamSo = docNhomThamSo(qs);
   // Lưới còn đang tải thì chưa có kết quả: không báo nhầm «không có việc» lúc lưới còn rỗng.
-  const ketQuaNhom = nhomThamSo ? timNhom({ bo, dangHien: dangTaiLead ? null : nhom, ma: nhomThamSo }) : null;
+  const ketQuaNhom = nhomThamSo ? timNhom({ bo: boMo, dangHien: dangTaiLead ? null : nhom, ma: nhomThamSo }) : null;
   const dongNhom = ketQuaNhom && "dong" in ketQuaNhom ? ketQuaNhom.dong : null;
   const [daMoNhom, setDaMoNhom] = useState<string | null>(null);
   if (ketQuaNhom && "dong" in ketQuaNhom && daMoNhom !== ketQuaNhom.dong) {
@@ -503,26 +680,27 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
     </KhungHoSoCan>
   ) : null;
 
-  const dangTai = ngan.listings === null || taiBo.kind === "dang" || taiLead.kind === "dang";
+  const dangTai = dangTaiHet;
 
   // ——— Điện thoại (hàng 39): thẻ hai tầng thay lưới, cùng nhóm và cùng bộ việc ———
   const dienThoai = useDienThoai();
   const theCua = (v: Viec): TheDong => {
     const h = hanCua(v, bayGio);
-    const noi = noiThe(v, hd, { duongChuaMa: duongHangChuaMa, diToi: (href) => window.location.assign(href) });
+    const noi = v.kind === "vai" ? { lam: () => ({}), ghiKetQua: () => {} } : noiThe(v, hd, { duongChuaMa: duongHangChuaMa, diToi: (href) => window.location.assign(href) });
     return {
       id: v.id,
       tren: tieuDe(v),
       duoi: [lyDoChu(v), chuGiaViec(v)].filter(Boolean).join(" · "),
       han: h && h.muc !== "khong" ? h : null,
       dong: viecDong(v),
-      coSo: v.kind === "lead" || v.can.listAgentKey === nguoi,
+      coSo: v.kind === "lead" || (v.kind === "can" && v.can.listAgentKey === nguoi),
+      nutRieng: v.kind === "vai" ? <NutCuaVai v={v} hd={hd} rong={false} /> : undefined,
       ban: dangGhi.has(v.id),
       loi: loi[v.id],
       lam: noi.lam,
       ghiKetQua: noi.ghiKetQua,
       soCu: soDaMo[v.id] ?? null,
-      moSo: () => (v.kind === "lead" ? moSo(v.lead.id) : moSoChu(v.can.id)),
+      moSo: () => (v.kind === "lead" ? moSo(v.lead.id) : v.kind === "can" ? moSoChu(v.can.id) : Promise.resolve({ ok: false, loi: "" })),
       daMo: (so) => setSoDaMo((m) => ({ ...m, [v.id]: so })),
     };
   };
@@ -530,14 +708,14 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
 
   const than = dienThoai ? (
     <FramePanel className="p-0!">
-      <DanhSachDienThoai trangThai={dangTai ? "dang" : "co"} nhom={nhomThe} coMang={!ngoaiTuyen} onThuLai={thuLai} trong={taiLead.kind === "loi" ? null : <HetViec />} />
+      <DanhSachDienThoai trangThai={dangTai ? "dang" : "co"} nhom={nhomThe} coMang={!ngoaiTuyen} onThuLai={() => docNguon("lead-giao")} trong={gop.loi.length ? null : <HetViec vai={vai} />} />
     </FramePanel>
   ) : dangTai ? (
     <DangTai />
   ) : tong === 0 ? (
-    taiLead.kind === "loi" ? null : (
+    gop.loi.length ? null : (
       <FramePanel>
-        <HetViec />
+        <HetViec vai={vai} />
       </FramePanel>
     )
   ) : (
@@ -551,12 +729,8 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
   );
 
   return (
-    <section aria-label="Hôm nay của đầu chủ" className="flex w-full min-w-0 flex-col">
+    <section aria-label="Việc hôm nay" className="flex w-full min-w-0 flex-col">
       <Frame stacked className="w-full min-w-0">
-        <FramePanel className="flex items-center justify-between gap-2 p-3.5!">
-          <h2 className="text-foreground text-base font-medium">Hôm nay</h2>
-          {!dangTai && <span className="text-muted-foreground text-sm">{tong} việc</span>}
-        </FramePanel>
         {!dangTai && nguonBo === "luu" && daLuu ? (
           <FramePanel className="p-0!">
             <TrangThai kind="notice" title={`Hàng đợi chia theo bộ nhóm lưu lúc ${chuGioNgay(daLuu.savedAt)}`} description="Chưa tải được bộ nhóm mới của sàn." />
@@ -567,29 +741,29 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
             <TrangThai kind="notice" title="Đang dùng bộ mặc định — chưa tải được bộ nhóm của sàn" />
           </FramePanel>
         ) : null}
-        {!dangTai && taiLead.kind === "loi" ? (
-          <FramePanel className="p-0!">
-            <TrangThai
-              kind="error"
-              title={ngoaiTuyen ? "Mất mạng — lead mới cần mạng" : "Chưa tải được lead giao cho bạn"}
-              description={
-                <span className="flex flex-col items-start gap-2">
-                  <span>Các nhóm căn vẫn đọc từ máy.</span>
-                  <Button size="sm" variant="outline" onClick={thuLai}>
-                    <RotateCwIcon data-icon="inline-start" />
-                    Thử lại
-                  </Button>
-                </span>
-              }
-            />
-          </FramePanel>
-        ) : null}
+        {!dangTai && !ngoaiTuyen
+          ? gop.loi.map((l) => (
+              <FramePanel key={l.nguon} className="p-0!">
+                <TrangThai
+                  kind="error"
+                  title={l.chu}
+                  description="Các nhóm còn lại vẫn đúng."
+                  hanhDong={
+                    <Button size="sm" variant="outline" onClick={() => thuLai(l.nguon)}>
+                      <RotateCwIcon data-icon="inline-start" />
+                      Thử lại
+                    </Button>
+                  }
+                />
+              </FramePanel>
+            ))
+          : null}
         {ketQuaMo && "khongCon" in ketQuaMo ? (
           <FramePanel className="p-0!">
             <TrangThai kind="notice" title={ketQuaMo.khongCon} />
           </FramePanel>
         ) : null}
-        {ketQuaNhom && "bao" in ketQuaNhom ? (
+        {ketQuaNhom && "bao" in ketQuaNhom && tong > 0 && gop.loi.length === 0 ? (
           <FramePanel className="p-0!">
             <TrangThai kind="notice" title={ketQuaNhom.bao} />
           </FramePanel>
@@ -608,6 +782,14 @@ export function HomNayDauChu({ nguoi, san, nhan }: { nguoi: string; san: string;
           (hoSo ?? than)
         )}
       </Frame>
+      {gop.soLeadDaNhap !== null ? (
+        <div className="pt-khung">
+          <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/leads/mine" />}>
+            <ListChecksIcon data-icon="inline-start" aria-hidden="true" />
+            Lead đã nhập ({gop.soLeadDaNhap})
+          </Button>
+        </div>
+      ) : null}
     </section>
   );
 }

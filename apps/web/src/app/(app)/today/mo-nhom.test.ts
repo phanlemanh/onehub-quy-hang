@@ -8,7 +8,7 @@ import { BO_NHOM_MAC_DINH, chiaNhom, kiemBoNhom, type BoNhom, type DuKienCan } f
 import { TODAY_ITEMS } from "@/components/shell/second-column";
 
 import { moNhom } from "./mo-lead";
-import { baoChiDauChu, baoNgoaiDauChu, baoNhomTrong, docNhomThamSo, KHONG_CO_NHOM, mucDangChon, timNhom } from "./mo-nhom";
+import { baoNhomTrong, docNhomThamSo, KHONG_CO_NHOM, mucDangChon, timNhom } from "./mo-nhom";
 
 const MA = ["new_lead", "price_adjustment", "call_back", "missing_info", "add_photos", "recent_change"] as const;
 const NHAN: Record<(typeof MA)[number], string> = {
@@ -146,38 +146,6 @@ describe("mo-nhom: lead thắng (E4)", () => {
 
   it("có lead thì nhóm cần mở là null; chỉ nhom thì đọc được mã", () => assert.equal(lech(docNhomThamSo), null));
   it("chiều đỏ: bản bỏ luật lead-thắng thì đỏ", () => assert.match(lech(docBoLuatLead) ?? "", /lead thắng/));
-});
-
-describe("mo-nhom: không đầu chủ (E5)", () => {
-  type Vai = "chỉ telesales" | "chỉ trưởng nhóm" | "đầu chủ kiêm telesales";
-  /** Dòng báo màn Hôm nay hiện ở đầu khung: chỉ cho người không có vai Đầu chủ (page.tsx). */
-  const baoTheoVai = (vai: Vai, ma: string) => (vai === "đầu chủ kiêm telesales" ? null : baoNgoaiDauChu(ma, BO_NHOM_MAC_DINH));
-  const VAI: Vai[] = ["chỉ telesales", "chỉ trưởng nhóm", "đầu chủ kiêm telesales"];
-  // Ma trận viết trước: vai × {sáu mã, mã lạ, sai khuôn}.
-  const O: [Vai, string, string | null][] = VAI.flatMap((vai) => [
-    ...MA.map((ma): [Vai, string, string | null] => [vai, ma, vai === "đầu chủ kiêm telesales" ? null : baoChiDauChu(NHAN[ma])]),
-    [vai, "nhom_la", vai === "đầu chủ kiêm telesales" ? null : KHONG_CO_NHOM],
-    [vai, "Sai-Khuon", null],
-  ]);
-  const lech = (vai: Vai, ma: string, mong: string | null) => {
-    const co = baoTheoVai(vai, ma);
-    return co === mong ? null : `vai «${vai}», mã ${ma}: ra ${JSON.stringify(co)}, mong ${JSON.stringify(mong)}`;
-  };
-
-  it("24 ô, mỗi ô đúng chữ báo", () => {
-    let dem = 0;
-    for (const [vai, ma, mong] of O) {
-      assert.equal(lech(vai, ma, mong), null);
-      dem++;
-    }
-    assert.equal(dem, 24);
-    assert.equal(baoNgoaiDauChu(null, BO_NHOM_MAC_DINH), null, "vắng tham số");
-  });
-
-  it("chiều đỏ: nhãn mong của một mã đổi sang nhãn nhóm khác; ô hai vai mong chữ báo không-đầu-chủ", () => {
-    assert.match(lech("chỉ telesales", "call_back", baoChiDauChu(NHAN.new_lead)) ?? "", /mã call_back/);
-    assert.match(lech("đầu chủ kiêm telesales", "new_lead", baoChiDauChu(NHAN.new_lead)) ?? "", /vai «đầu chủ kiêm telesales»/);
-  });
 });
 
 describe("mo-nhom: nhóm trống rồi sang nhóm có việc (E11)", () => {

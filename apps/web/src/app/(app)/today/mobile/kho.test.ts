@@ -45,7 +45,7 @@ test("E1 màn nghe đổi khổ ở đúng mốc 767 px và gỡ khi rời", () 
 
 // Chốt nối: màn Hôm nay đầu chủ rẽ khổ bằng useDienThoai, không bằng hook khổ khác (mốc viết hai lần là đường lệch).
 test("E1 màn rẽ khổ bằng useDienThoai của kho.ts, không còn useIsMobile", () => {
-  const man = readFileSync(fileURLToPath(new URL("../hom-nay-dau-chu.tsx", import.meta.url)), "utf8");
+  const man = readFileSync(fileURLToPath(new URL("../hom-nay.tsx", import.meta.url)), "utf8");
   assert.match(man, /const dienThoai = useDienThoai\(\);/);
   assert.match(man, /import \{ useDienThoai \} from "\.\/mobile\/kho";/);
   assert.doesNotMatch(man, /useIsMobile/);
