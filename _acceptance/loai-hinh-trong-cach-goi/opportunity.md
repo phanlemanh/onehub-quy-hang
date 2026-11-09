@@ -26,7 +26,7 @@ Vì sao: Known limits của hàng 79 bang-hang-theo-loai-hinh: vế «chữ cộ
 
 ## Ngưỡng chết / ngưỡng UAT
 
-- Câu hỏi phép đo trả lời: [đề xuất] đã đạt «Quản trị đổi tên một loại hình ở Cách gọi: cột Loại hình của Bảng hàng và hồ sơ căn hiện tên mới; xoá tên riêng thì về tên mặc định» chưa?
-- Kết quả nào là SỐNG: [đề xuất] Quản trị đổi tên một loại hình ở Cách gọi: cột Loại hình của Bảng hàng và hồ sơ căn hiện tên mới; xoá tên riêng thì về tên mặc định
-- Kết quả nào là CHẾT: [đề xuất] chưa đạt «Quản trị đổi tên một loại hình ở Cách gọi: cột Loại hình của Bảng hàng và hồ sơ căn hiện tên mới; xoá tên riêng thì về tên mặc định» khi hết timebox
-- Timebox: …
+- Câu hỏi phép đo trả lời: đã đạt «Quản trị đổi tên một loại hình ở Cách gọi: cột Loại hình của Bảng hàng và hồ sơ căn hiện tên mới; xoá tên riêng thì về tên mặc định» chưa?
+- Kết quả nào là SỐNG: Quản trị đổi tên một loại hình ở Cách gọi: cột Loại hình của Bảng hàng và hồ sơ căn hiện tên mới; xoá tên riêng thì về tên mặc định
+- Kết quả nào là CHẾT: chưa đạt «Quản trị đổi tên một loại hình ở Cách gọi: cột Loại hình của Bảng hàng và hồ sơ căn hiện tên mới; xoá tên riêng thì về tên mặc định» khi hết timebox
+- Timebox: 30 ngày kể từ ngày bản có tên riêng loại hình lên bản thật. Chủ kho chốt ngưỡng và hạn 09/11: «Giữ ngưỡng, đo 30 ngày».
