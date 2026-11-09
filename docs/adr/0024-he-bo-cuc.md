@@ -175,3 +175,26 @@ C» — `docs/design/danh-gia-ngan-chi-tiet-can.md`). Chữ của quyết địn
   bố cục này nhưng chưa mở chi tiết — không đổi. Màn danh sách – chi tiết sau (103, 79, 99, 100, 102) dựng trên cột này.
 - Kiểu mở chi tiết cố định theo bố cục, sàn không chọn (Hỏi-2) — dòng điều khoá ở `docs/architecture/so-diem-bien-thien.md`.
   Không thêm bố cục thứ tám.
+
+## Sửa đổi 09/11 — Tầng Mẫu hành vi
+
+Chủ kho duyệt phương án 09/11 («Duyệt theo khuyến nghị», nhật ký đợt dau-khach-nhap). Căn cứ: `docs/plan/thong-nhat-ia-khuon-ux.md`,
+`docs/plan/kiem-cai-dat.md`. Chữ của quyết định 1 và 4 ở trên giữ nguyên làm sử; điều đang đúng:
+
+- **Thêm một tầng cắt ngang** giữa bố cục và khuôn theo màn: **Mẫu hành vi**. Khuôn theo màn chia dọc, còn cách một việc diễn ra thì
+  cắt ngang mọi màn, nên «mẫu bên trong» của quyết định 1 không còn giao trọn cho từng nhóm khuôn. Bảy bố cục, sáu vùng và vỏ không đổi.
+- **Sáu mẫu mới, mỗi mẫu một thành phần chủ và một luật chọn**; mẫu «Hồ sơ» đã có từ 08/11:
+
+| Mẫu | Luật | Thành phần chủ |
+| --- | --- | --- |
+| Ghi | Sửa trên ô lưu ngay kèm hoàn tác · form nhiều ô qua thanh lưu · hộp một việc đóng là xong · công tắc áp ngay, không đứng trong form có Lưu | Thanh lưu (mới) |
+| Báo | Form báo cạnh nút Lưu; toast chỉ khi có Hoàn tác, từ một chỗ trong vỏ; lỗi luôn ở tại chỗ | Thanh lưu, một `Toaster` trong vỏ |
+| Chờ | Vùng lớn dùng khung theo hình bố cục; vòng quay chỉ cho chỗ nhỏ; bấm là có phản hồi ngay | `ChoTai` |
+| Lỗi | Một vùng một báo lỗi, luôn có «Thử lại», không lộ mã thô, mất mạng thì tự đọc lại | Khối báo lỗi vùng (mới, trên `TrangThai`) |
+| Trống | Luôn có một hành động hay một câu nói khi nào sẽ có | `TrangThai` |
+| Bảng | Lưới dày (`data-grid`) · danh sách dòng, tự thành thẻ dưới `md` · thẻ ở điện thoại | Danh sách dòng (mới) |
+
+- **Canh cửa** (đăng nhập, sàn, vai) kiểm một lần ở cấp nhà, đọc phiên một lần mỗi lượt dựng.
+- **Khối đích mới:** thanh lưu và danh sách dòng (theo `list-11`), được chủ kho đồng ý 09/11. Dựng theo hàng `cai-dat-mot-cach-luu`, `cai-dat-bang-dung-khung`.
+- **Khu Cài đặt là màn mẫu đầu tiên;** nhà khác áp mẫu khi có hàng chạm tới, không mở hàng dọn riêng. Lưới máy bật ở hàng `luoi-mau-hanh-vi`.
+- Chưa dựng tới đâu thì khuôn cũ còn hiệu lực tới đó.
