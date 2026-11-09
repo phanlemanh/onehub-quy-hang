@@ -5,7 +5,7 @@ slug: logo-onehub
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: approved
+status: implemented
 approved_by: Manh Phan
 approved_at: 2026-11-09
 design_doc: docs/superpowers/specs/2026-11-09-logo-onehub-design.md
