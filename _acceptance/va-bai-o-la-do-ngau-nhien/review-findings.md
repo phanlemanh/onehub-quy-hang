@@ -1,4 +1,4 @@
-# Review findings: va-bai-o-la-do-ngau-nhien (round 1)
+# Review findings: va-bai-o-la-do-ngau-nhien (round 2)
 
 ## Trong hợp đồng
 
@@ -8,67 +8,55 @@
 
 Các lỗi dưới đây nằm ngoài phạm vi đã duyệt ở Cổng Phạm vi và CHƯA qua bác bỏ đối kháng — người quyết, máy không sửa và không chấm thứ máy không được sửa.
 
-- **Thêm hàng lộ trình và hồ sơ mới nhưng chưa vẽ lại hai tệp sinh, job gate của CI sẽ đỏ**
-  Người dùng thấy gì: Nhánh chưa cập nhật hai tệp bản đồ sản phẩm và lộ trình, nên bước kiểm cuối của kho sẽ báo đỏ và chưa gộp được cho tới khi vẽ lại.
-  Căn cứ: Chỉ chặn việc gộp chứ không làm mất hay lộ dữ liệu, và vẽ lại rồi lưu lại là xong trong vài phút.
-  file: `docs/plan/lo-trinh.json`
-  severity: high
-  Đề xuất: known-limits
-
-- **Phép kiểm bỏ sót số điện thoại nằm trong giá trị dạng đối tượng, trái lời hứa quét mọi cột thêm sau này**
-  Người dùng thấy gì: Nếu sau này sổ chi phí AI thêm một cột chứa dữ liệu lồng nhau, số điện thoại lọt vào đó có thể không bị bài kiểm bắt và bài vẫn xanh.
-  Căn cứ: Hiện sổ chưa có cột như vậy nên chưa có lỗ thật, và lỗ chỉ mở khi có người thêm cột loại này, lúc đó sửa bài kiểm còn rẻ.
-  file: `packages/api/test-db/imports/vet-so-trong-so.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Giờ ghi của phản biện context sạch muộn hơn commit chứa nó và muộn hơn dấu niêm Gate 1**
-  Người dùng thấy gì: Hồ sơ ghi giờ phản biện muộn hơn thực tế, nên người ký có thể hiểu nhầm phản biện chạy sau khi niêm.
-  Căn cứ: Chỉ là sai một mốc giờ trong hồ sơ, không ảnh hưởng người dùng hay dữ liệu, và lịch sử commit đã cho thấy giờ thật.
-  file: `_acceptance/va-bai-o-la-do-ngau-nhien/gap-probe.md`
-  severity: low
-  Đề xuất: wont-fix
-
-- **Phép kiểm bỏ lọt số điện thoại nằm trong giá trị JSON lồng (cột jsonb, mảng chứa object)**
-  Người dùng thấy gì: Số điện thoại nằm trong dữ liệu lồng nhau của một cột tương lai có thể lọt qua bài kiểm mà không báo đỏ.
-  Căn cứ: Chưa có cột nào như vậy trong sổ hôm nay nên chưa mất hay lộ gì, và có thể bổ sung khi thêm cột đó.
-  file: `packages/api/test-db/imports/vet-so-trong-so.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Nhánh làm đỏ `product-map --check`: thêm hàng lộ trình và hồ sơ nhưng chưa vẽ lại hai tệp sinh**
-  Người dùng thấy gì: Hai tệp bản đồ sản phẩm và lộ trình đang lệch với hồ sơ mới, nên kiểm tra cuối của kho sẽ đỏ và chưa gộp được.
-  Căn cứ: Chỉ chặn việc gộp, không ảnh hưởng người dùng, và vẽ lại hai tệp rồi lưu là khắc phục ngay.
-  file: `docs/plan/lo-trinh.json`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Hình dạng 5, tuyên quét LỚP nhưng ma trận thiếu kiểu giá trị đối tượng: số nằm trong cột jsonb lọt qua**
-  Người dùng thấy gì: Bộ ca thử của bài kiểm không có trường hợp số điện thoại nằm trong dữ liệu lồng, nên nếu có cột như vậy sau này bài vẫn xanh dù số đã vào sổ.
-  Căn cứ: Chưa có cột loại này trong sổ hiện tại nên chưa có hậu quả thật, và thêm ca thử sau này không tốn nhiều.
-  file: `packages/api/test-db/imports/o-la.test.ts`
-  severity: medium
-  Đề xuất: known-limits
-
-- **Hình dạng 5, «số assert = số phần tử» là đếm tự sinh, không thể đỏ**
-  Người dùng thấy gì: Phép đếm kiểm tra bộ ca đủ số lượng tự khớp với chính nó, nên nếu bộ ca bị hụt một cột thì phép đếm không báo.
-  Căn cứ: Hậu quả nhẹ vì còn một chốt khác giữ các cột chính, và không có dữ liệu nào bị ảnh hưởng.
-  file: `packages/api/test-db/imports/o-la.test.ts`
+- **Dòng sổ đảo ba định tuyến nhưng chỉ rút một dòng: Ngoài-4 và Ngoài-6 vẫn còn hiệu lực là Known limits**
+  Người dùng thấy gì: Sổ quyết định của hồ sơ còn ghi hai giới hạn đã hết đúng, nên người đọc hồ sơ có thể hiểu nhầm. Người dùng sản phẩm không bị ảnh hưởng.
+  Căn cứ: Chỉ làm lệch giấy tờ hồ sơ, không ảnh hưởng người dùng hay dữ liệu, và sửa lại sau rất rẻ.
+  file: `_acceptance/va-bai-o-la-do-ngau-nhien/decisions.jsonl`
   severity: low
   Đề xuất: known-limits
 
-- **Hình dạng 5, tuyên đủ ba biến thể giờ ghi nhưng chỉ assert hai**
-  Người dùng thấy gì: Bài kiểm không tự xác nhận có dòng giờ ghi đủ sáu chữ số lẻ, nên nếu bộ sinh đổi và mất dạng này thì bài vẫn xanh.
-  Căn cứ: Hiện bộ sinh vẫn tạo dạng này nên chưa có hậu quả, và nếu mất thì chỉ làm bài kiểm yếu đi chứ không mất dữ liệu.
-  file: `packages/api/test-db/imports/o-la.test.ts`
+- **Notes của hợp đồng vẫn ghi nhánh sẽ đỏ vì chưa vẽ lại hai tệp sinh, trong khi điều đó đã hết đúng**
+  Người dùng thấy gì: Hợp đồng còn nêu một hạn chế đã được khắc phục, nên người ký có thể đọc nhầm rằng nhánh chưa gộp được. Không ảnh hưởng người dùng sản phẩm.
+  Căn cứ: Chỉ là ghi chú lỗi thời trong giấy tờ, không mất dữ liệu, và gỡ đi bất cứ lúc nào cũng rẻ.
+  file: `_acceptance/va-bai-o-la-do-ngau-nhien/contract.md`
   severity: low
   Đề xuất: known-limits
 
-- **Hình dạng 4, «đỏ 0» âm tính một mình: lần chạy không có ca nào vẫn tính là xanh**
-  Người dùng thấy gì: Nếu tên ca kiểm bị đổi, bộ đo 300 lần có thể chạy rỗng mà vẫn báo đạt, làm kết quả đo kém tin cậy.
-  Căn cứ: Chỉ xảy ra khi ai đó đổi tên ca và bộ đo này chỉ dùng một lần ở bước nghiệm thu, nên không ảnh hưởng người dùng.
+- **Bộ đo 300 lần báo xanh giả khi tên ca không còn khớp mẫu lọc**
+  Người dùng thấy gì: Nếu ai đó đổi tên ca kiểm, phép đo 300 lần vẫn báo đạt dù không chạy gì, khiến kết quả đo kém đáng tin. Người dùng sản phẩm không bị ảnh hưởng.
+  Căn cứ: Chỉ ảnh hưởng độ tin cậy của công cụ đo nội bộ, xảy ra khi có người đổi tên ca, và đã được ghi nhận từ trước.
   file: `_acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs`
   severity: low
   Đề xuất: known-limits
+
+- **Hình dạng 5, tuyên quét lớp «mã máy» nhưng chiều xanh chỉ ghim 2 trong 4 trường được miễn: company_id và user_id không có ca mang 011**
+  Người dùng thấy gì: Nếu ai đó vô tình bỏ một trong hai chỗ miễn trừ cho mã sàn hoặc mã người, bài kiểm vẫn xanh phần lớn các lần chạy, và lỗi đỏ ngẫu nhiên có thể quay lại. Người dùng sản phẩm không bị ảnh hưởng.
+  Căn cứ: Chỉ làm bài kiểm nội bộ yếu hơn ở một kiểu sửa sai hiếm, không đụng dữ liệu thật, và bổ sung ca kiểm sau này không đắt.
+  file: `packages/api/test-db/imports/o-la.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 5, «số assert = số phần tử» của ma trận cột là đếm tự sinh, ma trận không viết trước**
+  Người dùng thấy gì: Nếu bộ ca kiểm bị hụt một cột thì phép đếm vẫn không báo. Người dùng sản phẩm không bị ảnh hưởng.
+  Căn cứ: Chỉ làm bài kiểm nội bộ bỏ sót khi có người làm hụt ca, không mất dữ liệu, và đã được ghi nhận từ trước.
+  file: `packages/api/test-db/imports/o-la.test.ts`
+  severity: medium
+  Đề xuất: known-limits
+
+- **Hình dạng 5, tuyên đủ ba biến thể giờ ghi nhưng chỉ assert hai**
+  Người dùng thấy gì: Nếu bộ sinh dữ liệu mất dạng giờ ghi đủ sáu chữ số lẻ thì bài kiểm vẫn xanh mà không báo. Người dùng sản phẩm không bị ảnh hưởng.
+  Căn cứ: Chỉ làm bài kiểm nội bộ kém chặt ở một dạng dữ liệu, không ảnh hưởng người dùng, và đã được ghi nhận từ trước.
+  file: `packages/api/test-db/imports/o-la.test.ts`
+  severity: low
+  Đề xuất: known-limits
+
+- **Hình dạng 4, «đỏ 0» âm tính một mình: lượt chạy không có ca nào vẫn tính là xanh**
+  Người dùng thấy gì: Phép đo 300 lần có thể báo đạt dù không chạy ca nào nếu tên ca bị đổi, nên kết quả đo có thể sai. Người dùng sản phẩm không bị ảnh hưởng.
+  Căn cứ: Chỉ ảnh hưởng độ tin cậy của công cụ đo nội bộ, chỉ xảy ra khi có người đổi tên ca, và đã được ghi nhận từ trước.
+  file: `_acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs`
+  severity: low
+  Đề xuất: known-limits
+
+## Chưa adversarial-verify (refuter chết)
 
 Cụm ngoài vùng phủ: cluster: n-a (không đo được — không eval nào khai paths, hoặc dưới ngưỡng cụm).

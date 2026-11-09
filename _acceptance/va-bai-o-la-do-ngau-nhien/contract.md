@@ -5,7 +5,7 @@ slug: va-bai-o-la-do-ngau-nhien
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [test]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-09-va-bai-o-la-do-ngau-nhien-design.md
 approved_by:
 approved_at:

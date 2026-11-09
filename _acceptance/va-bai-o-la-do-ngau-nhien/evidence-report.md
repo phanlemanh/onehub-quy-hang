@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: f3b825b87ceb964a2cc31b983714854ea4dec887
+verified_commit: 5f4b3494103cfdad3df55f3695f22f4e3944d21c
 human_signoff:
 ---
 
@@ -25,149 +25,145 @@ human_signoff:
 | E8 | AC-8 | script | PASS |
 | E9 | AC-9 | script | PASS |
 | E10 | AC-10 | test | PASS |
+| E11 | AC-11 | test | PASS |
 
 ## Evidence
 
 - eval: E1
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E1-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E1-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.o_la_db
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    Lệnh: db:migrate rồi node --test o-la.test.ts (một lần chạy chung cho E1-E5, E10)
-    ℹ duration_ms 1576.937209
-    Ca «phép kiểm sổ: đỏ khi số lọt vào, không bắt nhầm mã máy» đạt.
+    ℹ duration_ms 1829.434375
 
 - eval: E2
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E2-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E2-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.o_la_db
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    Lệnh: db:migrate rồi node --test o-la.test.ts (một lần chạy chung cho E1-E5, E10)
-    ℹ duration_ms 1576.937209
-    Sáu dạng số đầy đủ trả đúng {truong: model, dang: day-du}.
+    ℹ duration_ms 1829.434375
 
 - eval: E3
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E3-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E3-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.o_la_db
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    Lệnh: db:migrate rồi node --test o-la.test.ts (một lần chạy chung cho E1-E5, E10)
-    ℹ duration_ms 1576.937209
-    Các ca đầu số, đuôi, đuôi viết rời trả đúng {truong: model, dang: mot-phan}.
+    ℹ duration_ms 1829.434375
 
 - eval: E4
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E4-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E4-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.o_la_db
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    Lệnh: db:migrate rồi node --test o-la.test.ts (một lần chạy chung cho E1-E5, E10)
-    ℹ duration_ms 1576.937209
-    Mã người mang số, mã người mang đuôi, trường số mang đủ số đều báo đỏ gọi đúng tên trường.
+    ℹ duration_ms 1829.434375
 
 - eval: E5
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E5-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E5-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.o_la_db
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    Lệnh: db:migrate rồi node --test o-la.test.ts (một lần chạy chung cho E1-E5, E10)
-    ℹ duration_ms 1576.937209
-    Ca «phép kiểm sổ không đỏ trên mã máy ngẫu nhiên» đạt (20000 dòng sinh).
+    ℹ duration_ms 1829.434375
 
 - eval: E6
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E6-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E6-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.o_la_pha_thu
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    Lệnh: node _acceptance/va-bai-o-la-do-ngau-nhien/thu/pha-thu.mjs (chung cho E6, E7)
     KẾT: ĐẠT
 
 - eval: E7
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E7-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E7-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.o_la_pha_thu
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    Lệnh: node _acceptance/va-bai-o-la-do-ngau-nhien/thu/pha-thu.mjs (chung cho E6, E7)
     KẾT: ĐẠT
 
 - eval: E8
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E8-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E8-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.o_la_lap
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
     KẾT: 300 lần, đỏ 0
 
 - eval: E9
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E9-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E9-r2
   exit_code: 0
   baseline: n-a
   verifier: config:executors.script.o_la_pham_vi
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    ĐẠT phạm vi: 14 tệp đổi, đều trong danh sách viết trước
+    ĐẠT phạm vi: 21 tệp đổi, đều trong danh sách viết trước
 
 - eval: E10
-  run_id: minted-va-bai-o-la-do-ngau-nhien-E10-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E10-r2
   exit_code: 0
   baseline: green
   verifier: config:executors.test.o_la_db
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
   output: |
-    Lệnh: db:migrate rồi node --test o-la.test.ts (một lần chạy chung cho E1-E5, E10)
-    ℹ duration_ms 1576.937209
-    Ca «phép kiểm sổ: mọi cột của dòng thật» đạt.
+    ℹ duration_ms 1829.434375
+
+- eval: E11
+  run_id: minted-va-bai-o-la-do-ngau-nhien-E11-r2
+  exit_code: 0
+  baseline: green
+  verifier: config:executors.test.o_la_db
+  verified_at: 2026-11-09T09:20:30Z
+  output: |
+    ℹ duration_ms 1829.434375
 
 ### Lệnh suite (hồi quy)
 
 - cmd: npm test -w @quy-hang/core
-  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-npm_test_w_quy_hang_core-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-npm_test_w_quy_hang_core-r2
   exit_code: 0
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
 
 - cmd: npm test -w @quy-hang/api
-  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-npm_test_w_quy_hang_api-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-npm_test_w_quy_hang_api-r2
   exit_code: 0
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
 
 - cmd: npm test -w @quy-hang/connect
-  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-npm_test_w_quy_hang_connect-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-npm_test_w_quy_hang_connect-r2
   exit_code: 0
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
 
 - cmd: npm run test:hooks
-  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-test_hooks-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-test_hooks-r2
   exit_code: 0
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
 
 - cmd: npm test -w @quy-hang/ui-lint
-  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-npm_test_w_quy_hang_ui_lint-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-npm_test_w_quy_hang_ui_lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
 
 - cmd: npm run typecheck
-  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-typecheck-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-typecheck-r2
   exit_code: 0
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
 
 - cmd: npm run lint
-  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-lint-r1
+  run_id: minted-va-bai-o-la-do-ngau-nhien-SUITE-lint-r2
   exit_code: 0
-  verified_at: 2026-11-09T04:43:13Z
+  verified_at: 2026-11-09T09:20:30Z
 
 ## Known limits
 
@@ -175,12 +171,15 @@ human_signoff:
 
 ## Analyst
 
-Eval không phân biệt (xanh cả ở HEAD lẫn baseline): E1, E2, E3, E4, E5, E10 (cùng một lệnh `o-la.test.ts` với cơ sở dữ liệu thử). Baseline xanh vì tệp kiểm này chạy được trên code cũ; cần viết lại để khẳng định hành vi mới, hoặc xác nhận là rào hồi quy có chủ ý. Chiều đỏ của chúng được đo bởi E7 (các bản phá), không bởi baseline.
+Eval không phân biệt (xanh trên cả HEAD lẫn baseline), chứng minh harness chứ chưa chứng minh feature; cần viết lại để assert hành vi mới hoặc xác nhận là regression-guard có chủ ý:
+
+- E1, E2, E3, E4, E5, E10, E11 (cùng một lệnh: `export DATABASE_URL=postgres://postgres:quyhang@localhost:5588/postgres && npm run db:migrate && cd packages/api && node --import tsx --test --test-concurrency=1 test-db/imports/o-la.test.ts`)
 
 Baseline không đo:
-- node _acceptance/va-bai-o-la-do-ngau-nhien/thu/pha-thu.mjs: bo qua baseline: tep _acceptance/va-bai-o-la-do-ngau-nhien/thu/pha-thu.mjs co o cay dang kiem nhung chua co o merge-base 98d0d6463e8ed2623c7275044aa01a739c811ca8 — eval moi, chay tren code cu khong phan biet gi
-- node _acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs --lan 300: bo qua baseline: tep _acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs co o cay dang kiem nhung chua co o merge-base 98d0d6463e8ed2623c7275044aa01a739c811ca8 — eval moi, chay tren code cu khong phan biet gi
-- node _acceptance/va-bai-o-la-do-ngau-nhien/thu/pham-vi.mjs: bo qua baseline: tep _acceptance/va-bai-o-la-do-ngau-nhien/thu/pham-vi.mjs co o cay dang kiem nhung chua co o merge-base 98d0d6463e8ed2623c7275044aa01a739c811ca8 — eval moi, chay tren code cu khong phan biet gi
+
+- node _acceptance/va-bai-o-la-do-ngau-nhien/thu/pha-thu.mjs: bo qua baseline: tep _acceptance/va-bai-o-la-do-ngau-nhien/thu/pha-thu.mjs co o cay dang kiem nhung chua co o merge-base 4acd1c075742bda507087704ac25b9758fb41d47 — eval moi, chay tren code cu khong phan biet gi
+- node _acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs --lan 300: bo qua baseline: tep _acceptance/va-bai-o-la-do-ngau-nhien/thu/lap.mjs co o cay dang kiem nhung chua co o merge-base 4acd1c075742bda507087704ac25b9758fb41d47 — eval moi, chay tren code cu khong phan biet gi
+- node _acceptance/va-bai-o-la-do-ngau-nhien/thu/pham-vi.mjs: bo qua baseline: tep _acceptance/va-bai-o-la-do-ngau-nhien/thu/pham-vi.mjs co o cay dang kiem nhung chua co o merge-base 4acd1c075742bda507087704ac25b9758fb41d47 — eval moi, chay tren code cu khong phan biet gi
 
 ## Variance
 
@@ -188,28 +187,5 @@ none — every multi-run eval is uniform
 
 ## Iterations
 
-Round 1: tất cả E1-E10 đạt, các lệnh suite xanh; không có eval đỏ.
-
-### Re-pin lần 1 — 2026-11-09, do gộp main sau lượt chấm, không đổi tệp của hồ sơ
-run_id: repin-20261109T054832Z-93654
-sha: 3d105544c3c1ce741ecd869920486e6011bf4165 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
-
-### Re-pin lần 2 — 2026-11-09, do gộp main lần hai, không đổi tệp của hồ sơ
-run_id: repin-20261109T060231Z-99492
-sha: e0f8e032c3055f660777f30f016ade540d99e028 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
-
-### Re-pin lần 3 — 2026-11-09, do gộp main lần ba, không đổi tệp của hồ sơ
-run_id: repin-20261109T061800Z-49649
-sha: 5bc6b8b3a36415f0c4b7214f867380dcf2a00522 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
-
-### Re-pin lần 4 — 2026-11-09, do gộp main lần bốn, không đổi tệp của hồ sơ
-run_id: repin-20261109T065757Z-92875
-sha: 258eae51da3c8862a5b9b4bab8e8b20ba9ec7dc8 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
-
-### Re-pin lần 5 — 2026-11-09, do gộp main lần năm, không đổi tệp của hồ sơ
-run_id: repin-20261109T075440Z-99571
-sha: 0dc875638c5fbe7b84e57efd8504f648517dbbc4 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
-
-### Re-pin lần 6 — 2026-11-09, do gộp main lần sáu, không đổi tệp của hồ sơ
-run_id: repin-20261109T082118Z-82766
-sha: f3b825b87ceb964a2cc31b983714854ea4dec887 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
+Round 1: lịch sử round trước nằm trong run-log.jsonl và hồ sơ xưởng.
+Round 2: toàn bộ 11 eval và 7 lệnh suite xanh trên commit 5f4b3494103cfdad3df55f3695f22f4e3944d21c; không eval nào cần phán đoán của người.
