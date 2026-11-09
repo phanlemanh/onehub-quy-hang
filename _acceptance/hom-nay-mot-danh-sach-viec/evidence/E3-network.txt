@@ -1,22 +1,27 @@
-50. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
-51. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
-52. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
-53. [GET] http://localhost:3462/api/v1/leads => [200] OK
-54. [GET] http://localhost:3462/api/v1/today/buyer => [200] OK
-57. [GET] http://localhost:3462/api/v1/leads/assigned => [200] OK
-58. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
-59. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
-60. [GET] http://localhost:3462/api/v1/leads => [200] OK
-61. [GET] http://localhost:3462/api/v1/today/buyer => [200] OK
-151. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
-152. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
-154. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
-155. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
-158. [POST] http://localhost:3462/api/v1/leads/00937426-90b2-489f-b108-1dffb2d3c4d9/assign => [200] OK
-159. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
-160. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
-162. [POST] http://localhost:3462/api/v1/leads/2a22fad8-06ac-456d-9d28-28342925b3e9/assign => [200] OK
-163. [GET] http://localhost:3462/api/v1/team/lead-queue => [200] OK
-164. [GET] http://localhost:3462/api/v1/team/listing-agents => [200] OK
-
-Note: 129 static requests not shown, run with "static" option to see them.
+B = [Mẫu] Đầu chủ 2 ea65fe03-606c-45a3-bbc7-3564cf0713d4
+CA 1 qua han
+hang doi truoc: 4 | lead can giao: 07c5d012-9aba-4ded-a238-8c4a6b697488 accept_overdue agent 72c75091-75bd-4c9d-b2b2-67623ae2ed82
+dau man truoc: 4 việc · 3 quá hạn | marker: E3-no-reload
+bam Giao lai: true
+danh sach dau chu: [Mẫu] Đầu chủ 1 8 lead ; chu-kho-thu 0 lead ; [Mẫu] Đầu chủ 2 3 lead
+chon Dau chu 2: true
+dau man sau: 3 việc · 2 quá hạn | marker: E3-no-reload | nut Giao lai 4 -> 3 | dong con hien: false
+man sau: [Mẫu] Sàn thử Gõ mã căn… ⌘ K + Lead Đã đồng bộ · 12:01 TR HÔM NAY Tất cả việc 3 Lead quá hạn 2 Chưa chia được 1 Quỹ hàng Hôm nay Hôm nay 3 việc · 2 quá hạn Bật thông báo lead Nhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng. Bật thông báo Đang dùng bộ mặc định — chưa tải được bộ nhóm của sàn Việc	Vì sao hôm nay	Chi tiết	Hành động Lead quá hạn 2 			 Toà B · chỉ biết toà Lead 	 Chưa nhận Quá hạn nhận 33 phút 	Đang ở [Mẫu] Đầu chủ 2	 Giao lại Toà A · A-04.03 Lead 	 Chưa nhận Quá hạn nhận 33 phút 	Đang ở [Mẫu] Đầu chủ 1	 Giao lại Chưa chia được 1 			 Toà Z · chỉ biết toà Lead 	 Toà chưa có đầu chủ phụ trách 	Chưa có người	 Giao lại Gõ mã căn Gõ mã căn hoặc tên nhà
+fetch trong trang: ["POST /api/v1/leads/07c5d012-9aba-4ded-a238-8c4a6b697488/assign -> 200","GET /api/v1/team/listing-agents -> 200","GET /api/v1/team/lead-queue -> 200"]
+hang doi sau: 3 | lead con trong hang doi: false | con lai: 1364c4b3,14a544a7,596d186e
+/leads/assigned cua B: status 200 n=4 co lead: true
+/leads/assigned cua dau chu 1 co lead: false
+CA 2 chua chia
+hang doi truoc: 3 | lead can giao: 596d186e-790c-461c-a12f-74531bb95eab unrouted agent null
+dau man truoc: 3 việc · 2 quá hạn | marker: E3-no-reload
+bam Giao lai: true
+danh sach dau chu: [Mẫu] Đầu chủ 1 7 lead ; chu-kho-thu 0 lead ; [Mẫu] Đầu chủ 2 4 lead
+chon Dau chu 2: true
+dau man sau: 2 việc · 2 quá hạn | marker: E3-no-reload | nut Giao lai 3 -> 2 | dong con hien: false
+man sau: [Mẫu] Sàn thử Gõ mã căn… ⌘ K + Lead Đã đồng bộ · 12:01 TR HÔM NAY Tất cả việc 2 Lead quá hạn 2 Chưa chia được 0 Quỹ hàng Hôm nay Hôm nay 2 việc · 2 quá hạn Bật thông báo lead Nhận thông báo khi lead về bạn, kể cả khi không mở Quỹ hàng. Bật thông báo Đang dùng bộ mặc định — chưa tải được bộ nhóm của sàn Việc	Vì sao hôm nay	Chi tiết	Hành động Lead quá hạn 2 			 Toà B · chỉ biết toà Lead 	 Chưa nhận Quá hạn nhận 33 phút 	Đang ở [Mẫu] Đầu chủ 2	 Giao lại Toà A · A-04.03 Lead 	 Chưa nhận Quá hạn nhận 33 phút 	Đang ở [Mẫu] Đầu chủ 1	 Giao lại Gõ mã căn Gõ mã căn hoặc tên nhà
+fetch trong trang: ["POST /api/v1/leads/07c5d012-9aba-4ded-a238-8c4a6b697488/assign -> 200","GET /api/v1/team/listing-agents -> 200","GET /api/v1/team/lead-queue -> 200","POST /api/v1/leads/596d186e-790c-461c-a12f-74531bb95eab/assign -> 200","GET /api/v1/team/listing-agents -> 200","GET /api/v1/team/lead-queue -> 200"]
+hang doi sau: 2 | lead con trong hang doi: false | con lai: 1364c4b3,14a544a7
+/leads/assigned cua B: status 200 n=5 co lead: true
+/leads/assigned cua dau chu 1 co lead: false
+KET: [{"h0":"4 việc · 3 quá hạn","h1":"3 việc · 2 quá hạn","rows":[4,3],"conDong":false,"trongHang":false,"cuaB":true,"q1":3},{"h0":"3 việc · 2 quá hạn","h1":"2 việc · 2 quá hạn","rows":[3,2],"conDong":false,"trongHang":false,"cuaB":true,"q1":2}]
+final lead-queue: {"items":[{"leadId":"1364c4b3-f5f5-4d0d-8c98-eba64ce6646a","kind":"accept_overdue","buildingName":"Toà B","unitNumber":null,"agentUserId":"ea65fe03-606c-45a3-bbc7-3564cf0713d4","dueAt":"2026-11-09T04:28:05.882Z"},{"leadId":"14a544a7-26bf-4cf4-bd65-1d259e868aa5","kind":"accept_overdue","buildingName":"Toà A","unitNumber":"A-04.03","agentUserId":"72c75091-75bd-4c9d-b2b2-67623ae2ed82","dueAt":"2026-11-09T04:28:05.882Z"}]}

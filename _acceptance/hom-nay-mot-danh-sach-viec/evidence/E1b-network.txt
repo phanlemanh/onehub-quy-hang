@@ -1,1 +1,1 @@
-E1b driver: CDP script (cdp.mjs), khong doc duoc network -> n-a (driver). /today 200 tren 3462 cho 6 vai (qh_san sang san trong).
+E1b network (performance resource entries, app origin localhost:3462): all /api/v1/* requests status 200 for 6 roles (catalog, company/settings/queue, leads/assigned, leads, listings, team/lead-queue, team/listing-agents, today/buyer, push/public-key). No 4xx/5xx, no console/connection errors observed by driver (CDP script; console not read).

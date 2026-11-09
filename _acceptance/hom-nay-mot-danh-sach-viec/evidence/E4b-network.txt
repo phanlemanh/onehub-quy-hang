@@ -1,6 +1,8 @@
-Playwright network (app origin localhost:3462), console errors: 0
-GET /api/v1/leads 200 truoc: 13, f883 returned
-nhap 0900 000 0xx: chan o client (Số cần mười chữ số) - khong co POST
-nhap 0900 000 001: POST /api/v1/leads/f8839084-a5b2-49d1-99b2-2dbc8fae3e23/resubmit => 201
-GET /api/v1/leads 200 sau: 14, f883 resubmitted
-Khong co request that bai.
+E4b network (origin http://localhost:3462)
+GET /api/v1/listings 200
+GET /api/v1/catalog 200
+GET /api/v1/leads 200
+POST /api/v1/leads/e9c0a2e5-9872-4313-969b-261c46c9c9c8/resubmit 201
+GET /api/v1/leads 200
+GET /api/v1/listings 200
+Console errors: 0

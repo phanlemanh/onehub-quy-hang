@@ -1,1 +1,4 @@
-E1 driver: CDP script (khong co read_network_requests); network khong doc duoc -> n-a (driver). Trang /today tai 200 tren 3462 o ca 2 kho.
+Playwright, /today khổ 1440 và 1912, vai du-vai
+37 phản hồi app-origin (HTML + /api/v1/*): tất cả 200
+requestfailed: không có
+console: xem .playwright-mcp/console-2026-11-09T04-51-56-519Z.log

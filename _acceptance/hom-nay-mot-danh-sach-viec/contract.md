@@ -5,7 +5,7 @@ slug: hom-nay-mot-danh-sach-viec
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [core, api, ui]
-status: implemented
+status: verified
 design_doc: docs/superpowers/specs/2026-11-09-hom-nay-mot-danh-sach-viec-design.md
 approved_by: Manh Phan
 approved_at: 2026-11-09
@@ -83,3 +83,20 @@ trên màn này — việc suy từ trạng thái.
 - Không đổi cơ sở dữ liệu nên hạng T2. Chọn nút «Xong» ở Hỏi-3 thì lên T3.
 - Phần giữ cứng của Hỏi-5 thành dòng «điều khoá» ở `docs/architecture/so-diem-bien-thien.md` trong cùng PR; E8 kiểm có dòng.
 - Đo nền hạ tầng chưa chạy: khoá của đợt Điều phối chặn lệnh đo nền, phiên này đứng ngoài đợt nên không xin khoá.
+- Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Người dùng không thấy gì khác; chỉ là một tệp minh chứng của bài chấm chứa trang lỗi thay vì dữ liệu thật, nên người duyệt không đối chiếu được ba ô số của trưởng nhóm. — `_acceptance/hom-nay-mot-danh-sach-viec/evidence/E6-leadqueue.json`
+- Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Khi một nguồn việc bị lỗi kéo dài, mục «Tất cả việc» có thể ghi 0 ngay cạnh dòng báo lỗi, dễ đọc nhầm là không có việc. — `apps/web/src/app/(app)/today/viec/kho-so.ts`
+- Ngoài-5 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Một bài kiểm tự hồi khi nguồn lỗi một lần dùng dữ liệu giả khác dữ liệu thật, nên nếu đường đọc thật hỏng đi thì bài vẫn xanh. — `apps/web/src/app/(app)/today/viec/doc-nguon.test.ts`
+- Ngoài-6 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm tự tính số việc và cờ lỗi thay vì dùng đúng đoạn chạy thật, nên có thể bỏ sót nếu đoạn thật tính sai. — `apps/web/src/app/(app)/today/viec/kho-so.test.ts`
+- Ngoài-7 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm chưa thật sự chứng minh mục được tô sáng là mục người dùng đang chọn, nên nếu lỗi này xuất hiện bài vẫn xanh. — `apps/web/src/app/(app)/today/viec/kho-so.test.ts`
+- Ngoài-9 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm chỉ thử một trong bốn nguồn việc bị lỗi, nên lỗi ở ba nguồn còn lại có thể lọt mà không ai phát hiện. — `apps/web/src/app/(app)/today/viec/kho-so.test.ts`
+- Ngoài-10 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Với đầu chủ, bài kiểm không thử việc sàn đổi tên nhóm có hiện ở cột thứ hai hay không, nên lỗi ở đây có thể không bị bắt. — `apps/web/src/app/(app)/today/viec/kho-so.test.ts`
+- Ngoài-12 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Nếu sàn tự đặt một nhóm lead mang mã riêng và việc đọc lead bị hỏng, cột bên cạnh hiện số 0 thay vì để trống, dễ hiểu nhầm là không có việc. — `apps/web/src/app/(app)/today/hom-nay.tsx`
+- Ngoài-13 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Tài liệu thiết kế của màn Đội còn mô tả một nút giao và một trạng thái mà màn thật đã bỏ; người dùng không thấy gì khác. — `design/patterns/hom-nay-truong-nhom.md`
+- Ngoài-16 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Trang Đội sau một lần rớt mạng thoáng qua vẫn báo đang mất mạng và giữ ô số trống dù mạng đã có lại, phải tải lại trang. — `apps/web/src/app/(app)/team/dashboard.tsx`
+- Ngoài-17 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Người vừa làm telesales vừa quản trị, khi hết việc, bấm nút mở Bảng hàng sẽ bị đưa về đúng màn Hôm nay đang xem. — `apps/web/src/app/(app)/today/mobile/het-viec.tsx`
+- Ngoài-18 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Chưa có bài kiểm tự động quét đủ mọi vai với mọi loại việc, nên một lỗi về nhóm việc theo vai sau này có thể lọt qua mà không ai biết. — `_acceptance/hom-nay-mot-danh-sach-viec/evals.yaml`
+- Ngoài-19 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Chưa có bài kiểm tự động bảo đảm dòng việc của đầu khách không lộ thông tin chủ nhà, nên nếu sau này có lỗi thì khó bị bắt sớm. — `_acceptance/hom-nay-mot-danh-sach-viec/evals.yaml`
+- Ngoài-20 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm danh sách nhóm theo vai mới soi một phần, nên nếu một vai thấy nhầm nhóm của vai khác khi đã có số thì chưa chắc bị phát hiện. — `apps/web/src/app/(app)/today/viec/kho-so.test.ts`
+- Ngoài-21 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm việc nguồn lỗi thì không hiện số chỉ kiểm dữ liệu tự viết, nên nếu khâu ghi số thật sai thì bài kiểm vẫn xanh. — `apps/web/src/app/(app)/today/viec/kho-so.test.ts`
+- Ngoài-22 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm việc tự đọc lại khi lỗi chưa chạy qua chuỗi tải thật, nên một lỗi nối giữa các bước có thể không bị bắt. — `apps/web/src/app/(app)/today/viec/doc-nguon.test.ts`
+- Ngoài-23 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bài kiểm việc giao lại chưa chứng minh các lead khác không bị rơi khỏi hàng đợi và đầu chủ có thấy lead được giao, nên lỗi kiểu đó có thể lọt. — `packages/api/test-db/hom-nay-truong-nhom.test.ts`
