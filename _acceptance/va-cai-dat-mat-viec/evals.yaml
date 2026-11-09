@@ -1,0 +1,105 @@
+# Bộ đo va-cai-dat-mat-viec. Chỗ thử dãy D: Postgres 5575/postgres, máy dev 3495. Một lệnh đo chạy cả tám ca và in mỗi ca một
+# dòng JSON {"ca":…, "dat":…}; thoát 0 khi mọi ca đạt, 1 khi có ca đỏ (nêu tên ca), 2 khi không dựng được chỗ thử hay thiếu axe.
+# Chiều đỏ chung: cùng lệnh trên mã trước khi sửa cho L1, L2, L8, L13 đỏ, nhật ký ở evidence/truoc-sua.log.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    layer: backend-effect
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca giu-nhan: dat true; nhãn sau còn, Lưu không khoá; sau Lưu đọc đường GET nhãn của màn: nhãn đầu mất, nhãn sau còn; đọc cơ sở dữ liệu: căn của nhãn đầu mang nhãn thay, căn của nhãn sau giữ nhãn. Chiều đỏ: truoc-sua.log có dòng ca giu-nhan dat false."
+    paths: ["apps/web/src/app/(app)/settings/statuses/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca huy-nhieu-lan: dat true, các khoá sauEsc, sauGiu, nhanMotVanGo, hoiMoi, nutKhoa đều true. Chiều đỏ: truoc-sua.log có dòng ca này dat false."
+    paths: ["apps/web/src/app/(app)/settings/statuses/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: script
+    layer: backend-effect
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca chuyen-hai: dat true; đường GET nhãn không còn hai nhãn, cơ sở dữ liệu cho căn của chúng sang đúng nhãn thay đã chọn. Đo hồi quy: mã trước sửa cũng đạt, phép đo canh việc bỏ cờ không làm hỏng đường chuyển; chiều đỏ của phép đo là khoá hopDong false khi hộp không đóng."
+    paths: ["apps/web/src/app/(app)/settings/statuses/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-4
+    executor: script
+    layer: backend-effect
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca xoa-hong: dat true cho cả 500 và đứt mạng: hopMo, coCauLoi, dongCon true; lúc treo haiNutKhoa, escKhongDong, sauTreoCoCau true; khongCauCu true; đối chứng dương sau khi bỏ chặn: hopDong, dongMat, soGhiXoa (dòng mới nhất của khoá trong cơ sở dữ liệu là delete) true. Chiều đỏ: truoc-sua.log có dòng ca này dat false."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.web
+    expected: "exit 0; mau-nhap.test.ts ca «sauKhiXoa»: bảng viết trước 204 đóng; 403 câu quyền; 404 câu đã mất kèm lamMoi; 400, 500, null câu thử lại. Chiều đỏ: cùng bảng, 500 không bao giờ đóng và ba câu khác nhau."
+    paths: ["apps/web/src/app/(app)/settings/templates/mau-nhap*"]
+    evidence_required: [run_id, exit_code, verifier, verified_at]
+  - id: E5b
+    criterion: AC-5
+    executor: script
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca xoa-hong: cau403 true (hộp mở, đúng câu); cau404 và dong404Mat true với 404 thật của máy chủ (dòng bị xoá trong cơ sở dữ liệu lúc màn còn mở)."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-6
+    executor: script
+    layer: backend-effect
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca sua-hong: dat true; hopMo, coCauLoi, dongNhuCu true, dongNhuCu đọc sau khi tải lại trang và đếm sổ trong cơ sở dữ liệu; đối chứng dương boChanLuuDuoc: bỏ chặn, cùng bản sửa ghi xuống cơ sở dữ liệu đúng hai cặp đã gõ. Đo hồi quy: đường sửa đã có báo lỗi, mã trước sửa cũng đạt; chiều đỏ của phép đo là boChanLuuDuoc false khi bản sửa không tới máy chủ."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca kho-375: dat true; khungKhongTran, nutTrongMan, docDuocGhepVaoNguon (từng dòng, mỗi dòng một đích và một ngày nguồn riêng: phần tử dòng phụ có kích thước, nằm trong hàng của nó, chứa đúng Ghép vào, Quy đổi, Nguồn của chính dòng đó đọc ở khổ rộng; dòng không quy đổi không mang chữ «giá trị»), docDuocQuyDoi (dòng một khoá «1 giá trị», dòng hai khoá «2 giá trị»), hopXoaTrongMan, hopSuaTrongMan true; hai đối chứng dương: dongChungDuong (thước tràn bắt được khối rộng cài vào), dongPhuChungDuong (ẩn dòng phụ thì khoá đọc thành false). Chiều đỏ: truoc-sua.log có dòng ca này dat false."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca kho-rong: dat true; ở 768 hai cột, dòng phụ hiện; ở 1024 và 1440 năm cột, dòng phụ không hiện; cả ba khổ khung không tràn. Chiều đỏ: thiếu một cột hay khung tràn thì dat false và nêu khổ."
+    paths: ["apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E9
+    criterion: AC-9
+    executor: script
+    cmd: node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs
+    expected: "exit 0; dòng ca nhan-ti-le: dat true ở 1440 và 375; loiLabel 0, tenO «Tỉ lệ môi giới (%)», soHienDung, luuBamDuoc true; đối chứng dương: axe báo một lỗi label khi cài ô không nhãn. Chiều đỏ: truoc-sua.log có dòng ca này dat false."
+    paths: ["apps/web/src/app/(app)/settings/fees/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E10
+    criterion: AC-10
+    executor: ui-check
+    layer: ui-observed
+    steps:
+      - "Chạy node _acceptance/va-cai-dat-mat-viec/thu/kiem-man.mjs --dung-man, đặt hạn lệnh 10 phút vì lệnh chờ tới lượt nếu lệnh đo máy đang chạy. Lệnh dựng chỗ thử dãy D, nạp nhãn và mẫu nhập, chụp năm ảnh vào _acceptance/va-cai-dat-mat-viec/evidence/, xong tự dọn dữ liệu thử và tắt máy dev; in đường các ảnh. Chỉ xem ảnh, không mở màn sống, không gọi lệnh tắt máy dev."
+      - "Xem giu-nhan.png (Trạng thái sau «Giữ nhãn», 1440x900): đủ vỏ, nhãn sau còn, Lưu không khoá."
+      - "Xem xoa-loi.png (hộp xoá có câu lỗi, 1440x900): hộp còn mở, câu lỗi đọc được, không đè nút."
+      - "Xem mau-375.png và mau-375-hop.png (375x812): bảng không cuộn ngang, Sửa, Xoá trong màn, chữ dài ngắt dòng không đè cột nút; hộp nằm trong màn."
+      - "Xem mau-1440.png (1440x900): năm cột, đủ vỏ."
+    expected: "Năm ảnh đúng mô tả từng bước; không chữ đè nhau, không thành phần tràn màn."
+    paths: ["apps/web/src/app/(app)/settings/statuses/**", "apps/web/src/app/(app)/settings/templates/**", "_acceptance/va-cai-dat-mat-viec/thu/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, screenshot]
+  - id: E11
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.script.design_floor
+    expected: "exit 0; không mã màu thô trên tệp giao diện vòng chạm."
+    paths: ["apps/web/src/app/(app)/settings/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E12
+    criterion: AC-10
+    executor: script
+    cmd: config:executors.design.khuon
+    paths: ["design/patterns/trang-thai.md", "apps/web/src/app/**/*.tsx", "apps/web/src/components/shell/*.tsx"]
+    expected: "exit 0; bước chấm khuôn không in dòng «lệch:» nào cho tệp thuộc nhóm trang-thai"
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

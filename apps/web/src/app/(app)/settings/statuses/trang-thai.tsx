@@ -3,7 +3,7 @@
 // Thân màn Cài đặt › Sàn › Trạng thái (hàng 46): một khung settings-3 (MucCaiDatKhoi) — sáu nhóm theo sáu trạng thái
 // chuẩn, mỗi nhóm huy hiệu màu + nhãn mặc định, dưới là các nhãn riêng neo vào (ô chữ · số căn đang mang · gỡ) và «Thêm
 // nhãn» khi chưa đủ 3. Gỡ một nhãn đang có căn mang → hộp hỏi nhãn thay cùng nhóm. Chân khung: «Lưu» một lượt PUT.
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { STANDARD_STATUSES } from "@quy-hang/core/listing";
 
@@ -55,8 +55,6 @@ export function TrangThaiRieng({ bo: boDau, thu = false }: { bo: BoTrangThaiMan;
   const [luu, setLuu] = useState<TrangThaiLuu>({ loai: "yen" });
   const [hoi, setHoi] = useState<{ khoa: string; chon: string | null | undefined } | null>(null);
   const luuDuoc = useMemo(() => coTheLuu(m), [m]);
-  // Bấm «Gỡ và chuyển» cũng đóng hộp — cờ này để lượt đóng ấy không hoàn lại việc gỡ.
-  const xacNhan = useRef(false);
 
   const doi = (moi: ManTrangThai) => {
     setM(moi);
@@ -162,9 +160,9 @@ export function TrangThaiRieng({ bo: boDau, thu = false }: { bo: BoTrangThaiMan;
       <AlertDialog
         open={!!oHoi}
         onOpenChange={(mo) => {
+          // Chỉ «Giữ nhãn» và Esc đi qua đây; «Gỡ và chuyển» là nút thường, tự đóng hộp bằng setHoi.
           if (mo || !hoi) return;
-          if (!xacNhan.current) doi(boGo(m, hoi.khoa));
-          xacNhan.current = false;
+          doi(boGo(m, hoi.khoa));
           setHoi(null);
         }}
       >
@@ -191,10 +189,7 @@ export function TrangThaiRieng({ bo: boDau, thu = false }: { bo: BoTrangThaiMan;
             <AlertDialogAction
               disabled={!hoi || hoi.chon === undefined || !oHoi?.code}
               onClick={() => {
-                if (hoi && hoi.chon !== undefined && oHoi?.code) {
-                  xacNhan.current = true;
-                  doi(chonThay(m, oHoi.code, hoi.chon));
-                }
+                if (hoi && hoi.chon !== undefined && oHoi?.code) doi(chonThay(m, oHoi.code, hoi.chon));
                 setHoi(null);
               }}
             >
