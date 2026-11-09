@@ -58,9 +58,8 @@ export default function BangDoi() {
     setTai((t) => ({ ...t, dang: t.hangDoi === null, loiHangDoi: false, loiDauChu: false }));
     void docCaHai().then((kq) => setTai((t) => apLanDoc(t, kq)));
   };
-  useKhiCoMangLai(() => {
-    if (tai.loiHangDoi || tai.loiDauChu) docLai();
-  });
+  // Có mạng lại luôn đọc: màn đang có số từ trước lúc mất mạng thì không có cờ lỗi nào mà số đã cũ.
+  useKhiCoMangLai(docLai);
 
   // Mất mạng chỉ theo trình duyệt: lời gọi không tới mà trình duyệt còn báo có mạng là lỗi đọc, có «Thử lại».
   const tt = trangThaiTruongNhom({ dangTai: tai.dang, loiTai: tai.loiHangDoi, matMang: ngoaiTuyen, hangDoi: tai.hangDoi, loiGiao: {} });

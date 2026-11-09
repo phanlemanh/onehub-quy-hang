@@ -1,0 +1,32 @@
+# E2b network/console (Playwright MCP console log, entries tu 8695457ms = luot cham nay)
+# 500 tren team/lead-queue, team/listing-agents, company/settings/queue la DO ETA TIEM (page.route fulfill), dung theo de; ERR_CONNECTION_REFUSED o dau tep la tu phien cu, truoc luot nay
+[ 1171935ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=jd_ocwvFNyyn8QeQs7_qW' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ 1176938ms] [ERROR] WebSocket connection to 'ws://localhost:3462/_next/hmr?id=jd_ocwvFNyyn8QeQs7_qW' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_client_1wygxxh5rwq0t._.js:16225
+[ 8695457ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8695500ms] [LOG] [HMR] connected @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8695617ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8695617ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8717131ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8717140ms] [LOG] [HMR] connected @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8717232ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/listing-agents:0
+[ 8717232ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/listing-agents:0
+[ 8726385ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8726398ms] [LOG] [HMR] connected @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8726512ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/listing-agents:0
+[ 8726512ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/listing-agents:0
+[ 8748225ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8748239ms] [LOG] [HMR] connected @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8748346ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/company/settings/queue:0
+[ 8748346ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/company/settings/queue:0
+[ 8757482ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8757490ms] [LOG] [HMR] connected @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8757572ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8757572ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8759575ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8759575ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8776355ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8776374ms] [LOG] [HMR] connected @ http://localhost:3462/_next/static/chunks/node_modules_next_dist_05y3oi5z9mc_3._.js:719
+[ 8776453ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8776454ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8778456ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0
+[ 8778456ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3462/api/v1/team/lead-queue:0

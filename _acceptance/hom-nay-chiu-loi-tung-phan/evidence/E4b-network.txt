@@ -1,0 +1,3 @@
+E4b network (playwright page.on response, /team, vai truong-nhom). 500 tren /api/v1/team/listing-agents va /team/lead-queue la LOI GIA LAP do page.route.fulfill (dieu kien thu), khong phai loi cua app.
+Cac loi goi khong bi chan: /api/v1/listings 200, /api/v1/team/* khi bo chan 200, /api/v1/catalog 200, /api/v1/push/public-key 200.
+Console error: chi "Failed to load resource ... 500" tuong ung loi gia lap.

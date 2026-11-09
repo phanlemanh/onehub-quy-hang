@@ -220,6 +220,7 @@ evals:
     target: "http://localhost:3462/today"
     steps:
       - "Dựng chỗ thử: node _acceptance/hom-nay-mot-danh-sach-viec/thu/dung.mjs (Postgres 5599, máy dev 3462 chạy từ cây đang chấm; cookie từng vai ở .acceptance-runs/hom-nay-mot-danh-sach-viec/phien.json); lỗi giả lập bằng chặn mạng của trình duyệt (page.route), đặt cookie bằng context.addCookies, khổ 1440. Máy dev chạy hiệu ứng hai lần nên «lỗi một lần» là trả 500 cho hai lời gọi đầu"
+      - "Bài này không giả lập mất mạng. Mỗi bước mở trang trong một browser context mới (browser.newContext) để không dính init-script đặt navigator.onLine của bài trước; đọc navigator.onLine phải ra true rồi mới chấm"
       - "Vai du-vai (đủ năm vai), lead-queue và leads/assigned 500 mọi lần: chờ 9 giây, đếm câu lỗi, «Thử lại», chụp"
       - "Vai dau-chu mở /today?nhom=new_lead, leads/assigned 500 mọi lần: đọc chữ"
       - "Vai telesales mở /leads/mine, GET /api/v1/leads 500 mọi lần: chờ 6 giây, đếm «Thử lại»; bỏ chặn, phát sự kiện online, chờ 4 giây"

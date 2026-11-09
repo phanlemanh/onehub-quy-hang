@@ -1,0 +1,39 @@
+FAILED GET http://localhost:3462/api/v1/team/lead-queue net::ERR_INTERNET_DISCONNECTED
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+FAILED GET http://localhost:3462/api/v1/team/listing-agents net::ERR_INTERNET_DISCONNECTED
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+FAILED GET http://localhost:3462/api/v1/team/lead-queue net::ERR_INTERNET_DISCONNECTED
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+FAILED GET http://localhost:3462/api/v1/team/listing-agents net::ERR_INTERNET_DISCONNECTED
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+200 GET http://localhost:3462/api/v1/listings
+FAILED GET http://localhost:3462/api/v1/team/lead-queue net::ERR_INTERNET_DISCONNECTED
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+FAILED GET http://localhost:3462/api/v1/team/listing-agents net::ERR_INTERNET_DISCONNECTED
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+FAILED GET http://localhost:3462/api/v1/team/lead-queue net::ERR_INTERNET_DISCONNECTED
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+FAILED GET http://localhost:3462/api/v1/team/listing-agents net::ERR_INTERNET_DISCONNECTED
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED
+200 GET http://localhost:3462/api/v1/team/lead-queue
+200 GET http://localhost:3462/api/v1/team/listing-agents
+200 GET http://localhost:3462/api/v1/listings
+FAILED GET http://localhost:3462/api/v1/team/lead-queue net::ERR_CONNECTION_FAILED
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED
+FAILED GET http://localhost:3462/api/v1/team/listing-agents net::ERR_CONNECTION_FAILED
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED
+FAILED GET http://localhost:3462/api/v1/team/lead-queue net::ERR_CONNECTION_FAILED
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED
+FAILED GET http://localhost:3462/api/v1/team/listing-agents net::ERR_CONNECTION_FAILED
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED
+200 GET http://localhost:3462/api/v1/listings
+FAILED GET http://localhost:3462/api/v1/team/lead-queue net::ERR_CONNECTION_FAILED
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED
+FAILED GET http://localhost:3462/api/v1/team/listing-agents net::ERR_CONNECTION_FAILED
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED
+FAILED GET http://localhost:3462/api/v1/team/lead-queue net::ERR_CONNECTION_FAILED
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED
+FAILED GET http://localhost:3462/api/v1/team/listing-agents net::ERR_CONNECTION_FAILED
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED
+200 GET http://localhost:3462/api/v1/team/lead-queue
+200 GET http://localhost:3462/api/v1/team/listing-agents

@@ -1,0 +1,5 @@
+Network (app-origin localhost:3462 /api/), playwright response log. Console errors not captured (driver run_code).
+truong-nhom: 200 team/lead-queue x2, team/listing-agents x2, push/public-key x2, catalog x2, listings
+telesales: 200 catalog x2, leads x2, listings
+dau-khach: 200 catalog x2, today/buyer x2, listings
+dau-chu: catalog, leads/assigned x2, push/public-key x2, listings = 200; company/settings/queue = 500 x4 (CHU Y: do page.route cua chinh eval gia lap, khong phai loi that cua app)
