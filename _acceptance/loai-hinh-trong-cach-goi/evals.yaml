@@ -1,6 +1,6 @@
 schema_version: 1
 feature_slug: loai-hinh-trong-cach-goi
-# Lệnh máy: executors.test.core, executors.test.web, executors.test.isolation (cần DATABASE_URL tới Postgres dãy X, cổng 5576),
+# Lệnh máy: executors.test.core, executors.test.web, executors.test.doi_nhan_db (Postgres dãy X, cổng 5576),
 # executors.script.ro_ri, executors.script.typecheck. ui-check trên chỗ thử dãy X: thu/dung.mjs dựng trên chỗ thử hàng 79
 # (Postgres 5576, máy dev 3496). Mỗi eval máy đòi đủ tên ca trong `expected`, có mặt và ok.
 evals:
@@ -22,7 +22,7 @@ evals:
     criterion: AC-2
     executor: test
     layer: backend-effect
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.doi_nhan_db
     paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/loai-hinh-cach-goi/**]
     expected: "exit 0; packages/api/test-db/loai-hinh-cach-goi/nhan.test.ts có mặt và ok: «loại hình: lưu tên riêng neo RESO» — quản trị sàn A PUT values [{field:propertySubType,value:Townhouse,label:\"Liền kề\"}], GET thấy dòng value Townhouse label «Liền kề» custom true; sàn B GET thấy label «Nhà phố» custom false; propertySubType đọc của một căn Townhouse sàn A bằng nhau trước và sau PUT; ca «loại hình: giá trị có dấu cách» — PUT Single Family Residence rồi GET thấy đúng label, custom true; và «loại hình: neo lạ bị từ chối» — PUT value «Shophouse» trả 400, reason nêu «Shophouse», GET không đổi (đối chứng dương cùng tệp: lượt neo đúng trả 200)."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
@@ -30,7 +30,7 @@ evals:
     criterion: AC-3
     executor: test
     layer: backend-effect
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.doi_nhan_db
     paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/loai-hinh-cach-goi/**]
     expected: "exit 0; nhan.test.ts ca «loại hình: máy chủ từ chối chữ sai và trùng» — bảng viết trước năm dòng: trùng riêng–mặc định, trùng riêng–riêng, rỗng, 41 ký tự, số 0900 000 001; mỗi dòng PUT trả 400, reason chứa đoạn ghim của dòng ấy, GET không đổi; đối chứng 200 với tên hợp lệ trên cùng sàn."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
@@ -73,7 +73,7 @@ evals:
     criterion: AC-7
     executor: test
     layer: backend-effect
-    cmd: config:executors.test.isolation
+    cmd: config:executors.test.doi_nhan_db
     paths: [packages/api/src/labels/**, packages/core/src/labels/**, packages/api/test-db/loai-hinh-cach-goi/**]
     expected: "exit 0; nhan.test.ts ca «loại hình: trả về mặc định» — sàn A đã đặt «Liền kề», có một căn Townhouse; PUT bộ không có dòng ấy; GET thấy label «Nhà phố» custom false; propertySubType của căn trước và sau lượt lưu bằng nhau."
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
