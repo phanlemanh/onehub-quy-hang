@@ -1,0 +1,46 @@
+schema_version: 1
+feature_slug: va-khuon-doan-sdt-ranh-gioi
+# exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi output có tên ca, «ok», không SKIP/TODO; ma trận viết trước, số lần so đếm bằng biến và so với độ dài ma trận.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khoá máy cấp: ma trận số điện thoại bị khuôn chặn» có mặt và ok — MA_TRAN_KHOA_SDT viết trước = 7 dấu nối (0900000071, 090.000.0071, 0900-000-071, 090_000_0071, 090:000:0071, 090--000--0071, 090.000-0071) × 5 ranh giới trước (rỗng, bld-, bld., bld_, bld:) × 5 ranh giới sau (rỗng, -A, .A, _A, :A) = 175 khoá; nút buildingKey và upi (bọc urn:onehub:upi:), số lần so bằng 350; mỗi lần parseCatalogConfirmation thất bại có lỗi ở đúng đường nút mang thông điệp chứa «dáng số điện thoại»; ma trận đối chứng ghép cặp cùng hình 8 chữ số (09000071, 090.000.71, 0900-071, 090_000_71, 090:000:71, 090--000--71, 090.000-71) qua hết, số lần so bằng 350. Chiều đỏ: đưa ranh giới của MAU_DOAN_SDT về chỉ : và _ → khoá bld-0900000071 đỏ nêu đường buildingKey; đổi dấu lặp thành một dấu → 090--000--0071 đỏ."
+    paths: [packages/core/src/confirmation/dang-dong.ts, packages/connect/src/catalog-confirmation*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E2
+    criterion: AC-2
+    executor: test
+    cmd: config:executors.test.core
+    expected: "exit 0; ca «khoá máy cấp: ma trận số điện thoại bị hàm dựng chặn» có mặt và ok — cùng hai ma trận; khoá toà qua dungKhungToa, dungThuocTinhCan, dungBaoSai, UPI qua dungThuocTinhCan, dungBaoSai, mỗi khoá cấy vào chính danh mục để qua bước tra; số lần so chặn bằng 875: ok false, có lỗi đúng truong, thongDiep chứa «dáng số điện thoại»; số lần so đối chứng bằng 875: ok true. Chiều đỏ: gỡ MAU_DOAN_SDT khỏi laMaToa → khoá đầu đỏ nêu buildingKey và tên hàm; gỡ laUpi ở dungThuocTinhCan → khoá UPI đầu đỏ nêu hàm ấy."
+    paths: [packages/core/src/confirmation/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E3
+    criterion: AC-3
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khoá dạng thật qua cả hai tầng» có mặt và ok — ba khoá toà viết trước (bld_01JC8R4ZQK0123456789ABCDEF, bld_0123456789012345678901ABCD, bld_01234567890123456789012345) và ba UPI viết trước (urn:onehub:upi:1:VN:VN-HN:bld_0123456789012345678901ABCD, urn:onehub:upi:1:VN:VN-01:bld_01JC8R4ZQK0123456789ABCDEF, urn:onehub:upi:1:VN:VN-01:bld_01234567890123456789012345) cấy vào danh mục; khuôn và từng đường hàm dựng đều nhận, danh sách bị từ chối gom đủ rồi so rỗng; số lần so bằng 21 (6 khuôn + 3 khoá toà × 3 hàm + 3 UPI × 2 hàm); mọi căn của danhMuc trong packages/db/seed/mau/du-lieu-mau.json dựng được thuộc tính căn và qua khuôn, biến đếm bằng tổng số căn đếm từ tệp. Chiều đỏ: bỏ vế sau không dính chữ số của nhánh đứng riêng trong MAU_DOAN_SDT → khoá bld_0123456789012345678901ABCD đỏ."
+    paths: [packages/core/src/confirmation/**, packages/connect/src/catalog-confirmation*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E4
+    criterion: AC-4
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khoá máy cấp: đoạn đứng riêng 9 đến 11 chữ số» có mặt và ok — ma trận viết trước sáu khoá toa-1234-5678 qua, toa-1234-56789 chặn, toa-1234-5678901 chặn, toa-1234-56789012 qua, 12-0900000071 chặn, toa-123-456789012 chặn; mỗi khoá so ở khuôn nút buildingKey và ở dungKhungToa với khoá cấy vào danh mục, số lần so bằng 12, hai tầng cùng kết quả. Chiều đỏ: thay luật bằng xét độ dài cả dãy → 12-0900000071 đỏ; đổi trần 11 chữ số thành 12 → toa-1234-56789012 đỏ."
+    paths: [packages/core/src/confirmation/**, packages/connect/src/catalog-confirmation*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E5
+    criterion: AC-5
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khoá máy cấp: số liền dính chữ giữ nguyên» có mặt và ok — x0900000071 và 0900000071x; khoá toà ở nút buildingKey và ba hàm dựng, UPI bọc tiền tố ở nút upi và hai hàm dựng, đều nhận, số lần so bằng 14. Chiều đỏ: bỏ vế trước không dính chữ số của nhánh đứng riêng trong MAU_DOAN_SDT → x0900000071 đỏ."
+    paths: [packages/core/src/confirmation/**, packages/connect/src/catalog-confirmation*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+  - id: E6
+    criterion: AC-6
+    executor: test
+    cmd: config:executors.test.connect
+    expected: "exit 0; ca «khoá máy cấp: có dấu tách dính chữ bị chặn» có mặt và ok — sáu dấu nối có dấu của E1 × hai phía (toa+số, số+x) = 12 khoá; khoá toà ở nút buildingKey và ba hàm dựng, UPI bọc tiền tố ở nút upi và hai hàm dựng, đều từ chối với thông điệp chứa «dáng số điện thoại», số lần so bằng 84; đối chứng cùng hình 8 chữ số qua, số lần so bằng 84. Chiều đỏ: bỏ nhánh có dấu tách của MAU_DOAN_SDT → toa090.000.0071 đỏ."
+    paths: [packages/core/src/confirmation/**, packages/connect/src/catalog-confirmation*]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
