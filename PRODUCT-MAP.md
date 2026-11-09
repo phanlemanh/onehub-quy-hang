@@ -6,7 +6,7 @@
 
 ```mermaid
 flowchart TD
-  A["Đang cân nhắc cơ hội<br/>chưa có"] --> GD{"Cổng Đáng"}
+  A["Đang cân nhắc cơ hội<br/>1 việc"] --> GD{"Cổng Đáng"}
   GD --> B["Sắp mở vòng<br/>3 việc"]
   GD --> XL["Xếp lại sau<br/>chưa có"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
@@ -21,6 +21,10 @@ flowchart TD
 > **Cổng Đáng** việc này có đáng làm không · **Cổng Phạm vi** bộ tiêu chí
 > đã đủ và đúng chưa · **Cổng Bằng chứng** đã làm đúng thứ đã hứa chưa ·
 > **Cổng Giá trị** thứ đã giao có ăn thua không.
+
+## Đang cân nhắc cơ hội
+
+- Bài quét khuôn giao diện đọc cả đồ thị nhập của màn chứ không chỉ page.tsx, và cấm Toaster ngoài vỏ; sáu chỗ đang có ghi ngoại lệ có hạn ở bản đồ khuôn theo ADR-0024 quyết định 9, mức nợ giữ trần 0. (`luoi-quet-do-thi-nhap`)
 
 ## Sắp mở vòng
 
