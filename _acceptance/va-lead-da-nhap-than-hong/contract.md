@@ -5,7 +5,7 @@ slug: va-lead-da-nhap-than-hong
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: verified
+status: machine-cleared
 design_doc: _acceptance/va-lead-da-nhap-than-hong/design.md
 approved_by:
 approved_at:
@@ -43,6 +43,12 @@ Quét độ phủ làm ngay trong hợp đồng, một trục vì lời đọc c
 
 ## Notes
 
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-09:
+  - Ngoài-1: Bài kiểm mới thử một kiểu lead đúng, nên siết nhầm điều kiện về sau có thể không bị bắt.
+  - Ngoài-2: Mục về dữ liệu mẫu của bài kiểm; đã sửa ở lượt 2, giữ lại theo lựa chọn ở cổng.
+  - Ngoài-3: Mục về lead mẫu của bài kiểm; đã sửa ở lượt 2, giữ lại theo lựa chọn ở cổng.
+  - Ngoài-4: Bộ kiểm chưa thử đủ các kiểu phần tử sai.
+- Phần còn hở của AC-2, đã báo chủ kho trước khi đi tiếp: phần tử gần đúng khuôn mà tên đầu chủ hay lý do trả lại không phải chữ vẫn làm vỡ trang; phân loại phí có chữ lạ thì màn ghi «chưa bao phí» mà không báo. Máy chủ hiện không sinh ra dữ liệu như vậy.
 - Bất biến chạm: không lối đọc mới, không chạm trang khách.
 - Ngoài-1 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Bộ kiểm tự động mới thử một kiểu lead mẫu, nên nếu sau này ai đó vô tình siết cửa kiểm quá chặt thì telesales có lead trả lại hay cho thuê có thể thấy báo lỗi thay cho cả danh sách mà bộ kiểm vẫn xanh. — `apps/web/src/app/(app)/leads/mine/nguon-that.test.ts`
 - Ngoài-2 (máy định tuyến 2026-11-09, đề xuất S4 known-limits): Dữ liệu mẫu trong bài kiểm không giống một lead thật, nên bài kiểm chứng minh yếu hơn mô tả. Người dùng không gặp lỗi nào ở màn hình. — `apps/web/src/app/(app)/leads/mine/nguon-that.test.ts`
