@@ -3056,6 +3056,12 @@
       ]
     },
     {
+      "ma": "va-ci-secrets-quet-dung-lich-su",
+      "cau_giao": "Job secrets của CI chỉ quét đúng lịch sử của commit đang xét thay vì mọi nhánh đã đẩy, vẫn phủ toàn bộ lịch sử main và nhánh PR: giá trị mẫu trên một nhánh khác không còn làm đỏ main và PR khác, khoá thật trên nhánh PR hay trong lịch sử main vẫn đỏ.",
+      "slug": "va-ci-secrets-quet-dung-lich-su",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-08"
+    },
+    {
       "ma": "va-khuon-doan-sdt-ranh-gioi",
       "cau_giao": "Số điện thoại dính dấu gạch hoặc dấu chấm trong khoá toà hay UPI (ví dụ dạng bld-0900000071, toa-090-000-0071) bị hàm dựng và khuôn Xác nhận danh mục từ chối giống dạng bld_0900000071; khoá dạng thật của Invest vẫn qua.",
       "slug": "va-khuon-doan-sdt-ranh-gioi",
