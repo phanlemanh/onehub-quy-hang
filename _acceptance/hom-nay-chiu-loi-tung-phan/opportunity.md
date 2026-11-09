@@ -3,10 +3,10 @@ schema_version: 1
 slug: hom-nay-chiu-loi-tung-phan
 feature: Khi một phần của Hôm nay đọc lỗi, người dùng thấy đúng một câu lỗi ở đúng chỗ của phần ấy, màn tự thử lại trước khi báo, các phần còn lại giữ nguyên và không phần nào nói sai về số việc; đầu chủ luôn hiện tên người
 owner: phanlemanh@gmail.com
-stage: discovery              # discovery | decided | archived
-decision:         # build | iterate | park | kill — người ký Cổng 0 điền
-decided_by: 
-decided_at:     # ISO UTC
+stage: decided              # discovery | decided | archived
+decision: build   # build | iterate | park | kill — người ký Cổng 0 điền
+decided_by: Manh Phan
+decided_at: 2026-11-09T03:06:23Z   # ISO UTC
 prototype:
   base_commit:     # điểm cắt nhánh proto khỏi nhánh chính — guard diffBase khi keep
   disposition:     # keep | archive
@@ -37,6 +37,8 @@ Vì sao: R1 của audit màn Hôm nay 09/11 (`docs/plan/audit-man-hom-nay.md` tr
 - A9 · mở lúc mất mạng thì báo «Không lead nào quá hạn» dù chưa đọc được gì (Known limit 04/11, tác động cao)
 - A10 · lead giao cho tôi tải lỗi mà vẫn báo «không có việc» (Known limit 02/11)
 - A11 · nội dung hỏng ở vùng Đầu khách hiện khung chờ mãi (Known limit 05/11)
+
+Cổng Đáng: chủ kho gõ tại phiên dãy L 09/11, nguyên văn «build». Chưa vào thiết kế: hàng `hom-nay-mot-danh-sach-viec` (nhánh cùng tên, chạm gần hết `today/**` và `leads/mine/**`) gộp trước; sau đó dãy L đo lại chín vấn đề trên bản mới và thu phạm vi (giám sát, 09/11). Ngưỡng dưới đây còn nhãn đề xuất vì sẽ chốt theo phạm vi đã thu.
 
 ## Ngưỡng chết / ngưỡng UAT
 
