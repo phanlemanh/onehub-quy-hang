@@ -7,7 +7,7 @@ import type { Agreement } from "../agreements";
 import { mayFlow } from "../agreements";
 import { normalizeCode } from "../catalog/code-rule";
 import type { CatalogBuildingData, CatalogData, CatalogUnitData } from "../catalog/types";
-import { chuanHoaMaCan, docHuong, laMaToa, laMaTruc, laUpi, MAU_NGAY } from "./dang-dong";
+import { chuanHoaMaCan, coDangSdt, docHuong, laMaToa, laMaTruc, laUpi, MAU_NGAY } from "./dang-dong";
 import {
   CATALOG_CONFIRMATION_SCHEMA_VERSION,
   KHOA_RIENG,
@@ -89,7 +89,7 @@ function kiemChung(
   if (!nc.userId) loi.push({ truong: "userId", thongDiep: "Thiếu mã người." });
   const buildingKey = dau["buildingKey"];
   const toa = laMaToa(buildingKey) ? timToa(nc.danhMuc, buildingKey) : undefined;
-  if (!laMaToa(buildingKey)) loi.push({ truong: "buildingKey", thongDiep: "Khoá toà sai dạng." });
+  if (!laMaToa(buildingKey)) loi.push({ truong: "buildingKey", thongDiep: coDangSdt(buildingKey) ? "Khoá toà sai dạng: có đoạn dáng số điện thoại." : "Khoá toà sai dạng." });
   else if (!toa) loi.push({ truong: "buildingKey", thongDiep: "Toà không có trong danh mục dùng chung." });
   if (loi.length > 0 || !nc.khoaBenNhan) return { loi };
   return {
@@ -169,7 +169,7 @@ export function dungThuocTinhCan(dau: DauThuocTinhCan, nc: NguCanh): KetQua<Thuo
   const unitNumber = giaTriTruong("unitNumber", dau.unitNumber);
   if (unitNumber === undefined) loi.push({ truong: "unitNumber", thongDiep: "Mã căn ngoài dạng đóng (chữ hoa, số, dấu nối; không câu, không số điện thoại)." });
   if (dau.upi !== null) {
-    if (!laUpi(dau.upi)) loi.push({ truong: "upi", thongDiep: "UPI ngoài dạng khuôn." });
+    if (!laUpi(dau.upi)) loi.push({ truong: "upi", thongDiep: coDangSdt(dau.upi) ? "UPI ngoài dạng khuôn: có đoạn dáng số điện thoại." : "UPI ngoài dạng khuôn." });
     else if (toa && !toa.units.some((u) => u.upi === dau.upi)) loi.push({ truong: "upi", thongDiep: "UPI không phải căn của toà này trong danh mục." });
   }
   const gt: Record<string, number | string> = {};
@@ -190,7 +190,7 @@ export type DauBaoSai = { buildingKey: string; upi: string; field: TruongBaoSai;
 export function dungBaoSai(dau: DauBaoSai, nc: NguCanh): KetQua<BaoSai> {
   const { loi, vo, toa } = kiemChung("correction", dau, nc);
   const upiDungDang = laUpi(dau.upi);
-  if (!upiDungDang) loi.push({ truong: "upi", thongDiep: "UPI ngoài dạng khuôn — căn này chưa báo sai được, nguồn danh mục phải sửa." });
+  if (!upiDungDang) loi.push({ truong: "upi", thongDiep: coDangSdt(dau.upi) ? "UPI ngoài dạng khuôn: có đoạn dáng số điện thoại." : "UPI ngoài dạng khuôn — căn này chưa báo sai được, nguồn danh mục phải sửa." });
   const can = upiDungDang ? toa?.units.find((u) => u.upi === dau.upi) : undefined;
   if (upiDungDang && toa && !can) loi.push({ truong: "upi", thongDiep: "Căn không có trong danh mục — chỉ báo sai được căn đã có." });
   const field = (TRUONG_BAO_SAI as readonly string[]).includes(dau.field) ? dau.field : undefined;

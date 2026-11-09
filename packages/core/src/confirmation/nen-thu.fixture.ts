@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import type { Agreement } from "../agreements";
 import type { CatalogData } from "../catalog/types";
-import type { NguCanh } from "./dung";
+import { dungBaoSai, dungKhungToa, dungThuocTinhCan, type KetQua, type NguCanh } from "./dung";
 
 export const DUONG_MAU = fileURLToPath(new URL("../../../db/seed/mau/du-lieu-mau.json", import.meta.url));
 
@@ -97,3 +97,40 @@ export function danhMucDoiKhoaToa(khoa: string): CatalogData {
   (toa as { buildingKey: string }).buildingKey = khoa;
   return dm;
 }
+
+/** Bảy kiểu nối dãy số trong khoá máy cấp — số mẫu, không số thật. */
+export const DAU_NOI_SDT: readonly string[] = [
+  "0900000071",
+  "090.000.0071",
+  "0900-000-071",
+  "090_000_0071",
+  "090:000:0071",
+  "090--000--0071",
+  "090.000-0071",
+];
+/** Đối chứng ghép cặp theo chỉ số với `DAU_NOI_SDT`: cùng hình, cùng dấu nối, 8 chữ số. */
+export const DAU_NOI_DOI_CHUNG: readonly string[] = ["09000071", "090.000.71", "09-000-071", "090_000_71", "090:000:71", "090--000--71", "090.000-71"];
+export const TRUOC_KHOA: readonly string[] = ["", "bld-", "bld.", "bld_", "bld:"];
+export const SAU_KHOA: readonly string[] = ["", "-A", ".A", "_A", ":A"];
+
+/** Tích dấu nối × ranh giới trước × ranh giới sau, thứ tự cố định để hai ma trận ghép cặp theo chỉ số. */
+export function maTranKhoa(dau: readonly string[]): string[] {
+  return dau.flatMap((d) => TRUOC_KHOA.flatMap((t) => SAU_KHOA.map((s) => `${t}${d}${s}`)));
+}
+
+export const bocUpi = (k: string): string => `urn:onehub:upi:${k}`;
+
+export type DuongDung = { ten: string; dung: (khoa: string) => KetQua<unknown> };
+
+/** Ba đường hàm dựng nhận khoá toà; khoá được cấy vào danh mục để qua bước tra. */
+export const DUONG_DUNG_TOA: readonly DuongDung[] = [
+  { ten: "dungKhungToa", dung: (k) => dungKhungToa({ ...dauKhungToa(), buildingKey: k }, nguCanhMau({ danhMuc: danhMucDoiKhoaToa(k) })) },
+  { ten: "dungThuocTinhCan", dung: (k) => dungThuocTinhCan({ ...dauThuocTinhCan(), buildingKey: k }, nguCanhMau({ danhMuc: danhMucDoiKhoaToa(k) })) },
+  { ten: "dungBaoSai", dung: (k) => dungBaoSai({ ...dauBaoSai(), buildingKey: k }, nguCanhMau({ danhMuc: danhMucDoiKhoaToa(k) })) },
+];
+
+/** Hai đường hàm dựng nhận UPI; UPI được cấy vào căn A-01.01 để qua bước tra. */
+export const DUONG_DUNG_UPI: readonly DuongDung[] = [
+  { ten: "dungThuocTinhCan", dung: (u) => dungThuocTinhCan({ ...dauThuocTinhCan(), upi: u }, nguCanhMau({ danhMuc: danhMucDoiUpi(u) })) },
+  { ten: "dungBaoSai", dung: (u) => dungBaoSai({ ...dauBaoSai(), upi: u }, nguCanhMau({ danhMuc: danhMucDoiUpi(u) })) },
+];
