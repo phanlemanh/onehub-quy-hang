@@ -80,6 +80,8 @@ await anh(t1, "E5-rong.png");
 rong.cot = await docCot(t1);
 await bam(t1, await toaDo(t1, oSo("Diện tích đất")));
 await ngu(300);
+// Bấm giữa ô đặt con trỏ giữa chữ: đưa về cuối để xoá lùi hết.
+await t1.tinh(`(() => { const o = ${oSo("Diện tích đất")}; o.setSelectionRange(o.value.length, o.value.length); return 1; })()`);
 await xoaHet(t1, GO.length);
 const sau = { ...(await trangThai(t1, "Diện tích đất")), cot: await docCot(t1) };
 await anh(t1, "E5-sau.png");
