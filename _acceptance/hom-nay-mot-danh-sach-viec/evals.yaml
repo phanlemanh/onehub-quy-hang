@@ -207,6 +207,15 @@ evals:
     criterion: AC-1
     executor: script
     cmd: config:executors.design.khuon
-    expected: "exit 0; 0 lệch mới ở nhóm hom-nay-dau-chu; các khai ngoai_le của hom-nay-truong-nhom và lead-cua-toi cho /today đã gỡ."
+    expected_exit: 1
+    expected: "exit 1 (đạt có giới hạn, chủ kho chốt 09/11, như E12 của hồ sơ luong-gui): bước chấm khuôn của kit 2.37.0 không xét ngoai_le nên báo trang Tin của khách mới «thuộc hai nhóm màn: hom-nay-dau-khach, trang-tam» — báo oan. Mã 1 chỉ được chấp nhận cùng E11b xanh. 0 lệch mới ở nhóm hom-nay-dau-chu; các khai ngoai_le của hom-nay-truong-nhom và lead-cua-toi cho /today đã gỡ. Kit vá (thoát 0) thì bỏ expected_exit ở đây và bỏ E11b."
     paths: ["design/patterns/**", "apps/web/src/app/(app)/today/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E11b
+    criterion: AC-1
+    executor: script
+    cmd: node _acceptance/hom-nay-mot-danh-sach-viec/kiem-khuon-e11.mjs
+    expected: "exit 0; năm đối chứng viết sẵn trong bài qua (chỉ dòng báo oan → qua; thêm một lệch, lỗi bản đồ, thoát 1 không có dòng báo oan, không chấm được → đỏ); trên cây thật, các dòng «lệch:» và «sai:» của bước chấm khuôn đúng bằng một dòng «lệch: apps/web/src/app/(app)/shares/tin/page.tsx · thuộc hai nhóm màn: hom-nay-dau-khach, trang-tam» và bài in «E11b: chỉ có dòng báo oan đã khai»."
+    paths: ["design/patterns/**", "apps/web/src/app/(app)/today/**", "apps/web/src/app/(app)/shares/tin/**", "_acceptance/hom-nay-mot-danh-sach-viec/kiem-khuon-e11.mjs"]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
