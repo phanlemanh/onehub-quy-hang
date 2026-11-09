@@ -5,7 +5,7 @@ slug: va-loi-doc-can-ngoai-khu
 owner: phanlemanh@gmail.com
 risk_tier: T2
 surfaces: [ui]
-status: implemented
+status: machine-cleared
 design_doc: docs/superpowers/specs/2026-11-09-va-loi-doc-can-ngoai-khu-design.md
 approved_by:
 approved_at:

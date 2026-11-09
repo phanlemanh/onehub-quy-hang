@@ -11,9 +11,9 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>2 việc"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>29 việc"]
-  GB --> CN["Chờ phiên nghiệm thu<br/>137 việc"] --> GG{"Cổng Giá trị"}
+  GB --> CN["Chờ phiên nghiệm thu<br/>138 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
 
@@ -27,10 +27,6 @@ flowchart TD
 - Người trong sàn thấy chữ trên mọi màn theo ba lớp đã chốt: «Lead» chỉ còn là dấu trên một liên hệ chưa nói chuyện hai chiều, còn việc với một người (bán, cho thuê, mua, thuê) hiện là «Cơ hội» với nhãn pha đã chốt ở Cổng Phạm vi hàng 103 — đổi một lượt cho cả bàn làm việc, nút «+ Lead» và «Gửi lead» giữ nguyên. (`doi-chu-lead-co-hoi`)
 - Gói «nguồn danh mục và thị trường» phiên bản 2 — danh mục kèm độ chắc từng giá trị, số thị trường theo toà và loại căn có mốc đo, tin rao công khai đã khớp căn — được nhận vào vùng dùng chung khi thoả thuận đang bật; gói v1 vẫn nhận trong thời gian chuyển (`khuon-nguon-danh-muc-v2`)
 - Bên kia của một thoả thuận gọi API bằng token máy gắn đúng thoả thuận ấy — đẩy gói danh mục không cần phiên của quản trị sàn — và lời gọi kế bị từ chối ngay khi thoả thuận tắt hay token bị thu hồi (`token-may-ket-noi`)
-
-## Đang làm
-
-- Khi đọc danh sách căn ngoài khu bị lỗi mà máy chưa có bản giữ, Bảng hàng báo lỗi và có nút Thử lại, không âm thầm hiện các căn ngoài khu là «Chưa rõ». (`va-loi-doc-can-ngoai-khu`)
 
 ## Đã giao — chờ phiên nghiệm thu
 
@@ -160,6 +156,7 @@ flowchart TD
 - Hàng vá va-ho-so-lien-he: ma trận vai phủ cả ba đường đọc liên hệ chủ nhà và đếm đủ ô (Ngoài-22 hàng 103); «Xem thêm» không trộn trang của bộ lọc cũ (AC-2 thấp hàng 103) (`va-ho-so-lien-he`)
 - Số điện thoại dính dấu tách trong khoá toà hay UPI bị hàm dựng và khuôn Xác nhận danh mục từ chối; khoá dạng thật của Invest vẫn qua. (`va-khuon-doan-sdt-ranh-gioi`)
 - Sự kiện báo sai của Xác nhận danh mục chỉ dựng được khi mã căn đúng dạng UPI như khuôn; phép quét rò rỉ của sự kiện đỏ được khi hàm dựng làm rò (đối chứng dương trên chính đường dựng); và phép quét cả lớp chuỗi đo được khuôn có chặn chữ tự do và dãy số dáng điện thoại, không chỉ «có khuôn». (`va-khuon-xac-nhan-bao-sai-quet-ro-ri`)
+- Khi đọc danh sách căn ngoài khu bị lỗi mà máy chưa có bản giữ, Bảng hàng báo lỗi và có nút Thử lại, không âm thầm hiện các căn ngoài khu là «Chưa rõ». (`va-loi-doc-can-ngoai-khu`)
 - Vá mốc gọi đầu: lead đã trả lại thì máy chủ từ chối mốc gọi đầu của người giữ cũ, mốc không đổi; lead đang giữ vẫn ghi gọi đầu như cũ (`va-moc-goi-dau-lead-tra-lai`)
 - Nút «Ghim lại hồ sơ cần bản thật» chạy được làn ghim lại trên máy chủ GitHub không cài kit: bước «Ghim lại» trỏ làn vào kit lấy theo tag; một phép đo chạy nguyên dòng lệnh của bước ấy như máy chủ GitHub để lỗi này không lọt lần nữa. (`va-nut-ci-ag-root`)
 - Nút «Ghim lại hồ sơ cần bản thật» cài gitleaks (đúng bản của CI, kiểm băm) trước bước «Ghim lại», để bài tự kiểm của rào trong làn chạy được trên máy chủ GitHub; lượt bấm lại không còn đỏ vì thiếu gitleaks. (`va-nut-ci-gitleaks`)

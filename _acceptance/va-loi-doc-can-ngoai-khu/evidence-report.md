@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: efa00e50ffd7b5dd23b3ac7424845326b9b14ba1
+verified_commit: 77daa999cfcf0c8d1da9e3986c56274d5fc9b1e7
 human_signoff:
 ---
 
@@ -170,3 +170,7 @@ none — mọi eval đều chạy một lần, xác định, không có pass_rat
 
 Round 1: PASS — mọi eval xanh; còn ba finding trong hợp đồng và một ngoài hợp đồng ghi ở review-findings.
 Round 2: PASS — E1-E7, E9 chạy lại trên commit efa00e50; E8 mang từ round 1 (delta không chạm paths của eval).
+
+### Re-pin lần 1 — 2026-11-09, do thêm ca đo sau lượt 2 và gộp nhánh chính
+run_id: repin-20261109T110753Z-15030
+sha: 77daa999cfcf0c8d1da9e3986c56274d5fc9b1e7 · suites: 7 lệnh exit 0 · evals: 8/8 eval máy đạt kỳ vọng · ngoài làn máy: E6 (E6 không khai paths) · AC không có chốt máy: AC-6 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
