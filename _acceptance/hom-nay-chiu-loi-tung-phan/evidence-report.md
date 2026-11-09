@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: c3a875874179d387245824a4699fb67ef6ca2301
+verified_commit: 3d2907e2e5b2f2cf40ce438014c50c02de4fa728
 human_signoff: Manh Phan 2026-11-09
 ---
 
@@ -307,3 +307,7 @@ none — mọi eval nhiều lượt đều đồng đều (không eval nào có 
 
 Round 1: E10d không đạt và có một phát hiện trong hợp đồng ở AC-5 (Đội không đọc lại khi có mạng nếu màn đang có số) — sửa ở commit 3cb2bd63 (`useKhiCoMangLai(docLai)`) và thêm bước vào E10d. Trả về triển khai.
 Round 2: E2b, E4b, E5b, E10b, E10c, E10d và các lệnh suite chạy lại trên c3a87587 và đạt; các eval còn lại mang sang từ round 1 vì delta không chạm paths của chúng. Phán quyết PASS.
+
+### Re-pin lần 1 — 2026-11-09, do gộp main có #237 sau chữ ký
+run_id: repin-20261109T124454Z-27516
+sha: 3d2907e2e5b2f2cf40ce438014c50c02de4fa728 · suites: 7 lệnh exit 0 · evals: 10/10 eval máy đạt kỳ vọng · ngoài làn máy: E1b, E2b, E3b, E4b, E5b, E6b, E7b, E8, E9b, E10, E10d · AC không có chốt máy: AC-8 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
