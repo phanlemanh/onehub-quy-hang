@@ -1,0 +1,19 @@
+# E5b network (playwright page events). Cac FAILED ben duoi la do page.route abort CHU DINH cua eval (gia lap mat mang / cat mang), khong phai loi may.
+--- step1 open offline (onLine=false), /api/v1/team/** abort internetdisconnected
+FAILED GET /api/v1/team/lead-queue net::ERR_INTERNET_DISCONNECTED (x4, retry)
+FAILED GET /api/v1/team/listing-agents net::ERR_INTERNET_DISCONNECTED (x4, retry)
+200 GET /api/v1/listings
+console.error Failed to load resource: net::ERR_INTERNET_DISCONNECTED (x8, tu cac request bi chan o tren)
+--- step2 unblock + onLine true + online event
+200 GET /api/v1/team/lead-queue
+200 GET /api/v1/team/listing-agents
+200 GET /api/v1/listings
+--- step3 onLine true, /api/v1/team/** abort connectionfailed (chu dinh)
+FAILED GET /api/v1/team/lead-queue net::ERR_CONNECTION_FAILED (x3)
+FAILED GET /api/v1/team/listing-agents net::ERR_CONNECTION_FAILED (x3)
+200 GET /api/v1/listings
+console.error Failed to load resource: net::ERR_CONNECTION_FAILED (x6, tu cac request bi chan)
+--- step3 unblock + click Thu lai
+200 GET /api/v1/team/lead-queue
+200 GET /api/v1/team/listing-agents
+no pageerror, no 4xx/5xx response from app

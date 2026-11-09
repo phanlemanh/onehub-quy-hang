@@ -16,7 +16,8 @@ Không phải một màn mà là một CHỖ trong màn: vùng chưa có gì, th
 như vậy trong màn của vỏ và màn xác thực dựng `<TrangThai kind="empty|error|notice" title="…" />`.
 
 - `empty` — vùng chưa có gì; kèm biểu tượng lucide nhỏ và một câu nói khi nào sẽ có.
-- `error` — thao tác hay lần tải thất bại; khối báo đỏ, `role="alert"`, chữ nói chuyện gì xảy ra.
+- `error` — thao tác hay lần tải thất bại; khối báo đỏ, `role="alert"`, chữ nói chuyện gì xảy ra. Lần đọc của một vùng
+  thất bại thì dùng `BaoLoiVung` (cùng tệp, dựng trên `TrangThai`): đúng một «Thử lại» cạnh câu, không tự ghép nút.
 - `notice` — điều người cần biết mà không phải lỗi (không đủ quyền, đã xong); khối báo thường, `role="status"`.
 
 **Dùng khi** chỗ ấy không gắn với một ô nhập cụ thể. **Không dùng** cho lỗi của một ô (dùng `FieldError` dưới ô đó),

@@ -1,0 +1,5 @@
+E7b network (Playwright page.on response/requestfailed, app-origin http://localhost:3462/api/v1)
+Step1 (truong-nhom, onLine=false, abort team/leads/today): FAILED(aborted by injected block) team/lead-queue x4, team/listing-agents x4; 200 catalog x2, push/public-key x2, listings x1. Aborts are the injected fault, not server faults.
+Step2 (unblocked + online event): 200 team/listing-agents, 200 team/lead-queue, 200 listings. No failures.
+Note: a first run in the shared playwright browser showed 500s on team/* with routes removed - stale routes from earlier evals (E6b noted same); curl with truong-nhom cookie = 200 for lead-queue, listing-agents, leads. Re-run after unrouteAll is the recorded result. Server log shows only 200s (+ today/buyer 403 buyer-agent-required, expected for non-buyer role, not requested by browser).
+Console errors: only resource-load errors from the injected block / stale-route run.

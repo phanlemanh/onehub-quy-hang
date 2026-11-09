@@ -1,0 +1,6 @@
+E8 network (Playwright MCP; console log .playwright-mcp/console-2026-11-09T07-53-19-078Z.log L296-L299)
+Step1 (1440, truong-nhom): POST /api/v1/leads/12ec9b47-.../assign -> 500 (injected by page.route fulfill, the eval's fault, not a server fault). Banner "Dang xem ban da tai - mat mang" present on page in all frames (stale offline state from earlier evals; page still worked).
+Step2 (unrouted): assign succeeded; row left queue (17 -> 16). No failures.
+Step3 (375): POST /api/v1/leads/25889cff-.../assign -> 500 (injected).
+Older ERR_INTERNET_DISCONNECTED lines in the log (team/lead-queue, listing-agents) belong to earlier evals (E7b), not this run.
+Only failures are the injected 500s on assign, expected by the eval.

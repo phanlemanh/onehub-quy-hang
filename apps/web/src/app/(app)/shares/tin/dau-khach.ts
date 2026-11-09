@@ -3,10 +3,15 @@
 import { giaTin } from "@quy-hang/core/sharing";
 import { LECH_GIO_VN, NHAN_TIN, type TinDauKhach } from "@quy-hang/core/today";
 
+import { docCoThuLai, docMang } from "../../today/viec/doc-nguon";
 import { NHAN_TRANG_THAI } from "../da-gui";
 
 export type { TinDauKhach };
 export { NHAN_TIN };
+
+/** Tin 7 ngày của người xem, tự thử lại một lần; nội dung hỏng, mã lỗi, mất mạng đều là `null`. */
+export const docTinDauKhach = (f: typeof fetch = fetch, cho?: (ms: number) => Promise<void>): Promise<TinDauKhach[] | null> =>
+  docCoThuLai(() => docMang<TinDauKhach>("/api/v1/today/buyer", (j) => (j as { items?: unknown } | null)?.items, f), cho);
 
 /** Tin phản ứng và vừa đổi mở chi tiết Lần gửi ở Đã gửi; căn mới mở luồng Gửi với căn ấy — người vẫn tự bấm gửi (bất biến 3). */
 export function hrefTin(t: TinDauKhach): string {
@@ -71,5 +76,4 @@ export const CHU = {
   trongMoTa: "Khách mở link, căn đã gửi đổi giá hay căn mới khớp bộ đã gửi sẽ hiện ở đây.",
   guiCan: "Gửi căn",
   loi: "Chưa tải được — thử lại",
-  thuLai: "Thử lại",
 } as const;

@@ -225,7 +225,7 @@ const CHO_TRANG_THAI = [
   // Hộp Xuất: thêm câu báo đọc mẫu của sàn lỗi ở ô «Cột theo» (hàng mau-bang-hang-va-bai).
   ...Array(6).fill(`${W}/app/(app)/inventory/phat-hang/hop-thoai.tsx`),
   // Lead của tôi (hàng 27): lỗi và trống của vùng Lead đã nhập.
-  ...Array(2).fill(`${W}/app/(app)/leads/mine/lead-da-nhap.tsx`),
+  `${W}/app/(app)/leads/mine/lead-da-nhap.tsx`,
   ...Array(6).fill(`${W}/app/(app)/leads/new/o-lead.tsx`),
   `${W}/app/(app)/leads/new/page.tsx`,
   // Tôi (hàng 38): lỗi đọc danh sách máy.
@@ -273,11 +273,11 @@ const CHO_TRANG_THAI = [
   // Màn Đã gửi (hàng 36): vai không xem ở trang.
   `${W}/app/(app)/shares/page.tsx`,
   // Hôm nay của đầu khách (hàng 37): lỗi tải, trống của vùng.
-  ...Array(2).fill(`${W}/app/(app)/shares/tin/dong-tin.tsx`),
+  `${W}/app/(app)/shares/tin/dong-tin.tsx`,
   // Tin của khách: vai khác Đầu khách.
   `${W}/app/(app)/shares/tin/page.tsx`,
   // Đội: lỗi tải, trống của bảng theo đầu chủ.
-  ...Array(2).fill(`${W}/app/(app)/team/dashboard.tsx`),
+  `${W}/app/(app)/team/dashboard.tsx`,
   // Thông báo lead (hàng 26): dải bật — hướng dẫn cài iPhone, chưa cấu hình, không hỗ trợ, bật / lỗi bật.
   ...Array(4).fill(`${W}/app/(app)/today/dai-bat.tsx`),
   ...Array(3).fill(`${W}/app/(app)/today/hom-nay.tsx`),
@@ -512,7 +512,7 @@ describe("E5 — lệnh ban-do-khuon.mjs", () => {
       "trang-khach: 1 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-mau: 2 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
       "trang-tam: 1 tệp theo khuôn · 27 ngoại lệ · 0 lệch",
-      "trang-thai: 175 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
+      "trang-thai: 172 chỗ theo khuôn · 0 ngoại lệ · 0 lệch",
       "xac-thuc: 4 tệp theo khuôn · 0 ngoại lệ · 0 lệch",
     ]);
     const j = JSON.parse(chay(ROOT, "--json").stdout);

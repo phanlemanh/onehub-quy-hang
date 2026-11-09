@@ -37,6 +37,24 @@ export const CHU_TRANG_THAI = {
   "mat-mang": "Đang mất mạng",
 } as const;
 
+/** Dòng có người giữ mà chưa biết tên: đọc danh sách lỗi hay chưa đặt tên. */
+export const CHU_CHUA_RO_TEN = "Chưa rõ tên";
+
+/** Một vùng một báo lỗi: hai nguồn cùng hỏng thì câu của hàng đợi. */
+export function baoLoiDoi(loi: { hangDoi: boolean; dauChu: boolean }): string | null {
+  if (loi.hangDoi) return CHU_TRANG_THAI.loi;
+  return loi.dauChu ? "Không tải được tên đầu chủ" : null;
+}
+
+/** Câu dưới «Đang mất mạng»: có số thì nói là lần đọc cuối, chưa có số thì nói máy sẽ tự đọc lại. */
+export const moTaMatMang = (hangDoi: readonly DongLeadTruongNhom[] | null) => (hangDoi ? "Số là lần đọc cuối." : "Máy sẽ tự đọc lại khi có mạng.");
+
+/** Chữ trong ô tròn của một đầu chủ; chưa biết tên thì gạch, không lấy chữ của câu thay. */
+export function kyHieuDauChu(ten: string): string {
+  if (ten === CHU_CHUA_RO_TEN) return "—";
+  return ten.replace(/[[\]]/g, "").trim().split(/\s+/).pop()?.slice(0, 2).toUpperCase() || "—";
+}
+
 /** Bảng theo người rỗng (ST-hntn-trong). */
 export const CHU_CHUA_CO_CAN = "Chưa có căn nào";
 /** Dòng dưới bảng theo người (gate1, Hỏi-5). */
@@ -85,7 +103,7 @@ export function dongTheoNguoi(dong: readonly DongHangCu[], dauChu: readonly DauC
   const theoMa = new Map(dauChu.map((d) => [d.userId, d]));
   return dong.map((d) => {
     const n = d.userId ? theoMa.get(d.userId) : undefined;
-    return { ...d, ten: d.userId === null ? "Chưa có người giữ" : (n?.displayName || "Chưa rõ tên"), nghi: n?.onLeave ?? false };
+    return { ...d, ten: d.userId === null ? "Chưa có người giữ" : (n?.displayName || CHU_CHUA_RO_TEN), nghi: n?.onLeave ?? false };
   });
 }
 

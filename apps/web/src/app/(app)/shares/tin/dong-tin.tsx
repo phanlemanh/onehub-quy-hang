@@ -8,7 +8,7 @@ import { ChoTai } from "@/components/bo-cuc";
 import { Badge } from "@/components/reui/badge";
 import { Frame, FrameHeader, FramePanel } from "@/components/reui/frame";
 import { Timeline, TimelineContent, TimelineHeader, TimelineIndicator, TimelineItem, TimelineSeparator } from "@/components/reui/timeline";
-import { TrangThai } from "@/components/trang-thai";
+import { BaoLoiVung, TrangThai } from "@/components/trang-thai";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -61,20 +61,9 @@ function MucTin({ t, step }: { t: TinDauKhach; step: number }) {
 }
 
 /** Bốn trạng thái của vùng (bảng ST-hndk-* của thiết kế); trống, lỗi đi qua `TrangThai`, đang tải dùng khung chờ của bố cục. */
-export function DongTinDauKhach({ trang, homNay, onThuLai }: { trang: TrangThaiVung; homNay: string; onThuLai?: () => void }) {
+export function DongTinDauKhach({ trang, homNay, onThuLai }: { trang: TrangThaiVung; homNay: string; onThuLai: () => void }) {
   if (trang.kieu === "dang-tai") return <ChoTai kieu="dong-tin" />;
-  if (trang.kieu === "loi")
-    return (
-      <TrangThai
-        kind="error"
-        title={CHU.loi}
-        hanhDong={
-          <Button size="sm" variant="outline" onClick={onThuLai}>
-            {CHU.thuLai}
-          </Button>
-        }
-      />
-    );
+  if (trang.kieu === "loi") return <BaoLoiVung title={CHU.loi} onThuLai={onThuLai} />;
   if (!trang.ds.length)
     return (
       <TrangThai
