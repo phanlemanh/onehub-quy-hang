@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 82586b82d139bcefaada34c2692d742d0b6c53c3
+verified_commit: 31cb5008c202a650b102fad5b57363efdc3a0376
 human_signoff:
 ---
 
@@ -285,3 +285,7 @@ none — mọi eval chạy một lần, xác định (runs 1), không có phươ
 
 Round 1: REJECT — hai phát hiện trong hợp đồng AC-5 (đầu cột hồ sơ lấy loại hình bằng so tiêu đề dòng, tên trường Loại hình trùng tiêu đề dòng khác làm đầu cột sai). Trả về sửa; lượt sửa thêm ca kiểm và bằng chứng lượt 1.
 Round 2: PASS — E4, E5, E6, E7b, E9, E10, E11, E15 và sáu lệnh suite chạy lại xanh; các eval còn lại mang từ round 1 vì delta không chạm paths của chúng.
+
+### Re-pin lần 1 — 2026-11-09, do gộp main tới lượt gộp
+run_id: repin-20261109T020555Z-53381
+sha: 31cb5008c202a650b102fad5b57363efdc3a0376 · suites: 7 lệnh exit 0 · evals: 19/19 eval máy đạt kỳ vọng · ngoài làn máy: E9 (E9 không khai paths) · AC không có chốt máy: AC-9 · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
