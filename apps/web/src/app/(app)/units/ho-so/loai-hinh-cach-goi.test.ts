@@ -31,7 +31,7 @@ const vao = (ds: ListingView[], them: Partial<VaoHoSo>): VaoHoSo => ({
   nguoi: "n-1",
   vai: ["listing_agent"],
   ds,
-  ngan: { listings: [], history: {}, lastAttempt: null, lastPullAt: null },
+  ngan: { listings: [], history: {}, queue: [], lastAttempt: null, lastPullAt: null },
   danhMuc: DANH_MUC,
   ngoaiKhu: NGOAI_KHU,
   chon: { ma: "", toa: null, lan: null },

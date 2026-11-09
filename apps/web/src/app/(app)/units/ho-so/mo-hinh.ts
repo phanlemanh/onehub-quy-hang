@@ -8,7 +8,7 @@ import type { CatalogData } from "@quy-hang/core";
 import { lopPhuHoSo, type CoHoSo } from "@quy-hang/core/access";
 import { nhanViTri, type ListingEvent } from "@quy-hang/core/listing";
 import type { TuVung } from "@quy-hang/core/labels";
-import type { LanThu, ListingView } from "@/lib/sync/types";
+import type { LanThu, ListingView, PendingOp } from "@/lib/sync/types";
 import { chiMuc, type CanNgoaiKhuXem } from "../../inventory/ghep-danh-muc";
 import { khoCuaSo } from "../../today/mobile/kho";
 import { dauCuaCan, hienNutSanSang, type Dich } from "../ready/san-sang";
@@ -99,7 +99,7 @@ export type VaoHoSo = {
   vai: readonly string[];
   /** Danh sách hàng trên máy (bản đã gồm thao tác chờ gửi). */
   ds: readonly ListingView[];
-  ngan: { listings: readonly unknown[] | null; history: Record<string, readonly ListingEvent[]>; lastAttempt: LanThu | null; lastPullAt: string | null };
+  ngan: { listings: readonly unknown[] | null; history: Record<string, readonly ListingEvent[]>; queue: readonly Pick<PendingOp, "listingId" | "type">[]; lastAttempt: LanThu | null; lastPullAt: string | null };
   danhMuc: CatalogData | null;
   chon: ChonCan;
   /** Hồ sơ theo hàng (`?hang=`): hàng chưa có mã, hay `null` khi không thấy hàng; vắng là hồ sơ theo căn. */
@@ -147,6 +147,10 @@ export type HoSoCo = {
   hienSanSang: boolean;
   lichSu: DongLichSu[];
   ttls: TrangThaiLichSu;
+  /** Hàng đợi trên máy còn lệnh đổi giá của căn: máy chủ chưa có giá đang hiện, nên chưa có dấu định nghĩa của giá ấy. */
+  giaChoGui: boolean;
+  /** Lần kéo thành công gần nhất. */
+  keoLuc: string | null;
   /** Mất mạng: đang xem bản trên máy, kèm giờ đồng bộ gần nhất. */
   banTrenMay: string | null;
   moToanMan: string | null;
@@ -228,6 +232,8 @@ export function moHinhHoSo(v: VaoHoSo): MoHinhHoSo {
     dauCot: [tt?.kind === "co" ? tt.khu : null, toa, loaiHinh].filter(Boolean).join(" · "),
     xacNhan: tuoi?.confirmed ? (tuoi.ageDays === 0 ? "Xác nhận hôm nay" : `Xác nhận ${tuoi.ageDays} ngày trước`) : "Chưa xác nhận với chủ nhà",
     gia: dichThieu.includes("gia") ? "Chưa có giá về tay" : p.gia,
+    giaChoGui: ngan.queue.some((o) => o.listingId === can.id && o.type === "price_changed"),
+    keoLuc: ngan.lastPullAt,
     phi: p.phi,
     mucDu: {
       co: p.mucDu.co,
