@@ -134,21 +134,45 @@ test("phiên bản lạ qua cửa nhận", async () => {
 test("cấm: cả gói không vào", async () => {
   const t = await sanCoToken("cam");
   const g = goiV2("cam");
-  const sai = structuredClone(g) as unknown as { publicListings: { listings: Record<string, unknown>[] }[] };
-  const cuoi = sai.publicListings[0]!.listings.at(-1)!;
-  cuoi.upi = `${String(cuoi.upi)}:0900000012`;
-  const res1 = await goi("POST", FEED, { bearer: t.token, body: sai });
+  /** Đổi UPI của tin cuối và của chính căn nó trỏ tới, nên chỉ còn hậu tố là khác gói lành. */
+  const voiHauTo = (hauTo: string) => {
+    const c = structuredClone(g) as unknown as CatalogFeedV2;
+    const tinCuoi = c.publicListings[0]!.listings.at(-1)!;
+    const can = canCua(c).find((u) => u.upi === tinCuoi.upi)!;
+    can.upi = tinCuoi.upi = `${tinCuoi.upi}${hauTo}`;
+    return c;
+  };
+  const res1 = await goi("POST", FEED, { bearer: t.token, body: voiHauTo(":0900000012") });
   assert.equal(res1.status, 422);
-  assert.equal(await docLoi(res1), "invalid-feed");
+  const than1 = (await res1.json()) as { error: string; errors: { path: (string | number)[]; message: string }[] };
+  assert.equal(than1.error, "invalid-feed");
+  const duong = ["publicListings", 0, "listings", g.publicListings[0]!.listings.length - 1, "upi"].join("/");
+  assert.ok(than1.errors.some((e) => e.path.join("/") === duong && /dáng số điện thoại/.test(e.message)), `phải do lưới giá trị: ${JSON.stringify(than1.errors)}`);
   assert.equal(soDong(await chup(khuCua(g))), 0, "giá trị cấm: có dòng ghi");
+
   const khoa = structuredClone(g) as unknown as { publicListings: { listings: Record<string, unknown>[] }[] };
   khoa.publicListings[0]!.listings.at(-1)!.sourceUrl = "[Mẫu]";
   const res2 = await goi("POST", FEED, { bearer: t.token, body: khoa });
   assert.equal(res2.status, 422);
+  const than2 = (await res2.json()) as { errors: { message: string }[] };
+  assert.ok(than2.errors.some((e) => e.message.includes("sourceUrl")), `phải do khoá lạ: ${JSON.stringify(than2.errors)}`);
   assert.equal(soDong(await chup(khuCua(g))), 0, "khoá cấm: có dòng ghi");
-  // Đối chứng: bỏ ô cấm thì nhận.
-  assert.equal((await goi("POST", FEED, { bearer: t.token, body: g })).status, 200);
+
+  // Đối chứng: cùng cách đổi nhưng hậu tố sạch thì nhận, nên lý do từ chối ở trên chính là giá trị cấm.
+  assert.equal((await goi("POST", FEED, { bearer: t.token, body: voiHauTo(":khac") })).status, 200);
   assert.ok(soDong(await chup(khuCua(g))) > 0);
+});
+
+test("mốc đo lạ qua cửa nhận", async () => {
+  const t = await sanCoToken("moc");
+  const g = goiV2("moc");
+  const sai = structuredClone(g);
+  sai.marketStats[0]!.measuredAt = "2026-11-09T08:00:00+99:00";
+  const res = await goi("POST", FEED, { bearer: t.token, body: sai });
+  assert.equal(res.status, 422, "phải là lỗi khuôn, không phải lỗi máy chủ");
+  assert.equal(await docLoi(res), "invalid-feed");
+  assert.equal(soDong(await chup(khuCua(g))), 0);
+  assert.equal((await goi("POST", FEED, { bearer: t.token, body: g })).status, 200, "đối chứng");
 });
 
 test("v2 trên đường token: nhật ký", async () => {

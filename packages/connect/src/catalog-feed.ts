@@ -20,6 +20,19 @@ import { z } from "zod";
  */
 export const CATALOG_FEED_SCHEMA_VERSION = 1;
 
+/**
+ * Mốc đo có múi giờ. Thêm hai giới hạn của `timestamptz`, vì khuôn nhận mà cơ sở dữ liệu từ chối thì bên đẩy nhận lỗi máy chủ
+ * thay vì lỗi có đường khoá: độ lệch múi giờ tới ±15:59, năm từ 0001.
+ */
+const MocDo = z
+  .string()
+  .datetime({ offset: true })
+  .refine((s) => {
+    const m = /([+-])(\d{2}):?(\d{2})$/.exec(s);
+    const lechHopLe = !m || Number(m[2]) * 60 + Number(m[3]) <= 15 * 60 + 59;
+    return lechHopLe && !s.startsWith("0000");
+  }, "Mốc đo có múi giờ hoặc năm ngoài khoảng nhận được.");
+
 const Upi = z.string().regex(/^urn:onehub:upi:/, "UPI phải có dạng urn:onehub:upi:…");
 
 /** Số đo dương hoặc `null`; vắng = loại hình không dùng trường này. */
@@ -100,7 +113,7 @@ export const CatalogFeed = z
     schemaVersion: z.literal(CATALOG_FEED_SCHEMA_VERSION),
     provider: z.string().min(1),
     /** Mốc đo của bên cung cấp, như ADR-0014: số cũ phải nhận ra được là cũ. */
-    measuredAt: z.string().datetime({ offset: true }),
+    measuredAt: MocDo,
     subdivisions: z.array(CatalogSubdivision),
   })
   .strict()
@@ -127,8 +140,6 @@ const CatalogSubdivisionV2 = CatalogSubdivision.extend({ buildings: z.array(Cata
 
 /** Giá đang rao hay giá tin, đồng; tiền tỷ vượt số nguyên 32 bit nên chặn theo số an toàn của JavaScript. */
 const GiaDong = z.number().int().safe().positive();
-const MocDo = z.string().datetime({ offset: true });
-
 const MarketSegment = z
   .object({
     buildingKey: z.string().min(1),
@@ -174,21 +185,24 @@ const DANG_CAM: { ten: string; mau: RegExp }[] = [
   { ten: "số điện thoại", mau: /(?<![A-Za-z0-9])\+?\d(?:[\s.\-_/:]*\d){8,10}(?![A-Za-z0-9])/ },
   { ten: "số điện thoại", mau: MAU_DOAN_SDT },
 ];
+/** Khoá do máy cấp được phép có dãy số dính chữ (như ULID, ADR-0027); chữ do người gõ thì không. */
+const KHOA_MA_MAY = new Set(["subdivisionKey", "buildingKey", "upi"]);
+const SO_TRONG_CHU_TU_DO = /\d(?:[\s().\-_/:]*\d){8,10}/;
 
 /** Duyệt đệ quy mọi lá chuỗi: khuôn đóng chặn khoá lạ, lưới này chặn đường dẫn hay số lọt qua trường chữ. */
-function soatChuoi(gt: unknown, path: (string | number)[], ctx: z.RefinementCtx) {
+function soatChuoi(gt: unknown, path: (string | number)[], ctx: z.RefinementCtx, khoa?: string) {
   if (typeof gt === "string") {
-    const trung = DANG_CAM.find((d) => d.mau.test(gt));
+    const trung = DANG_CAM.find((d) => d.mau.test(gt)) ?? (khoa && !KHOA_MA_MAY.has(khoa) && SO_TRONG_CHU_TU_DO.test(gt) ? { ten: "số điện thoại" } : undefined);
     if (trung) ctx.addIssue({ code: z.ZodIssueCode.custom, path, message: `Giá trị có dáng ${trung.ten}, không được vào gói.` });
     return;
   }
   if (Array.isArray(gt)) {
-    gt.forEach((x, i) => soatChuoi(x, [...path, i], ctx));
+    gt.forEach((x, i) => soatChuoi(x, [...path, i], ctx, khoa));
     return;
   }
   if (gt && typeof gt === "object") {
     for (const [k, v] of Object.entries(gt)) {
-      if (!KHOA_KHONG_SOAT.has(k) && k !== "fieldConfidence") soatChuoi(v, [...path, k], ctx);
+      if (!KHOA_KHONG_SOAT.has(k) && k !== "fieldConfidence") soatChuoi(v, [...path, k], ctx, k);
     }
   }
 }

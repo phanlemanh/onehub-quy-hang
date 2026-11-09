@@ -8,6 +8,17 @@ after(donDepV2);
 
 const T0 = "2026-11-09T08:00:00+07:00";
 
+/** Thêm một tin cho khu thứ hai, để phép so «khu khác không đổi» có dữ liệu ở cả hai bảng. */
+function coTinKhuHai(g: CatalogFeedV2): CatalogFeedV2 {
+  const khu = g.subdivisions[1]!;
+  g.publicListings.push({
+    subdivisionKey: khu.subdivisionKey,
+    measuredAt: T0,
+    listings: [{ listingKey: "tin-mau-khu-hai", upi: khu.buildings[0]!.units[0]!.upi, listPrice: 6_000_000_000, feeInclusion: null, onMarketDate: "2026-11-01" }],
+  });
+  return g;
+}
+
 /** Gói sau: chỉ khu đầu, nội dung khác, mốc đo cho trước; đổi cả diện tích một căn. */
 function goiSau(g: CatalogFeedV2, moc: string): CatalogFeedV2 {
   const s = structuredClone(g);
@@ -26,11 +37,11 @@ test("ảnh chụp: gói sau thay gói trước của cùng khu", async () => {
   let soLan = 0;
   for (const [i, o] of maTran.entries()) {
     const t = await sanCoToken(`ac-${i}`);
-    const g = goiV2(`ac-${i}`);
+    const g = coTinKhuHai(goiV2(`ac-${i}`));
     assert.equal((await goi("POST", FEED, { bearer: t.token, body: g })).status, 200, o.ten);
     const khu2 = khuCua(g)[1]!;
     const truocKhu2 = await chup([khu2]);
-    assert.ok(truocKhu2.thiTruong.length === 1, "đối chứng: khu thứ hai có dữ liệu");
+    assert.ok(truocKhu2.thiTruong.length === 1 && truocKhu2.tin.length === 1, "đối chứng: khu thứ hai có dữ liệu ở cả hai bảng");
     const sau = goiSau(g, o.moc);
     const res = await goi("POST", FEED, { bearer: t.token, body: sau });
     assert.equal(res.status, 200, `${o.ten}: ${JSON.stringify(await res.clone().json())}`);

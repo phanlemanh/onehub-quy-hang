@@ -68,7 +68,8 @@ test("độ chắc: ma trận lệch luật", () => {
 
 test("độ chắc: chín trường", () => {
   assert.deepEqual([...CATALOG_CONFIDENCE_LEVELS], ["inferred", "single_source", "verified"]);
-  assert.equal(CATALOG_CONFIDENCE_FIELDS.length, 9);
+  // Danh sách viết trước, không rút từ hằng của mã: đổi một tên trường thì ca này đỏ.
+  assert.deepEqual([...CATALOG_CONFIDENCE_FIELDS], ["stack", "floor", "livingArea", "bedroomsTotal", "directionFaces", "lotSizeArea", "storiesTotal", "frontageLength", "accessRoadWidth"]);
   let soLan = 0;
   for (const f of CATALOG_CONFIDENCE_FIELDS) {
     const g = mau();
@@ -202,21 +203,107 @@ function dat(o: unknown, path: (string | number)[], v: string) {
 }
 const DANG = ["https://vi-du.vn/tin", "www.vi-du", "vi-du.com.vn", "0900 000 012"];
 
-test("cấm: giá trị trong mọi chuỗi", () => {
-  const la = laChuoi(mau());
-  assert.ok(la.length >= 15, `chỉ có ${la.length} lá chuỗi`);
+type Parse = (g: unknown) => ReturnType<typeof parseCatalogFeed>;
+const LUOI = /Giá trị có dáng/;
+/** Những ô (lá chuỗi × dáng) mà lưới giá trị không báo đúng đường, trả về để phép đo đọc được cả chiều đỏ. */
+function oKhongBiChan(la: (string | number)[][], parse: Parse): { sot: string[]; soLan: number } {
+  const sot: string[] = [];
   let soLan = 0;
   for (const p of la) {
     for (const d of DANG) {
       const g = mau();
       dat(g, p, d);
+      const r = parse(g);
+      soLan += 1;
+      if (r.ok || !r.errors.some((e) => e.path.join("/") === p.join("/") && LUOI.test(e.message))) sot.push(`${p.join("/")} = ${d}`);
+    }
+  }
+  return { sot, soLan };
+}
+
+test("cấm: giá trị trong mọi chuỗi", () => {
+  // Mã tin có mẫu riêng nên không qua lưới giá trị; đo riêng ở dưới.
+  const tatCa = laChuoi(mau());
+  const la = tatCa.filter((p) => p.at(-1) !== "listingKey");
+  const maTin = tatCa.filter((p) => p.at(-1) === "listingKey");
+  assert.ok(la.length >= 15, `chỉ có ${la.length} lá chuỗi`);
+  assert.ok(maTin.length >= 1, "đối chứng: gói mẫu có mã tin");
+  const that = oKhongBiChan(la, parseCatalogFeed);
+  assert.deepEqual(that.sot, []);
+  assert.equal(that.soLan, la.length * DANG.length);
+  for (const p of maTin) {
+    for (const d of DANG) {
+      const g = mau();
+      dat(g, p, d);
       const r = parseCatalogFeed(g);
-      assert.ok(!r.ok, `${p.join("/")} = ${d}: phải bị từ chối`);
-      assert.ok(r.errors.some((e) => e.path.join("/") === p.join("/")), `${p.join("/")} = ${d}: lỗi phải nêu đúng đường, có ${JSON.stringify(r.errors)}`);
+      assert.ok(!r.ok && r.errors.some((e) => e.path.join("/") === p.join("/") && e.message.includes("listingKey")), `${p.join("/")} = ${d}`);
+    }
+  }
+  lanh();
+  // Chiều đỏ: tắt lưới giá trị trong bản sao hàm đọc thì phép đo đỏ và nêu đường lá.
+  const tatLuoi: Parse = (g) => {
+    const r = parseCatalogFeed(g);
+    if (r.ok) return r;
+    const con = r.errors.filter((e) => !LUOI.test(e.message));
+    return con.length ? { ok: false, errors: con } : { ok: true, feed: g as CatalogFeedV2 };
+  };
+  const { sot } = oKhongBiChan(la, tatLuoi);
+  assert.equal(sot.length, la.length * DANG.length, "tắt lưới thì mọi ô phải đỏ");
+  assert.ok(sot.some((x) => x.startsWith("provider = ")), "phép đo phải nêu đường lá");
+});
+
+test("cấm: số dính chữ ở trường chữ tự do", () => {
+  const dang = ["SĐT0900000012", "Zalo0900000012", "[Mẫu] Toà A LH0900000012", "(090) 000 0012"];
+  const o: { ten: string; path: (string | number)[] }[] = [
+    { ten: "provider", path: ["provider"] },
+    { ten: "tên khu", path: ["subdivisions", 0, "subdivisionName"] },
+    { ten: "tên phân khu", path: ["subdivisions", 0, "complexName"] },
+    { ten: "tên toà", path: ["subdivisions", 0, "buildings", 0, "buildingName"] },
+    { ten: "mã căn", path: [...CAN, "unitNumber"] },
+    { ten: "hướng", path: [...CAN, "directionFaces"] },
+  ];
+  let soLan = 0;
+  for (const c of o) {
+    for (const d of dang) {
+      const g = mau();
+      dat(g, c.path, d);
+      const r = parseCatalogFeed(g);
+      assert.ok(!r.ok && r.errors.some((e) => e.path.join("/") === c.path.join("/") && LUOI.test(e.message)), `${c.ten} = ${d}: ${JSON.stringify(r)}`);
       soLan += 1;
     }
   }
-  assert.equal(soLan, la.length * DANG.length);
+  assert.equal(soLan, o.length * dang.length);
+  // Đối chứng: khoá do máy cấp được phép có dãy số dính chữ như ULID.
+  const ulid = mau();
+  ulid.subdivisions[1]!.buildings[0]!.buildingKey = "01HZX0900000012ABCD";
+  ulid.marketStats[1]!.segments[0]!.buildingKey = "01HZX0900000012ABCD";
+  assert.ok(parseCatalogFeed(ulid).ok, JSON.stringify(parseCatalogFeed(ulid)));
+});
+
+test("mốc đo cơ sở dữ liệu không nhận", () => {
+  const moc = ["2026-11-09T08:00:00+99:00", "2026-11-09T08:00:00+16:00", "2026-11-09T08:00:00-16:30", "0000-01-01T00:00:00Z"];
+  const cho: { ten: string; path: (string | number)[]; dat: (g: Goi, v: string) => void }[] = [
+    { ten: "đầu gói", path: ["measuredAt"], dat: (g, v) => void (g.measuredAt = v) },
+    { ten: "số thị trường", path: ["marketStats", 0, "measuredAt"], dat: (g, v) => void (g.marketStats[0]!.measuredAt = v) },
+    { ten: "tin rao", path: ["publicListings", 0, "measuredAt"], dat: (g, v) => void (g.publicListings[0]!.measuredAt = v) },
+  ];
+  let soLan = 0;
+  for (const c of cho) {
+    for (const m of moc) {
+      const g = mau();
+      c.dat(g, m);
+      motLoi(g, c.path, `${c.ten} = ${m}`, "Mốc đo");
+      soLan += 1;
+    }
+  }
+  assert.equal(soLan, cho.length * moc.length);
+  const bien = mau();
+  bien.marketStats[0]!.measuredAt = "2026-11-09T08:00:00+15:59";
+  assert.ok(parseCatalogFeed(bien).ok, "đối chứng: độ lệch 15:59 nhận được");
+  // Khuôn v1 cùng luật.
+  const v1 = { schemaVersion: 1, provider: "[Mẫu]", measuredAt: moc[0], subdivisions: [] };
+  motLoi(v1, ["measuredAt"], "v1", "Mốc đo");
+  assert.ok(parseCatalogFeed({ ...v1, measuredAt: "2026-11-09T08:00:00+07:00" }).ok, "đối chứng v1");
 });
 
 test("cấm: mã tin dáng số điện thoại", () => {

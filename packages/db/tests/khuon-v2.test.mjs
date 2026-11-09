@@ -112,6 +112,21 @@ test("field_confidence: ràng buộc", { skip }, async () => {
     assert.equal((await chen("urn:onehub:upi:kiem:dung", '{"floor":"verified","livingArea":"inferred","stack":"single_source"}')).rowCount, 1);
     assert.equal((await chen("urn:onehub:upi:kiem:rong", "{}")).rowCount, 1);
     assert.equal((await chen("urn:onehub:upi:kiem:null", null)).rowCount, 1);
+    // Mọi cặp khoá × nhãn của lõi đi qua ràng buộc; danh sách viết trước, đối chiếu với tệp hằng của lõi để hai bên không lệch.
+    const KHOA = ["stack", "floor", "livingArea", "bedroomsTotal", "directionFaces", "lotSizeArea", "storiesTotal", "frontageLength", "accessRoadWidth"];
+    const NHAN = ["inferred", "single_source", "verified"];
+    const loi = readFileSync(fileURLToPath(new URL("../../core/src/catalog/confidence.ts", import.meta.url)), "utf8");
+    const rut = (ten) => [...loi.match(new RegExp(`export const ${ten} = \\[([\\s\\S]*?)\\] as const`))[1].matchAll(/"([A-Za-z_]+)"/g)].map((m) => m[1]);
+    assert.deepEqual(rut("CATALOG_CONFIDENCE_FIELDS"), KHOA, "danh sách khoá lệch lõi");
+    assert.deepEqual(rut("CATALOG_CONFIDENCE_LEVELS"), NHAN, "danh sách nhãn lệch lõi");
+    let soCap = 0;
+    for (const k of KHOA) {
+      for (const n of NHAN) {
+        assert.equal((await chen(`urn:onehub:upi:kiem:cap:${k}:${n}`, JSON.stringify({ [k]: n }))).rowCount, 1, `${k}/${n}`);
+        soCap += 1;
+      }
+    }
+    assert.equal(soCap, 27);
     await vaiApi(c);
     const { rows } = await c.query("select field_confidence from catalog_units where upi = 'urn:onehub:upi:kiem:dung'");
     assert.deepEqual(rows[0].field_confidence, { floor: "verified", livingArea: "inferred", stack: "single_source" });
