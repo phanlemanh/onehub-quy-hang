@@ -1,0 +1,8 @@
+E4b network (origin http://localhost:3462)
+GET /api/v1/listings 200
+GET /api/v1/catalog 200
+GET /api/v1/leads 200
+POST /api/v1/leads/e9c0a2e5-9872-4313-969b-261c46c9c9c8/resubmit 201
+GET /api/v1/leads 200
+GET /api/v1/listings 200
+Console errors: 0

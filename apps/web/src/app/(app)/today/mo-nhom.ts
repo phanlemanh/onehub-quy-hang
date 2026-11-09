@@ -7,7 +7,6 @@ const MA_NHOM = /^[a-z][a-z0-9_]{1,39}$/;
 
 export const KHONG_CO_NHOM = "Không có hàng đợi này ở Hôm nay của bạn";
 export const baoNhomTrong = (nhan: string) => `Hôm nay không có việc ở «${nhan}»`;
-export const baoChiDauChu = (nhan: string) => `Hàng đợi «${nhan}» chỉ có ở Hôm nay của đầu chủ`;
 
 type NhomBo = Pick<BoNhom[number], "code" | "label" | "enabled">;
 
@@ -36,13 +35,6 @@ export function timNhom(o: {
   return o.dangHien.some((g) => g.nhom.code === o.ma) ? { nhom: o.ma, dong: `nhom:${o.ma}` } : { bao: baoNhomTrong(n.label) };
 }
 
-/** Dòng báo cho người không có Hôm nay của đầu chủ (Hỏi-1: báo rõ); mã sai khuôn → null. */
-export function baoNgoaiDauChu(ma: string | null, bo: readonly NhomBo[]): string | null {
-  if (ma === null || !MA_NHOM.test(ma)) return null;
-  const n = nhomBat(bo, ma);
-  return n ? baoChiDauChu(n.label) : KHONG_CO_NHOM;
-}
-
 export type MucCot = { label: string; href: string };
 
 /** Mục Hôm nay của cột thứ hai: mỗi nhóm đang bật một mục trỏ `/today?nhom=<mã>`. */
@@ -53,11 +45,12 @@ export function mucHomNay(bo: readonly NhomBo[]): MucCot[] {
 /** Mục đang chọn của một danh sách mục cột: khớp đường dẫn, và mục mang `?nhom` thì khớp cả mã nhóm của địa chỉ. */
 export function mucDangChon(items: readonly MucCot[], path: string, qs: string | URLSearchParams): string | null {
   const ma = docNhomThamSo(qs);
+  let khongThamSo: string | null = null;
   for (const { href } of items) {
     const [duong, thamSo] = href.split("?");
     if (duong !== path) continue;
-    if (!thamSo) return href;
-    if (ma !== null && new URLSearchParams(thamSo).get("nhom") === ma) return href;
+    if (!thamSo) khongThamSo ??= href;
+    else if (ma !== null && new URLSearchParams(thamSo).get("nhom") === ma) return href;
   }
-  return null;
+  return khongThamSo;
 }

@@ -1,0 +1,5 @@
+E5b network (playwright, origin http://localhost:3462; 6 vai x /today + 3 loc nhom + 3 lan bam link)
+Moi response app-scope: 200 (GET /today, /api/v1/catalog, listings, leads, leads/assigned, team/lead-queue, team/listing-agents, today/buyer, company/settings/queue, push/public-key).
+requestfailed net::ERR_ABORTED (huy do dieu huong/prefetch RSC khi bam link, khong phai loi server): /shares?lan=..&_rsc, /shares/new?can=..&_rsc, /api/v1/shares, /api/v1/shares/<lan>, /api/v1/listings luc roi trang.
+Khong co 4xx/5xx khi dung trang /today.
+curl truc tiep: 403 voi vai khong duoc xem (today/buyer: dau-chu, truong-nhom, telesales, quan-tri; team/lead-queue: dau-chu, telesales, dau-khach, quan-tri) - dung thiet ke.

@@ -52,15 +52,14 @@ const dongNgoai = (out) => out.split("\n").filter((l) => l.includes(": ngoai-ban
 
 /** Trang tạm thôi phủ mọi page.tsx dưới (app): chỉ còn các địa chỉ đang là trang tạm (màn thật rời nhóm, KH-tt-roi-nhom). */
 function roiTrangTam(d, boRa = []) {
-  sua(
-    d,
-    "design/patterns/trang-tam.md",
-    NHAN_TRANG_TAM,
-    `nhan_dien: [${["today", "me", "team", "shares", "viewings", "exports/new", "imports/new", "leads/new", "units/[code]"]
-      .filter((m) => !boRa.includes(m))
-      .map((m) => `"apps/web/src/app/(app)/${m}/page.tsx"`)
-      .join(", ")}, "apps/web/src/app/(app)/settings/[section]/page.tsx"]`,
-  );
+  const con = ["today", "me", "team", "shares", "viewings", "exports/new", "imports/new", "leads/new", "units/[code]"].filter((m) => !boRa.includes(m));
+  // Lịch xem là trang tạm cuối còn dựng khuôn và là màn mẫu của nhóm: nó rời nhóm thì bản sao cần một trang tạm khác làm màn mẫu.
+  if (boRa.includes("viewings")) {
+    ghi(d, `${W}/app/(app)/mau-tam/page.tsx`, 'import { Placeholder } from "@/components/shell/placeholder";\n\nexport default function P() {\n  return <Placeholder path="/mau-tam" />;\n}\n');
+    con.push("mau-tam");
+    sua(d, "design/patterns/trang-tam.md", 'mau_dang_chay: { tep: "apps/web/src/app/(app)/viewings/page.tsx", duong: "/viewings"', 'mau_dang_chay: { tep: "apps/web/src/app/(app)/mau-tam/page.tsx", duong: "/mau-tam"');
+  }
+  sua(d, "design/patterns/trang-tam.md", NHAN_TRANG_TAM, `nhan_dien: [${con.map((m) => `"apps/web/src/app/(app)/${m}/page.tsx"`).join(", ")}, "apps/web/src/app/(app)/settings/[section]/page.tsx"]`);
 }
 const LICH_XEM_KHUON = 'export function LichXem({ title }: { title: string }) {\n  return <section>{title}</section>;\n}\n';
 const LICH_XEM_MD = `---

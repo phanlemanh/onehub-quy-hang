@@ -26,7 +26,7 @@ export const NHAN_VIEC: Readonly<Record<MaViec, string>> = {
   "con-giu-gia": "Còn · giữ giá",
   "ghi-cuoc-goi": "Ghi cuộc gọi",
   "tra-lai": "Trả lại",
-  "doi-gia-trang-thai": "Đổi giá, trạng thái · Mở hồ sơ",
+  "doi-gia-trang-thai": "Mở hồ sơ",
   "mo-so": "Mở số",
 };
 
