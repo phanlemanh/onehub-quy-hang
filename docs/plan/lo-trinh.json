@@ -1913,6 +1913,31 @@
       ]
     },
     {
+      "ma": "93",
+      "cau_giao": "Người trong sàn đăng nhập trên một thẻ theo khối auth-15: chỉ mã một lần qua email, không nút Google, Apple hay GitHub, giữ chân điều khoản; chọn sàn và chưa gắn sàn đi cùng khuôn; luồng đăng nhập, phiên và luật vào đúng sàn của hàng 6 giữ nguyên",
+      "slug": "dang-nhap-auth-15",
+      "vi_sao": "Chủ kho chọn auth-15 bỏ OAuth 02/11 (PR #88, vo-va-ia §2 và «Chỗ hở»): màn đăng nhập đang là bản ghép tạm bậc 6 từ hàng 6, dòng «Chỗ hở» quá hạn 30/10; phần Đăng nhập của mục chân trời H16",
+      "vai": "Người trong sàn",
+      "tieu_chi": 6,
+      "hang": "T2",
+      "dung_tren": [
+        "6",
+        "91"
+      ],
+      "bat_khi": "Ba màn đăng nhập, chọn sàn, chưa gắn sàn dựng trên khuôn Khung theo auth-15, không nút OAuth; không đổi tệp nào dưới packages/api/src/auth; dòng «Chỗ hở» Đăng nhập rời §3 và bài kiem-chuan bớt đúng một cảnh báo hạn",
+      "nhom": "nen",
+      "phu": [
+        "CK4"
+      ],
+      "vung": [
+        "apps/web/src/app/(auth)/**",
+        "design/patterns/xac-thuc.md",
+        ".agents/skills/quy-hang-ui/catalog.md",
+        "docs/design/vo-va-ia.md",
+        "packages/ui-lint/tests/kiem-chuan.test.mjs"
+      ]
+    },
+    {
       "ma": "88",
       "cau_giao": "Đầu chủ hoàn tác một lần sửa hay một lô mà máy không ghi được: thông báo nói đúng căn nào chưa trả về và vì sao, lần hoàn tác chưa xong vẫn bấm lại được, lỗi bất ngờ sau khi ô sửa đã đóng hiện thông báo thay vì im lặng",
       "slug": "va-duong-loi-hoan-tac",
@@ -2066,6 +2091,15 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-02"
     },
     {
+      "ma": "cai-dat-hop-nhat",
+      "cau_giao": "Mọi người dùng có một khu Cài đặt duy nhất: nhóm «Cá nhân» (hồ sơ, cài lên màn hình chính, thông báo, máy đang đăng nhập, đăng xuất — ai cũng thấy) và nhóm «Sàn [Tên]» (người dùng, cách gọi, trường, luật chia lead — chỉ quản trị); hai đường vào: menu tài khoản hay tab Tôi trên điện thoại vào «Cá nhân», biểu tượng Cài đặt trên cột nhà vào mục đầu theo quyền; nội dung đứng cạnh cột mục lục nên không trải hết bề rộng màn.",
+      "slug": "cai-dat-hop-nhat",
+      "vi_sao": "Chủ kho đồng ý ở phiên H 04/11 khi xem Cổng Bằng chứng hàng 38: màn Tôi quá rộng trên máy tính, Tôi/Cá nhân nên thuộc Cài đặt; giám sát ghi hàng (H-13), sau 38 và 43, trước 92.",
+      "sau": [
+        "38"
+      ]
+    },
+    {
       "ma": "92",
       "cau_giao": "Đầu chủ mở Hôm nay và đọc mỗi việc trên một dòng: tên căn, cột «Vì sao hôm nay» hai tầng — lý do chữ đậm, hạn đỏ khi quá, vàng khi còn dưới 15 phút — và giá; làm việc đầu của nhóm bằng đúng một nút, một chạm; việc còn lại nằm trong ⋯; hàng đợi, luật mỗi căn một hàng đợi và ghi kết quả của hàng 22 giữ nguyên",
       "slug": "lam-lai-hom-nay-dau-chu",
@@ -2088,28 +2122,12 @@
       ]
     },
     {
-      "ma": "93",
-      "cau_giao": "Người trong sàn đăng nhập trên một thẻ theo khối auth-15: chỉ mã một lần qua email, không nút Google, Apple hay GitHub, giữ chân điều khoản; chọn sàn và chưa gắn sàn đi cùng khuôn; luồng đăng nhập, phiên và luật vào đúng sàn của hàng 6 giữ nguyên",
-      "slug": "dang-nhap-auth-15",
-      "vi_sao": "Chủ kho chọn auth-15 bỏ OAuth 02/11 (PR #88, vo-va-ia §2 và «Chỗ hở»): màn đăng nhập đang là bản ghép tạm bậc 6 từ hàng 6, dòng «Chỗ hở» quá hạn 30/10; phần Đăng nhập của mục chân trời H16",
-      "vai": "Người trong sàn",
-      "tieu_chi": 6,
-      "hang": "T2",
+      "ma": "ghi-thiet-bi-va-mat-mang",
+      "cau_giao": "Ghi thiết bị (máy tính hay điện thoại) vào sự kiện của thao tác, và ghi lượt mất mạng cùng thao tác lúc mất mạng trên điện thoại về máy chủ, để hai số đo §11 «thao tác theo thiết bị và vai» và «mất mạng trên điện thoại» đo được trong hai tuần thử",
+      "slug": "ghi-thiet-bi-va-mat-mang",
+      "vi_sao": "Hỏi-1 Cổng Phạm vi hàng 52, chủ kho duyệt 03/11: mở một hàng nhỏ cho hai sự kiện chưa hàng nào ghi (thiết bị của thao tác, lượt mất mạng trên điện thoại)",
       "dung_tren": [
-        "6",
-        "91"
-      ],
-      "bat_khi": "Ba màn đăng nhập, chọn sàn, chưa gắn sàn dựng trên khuôn Khung theo auth-15, không nút OAuth; không đổi tệp nào dưới packages/api/src/auth; dòng «Chỗ hở» Đăng nhập rời §3 và bài kiem-chuan bớt đúng một cảnh báo hạn",
-      "nhom": "nen",
-      "phu": [
-        "CK4"
-      ],
-      "vung": [
-        "apps/web/src/app/(auth)/**",
-        "design/patterns/xac-thuc.md",
-        ".agents/skills/quy-hang-ui/catalog.md",
-        "docs/design/vo-va-ia.md",
-        "packages/ui-lint/tests/kiem-chuan.test.mjs"
+        "52"
       ]
     },
     {
@@ -2392,28 +2410,10 @@
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-03"
     },
     {
-      "ma": "ghi-thiet-bi-va-mat-mang",
-      "cau_giao": "Ghi thiết bị (máy tính hay điện thoại) vào sự kiện của thao tác, và ghi lượt mất mạng cùng thao tác lúc mất mạng trên điện thoại về máy chủ, để hai số đo §11 «thao tác theo thiết bị và vai» và «mất mạng trên điện thoại» đo được trong hai tuần thử",
-      "slug": "ghi-thiet-bi-va-mat-mang",
-      "vi_sao": "Hỏi-1 Cổng Phạm vi hàng 52, chủ kho duyệt 03/11: mở một hàng nhỏ cho hai sự kiện chưa hàng nào ghi (thiết bị của thao tác, lượt mất mạng trên điện thoại)",
-      "dung_tren": [
-        "52"
-      ]
-    },
-    {
       "ma": "ho-so-dien-thoai-product-detail-5",
       "cau_giao": "Dựng lại hồ sơ căn trên điện thoại theo khối đích product-detail-5, dùng chung cho 33, 40–41 — đứng trên 33; nguồn: Hỏi-3 Cổng Phạm vi hàng 33, chủ kho 04/11",
       "slug": "ho-so-dien-thoai-product-detail-5",
       "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-03"
-    },
-    {
-      "ma": "cai-dat-hop-nhat",
-      "cau_giao": "Mọi người dùng có một khu Cài đặt duy nhất: nhóm «Cá nhân» (hồ sơ, cài lên màn hình chính, thông báo, máy đang đăng nhập, đăng xuất — ai cũng thấy) và nhóm «Sàn [Tên]» (người dùng, cách gọi, trường, luật chia lead — chỉ quản trị); hai đường vào: menu tài khoản hay tab Tôi trên điện thoại vào «Cá nhân», biểu tượng Cài đặt trên cột nhà vào mục đầu theo quyền; nội dung đứng cạnh cột mục lục nên không trải hết bề rộng màn.",
-      "slug": "cai-dat-hop-nhat",
-      "vi_sao": "Chủ kho đồng ý ở phiên H 04/11 khi xem Cổng Bằng chứng hàng 38: màn Tôi quá rộng trên máy tính, Tôi/Cá nhân nên thuộc Cài đặt; giám sát ghi hàng (H-13), sau 38 và 43, trước 92.",
-      "sau": [
-        "38"
-      ]
     },
     {
       "ma": "104",
