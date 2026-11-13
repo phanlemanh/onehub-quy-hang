@@ -32,7 +32,7 @@ jobs:
       group: ghim-lai-ban-that
       cancel-in-progress: false
     env:
-      KIT_TAG: v2.37.0
+      KIT_TAG: v2.39.0
       # Cùng bản với GITLEAKS_VERSION của ci.yml. Băm là digest GitHub công bố cho tệp gitleaks_<bản>_linux_x64.tar.gz của
       # bản phát hành; nâng bản thì đổi cả hai dòng (và ci.yml) trong cùng một PR.
       GITLEAKS_VERSION: 8.30.1

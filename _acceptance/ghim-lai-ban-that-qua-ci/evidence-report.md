@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 2bfd418304426133247cdcb538473dad9afc1784
+verified_commit: eaa7d540e7de7c499b55e1b357d523ddecf5b45b
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -149,3 +149,7 @@ sha: 779c5936e66f6908f6844794888522b89cf84a81 · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 5 — 2026-11-08, do gộp nhánh chính trước khi gộp #209
 run_id: repin-20261108T160952Z-91293
 sha: 2bfd418304426133247cdcb538473dad9afc1784 · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
+
+### Re-pin lần 6 — 2026-11-13, do nâng kit lên v2.39.0: KIT_TAG của luồng ghim lại đổi cùng ci.yml
+run_id: repin-20261113T090422Z-45025
+sha: eaa7d540e7de7c499b55e1b357d523ddecf5b45b · suites: 7 lệnh exit 0 · evals: 5/5 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)

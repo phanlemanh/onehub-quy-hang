@@ -97,7 +97,7 @@ jobs:
     name: gate
     runs-on: ubuntu-latest
     env:
-      KIT_TAG: v2.37.0
+      KIT_TAG: v2.39.0
     steps:
       - uses: actions/checkout@v4
         with:
