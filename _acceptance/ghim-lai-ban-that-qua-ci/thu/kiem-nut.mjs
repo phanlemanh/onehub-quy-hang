@@ -86,7 +86,11 @@ if (process.argv.includes("--tinh")) {
     ["chạy bộ kiểm cách ly", sua("      # Thông báo lỗi kết nối", "      - run: npm run test:isolation -w @quy-hang/db\n      # Thông báo lỗi kết nối"), "bước ghim lại chạy làn của kit trên cây nhánh, không gọi bộ kiểm ghi"],
     ["tải dù quét thấy bí mật", sua("        if: always() && steps.quet.outcome == 'success'\n", "        if: always()\n"), "quét bí mật trước khi tải, chỉ tải khi quét sạch"],
     ["quét chỉ khi làn xanh", sua("        id: quet\n        if: always()\n", "        id: quet\n"), "dòng ghim lại ra tệp đính kèm cả khi làn đỏ"],
-    ["kit lệch bản CI", sua("      KIT_TAG: v2.37.0", "      KIT_TAG: v2.36.0"), "cùng bản kit với CI"],
+    // Thẻ đọc từ chính luồng, không ghi cứng: mỗi lần nâng kit ca này không phải sửa theo.
+    ["kit lệch bản CI", (s) => {
+      const the = (s.match(/KIT_TAG:\s*(\S+)/) ?? [])[1];
+      return sua(`      KIT_TAG: ${the}`, `      KIT_TAG: ${the}-lech`)(s);
+    }, "cùng bản kit với CI"],
   ];
   let so = 0;
   for (const [ten, f, ve] of MA_TRAN) {
