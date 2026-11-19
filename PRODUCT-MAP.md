@@ -11,7 +11,7 @@ flowchart TD
   GD --> XL["Xếp lại sau<br/>2 việc"]
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
-  GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
+  GP --> DL["Đang làm<br/>1 việc"] --> GB{"Cổng Bằng chứng"}
   GB --> DG["Đã giao<br/>29 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>143 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
@@ -25,6 +25,10 @@ flowchart TD
 ## Sắp mở vòng
 
 - Người trong sàn thấy chữ trên mọi màn theo ba lớp đã chốt: «Lead» chỉ còn là dấu trên một liên hệ chưa nói chuyện hai chiều, còn việc với một người (bán, cho thuê, mua, thuê) hiện là «Cơ hội» với nhãn pha đã chốt ở Cổng Phạm vi hàng 103 — đổi một lượt cho cả bàn làm việc, nút «+ Lead» và «Gửi lead» giữ nguyên. (`doi-chu-lead-co-hoi`)
+
+## Đang làm
+
+- Chuyển kit nghiệm thu từ chợ cũ acceptance-gate-kit v2.39.0 sang chợ delivery-loop v3.0.0 — CI kéo kit từ kho mới theo thẻ, phiên bật sáu plugin chợ mới và tắt đích danh sáu plugin chợ cũ, tệp sống thôi gọi tên lệnh cũ, hồ sơ cần thì ghim lại; không đổi hành vi (`chuyen-cho-delivery-loop-3-0`)
 
 ## Đã giao — chờ phiên nghiệm thu
 

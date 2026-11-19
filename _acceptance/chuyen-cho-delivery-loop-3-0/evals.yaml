@@ -1,0 +1,94 @@
+schema_version: 1
+feature_slug: chuyen-cho-delivery-loop-3-0
+# Bài đo của vòng: tệp node:test `_acceptance/chuyen-cho-delivery-loop-3-0/thu/chuyen-cho.test.mjs` (executors.script.cc30_thu)
+# và bài đối chứng hai kit `rang/doi-chung.mjs` (executors.script.cc30_doi_chung, lấy kit từ GitHub theo thẻ, kiểm commit
+# ghim). exit 0 của lệnh chung KHÔNG đủ: mỗi eval đòi `output`, người chấm đối chiếu tên ca nêu trong `expected` — có mặt,
+# «ok», không «# SKIP»/«# TODO». Mỗi ca là một cặp hai chiều trên cùng hàm đọc: vật thật xanh, bản phá đỏ đúng thông điệp.
+evals:
+  - id: E1
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.cc30_thu
+    expected: "exit 0; ca «AC-1 «hai luồng kéo delivery-loop v3.0.0»: vật thật xanh, năm bản phá đỏ đúng thông điệp» ok — ci.yml và ghim-lai-ban-that.yml qua hàm kiemLuong: đúng một KIT_TAG v3.0.0, fetch từ phanlemanh/delivery-loop theo thẻ, CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit/plugins/acceptance-gate, không dòng $CLAUDE_PLUGIN_ROOT/feature-loop/, và ghim-lai-ban-that.yml có đúng một dòng gọi $CLAUDE_PLUGIN_ROOT/../feature-loop/scripts/repin-lane.mjs (vế dương; bản phá xoá dòng ấy → «bước Ghim lại không gọi …» ); năm bản phá (thẻ cũ, kho cũ, lõi ở gốc kit, chú thích tên kho cũ, làn ghim lại theo bố cục cũ) mỗi bản ném đúng thông điệp ghim. Ca «AC-1 «không tệp nào dưới .github/ còn tên kho kit cũ»» ok, quét ≥ 3 tệp."
+    paths: [.github/**, _acceptance/chuyen-cho-delivery-loop-3-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E1c
+    criterion: AC-1
+    executor: script
+    cmd: config:executors.script.cc30_duong
+    expected: "exit 0; in «duong-kit: <n> đường của hai luồng có trên cây kit v3.0.0 (c16d25db)» với n ≥ 4 — mọi chuỗi $CLAUDE_PLUGIN_ROOT/<đường> và $RUNNER_TEMP/kit/<đường> trong ci.yml và ghim-lai-ban-that.yml được phân giải trên cây kit lấy theo thẻ (CLAUDE_PLUGIN_ROOT = $RUNNER_TEMP/kit/plugins/acceptance-gate) và tồn tại; chiều đỏ trong cùng lượt: đường cũ $CLAUDE_PLUGIN_ROOT/feature-loop/scripts/repin-lane.mjs phân giải ra «không tồn tại» và lượt in «duong-kit: đối chứng — đường bố cục cũ không có trên cây 3.0»; và in «duong-kit: 14 tên lệnh mới của bảng có trên cây kit v3.0.0, 0 tên cũ còn» — mỗi tên mới <plugin>:<lệnh> có plugins/<plugin>/commands/<lệnh>.md hay plugins/<plugin>/skills/<lệnh>/SKILL.md, mỗi tên cũ không có; đối chứng: in «duong-kit: đối chứng — dispatch:khong-co không có trên kit»."
+    paths: [.github/workflows/**, _acceptance/chuyen-cho-delivery-loop-3-0/rang/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E2
+    criterion: AC-2
+    executor: script
+    cmd: config:executors.script.cc30_thu
+    expected: "exit 0; ca «AC-2 «phiên khai chợ delivery-loop cùng bản CI, bật sáu plugin»: vật thật xanh, bốn bản phá đỏ» ok (còn chợ cũ · ref lệch CI · thiếu knowledge · roadmap tắt, mỗi bản đúng thông điệp ghim); ca «AC-2 «phần còn lại của .claude/settings.json giữ nguyên so với nhánh chính»» ok — mọi khoá ngoài enabledPlugins/extraKnownMarketplaces bằng bản merge-base, khoá plugin ngoài kit giữ giá trị, đối chứng thêm một quyền bị thấy."
+    paths: [.claude/settings.json, .github/workflows/ci.yml, _acceptance/chuyen-cho-delivery-loop-3-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E3
+    criterion: AC-3
+    executor: script
+    cmd: config:executors.script.cc30_thu
+    expected: "exit 0; ca «AC-3 «tắt đích danh đúng sáu plugin chợ cũ»: vật thật xanh, ba bản phá đỏ» ok — sáu khoá @acceptance-gate-kit đều false, không khoá chợ cũ lạ; bản phá một khoá true · xoá một khoá · khoá lạ, mỗi bản đúng thông điệp ghim."
+    paths: [.claude/settings.json, _acceptance/chuyen-cho-delivery-loop-3-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E4
+    criterion: AC-4
+    executor: script
+    cmd: config:executors.script.cc30_thu
+    expected: "exit 0; ca «AC-4 «tim-kit.mjs chọn bản cài acceptance-gate@delivery-loop, bỏ qua chợ cũ»» ok — sổ cài tạm có mục chợ mới → in đúng đường bản cài; cùng mục dưới khoá chợ cũ → in rỗng. Ca «AC-4 «trên máy này, kit tim-kit tìm được là acceptance-gate 3.0.0 và có đủ script các lệnh executor gọi»» ok — plugin.json version 3.0.0, có product-map.mjs, design-floor-s4.mjs, design-floor-khuon.mjs, pre-merge-check.sh, evidence-core.cjs, eval-yaml.cjs."
+    paths: [packages/ui-lint/tim-kit.mjs, _acceptance/chuyen-cho-delivery-loop-3-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E5
+    criterion: AC-5
+    executor: script
+    cmd: config:executors.script.cc30_thu
+    expected: "exit 0; ca «AC-5 «không tệp sống nào gọi tên lệnh cũ hay giữ khoá chợ cũ»: vật thật 0 chỗ, bản cấy đỏ đúng tệp:dòng» ok — danh sách tệp là MỌI tệp của git ls-files trừ tệp bị một luật loại trừ có tên bắt; luật viết trước: ho-so-da-ky (_acceptance/<slug>/**, trừ config.yaml và README), mang-ngay (tên hay thư mục mở đầu YYYY-MM-DD), nhat-ky (CHANGELOG*), tai-lieu-tho (docs/tri-thuc/raw/**), tep-sinh (LO-TRINH.html, PRODUCT-MAP.md, package-lock.json), nhi-phan (có byte NUL); mỗi tệp bị bỏ đều khớp đúng một luật có tên, số tệp quét > 200 và gồm cả .sh, .yml, .cjs, tệp không đuôi dưới .githooks/; bảng 14 tên lệnh cũ → mới chép từ migration/chay-thu-phien/bang-ten.json của kho delivery-loop, và ca «AC-5 «tên mới trong bảng có trên kit 3.0.0»» của E1c đối chiếu bảng với cây kit theo thẻ; kết quả quét rỗng; bản cấy cho đúng bốn dòng «docs/x.md:2 dieu-phoi:mo-dot → dispatch:open», «tools/y.mjs:1 khoá …@acceptance-gate-kit», «.githooks/z:1 road-map:xem → roadmap:status», «scripts/w.sh:1 tri-thuc:kiem → knowledge:health», tên mới không bị bắt. Ca «AC-5 «AGENTS.md và Tham chiếu nói đúng kit và thẻ CI đang dùng»: vật thật xanh, ba bản phá đỏ» ok."
+    paths: ["**", _acceptance/chuyen-cho-delivery-loop-3-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.cc30_doi_chung
+    expected: "exit 0; in hai dòng: «doi-chung: merge-base <sha> --recheck-all — kit v2.39.0 và v3.0.0 cùng 0 VIOLATION, cùng <n> hồ sơ OK» và «doi-chung: HEAD <sha> --recheck-all kit v3.0.0 — <m> hồ sơ OK (đủ <n> của nền), VIOLATION ngoài vòng 0, của vòng <k>». Kit lấy theo thẻ và kiểm commit ghim (0c4e503b, c16d25db). Hàm so ở chiều đỏ: ca «AC-6 «hàm so đối chứng»» của E6b."
+    paths: [_acceptance/**, .github/workflows/**, .claude/settings.json]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E6b
+    criterion: AC-6
+    executor: script
+    cmd: config:executors.script.cc30_thu
+    expected: "exit 0; ca «AC-6 «hàm so đối chứng»: cùng tập OK xanh; lệch, VIOLATION, không chạy luật đều đỏ đúng thông điệp» ok — trên văn bản tổng hợp: lệch tập OK, VIOLATION trên merge-base, kit không chạy luật, hồ sơ thôi OK trên HEAD, VIOLATION ngoài vòng, mỗi ca đúng thông điệp ghim; VIOLATION [PR] của vòng không làm đỏ."
+    paths: [_acceptance/chuyen-cho-delivery-loop-3-0/rang/**, _acceptance/chuyen-cho-delivery-loop-3-0/thu/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E7
+    criterion: AC-7
+    executor: script
+    cmd: config:executors.script.cc30_thu
+    expected: "exit 0; ca «AC-7 «phân loại ghim lại khớp hợp đồng, trên đúng cây HEAD»» ok — evidence/phan-loai-ghim.json có sha mà cây ngoài _acceptance/ bằng cây HEAD, đủ 36 ứng viên viết trước, kit HEAD c16d25db và kit nhánh chính 0c4e503b đặt qua CLAUDE_PLUGIN_ROOT; mọi hồ sơ đỏ trên HEAD hoặc đỏ trên nhánh chính (do-ca-hai) hoặc xanh trên bản sau gộp giả (doi-nhanh, tệp ghi sha bản giả và đủ eval đã chạy lại); ba tập «ghim», «doi-nhanh», «do-ca-hai» của mục «Ghim lại — kết quả» bằng đúng ba tập của tệp; đối chứng: thêm vào tập đỏ HEAD của bản sao một tên xanh ở nhánh chính và không có ở bản sau gộp giả → «đỏ trên HEAD mà xanh trên nhánh chính: <tên>». Ca «AC-7 «hồ sơ ghim lại giữ chữ ký, dòng ghim khớp verified_commit»» ok — với mỗi hồ sơ «ghim»: dòng repin cuối có sha bằng verified_commit, evals_exit khác rỗng và toàn 0, evidence-report cite run_id, human_signoff bằng bản merge-base, verified_commit khác bản merge-base; bản sao mang sha khác và bản sao đổi human_signoff bị bắt đúng thông điệp."
+    paths: ["_acceptance/**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.cc30_thu
+    expected: "exit 0; ca «AC-8 «diff từ nhánh chính chỉ chạm tệp của việc chuyển chợ»: vật thật 0 tệp lạ, bản cấy đỏ» ok — mọi tệp của git diff merge-base...HEAD khớp danh sách viết trước; danh sách tệp đo được phép của hồ sơ ghim lại rút từ mục «Ghim lại — kết quả» của hợp đồng (không ghi cứng); bản cấy thêm packages/core/src/agreements.ts, contract của một hồ sơ khác, contract, evals.yaml của hồ sơ ghim lại → cả bốn bị liệt."
+    paths: ["**"]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]
+
+  - id: E8b
+    criterion: AC-8
+    executor: script
+    cmd: config:executors.script.product_map_kit
+    expected: "exit 0; in «PRODUCT-MAP.md khớp hồ sơ xưởng.» và «LO-TRINH.html khớp tệp ý định và hồ sơ.» bằng kit acceptance-gate 3.0.0 (tìm qua tim-kit.mjs khi vắng CLAUDE_PLUGIN_ROOT)."
+    paths: [PRODUCT-MAP.md, LO-TRINH.html, docs/plan/lo-trinh.json, _acceptance/**]
+    evidence_required: [run_id, exit_code, verifier, verified_at, output]

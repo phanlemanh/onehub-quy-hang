@@ -3329,6 +3329,12 @@
         "packages/api/src/catalog/feeds*",
         "_acceptance/va-khuon-v2-moc-tuong-lai/**"
       ]
+    },
+    {
+      "ma": "chuyen-cho-delivery-loop-3-0",
+      "cau_giao": "Chuyển kit nghiệm thu của kho từ chợ cũ acceptance-gate-kit v2.39.0 sang chợ delivery-loop v3.0.0 — CI kéo kit từ kho mới theo thẻ, phiên Claude Code bật sáu plugin chợ mới và tắt đích danh sáu plugin chợ cũ, tệp sống thôi gọi tên lệnh cũ; không đổi hành vi",
+      "slug": "chuyen-cho-delivery-loop-3-0",
+      "vi_sao": "Máy thêm khi mở vòng từ mô tả, 2026-11-19"
     }
   ],
   "chan_troi": [
