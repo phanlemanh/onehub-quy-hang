@@ -11,8 +11,8 @@ Bốn hàng: 9 gõ mã căn, 11 lớp trường nguồn, 12 trục ai thấy hà
 ## Mở đợt
 
 1. Gói này và năm ô cơ hội đã vào `main`; Cổng Đáng của năm hàng đã quyết ở `the-cong-dang.md` (Manh Phan 30/10).
-2. Đợt `nen-dau` đã đóng (`/dieu-phoi:dong-dot`) — kit chỉ chạy một đợt mỗi lần.
-3. Mở từ một phiên mới ở checkout chính: `/dieu-phoi:mo-dot nen-2`. Docker đang chạy.
+2. Đợt `nen-dau` đã đóng (`/dispatch:close`) — kit chỉ chạy một đợt mỗi lần.
+3. Mở từ một phiên mới ở checkout chính: `/dispatch:open nen-2`. Docker đang chạy.
 
 Không cần chờ hàng 2, 5, 8 gộp hết mới mở: dãy nào hàng nó đứng trên chưa gộp thì bộ phát lịch giữ ở «chờ phụ thuộc»
 và không mở chip; hàng ấy gộp lên `main` là nhịp kế giao ngay.

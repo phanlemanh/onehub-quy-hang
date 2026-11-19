@@ -65,10 +65,10 @@ docs/adr/         quyết định kiến trúc của kho này
   đổi; luật theo đường dẫn ở `.claude/rules/`; skill `/verify`, `/new-migration`. Cài đặt nạp lúc mở phiên — đổi
   `.claude/settings.json` thì mở phiên mới.
 - **CI**: check bắt buộc duy nhất là `ci-ok`, xanh khi `check`, `isolation`, `secrets`, `gate`, `ro-ri` cùng xanh.
-- **Cổng nghiệm thu** (Acceptance-Gate Kit, `_acceptance/config.yaml`): đổi code ngoài T1 phải kèm hồ sơ
+- **Cổng nghiệm thu** (kit nghiệm thu `phanlemanh/delivery-loop`, `_acceptance/config.yaml`): đổi code ngoài T1 phải kèm hồ sơ
   `_acceptance/<slug>/`, T2/T3 phải có người ký; T3 là cơ sở dữ liệu, trần lớp dữ liệu, thoả thuận, `packages/connect`
   và các rào. Tính năng mới đi `/feature-loop:feature-loop`. Job `gate` lấy kit theo tag `KIT_TAG` trong `ci.yml`
-  (đang `v2.39.0`) — nâng kit là đổi dòng đó bằng PR riêng. Kho bật thêm: phản biện context sạch bắt buộc
+  (đang `v3.0.0`) — nâng kit là đổi dòng đó bằng PR riêng. Kho bật thêm: phản biện context sạch bắt buộc
   (`gap_probe: required`); hồ sơ mới phải thuộc một hàng lộ trình (`lo_trinh.chan`); máy tự định tuyến mục ngoài hợp
   đồng ở hồ sơ T2 sạch (`feature_loop.ngoai_n_tu_dinh_tuyen`).
 - **Gộp tệp sinh**: `.gitattributes` gắn driver `tep-sinh` cho `PRODUCT-MAP.md` và `LO-TRINH.html` — gộp nhánh chính vào

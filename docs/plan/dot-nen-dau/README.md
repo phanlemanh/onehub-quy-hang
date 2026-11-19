@@ -3,7 +3,7 @@
 Mạnh 30/10: dọn phiên cũ rồi chạy lộ trình theo mô hình Điều phối – Thợ, thay vì mở từng hàng bằng một phiên riêng.
 Gói theo khuôn của gói `dieu-phoi` trong Acceptance-Gate Kit 2.35.0: `dieu-phoi.config.json`, `hang-viec.json`,
 `LUAT-rieng.md`. Hàng lấy từ `docs/plan/lo-trinh.json` qua `nguon_hang`. Chủ kho duyệt hàng, Cổng Đáng (`build`) của
-từng hàng và quyền tự merge ở thẻ khởi tạo của `/dieu-phoi:mo-dot nen-dau`, không phải ở đây.
+từng hàng và quyền tự merge ở thẻ khởi tạo của `/dispatch:open nen-dau`, không phải ở đây.
 
 ## Mở đợt
 

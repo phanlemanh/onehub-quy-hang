@@ -36,7 +36,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === realpathSync(process.a
   const so = process.env.QUY_HANG_PLUGIN_REGISTRY ?? `${homedir()}/.claude/plugins/installed_plugins.json`;
   let entries = [];
   try {
-    entries = JSON.parse(readFileSync(so, "utf8")).plugins?.["acceptance-gate@acceptance-gate-kit"] ?? [];
+    entries = JSON.parse(readFileSync(so, "utf8")).plugins?.["acceptance-gate@delivery-loop"] ?? [];
   } catch {
     /* không có sổ → không in gì */
   }

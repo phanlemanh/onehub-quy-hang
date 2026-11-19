@@ -7,7 +7,7 @@
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const GOC = fileURLToPath(new URL("../../../", import.meta.url));
@@ -184,8 +184,15 @@ if (process.argv.includes("--tinh")) {
   const TAG = (CI.match(/KIT_TAG:\s*(\S+)/) ?? [])[1];
   const KIT = mkdtempSync(join(tmpdir(), "kit-"));
   execFileSync("git", ["init", "-q", KIT]);
-  execFileSync("git", ["-C", KIT, "fetch", "-q", "--depth", "1", "https://github.com/phanlemanh/acceptance-gate-kit", `refs/tags/${TAG}`]);
+  // Kho kit, lõi trong cây kit và đường làn ghim lại cũng rút từ luồng — không ghi cứng kho hay bố cục của kit.
+  const KHO_KIT = (CI.match(/fetch -q --depth 1 (\S+) "refs\/tags\/\$KIT_TAG"/) ?? [])[1];
+  const DUOI_LOI = (CI.match(/echo "CLAUDE_PLUGIN_ROOT=\$RUNNER_TEMP\/kit([^"]*)" >> "\$GITHUB_ENV"/) ?? [])[1];
+  const DUONG_LAN = (LUONG.match(/node "\$CLAUDE_PLUGIN_ROOT\/([^"]*repin-lane\.mjs)"/) ?? [])[1];
+  if (!KHO_KIT || DUOI_LOI === undefined || !DUONG_LAN) { dat(false, "ci.yml thiếu dòng lấy kit / CLAUDE_PLUGIN_ROOT, hoặc luồng ghim lại thiếu lệnh gọi repin-lane.mjs"); process.exit(1); }
+  execFileSync("git", ["-C", KIT, "fetch", "-q", "--depth", "1", KHO_KIT, `refs/tags/${TAG}`]);
   execFileSync("git", ["-C", KIT, "checkout", "-q", "FETCH_HEAD"]);
+  const LOI = join(KIT, DUOI_LOI);
+  const LAN = resolve(LOI, DUONG_LAN);
   const khoaThat = (readFileSync(join(GOC, "_acceptance/config.yaml"), "utf8").match(/\n {2}repin_ci_blank_env:.*\n/) ?? [])[0];
   if (!khoaThat) dat(false, "config.yaml của kho thiếu feature_loop.repin_ci_blank_env");
   const g = mkdtempSync(join(tmpdir(), "trong-"));
@@ -212,9 +219,9 @@ if (process.argv.includes("--tinh")) {
     git("commit", "-q", "-m", "khoi");
     const sha = git("rev-parse", "HEAD").trim();
     writeFileSync(join(g, "_acceptance/thu-trong/evidence-report.md"), `---\nverdict: PASS\nverified_commit: ${sha}\n---\n`);
-    const r = spawnSync(process.execPath, [join(KIT, "feature-loop/scripts/repin-lane.mjs"), "--root", g, "--slug", "thu-trong", "--reason", "đo bộ kiểm chung để trống biến"], {
+    const r = spawnSync(process.execPath, [LAN, "--root", g, "--slug", "thu-trong", "--reason", "đo bộ kiểm chung để trống biến"], {
       encoding: "utf8",
-      env: { ...process.env, DATABASE_URL: "postgres://khong-ket-noi@127.0.0.1:1/x", CLAUDE_PLUGIN_ROOT: KIT },
+      env: { ...process.env, DATABASE_URL: "postgres://khong-ket-noi@127.0.0.1:1/x", CLAUDE_PLUGIN_ROOT: LOI },
     });
     const out = r.stdout + r.stderr;
     const suiteOk = /suite 1\/1: .* → exit 0/.test(out);
@@ -225,9 +232,9 @@ if (process.argv.includes("--tinh")) {
     git("commit", "-qam", "bo khoa");
     const sha2 = git("rev-parse", "HEAD").trim();
     writeFileSync(join(g, "_acceptance/thu-trong/evidence-report.md"), `---\nverdict: PASS\nverified_commit: ${sha2}\n---\n`);
-    const r2 = spawnSync(process.execPath, [join(KIT, "feature-loop/scripts/repin-lane.mjs"), "--root", g, "--slug", "thu-trong", "--reason", "đối chứng"], {
+    const r2 = spawnSync(process.execPath, [LAN, "--root", g, "--slug", "thu-trong", "--reason", "đối chứng"], {
       encoding: "utf8",
-      env: { ...process.env, DATABASE_URL: "postgres://khong-ket-noi@127.0.0.1:1/x", CLAUDE_PLUGIN_ROOT: KIT },
+      env: { ...process.env, DATABASE_URL: "postgres://khong-ket-noi@127.0.0.1:1/x", CLAUDE_PLUGIN_ROOT: LOI },
     });
     dat(/suite 1\/1: .* → exit 1/.test(r2.stdout + r2.stderr) && r2.status !== 0, `đối chứng: gỡ khoá để trống thì bộ kiểm chung thấy chuỗi kết nối, làn đỏ (thoát ${r2.status})`);
   } finally {
