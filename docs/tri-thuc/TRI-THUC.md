@@ -6,7 +6,7 @@ Gốc tri thức theo khuôn của acceptance-gate-kit (skills/acceptance/refere
 - wiki/nen/ — nền chung mọi vòng đọc. wiki/chu-de/ — chủ đề. wiki/dot/<đợt>.md — mã → trang.
 - Không commit index.md hay log.md.
 
-Ghi bằng `/tri-thuc:ghi`, kiểm bằng `/tri-thuc:kiem`. Kho riêng tư nên tài liệu thô nằm ngay trong kho; kho đổi sang
+Ghi bằng `/knowledge:ingest`, kiểm bằng `/knowledge:health`. Kho riêng tư nên tài liệu thô nằm ngay trong kho; kho đổi sang
 công khai thì phải chuyển tài liệu thô sang kho riêng trước (khai `cong_khai` và `kho` trong `_acceptance/config.yaml`).
 
 Không đưa vào: tên, số điện thoại, địa chỉ thật của chủ nhà, khách hay môi giới (dùng `[Tên]`, `0900 000 0xx`, `[Tên sàn]`);

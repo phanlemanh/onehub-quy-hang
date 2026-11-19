@@ -15,8 +15,8 @@ hàng giữ nguyên trên lộ trình tới khi thiết kế ấy cắt lại. K
 ## Mở đợt
 
 1. Gói này và 19 ô cơ hội đã vào `main`; Cổng Đáng đã quyết ở `the-cong-dang.md` (Manh Phan 31/10: «tất cả build»).
-2. Đợt `nen-2` đã đóng (`/dieu-phoi:dong-dot`) — kit chỉ chạy một đợt mỗi lần.
-3. Mở từ một phiên mới ở checkout chính: `/dieu-phoi:mo-dot dau-chu-dong-vao`. Docker đang chạy.
+2. Đợt `nen-2` đã đóng (`/dispatch:close`) — kit chỉ chạy một đợt mỗi lần.
+3. Mở từ một phiên mới ở checkout chính: `/dispatch:open dau-chu-dong-vao`. Docker đang chạy.
 
 Không cần sửa gói sau Cổng Đáng: bộ phát lịch chỉ giao hàng có ô quyết `build`; hàng quyết khác không tính là việc còn
 lại của dãy. Hàng 10 vắng `build` thì dãy D làm xong hàng 63 là hết việc.

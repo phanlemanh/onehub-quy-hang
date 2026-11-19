@@ -1,0 +1,20 @@
+{
+  "feature_plain": "Kho chuyển sang lấy công cụ nghiệm thu từ kho mới delivery-loop bản 3.0.0, thôi dùng kho cũ đã đóng băng — không đổi luật cổng nào.",
+  "will_do": [
+    {"id": "AC-1", "p": "Sẽ cho hai luồng trên GitHub (kiểm PR, nút «Ghim lại hồ sơ cần bản thật») lấy kit từ kho mới bản 3.0.0, đúng bố cục mới (AC-1)."},
+    {"id": "AC-2", "p": "Sẽ cho phiên Claude Code trong kho bật sáu plugin của chợ mới, ghim cùng bản với CI; quyền và hook khác giữ nguyên (AC-2)."},
+    {"id": "AC-3", "p": "Sẽ tắt đích danh sáu plugin chợ cũ để máy còn cài chợ cũ cũng không nạp bản cũ (AC-3)."},
+    {"id": "AC-4", "p": "Sẽ cho công cụ tìm kit của kho tìm bản cài chợ mới, bỏ qua chợ cũ (AC-4)."},
+    {"id": "AC-5", "p": "Sẽ thay mọi tên lệnh cũ trong tài liệu và mã còn dùng; AGENTS.md và Tham chiếu ghi đúng kho kit và bản (AC-5)."},
+    {"id": "AC-7", "p": "Sẽ sửa phép đo của 2 hồ sơ cũ đọc đúng dòng vừa đổi rồi ghim lại bằng máy; 30 hồ sơ đỏ khác chỉ liệt tên kèm lý do (AC-7)."},
+    {"id": "AC-8", "p": "Sẽ chỉ chạm tệp của việc chuyển chợ; bộ kiểm của kho và bản đồ sản phẩm vẫn xanh (AC-8)."}
+  ],
+  "wont_do": [
+    {"id": "AC-6", "p": "Sẽ KHÔNG đổi phán quyết của hồ sơ cũ nào: 172 hồ sơ cùng OK dưới kit cũ và kit mới (AC-6)."},
+    {"id": "OOS-1", "p": "Phép thử phiên thật chạy tay trước và sau gộp, ghi vào mô tả PR — không thành bài đo tự động."},
+    {"id": "OOS-2", "p": "Cài đặt của máy (sổ cài plugin, cài đặt mức người dùng) là việc của anh, máy không đụng."},
+    {"id": "OOS-3", "p": "Không bật luật hay khoá mới nào của kit 3.0 trong vòng này."},
+    {"id": "OOS-4", "p": "Không chạm PR #192."},
+    {"id": "OOS-5", "p": "Không sửa 23 hồ sơ đỏ từ trước vòng."}
+  ]
+}

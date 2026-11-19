@@ -91,13 +91,13 @@ jobs:
           curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz -C "$HOME/bin" gitleaks
           "$HOME/bin/gitleaks" git --redact --no-banner --log-level warn --log-opts="--full-history --diff-filter=tuxdb HEAD" .
 
-  # Cổng nghiệm thu của Acceptance-Gate Kit (GUIDE §5.3): chạy từ bản kit ghim tag, không chép tệp kit vào kho.
+  # Cổng nghiệm thu của kit delivery-loop (GUIDE §5.3): chạy từ bản kit ghim tag, không chép tệp kit vào kho.
   # Nâng kit = đổi KIT_TAG bằng một PR có chủ đích mỗi mốc; tệp này nằm trong t1_skip_globs nên PR đó không đỏ T1-escape.
   gate:
     name: gate
     runs-on: ubuntu-latest
     env:
-      KIT_TAG: v2.39.0
+      KIT_TAG: v3.0.0
     steps:
       - uses: actions/checkout@v4
         with:
@@ -108,9 +108,9 @@ jobs:
       - name: Lấy kit theo tag (ngoài cây kho)
         run: |
           git init -q "$RUNNER_TEMP/kit"
-          git -C "$RUNNER_TEMP/kit" fetch -q --depth 1 https://github.com/phanlemanh/acceptance-gate-kit "refs/tags/$KIT_TAG"
+          git -C "$RUNNER_TEMP/kit" fetch -q --depth 1 https://github.com/phanlemanh/delivery-loop "refs/tags/$KIT_TAG"
           git -C "$RUNNER_TEMP/kit" checkout -q FETCH_HEAD
-          echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit" >> "$GITHUB_ENV"
+          echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit/plugins/acceptance-gate" >> "$GITHUB_ENV"
       - name: pre-merge-check
         run: |
           # PR: soi diff với nhánh đích, T1-escape bật. Push lên main: không có tiền đề PR → HEAD~1 + --no-t1-escape

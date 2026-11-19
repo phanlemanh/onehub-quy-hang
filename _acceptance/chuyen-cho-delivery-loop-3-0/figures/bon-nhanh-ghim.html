@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bốn nhánh ghim lại · bản sửa × nhánh chính</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;1,400&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <svg viewBox="0 0 1200 648" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Luật chọn ghim lại theo hai kết quả: bản sửa và nhánh chính, bốn ô">
+      <rect width="100%" height="100%" fill="#f5f5f5"/>
+
+      <!-- Tiêu đề -->
+      <text x="80" y="64" fill="#2d3142" font-size="32" font-family="'Instrument Serif', 'Lora', serif" letter-spacing="-0.01em">Luật chọn ghim lại theo hai kết quả</text>
+
+      <!-- Trục ngang: nhánh chính -->
+      <text x="728" y="128" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Nhánh chính <tspan font-family="'Geist Mono', monospace" font-weight="400" fill="#4f5d75">(kit CI 2.39.0)</tspan></text>
+      <text x="520" y="168" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">xanh</text>
+      <text x="936" y="168" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">đỏ</text>
+      <line x1="320" y1="184" x2="1136" y2="184" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+
+      <!-- Trục dọc: bản sửa -->
+      <text x="80" y="128" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif">Bản sửa <tspan font-family="'Geist Mono', monospace" font-weight="400" fill="#4f5d75">(kit 3.0.0)</tspan></text>
+      <text x="80" y="288" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif">xanh</text>
+      <text x="80" y="464" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif">đỏ</text>
+      <line x1="304" y1="200" x2="304" y2="536" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+
+      <!-- Ô xanh / xanh -->
+      <rect x="320" y="200" width="400" height="160" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="344" y="272" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif">Không ghim</text>
+      <text x="344" y="304" fill="#4f5d75" font-size="16" font-family="'Geist', sans-serif">ghim không đổi phán quyết nào,</text>
+      <text x="344" y="328" fill="#4f5d75" font-size="16" font-family="'Geist', sans-serif">chỉ thêm bản ghi</text>
+
+      <!-- Ô xanh / đỏ -->
+      <rect x="736" y="200" width="400" height="160" rx="6" fill="#ffffff" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+      <text x="760" y="272" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif">Chuyển chợ vô tình chữa</text>
+      <text x="760" y="304" fill="#4f5d75" font-size="16" font-family="'Geist', sans-serif">liệt tên, không ghim</text>
+
+      <!-- Ô đỏ / xanh — Hỏi-1 (điểm nhấn) -->
+      <rect x="320" y="376" width="400" height="160" rx="6" fill="#f5f5f5"/>
+      <rect x="320" y="376" width="400" height="160" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="2"/>
+      <rect x="344" y="392" width="72" height="24" rx="2" fill="none" stroke="#eb6c36" stroke-width="1"/>
+      <text x="380" y="409" fill="#ba4513" font-size="12" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-1</text>
+      <text x="344" y="452" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif">Sửa phép đo đúng chỗ</text>
+      <text x="344" y="480" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif">đọc vật vừa đổi</text>
+      <text x="344" y="512" fill="#4f5d75" font-size="16" font-family="'Geist', sans-serif">ghim lại bằng máy, giữ chữ ký</text>
+
+      <!-- Ô đỏ / đỏ — Hỏi-2 -->
+      <rect x="736" y="376" width="400" height="160" rx="6" fill="#ffffff" stroke="#eb6c36" stroke-width="1.4" stroke-dasharray="6,4"/>
+      <rect x="760" y="392" width="72" height="24" rx="2" fill="none" stroke="#eb6c36" stroke-width="1"/>
+      <text x="796" y="409" fill="#ba4513" font-size="12" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HỎI-2</text>
+      <text x="760" y="452" fill="#2d3142" font-size="20" font-weight="600" font-family="'Geist', sans-serif">Nợ cũ</text>
+      <text x="760" y="484" fill="#4f5d75" font-size="16" font-family="'Geist', sans-serif">để nguyên, liệt tên</text>
+
+      <!-- Ghi chú -->
+      <line x1="80" y1="576" x2="1136" y2="576" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+      <text x="80" y="612" fill="#4f5d75" font-size="16" font-family="'Geist', sans-serif">36 hồ sơ ứng viên — phép đo đọc vật vừa đổi</text>
+      <text x="1136" y="612" fill="#636b80" font-size="12" font-family="'Geist Mono', monospace" text-anchor="end" letter-spacing="0.06em">AC-7</text>
+    </svg>
+  </div>
+</body>
+</html>

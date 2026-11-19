@@ -12,7 +12,7 @@ flowchart TD
   GD --> DB["Đã bác từ khám phá<br/>chưa có"]
   B --> CD["Chờ duyệt phạm vi<br/>chưa có"] --> GP{"Cổng Phạm vi"}
   GP --> DL["Đang làm<br/>chưa có"] --> GB{"Cổng Bằng chứng"}
-  GB --> DG["Đã giao<br/>29 việc"]
+  GB --> DG["Đã giao<br/>30 việc"]
   GB --> CN["Chờ phiên nghiệm thu<br/>143 việc"] --> GG{"Cổng Giá trị"}
   GG --> NT["Đã nghiệm thu giá trị<br/>chưa có"]
 ```
@@ -175,6 +175,7 @@ flowchart TD
 ## Đã giao
 
 - Khi deploy, cơ sở dữ liệu tự bật hẳn hai ràng buộc chặn số chủ để rõ nếu bảng không còn số rõ; còn số rõ thì bỏ qua và nhắc chạy lệnh mã hoá lại (`bat-rang-buoc-ban-ma`)
+- Chuyển kit nghiệm thu từ chợ cũ acceptance-gate-kit v2.39.0 sang chợ delivery-loop v3.0.0 — CI kéo kit từ kho mới theo thẻ, phiên bật sáu plugin chợ mới và tắt đích danh sáu plugin chợ cũ, tệp sống thôi gọi tên lệnh cũ, hồ sơ cần thì ghim lại; không đổi hành vi (`chuyen-cho-delivery-loop-3-0`)
 - Bài kiểm chuyển dữ liệu cũ của hàng 85 không kẹt khoá với các bài kiểm gỡ ràng buộc chạy song song (`chuyen-khong-ket-khoa`)
 - Đầu chủ điền mã căn cho hàng tạo từ lead chỉ biết toà — mở hồ sơ căn của hàng chưa có mã, gắn mã một lần, máy chặn trùng hàng đang mở cùng căn; hàng có mã thì thôi báo thiếu mã căn và xét ảnh như thường (`dien-ma-can-cho-hang`)
 - Đổi đường API, mã lỗi và đường màn đăng nhập sang tiếng Anh, giữ nguyên hành vi và chữ trên màn (`doi-ten-api-tieng-anh`)

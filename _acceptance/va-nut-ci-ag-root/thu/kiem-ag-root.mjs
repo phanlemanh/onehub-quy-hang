@@ -42,7 +42,7 @@ function veHong(y) {
   const ag = (b.run.match(/--ag-root\s+("[^"]*"|\S+)/) ?? [])[1];
   if (ag !== '"$CLAUDE_PLUGIN_ROOT"') h.push("bước ghim lại truyền --ag-root \"$CLAUDE_PLUGIN_ROOT\"");
   const k = buoc(y, "Lấy kit theo tag");
-  if (!k || !/echo "CLAUDE_PLUGIN_ROOT=\$RUNNER_TEMP\/kit" >> "\$GITHUB_ENV"/.test(k.khoi) || !/refs\/tags\/\$KIT_TAG/.test(k.khoi) || k.viTri > b.viTri)
+  if (!k || !/echo "CLAUDE_PLUGIN_ROOT=\$RUNNER_TEMP\/kit(\/plugins\/acceptance-gate)?" >> "\$GITHUB_ENV"/.test(k.khoi) || !/refs\/tags\/\$KIT_TAG/.test(k.khoi) || k.viTri > b.viTri)
     h.push("CLAUDE_PLUGIN_ROOT là kit lấy theo KIT_TAG, ngoài cây kho, đặt qua GITHUB_ENV ở bước trước «Ghim lại»");
   return h;
 }
@@ -56,7 +56,7 @@ if (process.argv.includes("--tinh")) {
     ["bỏ --ag-root", sua(run, run.replace(/ --ag-root\s+("[^"]*"|\S+)/, "")), "bước ghim lại truyền --ag-root \"$CLAUDE_PLUGIN_ROOT\""],
     ["--ag-root trỏ cây nhánh", sua(run, run.replace(/--ag-root\s+("[^"]*"|\S+)/, "--ag-root .")), "bước ghim lại truyền --ag-root \"$CLAUDE_PLUGIN_ROOT\""],
     ["kit không lấy theo tag", sua('"refs/tags/$KIT_TAG"', '"refs/heads/main"'), "CLAUDE_PLUGIN_ROOT là kit lấy theo KIT_TAG, ngoài cây kho, đặt qua GITHUB_ENV ở bước trước «Ghim lại»"],
-    ["CLAUDE_PLUGIN_ROOT chỉ đặt ở env của bước lấy kit", sua('          echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit" >> "$GITHUB_ENV"\n', "").replace("      - name: Lấy kit theo tag (ngoài cây kho)\n", "      - name: Lấy kit theo tag (ngoài cây kho)\n        env:\n          CLAUDE_PLUGIN_ROOT: ${{ runner.temp }}/kit\n"), "CLAUDE_PLUGIN_ROOT là kit lấy theo KIT_TAG, ngoài cây kho, đặt qua GITHUB_ENV ở bước trước «Ghim lại»"],
+    ["CLAUDE_PLUGIN_ROOT chỉ đặt ở env của bước lấy kit", sua((LUONG.match(/^ *echo "CLAUDE_PLUGIN_ROOT=\$RUNNER_TEMP\/kit[^"]*" >> "\$GITHUB_ENV"\n/m) ?? ["\u0000"])[0], "").replace("      - name: Lấy kit theo tag (ngoài cây kho)\n", "      - name: Lấy kit theo tag (ngoài cây kho)\n        env:\n          CLAUDE_PLUGIN_ROOT: ${{ runner.temp }}/kit\n"), "CLAUDE_PLUGIN_ROOT là kit lấy theo KIT_TAG, ngoài cây kho, đặt qua GITHUB_ENV ở bước trước «Ghim lại»"],
   ];
   for (const [ten, banSao, ve] of ca) {
     if (!banSao || banSao === LUONG) { dat(false, `ca phá thử «${ten}» lệch luồng`); continue; }

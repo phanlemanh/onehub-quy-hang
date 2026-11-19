@@ -52,8 +52,8 @@ Thẻ Cổng Đáng của gói này liệt cả bảy hàng ấy, để chủ kh
 ## Mở đợt
 
 1. Gói này, PR #61, và 27 ô cơ hội đã vào `main`; Cổng Đáng đã quyết ở `the-cong-dang.md`.
-2. Đợt `dau-chu-dong-vao` đã đóng (`/dieu-phoi:dong-dot`) — kit chỉ chạy một đợt mỗi lần.
-3. Mở từ một phiên mới ở checkout chính: `/dieu-phoi:mo-dot dau-khach-nhap`. Docker đang chạy.
+2. Đợt `dau-chu-dong-vao` đã đóng (`/dispatch:close`) — kit chỉ chạy một đợt mỗi lần.
+3. Mở từ một phiên mới ở checkout chính: `/dispatch:open dau-khach-nhap`. Docker đang chạy.
 
 Không cần sửa gói sau Cổng Đáng: bộ phát lịch chỉ giao hàng có ô quyết `build`; hàng quyết khác không tính là việc còn
 lại của dãy.

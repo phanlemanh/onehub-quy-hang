@@ -32,7 +32,7 @@ jobs:
       group: ghim-lai-ban-that
       cancel-in-progress: false
     env:
-      KIT_TAG: v2.39.0
+      KIT_TAG: v3.0.0
       # Cùng bản với GITLEAKS_VERSION của ci.yml. Băm là digest GitHub công bố cho tệp gitleaks_<bản>_linux_x64.tar.gz của
       # bản phát hành; nâng bản thì đổi cả hai dòng (và ci.yml) trong cùng một PR.
       GITLEAKS_VERSION: 8.30.1
@@ -59,9 +59,9 @@ jobs:
       - name: Lấy kit theo tag (ngoài cây kho)
         run: |
           git init -q "$RUNNER_TEMP/kit"
-          git -C "$RUNNER_TEMP/kit" fetch -q --depth 1 https://github.com/phanlemanh/acceptance-gate-kit "refs/tags/$KIT_TAG"
+          git -C "$RUNNER_TEMP/kit" fetch -q --depth 1 https://github.com/phanlemanh/delivery-loop "refs/tags/$KIT_TAG"
           git -C "$RUNNER_TEMP/kit" checkout -q FETCH_HEAD
-          echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit" >> "$GITHUB_ENV"
+          echo "CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit/plugins/acceptance-gate" >> "$GITHUB_ENV"
       # Bài tự kiểm của rào (test:hooks, trong bộ kiểm chung của làn) đòi gitleaks khi CI=true, như job check của ci.yml.
       # Tệp nhị phân này chạy trong bước «Ghim lại», cạnh chuỗi kết nối bản thật, nên kiểm băm ghim trước khi giải nén.
       - name: Cài gitleaks (bài tự kiểm của rào trong làn cần nó)
@@ -83,7 +83,7 @@ jobs:
           SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
           APP_URL: https://quyhang.onehub.center
         working-directory: nhanh
-        run: node "$CLAUDE_PLUGIN_ROOT/feature-loop/scripts/repin-lane.mjs" --root . --slug "$HO_SO" --ag-root "$CLAUDE_PLUGIN_ROOT" --reason "ghim lại bằng biến bản thật qua CI" --write
+        run: node "$CLAUDE_PLUGIN_ROOT/../feature-loop/scripts/repin-lane.mjs" --root . --slug "$HO_SO" --ag-root "$CLAUDE_PLUGIN_ROOT" --reason "ghim lại bằng biến bản thật qua CI" --write
       # Thông báo lỗi kết nối có thể in nguyên chuỗi kết nối; GitHub không che bí mật trong tệp đính kèm. Gặp thì dừng, không tải.
       - name: Quét bí mật trong tệp sắp tải
         id: quet
