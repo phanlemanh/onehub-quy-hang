@@ -5,7 +5,7 @@ slug: chuyen-cho-delivery-loop-3-0
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci, config]
-status: verified
+status: signed-off
 design_doc: docs/superpowers/specs/2026-11-19-chuyen-cho-delivery-loop-3-0-design.md
 approved_by: Phan Le Manh
 approved_at: 2026-11-19T15:09:21Z
@@ -129,3 +129,13 @@ chính (ví dụ `cach-goi-rieng` E15b): eval gọi `tim-kit.mjs` trực tiếp 
 - Không chạm bất biến nào của AGENTS.md: không mã sản phẩm, không cơ sở dữ liệu, không lớp `source`.
 - Bản vá phần chung (K1–K3) lấy từ `chuyen-kho.mjs --soan`; công cụ không biết bước «Ghim lại» gọi
   `$CLAUDE_PLUGIN_ROOT/feature-loop/…` — dòng ấy sửa tay (AC-1), báo lại cho phiên giữ đợt.
+- Known limits — chọn ở Cổng Bằng chứng 2026-11-19:
+  - Ngoài-1: Sau khi gộp hoặc khi nâng kit lần sau, bài kiểm của việc chuyển chợ này sẽ báo đỏ dù hệ thống vẫn đúng. Người làm sẽ phải gỡ hồ sơ này khỏi lượt kiểm.
+  - Ngoài-2: Một lệnh ghi cứng đường dẫn bản cài kit theo số phiên của chợ mới sẽ lọt qua mà không ai bị báo. Nếu có, máy khác sẽ chạy hỏng khi đổi phiên kit.
+  - Ngoài-3: Nếu luồng ghim lại trên CI bị để sai bố cục kit, bài kiểm của nút ghim lại vẫn xanh nhưng bước ghim lại trên CI sẽ hỏng. Người làm chỉ biết khi chạy thật.
+  - Ngoài-4: Phép kiểm tĩnh của nút này chấp nhận cả bố cục kit cũ, nên một cấu hình sai có thể qua kiểm mà làm hỏng bước ghim lại trên CI.
+  - Ngoài-5: Danh sách hồ sơ ghim lại do người viết tay, chưa đối chiếu với kết quả máy chạy thật, nên có thể sót một hồ sơ đỏ mà bài vẫn xanh.
+  - Ngoài-6: Phép quét tên lệnh cũ chỉ thử vài luật loại trừ, nên một luật bỏ thừa có thể giấu một tên cũ còn sót trong tệp đang dùng.
+  - Ngoài-7: Trên máy chưa cài đúng bản kit, toàn bộ bài kiểm của hồ sơ này sẽ đỏ dù mã nguồn đúng. Người khác chạy sẽ thấy lỗi khó hiểu.
+  - Ngoài-8: Nếu cấu hình nghiệm thu đổi sau lượt phân loại, bài vẫn báo khớp. Kết quả phân loại có thể cũ mà không ai biết.
+  - Ngoài-9: Nếu kit bỏ qua mọi hồ sơ, bài đối chứng hai bản kit vẫn báo cùng kết quả và xanh. Người ký có thể tin nhầm là không đổi phán quyết.
