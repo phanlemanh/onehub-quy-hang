@@ -2,7 +2,7 @@
 // bản sao phá đúng một chỗ → đỏ với thông điệp ghim. Không ghi vào cây kho; bản sao là chuỗi trong bộ nhớ hay thư mục tạm.
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { test } from "node:test";
@@ -156,7 +156,9 @@ test("AC-4 «tim-kit.mjs chọn bản cài acceptance-gate@delivery-loop, bỏ q
 });
 
 test("AC-4 «trên máy này, kit tim-kit tìm được là acceptance-gate 3.0.0 và có đủ script các lệnh executor gọi»", () => {
-  const r = spawnSync(process.execPath, [join(GOC, "packages/ui-lint/tim-kit.mjs")], { cwd: GOC, encoding: "utf8", env: { ...process.env, QUY_HANG_PLUGIN_REGISTRY: "" } });
+  const env = { ...process.env };
+  delete env.QUY_HANG_PLUGIN_REGISTRY;
+  const r = spawnSync(process.execPath, [join(GOC, "packages/ui-lint/tim-kit.mjs")], { cwd: GOC, encoding: "utf8", env });
   const goc = (r.stdout ?? "").trim();
   assert.ok(goc, "tim-kit không in gì — máy chưa cài acceptance-gate@delivery-loop");
   const pj = JSON.parse(readFileSync(join(goc, ".claude-plugin/plugin.json"), "utf8"));
@@ -197,13 +199,14 @@ test("AC-5 «không tệp sống nào gọi tên lệnh cũ hay giữ khoá ch�
   const song = [];
   const boTheoLuat = {};
   for (const f of tat) {
-    const ten = luatBo(f, existsSync(join(GOC, f)) ? readFileSync(join(GOC, f), "latin1") : "\0");
+    const p = join(GOC, f);
+    const ten = lstatSync(p, { throwIfNoEntry: false })?.isSymbolicLink() ? "lien-ket" : luatBo(f, existsSync(p) ? readFileSync(p, "latin1") : "\0");
     if (ten) boTheoLuat[ten] = (boTheoLuat[ten] ?? 0) + 1;
     else song.push(f);
   }
   assert.equal(song.length + Object.values(boTheoLuat).reduce((a, b) => a + b, 0), tat.length, "mỗi tệp hoặc sống hoặc bị đúng một luật có tên bỏ");
   assert.ok(song.length > 200, `đối chứng: quét ${song.length} tệp sống`);
-  for (const duoi of [/\.sh$/, /\.yml$/, /\.cjs$/, /^\.githooks\/[^.]+$/]) assert.ok(song.some((f) => duoi.test(f)), `tập quét thiếu loại tệp ${duoi}`);
+  for (const duoi of [/\.sh$/, /\.yml$/, /\.ts$/, /^\.githooks\/[^.]+$/]) assert.ok(song.some((f) => duoi.test(f)), `tập quét thiếu loại tệp ${duoi}`);
   assert.deepEqual(quetTenCu(song, doc), []);
   const cay = { "docs/x.md": "a\nmở bằng `/dieu-phoi:mo-dot nen`\n", "tools/y.mjs": 'k = "acceptance-gate@acceptance-gate-kit"\n', ".githooks/z": "road-map:xem\n", "scripts/w.sh": "echo /tri-thuc:kiem\n", "docs/v.md": "dùng /dispatch:open và /knowledge:health\n" };
   assert.deepEqual(quetTenCu(Object.keys(cay), (f) => cay[f]), ["docs/x.md:2 dieu-phoi:mo-dot → dispatch:open", "tools/y.mjs:1 khoá …@acceptance-gate-kit", ".githooks/z:1 road-map:xem → roadmap:status", "scripts/w.sh:1 tri-thuc:kiem → knowledge:health"]);
