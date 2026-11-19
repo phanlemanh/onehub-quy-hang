@@ -9,7 +9,7 @@ evals:
     criterion: AC-1
     executor: script
     cmd: config:executors.script.cc30_thu
-    expected: "exit 0; ca «AC-1 «hai luồng kéo delivery-loop v3.0.0»: vật thật xanh, năm bản phá đỏ đúng thông điệp» ok — ci.yml và ghim-lai-ban-that.yml qua hàm kiemLuong: đúng một KIT_TAG v3.0.0, fetch từ phanlemanh/delivery-loop theo thẻ, CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit/plugins/acceptance-gate, không dòng $CLAUDE_PLUGIN_ROOT/feature-loop/, và ghim-lai-ban-that.yml có đúng một dòng gọi $CLAUDE_PLUGIN_ROOT/../feature-loop/scripts/repin-lane.mjs (vế dương; bản phá xoá dòng ấy → «bước Ghim lại không gọi …» ); năm bản phá (thẻ cũ, kho cũ, lõi ở gốc kit, chú thích tên kho cũ, làn ghim lại theo bố cục cũ) mỗi bản ném đúng thông điệp ghim. Ca «AC-1 «không tệp nào dưới .github/ còn tên kho kit cũ»» ok, quét ≥ 3 tệp."
+    expected: "exit 0; ca «AC-1 «hai luồng kéo delivery-loop v3.0.0»: vật thật xanh, sáu bản phá đỏ đúng thông điệp» ok — ci.yml và ghim-lai-ban-that.yml qua hàm kiemLuong: đúng một KIT_TAG v3.0.0, fetch từ phanlemanh/delivery-loop theo thẻ, CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit/plugins/acceptance-gate, không dòng $CLAUDE_PLUGIN_ROOT/feature-loop/, và ghim-lai-ban-that.yml có đúng một dòng gọi $CLAUDE_PLUGIN_ROOT/../feature-loop/scripts/repin-lane.mjs (vế dương); sáu bản phá (thẻ cũ, kho cũ, lõi ở gốc kit, chú thích tên kho cũ, làn ghim lại theo bố cục cũ, bỏ bước Ghim lại → «bước Ghim lại không gọi đúng một lần … (thấy 0)») mỗi bản ném đúng thông điệp ghim. Ca «AC-1 «không tệp nào dưới .github/ còn tên kho kit cũ»» ok, quét ≥ 3 tệp."
     paths: [.github/**, _acceptance/chuyen-cho-delivery-loop-3-0/thu/**]
     evidence_required: [run_id, exit_code, verifier, verified_at, output]
 
