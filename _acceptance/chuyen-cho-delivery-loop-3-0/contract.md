@@ -5,7 +5,7 @@ slug: chuyen-cho-delivery-loop-3-0
 owner: phanlemanh@gmail.com
 risk_tier: T3
 surfaces: [ci, config]
-status: approved
+status: implemented
 design_doc: docs/superpowers/specs/2026-11-19-chuyen-cho-delivery-loop-3-0-design.md
 approved_by: Phan Le Manh
 approved_at: 2026-11-19T15:09:21Z
