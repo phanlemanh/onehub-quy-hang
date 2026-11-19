@@ -246,18 +246,26 @@ export function kiemGhim(slug, runLog, report, reportNen) {
 }
 
 export const UNG_VIEN = ["ghim-lai-ban-that-qua-ci", "va-nut-ci-ag-root", "va-nut-ci-gitleaks", "bat-rang-buoc-ban-ma", "luat-an-va-kiem-ro-ri", "moi-truong-that", "nang-kit-2-36-0", "tang-5-giao-dien", "va-bai-o-la-do-ngau-nhien", "va-ci-secrets-quet-dung-lich-su", "va-deploy-csdl-tam", "cach-goi-rieng", "chuan-hoa-moi-cua", "hom-nay-mot-danh-sach-viec", "luat-chia-lead", "luong-gui", "man-lien-he", "mau-nhap-va-bai", "nhap-tac-tu-ke-hoach", "thue-phi", "trang-nhom-moi-gioi", "trang-thai-rieng", "truong-rieng-toi-thieu", "va-thuoc-ci-ho-so-moi-truong-that", "bai-thu-dong-bo-mat-mang", "bai-thu-zalo", "chu-san-du-vai", "pooler-che-do-giao-dich", "va-dinh-nghia-doc-lai", "che-vung-anh", "he-bo-cuc", "sua-hang-loat", "va-che-vung-anh", "va-pool-ket-noi", "va-sua-tren-o", "va-thong-bao-lead"];
+// Phân loại theo TỪNG eval: eval đỏ trên HEAD mà không đỏ ở nhánh chính là eval «mới đỏ»; nó chỉ được chấp nhận khi
+// xanh trên bản sau gộp giả (đo diff của nhánh), và bản giả không đỏ eval nào ngoài tập đã đỏ ở nhánh chính.
 export function kiemPhanLoai(pl, kq) {
   if (pl.ung_vien.length !== UNG_VIEN.length || [...pl.ung_vien].sort().join() !== [...UNG_VIEN].sort().join()) throw new Error(`ứng viên lệch danh sách viết trước (${pl.ung_vien.length}/${UNG_VIEN.length})`);
   if (pl.kit_dau?.sha !== KIT_MOI.sha || pl.kit_nen?.sha !== KIT_CU.sha) throw new Error("tệp phân loại không chạy bằng hai kit ghim");
-  const gia = pl.sau_gop_gia ?? {};
-  const moi = pl.do_dau.filter((x) => pl.nen?.[x] !== "do" && gia.ket_qua?.[x] !== "xanh");
-  if (moi.length) throw new Error(`đỏ trên HEAD mà xanh trên nhánh chính: ${moi.join(",")}`);
-  const nhanh = pl.do_dau.filter((x) => pl.nen?.[x] !== "do").sort();
-  const caHai = pl.do_dau.filter((x) => pl.nen?.[x] === "do").sort();
-  if (nhanh.length && !/^[0-9a-f]{40}$/.test(gia.sha ?? "")) throw new Error("tập «doi-nhanh» không có bản sau gộp giả ghi sha");
-  if (caHai.join() !== kq.doCaHai.join()) throw new Error(`tập «do-ca-hai» của hợp đồng [${kq.doCaHai}] ≠ tệp [${caHai}]`);
-  if (nhanh.join() !== kq.doiNhanh.join()) throw new Error(`tập «doi-nhanh» của hợp đồng [${kq.doiNhanh}] ≠ tệp [${nhanh}]`);
-  if ([...pl.ghim].sort().join() !== Object.keys(kq.ghim).sort().join()) throw new Error(`tập «ghim» của hợp đồng ≠ tệp`);
+  const caHai = [];
+  const nhanh = [];
+  for (const [x, doDau] of Object.entries(pl.dau_do)) {
+    const doNen = pl.nen_do?.[x] ?? [];
+    const moi = doDau.filter((e) => !doNen.includes(e));
+    if (!moi.length) { caHai.push(x); continue; }
+    const doGia = pl.sau_gop_gia?.do?.[x];
+    if (!doGia || doGia.some((e) => !doNen.includes(e))) throw new Error(`đỏ trên HEAD mà xanh trên nhánh chính: ${x} (${moi.join(",")})`);
+    nhanh.push(x);
+  }
+  if (nhanh.length && !/^[0-9a-f]{40}$/.test(pl.sau_gop_gia?.sha ?? "")) throw new Error("tập «doi-nhanh» không có bản sau gộp giả ghi sha");
+  if (caHai.sort().join() !== kq.doCaHai.join()) throw new Error(`tập «do-ca-hai» của hợp đồng [${kq.doCaHai}] ≠ tệp [${caHai}]`);
+  if (nhanh.sort().join() !== kq.doiNhanh.join()) throw new Error(`tập «doi-nhanh» của hợp đồng [${kq.doiNhanh}] ≠ tệp [${nhanh}]`);
+  if ([...pl.ghim].sort().join() !== Object.keys(kq.ghim).sort().join()) throw new Error("tập «ghim» của hợp đồng ≠ tệp");
+  for (const g of pl.ghim) if (pl.dau_do[g]) throw new Error(`hồ sơ ghim lại còn đỏ trên HEAD: ${g}`);
 }
 
 test("AC-7 «phân loại ghim lại khớp hợp đồng, trên đúng cây HEAD»", () => {
@@ -266,8 +274,10 @@ test("AC-7 «phân loại ghim lại khớp hợp đồng, trên đúng cây HEA
   assert.equal(lech, 0, `cây ngoài _acceptance/ của ${pl.sha?.slice(0, 8)} khác HEAD — phân loại chạy trên cây khác`);
   const kq = docKetQuaGhim(doc(`_acceptance/${SLUG}/contract.md`));
   kiemPhanLoai(pl, kq);
-  const xanhNen = pl.ung_vien.find((x) => pl.nen?.[x] !== "do" && pl.sau_gop_gia?.ket_qua?.[x] !== "xanh") ?? "x";
-  assert.throws(() => kiemPhanLoai({ ...pl, do_dau: [...pl.do_dau, xanhNen] }, kq), new RegExp(`đỏ trên HEAD mà xanh trên nhánh chính: ${xanhNen}`));
+  const mot = kq.doCaHai[0];
+  assert.ok(mot, "đối chứng cần một hồ sơ «do-ca-hai»");
+  assert.throws(() => kiemPhanLoai({ ...pl, dau_do: { ...pl.dau_do, [mot]: [...pl.dau_do[mot], "EX"] } }, kq), new RegExp(`đỏ trên HEAD mà xanh trên nhánh chính: ${mot} \\(EX\\)`));
+  assert.throws(() => kiemPhanLoai({ ...pl, dau_do: { ...pl.dau_do, [pl.ghim[0]]: ["E1"] }, nen_do: { ...pl.nen_do, [pl.ghim[0]]: ["E1"] } }, { ...kq, doCaHai: [...kq.doCaHai, pl.ghim[0]].sort() }), /hồ sơ ghim lại còn đỏ trên HEAD/);
   assert.throws(() => kiemPhanLoai({ ...pl, ung_vien: pl.ung_vien.slice(1) }, kq), /ứng viên lệch danh sách viết trước/);
 });
 

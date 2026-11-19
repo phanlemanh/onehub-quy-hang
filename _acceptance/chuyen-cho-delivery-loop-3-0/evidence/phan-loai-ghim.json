@@ -1,0 +1,525 @@
+{
+ "khuon": "phan-loai-ghim",
+ "sha": "f4b7cfea0e5a1e8e00257fb87bc233f343eb6748",
+ "kit_dau": {
+  "tag": "v3.0.0",
+  "sha": "c16d25dbe224ec0b122b6d578118731750b6a4e3"
+ },
+ "kit_nen": {
+  "tag": "v2.39.0",
+  "sha": "0c4e503b1d9649faa6948dd169573717b6dddce4"
+ },
+ "lan_dau": {
+  "run_id": "repin-20261119T151348Z-23712",
+  "sha": "f4b7cfea0e5a1e8e00257fb87bc233f343eb6748"
+ },
+ "lan_nen": {
+  "run_id": "repin-20261119T144721Z-65596",
+  "sha": "f1d123ee88029c343bd077e4b2678c7375848fbc",
+  "ghi_chu": "chỉ chạy cho hồ sơ đỏ trên bản sửa 7208c8a9; hồ sơ khác xanh trên bản sửa"
+ },
+ "ung_vien": [
+  "ghim-lai-ban-that-qua-ci",
+  "va-nut-ci-ag-root",
+  "va-nut-ci-gitleaks",
+  "bat-rang-buoc-ban-ma",
+  "luat-an-va-kiem-ro-ri",
+  "moi-truong-that",
+  "nang-kit-2-36-0",
+  "tang-5-giao-dien",
+  "va-bai-o-la-do-ngau-nhien",
+  "va-ci-secrets-quet-dung-lich-su",
+  "va-deploy-csdl-tam",
+  "cach-goi-rieng",
+  "chuan-hoa-moi-cua",
+  "hom-nay-mot-danh-sach-viec",
+  "luat-chia-lead",
+  "luong-gui",
+  "man-lien-he",
+  "mau-nhap-va-bai",
+  "nhap-tac-tu-ke-hoach",
+  "thue-phi",
+  "trang-nhom-moi-gioi",
+  "trang-thai-rieng",
+  "truong-rieng-toi-thieu",
+  "va-thuoc-ci-ho-so-moi-truong-that",
+  "bai-thu-dong-bo-mat-mang",
+  "bai-thu-zalo",
+  "chu-san-du-vai",
+  "pooler-che-do-giao-dich",
+  "va-dinh-nghia-doc-lai",
+  "che-vung-anh",
+  "he-bo-cuc",
+  "sua-hang-loat",
+  "va-che-vung-anh",
+  "va-pool-ket-noi",
+  "va-sua-tren-o",
+  "va-thong-bao-lead"
+ ],
+ "dau_do": {
+  "bat-rang-buoc-ban-ma": [
+   "E1",
+   "E2",
+   "E3",
+   "E6"
+  ],
+  "luat-an-va-kiem-ro-ri": [
+   "E10",
+   "E9b"
+  ],
+  "moi-truong-that": [
+   "E1",
+   "E2",
+   "E4",
+   "E5",
+   "E7",
+   "E8"
+  ],
+  "nang-kit-2-36-0": [
+   "E1",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7",
+   "E8"
+  ],
+  "tang-5-giao-dien": [
+   "E3"
+  ],
+  "va-bai-o-la-do-ngau-nhien": [
+   "E1",
+   "E10",
+   "E11",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7",
+   "E8",
+   "E9"
+  ],
+  "va-deploy-csdl-tam": [
+   "E4",
+   "E5",
+   "E6"
+  ],
+  "cach-goi-rieng": [
+   "E1",
+   "E2",
+   "E2b",
+   "E3b",
+   "E6b",
+   "E8",
+   "E9"
+  ],
+  "chuan-hoa-moi-cua": [
+   "E10",
+   "E3",
+   "E5",
+   "E6",
+   "E7",
+   "E8"
+  ],
+  "hom-nay-mot-danh-sach-viec": [
+   "E3b"
+  ],
+  "luat-chia-lead": [
+   "E2b",
+   "E3",
+   "E5c",
+   "E6b",
+   "E7c"
+  ],
+  "luong-gui": [
+   "E2",
+   "E3b",
+   "E7b"
+  ],
+  "man-lien-he": [
+   "E1",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6b",
+   "E7",
+   "E8",
+   "E9"
+  ],
+  "mau-nhap-va-bai": [
+   "E1",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7",
+   "E8"
+  ],
+  "nhap-tac-tu-ke-hoach": [
+   "E11",
+   "E3b",
+   "E4b",
+   "E5",
+   "E8",
+   "E9",
+   "E9b"
+  ],
+  "thue-phi": [
+   "E2b",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7a"
+  ],
+  "trang-nhom-moi-gioi": [
+   "E1",
+   "E2b",
+   "E3",
+   "E4b",
+   "E8",
+   "E9"
+  ],
+  "trang-thai-rieng": [
+   "E1",
+   "E2b",
+   "E3",
+   "E3d",
+   "E4",
+   "E5",
+   "E6c",
+   "E7b",
+   "E7c",
+   "E8",
+   "E9"
+  ],
+  "truong-rieng-toi-thieu": [
+   "E1",
+   "E10b",
+   "E2b",
+   "E3b",
+   "E4",
+   "E4d",
+   "E5b",
+   "E6",
+   "E6d",
+   "E7",
+   "E7c",
+   "E8",
+   "E9",
+   "E9b"
+  ],
+  "bai-thu-dong-bo-mat-mang": [
+   "E1",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E8",
+   "E9"
+  ],
+  "chu-san-du-vai": [
+   "E2",
+   "E3c",
+   "E4",
+   "E5c",
+   "E6"
+  ],
+  "pooler-che-do-giao-dich": [
+   "E11",
+   "E13",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6"
+  ],
+  "va-dinh-nghia-doc-lai": [
+   "E3",
+   "E5b",
+   "E7b"
+  ],
+  "che-vung-anh": [
+   "E13"
+  ],
+  "sua-hang-loat": [
+   "E15"
+  ],
+  "va-che-vung-anh": [
+   "E10"
+  ],
+  "va-pool-ket-noi": [
+   "E10",
+   "E4",
+   "E7"
+  ],
+  "va-sua-tren-o": [
+   "E10"
+  ],
+  "va-thong-bao-lead": [
+   "E13",
+   "E14",
+   "E15",
+   "E4",
+   "E5",
+   "E6",
+   "E9"
+  ]
+ },
+ "nen_do": {
+  "bat-rang-buoc-ban-ma": [
+   "E1",
+   "E2",
+   "E3",
+   "E6"
+  ],
+  "luat-an-va-kiem-ro-ri": [
+   "E10",
+   "E9b"
+  ],
+  "moi-truong-that": [
+   "E1",
+   "E2",
+   "E4",
+   "E5",
+   "E7",
+   "E8"
+  ],
+  "nang-kit-2-36-0": [
+   "E1",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7",
+   "E8"
+  ],
+  "tang-5-giao-dien": [
+   "E3"
+  ],
+  "va-bai-o-la-do-ngau-nhien": [
+   "E1",
+   "E10",
+   "E11",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7",
+   "E8"
+  ],
+  "va-deploy-csdl-tam": [
+   "E4",
+   "E5",
+   "E6"
+  ],
+  "cach-goi-rieng": [
+   "E1",
+   "E15b",
+   "E2",
+   "E2b",
+   "E3b",
+   "E6b",
+   "E8",
+   "E9"
+  ],
+  "chuan-hoa-moi-cua": [
+   "E10",
+   "E11b",
+   "E3",
+   "E5",
+   "E6",
+   "E7",
+   "E8"
+  ],
+  "hom-nay-mot-danh-sach-viec": [
+   "E11b",
+   "E3b"
+  ],
+  "luat-chia-lead": [
+   "E13",
+   "E2b",
+   "E3",
+   "E5c",
+   "E6b",
+   "E7c"
+  ],
+  "luong-gui": [
+   "E13",
+   "E2",
+   "E3b",
+   "E7b"
+  ],
+  "man-lien-he": [
+   "E1",
+   "E10e",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6b",
+   "E7",
+   "E8",
+   "E9"
+  ],
+  "mau-nhap-va-bai": [
+   "E1",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7",
+   "E8"
+  ],
+  "nhap-tac-tu-ke-hoach": [
+   "E11",
+   "E12b",
+   "E13b",
+   "E3b",
+   "E4b",
+   "E5",
+   "E8",
+   "E9",
+   "E9b"
+  ],
+  "thue-phi": [
+   "E13",
+   "E2b",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E7a"
+  ],
+  "trang-nhom-moi-gioi": [
+   "E1",
+   "E2b",
+   "E3",
+   "E4b",
+   "E8",
+   "E9"
+  ],
+  "trang-thai-rieng": [
+   "E1",
+   "E14b",
+   "E2b",
+   "E3",
+   "E3d",
+   "E4",
+   "E5",
+   "E6c",
+   "E7b",
+   "E7c",
+   "E8",
+   "E9"
+  ],
+  "truong-rieng-toi-thieu": [
+   "E1",
+   "E10b",
+   "E14b",
+   "E2b",
+   "E3b",
+   "E4",
+   "E4d",
+   "E5b",
+   "E6",
+   "E6d",
+   "E7",
+   "E7c",
+   "E8",
+   "E9",
+   "E9b"
+  ],
+  "bai-thu-dong-bo-mat-mang": [
+   "E1",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6",
+   "E8",
+   "E9"
+  ],
+  "chu-san-du-vai": [
+   "E2",
+   "E3c",
+   "E4",
+   "E5c",
+   "E6"
+  ],
+  "pooler-che-do-giao-dich": [
+   "E11",
+   "E13",
+   "E2",
+   "E3",
+   "E4",
+   "E5",
+   "E6"
+  ],
+  "va-dinh-nghia-doc-lai": [
+   "E3",
+   "E5b",
+   "E7b"
+  ],
+  "che-vung-anh": [],
+  "sua-hang-loat": [],
+  "va-che-vung-anh": [],
+  "va-pool-ket-noi": [
+   "E10",
+   "E4",
+   "E7"
+  ],
+  "va-sua-tren-o": [],
+  "va-thong-bao-lead": [
+   "E14",
+   "E15",
+   "E4",
+   "E5",
+   "E6",
+   "E9"
+  ]
+ },
+ "sau_gop_gia": {
+  "sha": "f4b7cfea0e5a1e8e00257fb87bc233f343eb6748",
+  "run_id": "repin-20261119T152949Z-44257",
+  "origin_main": "f4b7cfea0e5a1e8e00257fb87bc233f343eb6748",
+  "do": {
+   "va-bai-o-la-do-ngau-nhien": [
+    "E1",
+    "E10",
+    "E11",
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6",
+    "E7",
+    "E8"
+   ],
+   "che-vung-anh": [],
+   "sua-hang-loat": [],
+   "va-che-vung-anh": [],
+   "va-sua-tren-o": [],
+   "va-thong-bao-lead": [
+    "E14",
+    "E15",
+    "E4",
+    "E5",
+    "E6",
+    "E9"
+   ]
+  }
+ },
+ "ghim": [
+  "ghim-lai-ban-that-qua-ci",
+  "va-nut-ci-ag-root"
+ ]
+}

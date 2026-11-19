@@ -7,7 +7,7 @@ reason:
 verified_by: fresh-context verification subagent
 enforcement_mode: strict
 bypass_used: false
-verified_commit: 2bfd418304426133247cdcb538473dad9afc1784
+verified_commit: f4b7cfea0e5a1e8e00257fb87bc233f343eb6748
 human_signoff: Manh Phan 2026-11-08
 ---
 
@@ -106,3 +106,7 @@ sha: 779c5936e66f6908f6844794888522b89cf84a81 · suites: 7 lệnh exit 0 · eval
 ### Re-pin lần 3 — 2026-11-08, do gộp nhánh chính trước khi gộp #209
 run_id: repin-20261108T160952Z-91293
 sha: 2bfd418304426133247cdcb538473dad9afc1784 · suites: 7 lệnh exit 0 · evals: 2/2 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)
+
+### Re-pin lần 4 — 2026-11-19, do chuyển kit sang chợ delivery-loop v3.0.0: luồng kéo kit mới theo thẻ, lõi ở plugins/acceptance-gate, phép đo rút kho kit và bố cục từ luồng
+run_id: repin-20261119T153522Z-52717
+sha: f4b7cfea0e5a1e8e00257fb87bc233f343eb6748 · suites: 7 lệnh exit 0 · evals: 2/2 eval máy đạt kỳ vọng · suite chạy ở môi trường giống CI (biến rỗng: DATABASE_URL, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, APP_URL)

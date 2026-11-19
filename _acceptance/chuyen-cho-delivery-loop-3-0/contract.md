@@ -70,18 +70,19 @@ delivery-loop, nhánh `chuyen-nha`) · `migration/chuyen-kho/README.md` (K1–K6
 
 ## Ghim lại — kết quả
 
-Đo trước Cổng Phạm vi (làn khô `--tung-ho-so`, bản sửa `7208c8a9` bằng kit 3.0.0 · nhánh chính `f1d123ee` bằng kit 2.39.0).
-Phân loại cuối chạy lại trên HEAD và ghi `evidence/phan-loai-ghim.json`; dòng dưới cập nhật theo tệp ấy.
+Phân loại cuối: làn khô `--tung-ho-so` trên HEAD `f4b7cfea` bằng kit 3.0.0 (run `repin-20261119T151348Z-23712`), nhánh chính
+`f1d123ee` bằng kit 2.39.0 (run `repin-20261119T144721Z-65596`), bản sau gộp giả của `f4b7cfea`
+(run `repin-20261119T152949Z-44257`) — tệp `evidence/phan-loai-ghim.json`. So theo từng eval. Trước Cổng Phạm vi, bản sửa
+`7208c8a9` (chưa có dòng 86) còn xếp `va-thuoc-ci-ho-so-moi-truong-that` vào nhóm đo diff của nhánh; trên HEAD nó xanh.
 
 - ghim: `ghim-lai-ban-that-qua-ci` — tệp đo: `thu/kiem-nut.mjs` (E4 lấy kit từ kho cũ cứng, ghép `feature-loop/` theo bố cục cũ)
 - ghim: `va-nut-ci-ag-root` — tệp đo: `thu/kiem-ag-root.mjs` (E2 đòi `CLAUDE_PLUGIN_ROOT=$RUNNER_TEMP/kit` đúng từng chữ; E1 đỏ vì dòng 86 của luồng)
-- doi-nhanh: `va-bai-o-la-do-ngau-nhien` (E9 `pham-vi.mjs`)
-- doi-nhanh: `va-thuoc-ci-ho-so-moi-truong-that` (E3 `--luoi` đòi lưới trước-gộp của cả PR thoát 0)
+- doi-nhanh: `va-bai-o-la-do-ngau-nhien` (E9 `pham-vi.mjs`; mười eval khác đỏ như ở nhánh chính)
 - doi-nhanh: `che-vung-anh` (E13 `ranh-gioi.mjs`)
 - doi-nhanh: `sua-hang-loat` (E15 `ranh-gioi.mjs`)
 - doi-nhanh: `va-che-vung-anh` (E10 `ranh-gioi.mjs`)
 - doi-nhanh: `va-sua-tren-o` (E10 `ranh-gioi.mjs`)
-- doi-nhanh: `va-thong-bao-lead` (E13 `ranh-gioi.mjs`)
+- doi-nhanh: `va-thong-bao-lead` (E13 `ranh-gioi.mjs`; sáu eval khác đỏ như ở nhánh chính)
 - do-ca-hai: `bai-thu-dong-bo-mat-mang`
 - do-ca-hai: `bat-rang-buoc-ban-ma`
 - do-ca-hai: `cach-goi-rieng`
@@ -107,8 +108,9 @@ Phân loại cuối chạy lại trên HEAD và ghi `evidence/phan-loai-ghim.jso
 - do-ca-hai: `va-pool-ket-noi`
 
 23 hồ sơ «đỏ cả hai bên» đỏ đúng cùng các eval ở hai bên (phần lớn cần Postgres hay máy chủ đang chạy, `nang-kit-2-36-0` ghim cứng
-thẻ 2.36.0). 4 hồ sơ xanh cả hai bên: `va-nut-ci-gitleaks`, `va-ci-secrets-quet-dung-lich-su`, `bai-thu-zalo`, `he-bo-cuc`.
-Không hồ sơ nào xanh trên bản sửa mà đỏ trên nhánh chính.
+thẻ 2.36.0). 7 hồ sơ xanh trên HEAD: hai hồ sơ đã ghim, `va-thuoc-ci-ho-so-moi-truong-that`, `va-nut-ci-gitleaks`,
+`va-ci-secrets-quet-dung-lich-su`, `bai-thu-zalo`, `he-bo-cuc`. Mười hồ sơ «đỏ cả hai bên» trên HEAD đỏ ít eval hơn ở nhánh
+chính (ví dụ `cach-goi-rieng` E15b): eval gọi `tim-kit.mjs` trực tiếp nay tìm đúng bản 3.0 — chuyển chợ chữa, không ghim.
 
 ## Out of scope
 
